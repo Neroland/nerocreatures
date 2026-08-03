@@ -1,0 +1,9 @@
+{
+  "replace": false,
+  "values": [
+    {
+      "id": "nerocreatures:stalker_hide",
+      "required": false
+    }
+  ]
+}

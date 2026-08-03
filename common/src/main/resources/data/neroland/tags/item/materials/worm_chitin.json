@@ -1,0 +1,9 @@
+{
+  "replace": false,
+  "values": [
+    {
+      "id": "nerocreatures:worm_chitin",
+      "required": false
+    }
+  ]
+}

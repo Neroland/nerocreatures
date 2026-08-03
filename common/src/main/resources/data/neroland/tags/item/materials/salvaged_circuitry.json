@@ -1,0 +1,9 @@
+{
+  "replace": false,
+  "values": [
+    {
+      "id": "nerocreatures:salvaged_circuitry",
+      "required": false
+    }
+  ]
+}

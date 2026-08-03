@@ -1,0 +1,9 @@
+{
+  "replace": false,
+  "values": [
+    {
+      "id": "#c:dusts/ore_slurry",
+      "required": false
+    }
+  ]
+}

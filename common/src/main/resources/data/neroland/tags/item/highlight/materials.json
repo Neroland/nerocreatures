@@ -1,0 +1,45 @@
+{
+  "replace": false,
+  "values": [
+    {
+      "id": "nerocreatures:void_essence",
+      "required": false
+    },
+    {
+      "id": "nerocreatures:stalker_hide",
+      "required": false
+    },
+    {
+      "id": "nerocreatures:stalker_sinew",
+      "required": false
+    },
+    {
+      "id": "nerocreatures:refined_crystal",
+      "required": false
+    },
+    {
+      "id": "nerocreatures:worm_chitin",
+      "required": false
+    },
+    {
+      "id": "nerocreatures:ore_slurry",
+      "required": false
+    },
+    {
+      "id": "nerocreatures:plasma_cell",
+      "required": false
+    },
+    {
+      "id": "nerocreatures:contraband",
+      "required": false
+    },
+    {
+      "id": "nerocreatures:salvaged_circuitry",
+      "required": false
+    },
+    {
+      "id": "nerocreatures:android_core",
+      "required": false
+    }
+  ]
+}
