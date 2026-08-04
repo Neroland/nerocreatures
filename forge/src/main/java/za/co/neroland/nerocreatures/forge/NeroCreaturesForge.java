@@ -1,7 +1,9 @@
 package za.co.neroland.nerocreatures.forge;
 
+import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.fml.loading.FMLEnvironment;
 
 import za.co.neroland.nerolandcore.entity.EntityRegistrationSupport;
 import za.co.neroland.nerolandcore.registry.RegistrationProvider;
@@ -25,5 +27,9 @@ public final class NeroCreaturesForge {
         EntityRegistrationSupport.attach(context.getModBusGroup());
         ForgeCreatureNetwork.register();
         ForgeCreatureEvents.register();
+        // Client-only: renderers. Gated so the client classes never load on a dedicated server.
+        if (FMLEnvironment.dist == Dist.CLIENT) {
+            ForgeClientSetup.init();
+        }
     }
 }

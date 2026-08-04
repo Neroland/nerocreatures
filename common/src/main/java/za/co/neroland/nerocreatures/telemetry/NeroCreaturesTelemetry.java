@@ -51,21 +51,26 @@ import za.co.neroland.nerocreatures.platform.Services;
 public final class NeroCreaturesTelemetry {
 
     /**
-     * ============================ PLACEHOLDER DSN — NOT LIVE ============================
-     * NeroCreatures has no Sentry project yet. While {@link #DSN} equals this literal, every
-     * entry point below is a hard no-op: {@link #init()} returns before touching the Sentry SDK,
-     * so <b>nothing is ever sent anywhere</b> and no network connection is opened, regardless of
-     * the {@code telemetryEnabled} config value.
+     * ============================ THE UNCONFIGURED-BUILD GUARD ============================
+     * While {@link #DSN} equals this literal, every entry point below is a hard no-op:
+     * {@link #init()} returns before touching the Sentry SDK, so <b>nothing is ever sent
+     * anywhere</b> and no network connection is opened, regardless of the {@code telemetryEnabled}
+     * config value.
      *
-     * <p><b>Before release:</b> create the Sentry project, replace {@link #DSN} with the real
-     * public client key, and re-check PRIVACY.md / wiki/Telemetry.md. Do not remove this guard —
-     * it is what keeps a half-configured build silent.
+     * <p>NeroCreatures now ships a real DSN, so this branch is dormant — but <b>do not remove the
+     * guard</b>. It is what keeps a fork, a stripped build or a half-configured branch silent
+     * instead of crashing on SDK init or reporting into somebody else's project.
      * ===================================================================================
      */
     private static final String PLACEHOLDER_DSN = "https://REPLACE-ME@sentry.invalid/0";
 
-    /** Sentry DSN — a public client key (write-only ingest), safe to ship in the jar. */
-    private static final String DSN = PLACEHOLDER_DSN;
+    /**
+     * Sentry DSN — a public client key (write-only ingest), safe to ship in the jar. It grants
+     * permission to SEND events and nothing else: it cannot read issues, and it identifies the
+     * NeroCreatures project, never a player.
+     */
+    private static final String DSN =
+            "https://db8afe4d6bdf48455b359009b9c2e5c7@o4511183823241216.ingest.de.sentry.io/4511854430978128";
 
     /** Stack traces must contain this package for an event to be sent. */
     private static final String PACKAGE_MARKER = "za.co.neroland.nerocreatures";

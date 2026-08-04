@@ -40,6 +40,10 @@
     {
       "id": "nerocreatures:android_core",
       "required": false
+    },
+    {
+      "id": "nerocreatures:apex_trophy",
+      "required": false
     }
   ]
 }

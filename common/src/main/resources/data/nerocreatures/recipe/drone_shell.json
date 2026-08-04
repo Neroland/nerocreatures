@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "key": {
+    "A": "nerocreatures:android_core",
+    "C": "nerocreatures:salvaged_circuitry",
+    "I": "#c:ingots/iron",
+    "P": "nerocreatures:plasma_cell"
+  },
+  "pattern": [
+    "CIC",
+    "PAP",
+    "ICI"
+  ],
+  "result": {
+    "count": 1,
+    "id": "nerocreatures:drone_shell"
+  }
+}

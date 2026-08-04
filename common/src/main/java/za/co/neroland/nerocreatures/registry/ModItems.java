@@ -10,6 +10,7 @@ import za.co.neroland.nerolandcore.registry.RegistrationProvider;
 import za.co.neroland.nerolandcore.registry.RegistrationProvider.RegistryEntry;
 
 import za.co.neroland.nerocreatures.NeroCreaturesCommon;
+import za.co.neroland.nerocreatures.item.DroneShellItem;
 
 /**
  * NeroCreatures' item registrations — the creature drops.
@@ -73,10 +74,36 @@ public final class ModItems {
     public static final RegistryEntry<Item> ANDROID_CORE = ITEMS.register("android_core",
             key -> new Item(new Item.Properties().stacksTo(16).setId(key)));
 
+    /**
+     * Planet-boss drop — the proof you killed one, and the ecosystem's top-tier reagent.
+     *
+     * <p>It stacks to 8 rather than 64 because it is meant to be counted rather than accumulated: a
+     * trophy is one boss. Every planet boss drops this same item — the trophy is the <b>tier</b>, not
+     * the creature — so a downstream recipe can ask for "a boss kill" without caring which world it
+     * happened on.
+     */
+    public static final RegistryEntry<Item> APEX_TROPHY = ITEMS.register("apex_trophy",
+            key -> new Item(new Item.Properties().stacksTo(8).setId(key)));
+
+    /**
+     * Terraforming Drone deployment shell — the one item here that is <b>not</b> a drop.
+     *
+     * <p>It is a crafted deployable: right-click it to unfold a drone bound to you (see
+     * {@code item/DroneShellItem}), and shift-interact that drone with an empty hand to get the shell
+     * back. It lives in this class because there is no third item registry worth having, but it is
+     * kept out of {@link #DROPS} and tagged as a <b>tool</b> rather than a material, so Core's item
+     * highlighting gives it the tool border alongside the spawn eggs.
+     */
+    public static final RegistryEntry<Item> DRONE_SHELL = ITEMS.register("drone_shell",
+            key -> new DroneShellItem(new Item.Properties().stacksTo(4).setId(key)));
+
     /** Every drop, in Drop-Map order — used for the creative tab and by the wiki check. */
     private static final List<RegistryEntry<Item>> DROPS = List.of(
             VOID_ESSENCE, STALKER_HIDE, STALKER_SINEW, REFINED_CRYSTAL, WORM_CHITIN,
-            ORE_SLURRY, PLASMA_CELL, CONTRABAND, SALVAGED_CIRCUITRY, ANDROID_CORE);
+            ORE_SLURRY, PLASMA_CELL, CONTRABAND, SALVAGED_CIRCUITRY, ANDROID_CORE, APEX_TROPHY);
+
+    /** Crafted deployables — contributed to the creative tab after the drops. */
+    private static final List<RegistryEntry<Item>> DEPLOYABLES = List.of(DRONE_SHELL);
 
     private ModItems() {
     }
@@ -93,6 +120,9 @@ public final class ModItems {
     public static void addToCreativeTab() {
         for (RegistryEntry<Item> drop : DROPS) {
             CoreCreativeTab.add(drop::get);
+        }
+        for (RegistryEntry<Item> deployable : DEPLOYABLES) {
+            CoreCreativeTab.add(deployable::get);
         }
     }
 }

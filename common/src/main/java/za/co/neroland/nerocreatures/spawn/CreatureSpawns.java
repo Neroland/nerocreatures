@@ -17,7 +17,14 @@ import net.minecraft.world.entity.SpawnPlacements;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.levelgen.Heightmap;
 
+import org.jetbrains.annotations.Nullable;
+
+import za.co.neroland.nerolandcore.worldgen.SpaceTags;
+
+import za.co.neroland.nerocreatures.boss.BossFights;
+import za.co.neroland.nerocreatures.boss.BossSpawns;
 import za.co.neroland.nerocreatures.config.NeroCreaturesConfig;
+import za.co.neroland.nerocreatures.registry.ModEntities;
 
 /**
  * NeroCreatures' natural-spawn engine.
@@ -100,14 +107,85 @@ public final class CreatureSpawns {
     /**
      * Declares the spawn table. Called once from common init, after the entity types exist.
      *
-     * <p>The table is legitimately <b>empty</b> at this stage: the framework lands before the
-     * roster, so the engine runs, finds nothing to place, and costs one integer compare per tick.
-     * Each creature adds its line here as it is built.
+     * <p>Weights are relative to each other <em>within the biomes a rule matches</em>, not global:
+     * a position only ever picks between the rules that apply there, so the Asteroid Worm's weight
+     * of 6 competes with nothing at all in an asteroid field. Each creature adds its line here as it
+     * is built; a creature with no line never spawns naturally, which is the intended state for
+     * structure- and event-placed mobs.
      */
     public static void init() {
-        // Stage 3+ registers the roster here, e.g.:
-        //   register(SpawnRule.inSpace("void_crawler", ModEntities.VOID_CRAWLER::get,
-        //           SpaceTags.DARK_BIOMES, 20, 1, 3));
+        // Every rule below uses anyDimension() rather than inSpace(): the biome tag IS the precise
+        // lever, and a dimension guard would silently exclude any planet that reuses a vanilla
+        // dimension type (Nerospace's Greenxertz reuses minecraft:overworld, so it cannot be tagged
+        // without dragging the real Overworld in with it). No vanilla Earth biome is a member of any
+        // neroland:space/* tag, so dropping the guard costs nothing and losing a planet would.
+
+        // Void Crawler — the common hostile of the dark planets. Solitary or in pairs; the threat is
+        // the blink, so a crowd of them would be unfair rather than harder.
+        register(SpawnRule.anyDimension("void_crawler", ModEntities.VOID_CRAWLER,
+                SpaceTags.DARK_BIOMES, 30, 1, 2));
+
+        // Lunar Stalker — always arrives as a pack, because one stalker is not a fight and the pack
+        // AI (broadcast + flank) is the whole point of the creature.
+        register(SpawnRule.anyDimension("lunar_stalker", ModEntities.LUNAR_STALKER,
+                SpaceTags.MOON_BIOMES, 24, 2, 4));
+
+        // Asteroid Worm — an elite. Deliberately the rarest thing in the table and never in groups:
+        // meeting one should be an event, and two at once would be a wall.
+        register(SpawnRule.anyDimension("asteroid_worm", ModEntities.ASTEROID_WORM,
+                SpaceTags.ASTEROID_BIOMES, 6, 1, 1));
+
+        // Plasma Slime — at home in the crystal terrain, an occasional visitor to the dark. Groups
+        // stay small because every one of them can still split.
+        register(SpawnRule.anyDimension("plasma_slime", ModEntities.PLASMA_SLIME,
+                SpaceTags.CRYSTALLINE_BIOMES, 20, 1, 3));
+        register(SpawnRule.anyDimension("plasma_slime", ModEntities.PLASMA_SLIME,
+                SpaceTags.DARK_BIOMES, 8, 1, 2));
+
+        // Crystal Golem — a neutral elite and a resource node, so it is rare and always alone:
+        // stumbling onto one should feel like finding an ore vein that can hit back, not like being
+        // ambushed by a herd.
+        register(SpawnRule.anyDimension("crystal_golem", ModEntities.CRYSTAL_GOLEM,
+                SpaceTags.CRYSTALLINE_BIOMES, 8, 1, 1));
+
+        // Space Pirate — the only rule against the PLANET_BIOMES umbrella, so a band can turn up on
+        // any off-Earth surface. Low weight, because the interesting pirates are the ones a future
+        // NeroEvents raid places on purpose (entity/humanoid/PirateSpawner).
+        register(SpawnRule.anyDimension("space_pirate", ModEntities.SPACE_PIRATE,
+                SpaceTags.PLANET_BIOMES, 10, 2, 3));
+
+        // Rogue Androids — deliberately the rarest natural spawns in the table after the worm. They
+        // are a ruins creature; NeroRuins will place them properly (entity/mechanical/AndroidSpawner)
+        // and these two lines only ensure the pair is obtainable in survival before that lands.
+        register(SpawnRule.anyDimension("rogue_drone", ModEntities.ROGUE_DRONE,
+                SpaceTags.DARK_BIOMES, 6, 1, 2));
+        register(SpawnRule.anyDimension("rogue_android", ModEntities.ROGUE_ANDROID,
+                SpaceTags.DARK_BIOMES, 3, 1, 1));
+
+        // Glacite Wisp — the frozen-world pet. Two rules, because a glacial crystal world sits in
+        // both tags: it is a moon first and a crystal field second, hence the weight split.
+        register(SpawnRule.anyDimension("glacite_wisp", ModEntities.GLACITE_WISP,
+                SpaceTags.MOON_BIOMES, 12, 1, 2));
+        register(SpawnRule.anyDimension("glacite_wisp", ModEntities.GLACITE_WISP,
+                SpaceTags.CRYSTALLINE_BIOMES, 6, 1, 2));
+
+        // Xertz Forager — the lush-world pet, and the only creature that shares the crystalline tag
+        // with the golem and the slime without being a threat. Small herds, so a player looking for
+        // one has a reasonable chance of finding one before they run out of plasma cells.
+        register(SpawnRule.anyDimension("xertz_forager", ModEntities.XERTZ_FORAGER,
+                SpaceTags.CRYSTALLINE_BIOMES, 14, 1, 3));
+
+        // Cinder Tyrant — the boss, and by far the rarest line in the table. Its weight is a tenth
+        // of the next-rarest creature's, it is always alone, and unlike everything above it the
+        // weighted roll is not what actually decides whether it appears: the gate is, and the gate
+        // says "only if the server allows natural bosses, only once a Minecraft day per dimension,
+        // and only if there is not already one out there" (boss/BossSpawns). The weight is what
+        // makes it feel like a rumour rather than a schedule. DARK_BIOMES is the tag Cindara — the
+        // ember world it belongs to — is a member of.
+        register(SpawnRule.gated("cinder_tyrant", ModEntities.CINDER_TYRANT,
+                SpaceTags.DARK_BIOMES, 1, 1, 1, BossSpawns::maySpawnNaturally));
+
+        // The Terraforming Drone has no rule at all, and never will: it is deployed, not spawned.
     }
 
     /** Adds a rule to the table. Call from {@link #init()} only. */
@@ -143,10 +221,23 @@ public final class CreatureSpawns {
         }
     }
 
+    /**
+     * The server this engine last ticked, or {@code null} before the first server tick and after a
+     * shutdown. It is tracked here anyway, for the sweep clock — so the link module, which Core's
+     * snapshot API hands nothing but a player UUID, reads it from here rather than keeping a second
+     * copy of the same reference.
+     */
+    @Nullable
+    public static MinecraftServer currentServer() {
+        return currentServer.get();
+    }
+
     /** Resets the sweep clock and population counters. Called when the engine sees a new server. */
     public static void reset() {
         tickCounter = 0;
         CreatureCensus.reset();
+        BossSpawns.reset();
+        BossFights.reset();
     }
 
     private static void sweep(ServerLevel level) {

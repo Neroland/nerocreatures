@@ -8,6 +8,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.entity.EntityTypeTest;
@@ -15,6 +16,7 @@ import net.minecraft.world.phys.AABB;
 
 import za.co.neroland.nerocreatures.config.NeroCreaturesConfig;
 import za.co.neroland.nerocreatures.entity.base.NeroCreatureEntity;
+import za.co.neroland.nerocreatures.entity.tame.TameableCreature;
 
 /**
  * Population accounting for the spawn caps — "how many NeroCreatures are alive here right now".
@@ -37,6 +39,18 @@ import za.co.neroland.nerocreatures.entity.base.NeroCreatureEntity;
  *
  * <p>Never call either from a per-tick loop. All counts are per {@link ServerLevel}; client levels
  * are never counted, since the client has no say in spawning.
+ *
+ * <h2>Two class roots, and why</h2>
+ *
+ * <p>Almost every creature in the mod is a {@link NeroCreatureEntity}, and being one is what makes a
+ * mob visible here. The tameable pets are the exception: they derive from vanilla
+ * {@link TamableAnimal} instead, because vanilla's owner storage and its four owner-aware goals are
+ * only available on that branch (see {@code entity/tame/TameableCreature}). So both roots are
+ * counted, and a wild pet is inside the population caps exactly like every other creature.
+ *
+ * <p>That costs one extra bounded query per dimension per sweep and one extra chunk query per
+ * placement — and only when the first count has not already reached the cap, since the second query
+ * is asked for the remaining budget and skipped entirely once there is none.
  *
  * <p>No player data of any kind passes through here (POPIA/GDPR).
  */
@@ -66,10 +80,18 @@ public final class CreatureCensus {
         if (cached != null && now >= cached.gameTime() && now - cached.gameTime() < CACHE_TTL_TICKS) {
             return cached.count();
         }
+        int limit = cap + 1;
         List<NeroCreatureEntity> found = new ArrayList<>();
-        level.getEntities(EntityTypeTest.forClass(NeroCreatureEntity.class), entity -> true, found, cap + 1);
-        PER_DIMENSION.put(level.dimension(), new Snapshot(now, found.size()));
-        return found.size();
+        level.getEntities(EntityTypeTest.forClass(NeroCreatureEntity.class), entity -> true, found, limit);
+        int total = found.size();
+        if (total < limit) {
+            List<TameableCreature> pets = new ArrayList<>();
+            level.getEntities(EntityTypeTest.forClass(TameableCreature.class), entity -> true, pets,
+                    limit - total);
+            total += pets.size();
+        }
+        PER_DIMENSION.put(level.dimension(), new Snapshot(now, total));
+        return total;
     }
 
     /**
@@ -97,7 +119,8 @@ public final class CreatureCensus {
         AABB box = new AABB(
                 chunk.getMinBlockX(), minY, chunk.getMinBlockZ(),
                 chunk.getMaxBlockX() + 1.0D, minY + level.getHeight(), chunk.getMaxBlockZ() + 1.0D);
-        return level.getEntitiesOfClass(NeroCreatureEntity.class, box, entity -> true).size();
+        return level.getEntitiesOfClass(NeroCreatureEntity.class, box, entity -> true).size()
+                + level.getEntitiesOfClass(TameableCreature.class, box, entity -> true).size();
     }
 
     /**

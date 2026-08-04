@@ -3,10 +3,15 @@ package za.co.neroland.nerocreatures;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import za.co.neroland.nerocreatures.boss.BossSummons;
+import za.co.neroland.nerocreatures.compat.CompanionBridge;
 import za.co.neroland.nerocreatures.config.NeroCreaturesConfig;
 import za.co.neroland.nerocreatures.data.CreatureData;
+import za.co.neroland.nerocreatures.link.CreatureLinkModule;
 import za.co.neroland.nerocreatures.network.CreatureNetwork;
+import za.co.neroland.nerocreatures.registry.ModEntities;
 import za.co.neroland.nerocreatures.registry.ModItems;
+import za.co.neroland.nerocreatures.registry.ModSpawnEggs;
 import za.co.neroland.nerocreatures.spawn.CreatureSpawns;
 import za.co.neroland.nerocreatures.telemetry.NeroCreaturesTelemetry;
 
@@ -38,23 +43,41 @@ public final class NeroCreaturesCommon {
         // 3. Content registration. On Fabric this registers eagerly here; on NeoForge/Forge it only
         //    builds the DeferredRegisters, which each of those entry points then attaches to its mod
         //    event bus with RegistrationProvider.attach(...).
+        //    Entity types come first: the spawn eggs and the spawn table both name them, and on
+        //    Fabric "first" is literal.
+        ModEntities.init();
         ModItems.init();
-        // 4. The drops join Neroland Core's shared creative tab — no NeroCreatures tab of its own.
-        //    Core's tab reads its contents lazily when displayed, so contributing after Core has
-        //    already built the tab is fine.
+        ModSpawnEggs.init();
+        // 4. The drops and eggs join Neroland Core's shared creative tab — no NeroCreatures tab of
+        //    its own. Core's tab reads its contents lazily when displayed, so contributing after
+        //    Core has already built the tab is fine.
         ModItems.addToCreativeTab();
-        // 5. Player-data erasure registration. Registered before any store exists on purpose:
+        ModSpawnEggs.addToCreativeTab();
+        // 5. Default attributes and spawn placements, through Core's entity seam. After the types
+        //    exist, because Fabric applies these the moment they are declared.
+        ModEntities.registerEntitySupport();
+        // 6. Player-data erasure registration. Registered before any store exists on purpose:
         //    registering late is how an erasure request silently misses a store (POPIA/GDPR).
         CreatureData.init();
-        // 6. Declare the payloads before any loader registers them: every loader entry point runs
+        // 7. Resolve the optional companion-mod hooks now rather than on the first pet interaction.
+        //    Same reasoning as platform/Services: a lazy ServiceLoader read can fail out of
+        //    gameplay code, and this is the one place where failing is harmless. Finding nothing is
+        //    the normal case and costs nothing.
+        CompanionBridge.hooks();
+        // 8. Declare the payloads before any loader registers them: every loader entry point runs
         //    this method first, then wires its own networking.
         CreatureNetwork.init();
-        // 7. Spawn rules last of the content steps — they reference entity types, which on Fabric
+        // 9. Spawn rules last of the content steps — they reference entity types, which on Fabric
         //    must already have been registered by the step above, and Core's entity seam applies
         //    Fabric registrations eagerly too.
         CreatureSpawns.init();
-        // 8. (Later) the NeroLink module registers NeroCreatures' read/write/live surfaces with
-        //    Core's link registry. It goes last so a companion client is never told about something
-        //    before the mod itself has finished reacting to it.
+        // 10. The summonable-boss registry. After the entity types for the same reason as the spawn
+        //     table, and after the spawn table because a boss's natural-spawn rule is part of it.
+        BossSummons.init();
+        // 11. The NeroLink module registers NeroCreatures' read/write/live surfaces with Core's link
+        //     registry. It goes LAST so a companion client is never told about something before the
+        //     mod itself has finished reacting to it, and its own init swallows any failure — a
+        //     broken link module must never take the creature layer down with it.
+        CreatureLinkModule.init();
     }
 }

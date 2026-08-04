@@ -59,6 +59,13 @@ public final class NeroCreaturesConfig {
             "Scales hostile creatures' detection range and attack pressure. 0 = they never seek a "
                     + "target on their own (they still retaliate).");
 
+    public static final ConfigValue<Boolean> PIRATE_VILLAGER_AGGRESSION = SCHEMA.bool(
+            "pirateVillagerAggression", false, true,
+            "Whether Space Pirates also attack villagers and colony NPCs (anything in the "
+                    + "nerocreatures:pirate_raid_targets entity-type tag). OFF by default: a raider "
+                    + "band wiping out a village is something a server should have to opt into. "
+                    + "Pirates always attack players regardless.");
+
     public static final ConfigValue<Double> DROP_RATE_MULTIPLIER = SCHEMA.doubleRange(
             "dropRateMultiplier", 1.0D, 0.0D, 10.0D, true,
             "Scales the BONUS rolls NeroCreatures adds on top of a creature's loot table. The base "

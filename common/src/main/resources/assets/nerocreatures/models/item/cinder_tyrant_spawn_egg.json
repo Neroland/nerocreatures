@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "nerocreatures:item/cinder_tyrant_spawn_egg"
+  }
+}

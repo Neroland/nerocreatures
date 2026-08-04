@@ -1,0 +1,17 @@
+{
+  "replace": false,
+  "values": [
+    "nerocreatures:void_crawler_spawn_egg",
+    "nerocreatures:lunar_stalker_spawn_egg",
+    "nerocreatures:asteroid_worm_spawn_egg",
+    "nerocreatures:plasma_slime_spawn_egg",
+    "nerocreatures:crystal_golem_spawn_egg",
+    "nerocreatures:space_pirate_spawn_egg",
+    "nerocreatures:rogue_drone_spawn_egg",
+    "nerocreatures:rogue_android_spawn_egg",
+    "nerocreatures:glacite_wisp_spawn_egg",
+    "nerocreatures:xertz_forager_spawn_egg",
+    "nerocreatures:cinder_tyrant_spawn_egg",
+    "nerocreatures:drone_shell"
+  ]
+}

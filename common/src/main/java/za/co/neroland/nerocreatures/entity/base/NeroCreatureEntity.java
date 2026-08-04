@@ -1,5 +1,7 @@
 package za.co.neroland.nerocreatures.entity.base;
 
+import java.util.UUID;
+
 import net.minecraft.core.Holder;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.entity.EntitySpawnReason;
@@ -13,6 +15,10 @@ import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
+
+import org.jetbrains.annotations.Nullable;
 
 import za.co.neroland.nerocreatures.config.NeroCreaturesConfig;
 import za.co.neroland.nerocreatures.spawn.CreatureCensus;
@@ -49,6 +55,14 @@ public abstract class NeroCreatureEntity extends PathfinderMob {
 
     private final CreatureTier tier;
 
+    /**
+     * The event wave this creature was spawned as part of, or {@code null} for everything that was
+     * not. Set only by {@code spawn/InvasionBudget}; see that class for why it exists and why it is
+     * persisted rather than kept in memory.
+     */
+    @Nullable
+    private UUID waveId;
+
     protected NeroCreatureEntity(EntityType<? extends NeroCreatureEntity> type, Level level, CreatureTier tier) {
         super(type, level);
         this.tier = tier;
@@ -58,6 +72,23 @@ public abstract class NeroCreatureEntity extends PathfinderMob {
     /** The power band this creature was built for. */
     public final CreatureTier tier() {
         return this.tier;
+    }
+
+    /**
+     * The event wave this creature belongs to, or {@code null} if it is an ordinary spawn.
+     *
+     * <p>This is a <b>wave</b> id, not a player id and not an event-participant id: it identifies a
+     * batch of mobs so that batch can be cleaned up again. Nothing about a player is derivable from
+     * it (POPIA/GDPR).
+     */
+    @Nullable
+    public final UUID waveId() {
+        return this.waveId;
+    }
+
+    /** Marks (or unmarks) this creature as part of an event wave. */
+    public final void setWaveId(@Nullable UUID waveId) {
+        this.waveId = waveId;
     }
 
     /**
@@ -119,5 +150,37 @@ public abstract class NeroCreatureEntity extends PathfinderMob {
     @Override
     public boolean removeWhenFarAway(double distanceToClosestPlayerSqr) {
         return !this.isPersistenceRequired() && !this.requiresCustomPersistence();
+    }
+
+    // --- persistence --------------------------------------------------------
+
+    /**
+     * The wave marker is persisted deliberately. An invasion that was running when the server went
+     * down would otherwise leave its mobs behind with nothing left to identify them by, and
+     * {@code spawn/InvasionBudget#sweep} exists precisely to clear that up.
+     */
+    @Override
+    protected void addAdditionalSaveData(ValueOutput output) {
+        super.addAdditionalSaveData(output);
+        if (this.waveId != null) {
+            output.putString("WaveId", this.waveId.toString());
+        }
+    }
+
+    @Override
+    protected void readAdditionalSaveData(ValueInput input) {
+        super.readAdditionalSaveData(input);
+        String stored = input.getStringOr("WaveId", "");
+        if (stored.isEmpty()) {
+            this.waveId = null;
+            return;
+        }
+        try {
+            this.waveId = UUID.fromString(stored);
+        } catch (IllegalArgumentException ignored) {
+            // A malformed marker means this creature simply is not in a wave any more; a bad string
+            // must never fail an entity load.
+            this.waveId = null;
+        }
     }
 }

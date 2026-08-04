@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "nerocreatures:item/asteroid_worm_spawn_egg"
+  }
+}
