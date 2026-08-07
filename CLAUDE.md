@@ -329,4 +329,4 @@
 - Let a link failure reach gameplay. Registration swallows `RuntimeException` with a warning, and
   every publisher and snapshot section is wrapped; a companion client is a nice-to-have and the
   creature layer is not.
-- Reference the umbrella repo (or any absolute path) from anything in this repository.
+- Reference any out-of-repo planning docs (or any absolute path) from anything in this repository.
