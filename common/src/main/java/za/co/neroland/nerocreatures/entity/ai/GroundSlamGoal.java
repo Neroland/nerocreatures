@@ -142,7 +142,11 @@ public class GroundSlamGoal extends Goal {
             victim.push(dx / length * SHOVE, LIFT, dz / length * SHOVE);
             // Without this a player's client never sees the impulse — the server's velocity change
             // is only sent when the entity is marked as having been knocked about.
+            //? if >=26.3 {
+            /*victim.syncVelocity = true;
+            *///?} else {
             victim.hurtMarked = true;
+            //?}
             hit++;
         }
         this.onSlam(level, hit);

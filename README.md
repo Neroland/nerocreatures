@@ -37,8 +37,8 @@ materials the rest of the ecosystem spends.
 
 ## Build targets
 
-- **Minecraft:** 26.1.2 and 26.2
-- **Loaders:** NeoForge, MinecraftForge/Forge, Fabric (the "6 cells")
+- **Minecraft:** 26.1.2, 26.2 and 26.3
+- **Loaders:** NeoForge, MinecraftForge/Forge, Fabric (the "9 cells")
 - **Java:** 25
 - Mod id: `nerocreatures` · package `za.co.neroland.nerocreatures`
 
@@ -56,9 +56,9 @@ The build is the repo root, with a flattened cross-loader structure driven by St
 
 ```sh
 ./gradlew :fabric:26.2:build          # one cell
-./gradlew :neoforge:26.1.2:build :neoforge:26.2:build \
-          :forge:26.1.2:build :forge:26.2:build \
-          :fabric:26.1.2:build :fabric:26.2:build   # all six
+./gradlew :neoforge:26.1.2:build :neoforge:26.2:build :neoforge:26.3:build \
+          :forge:26.1.2:build :forge:26.2:build :forge:26.3:build \
+          :fabric:26.1.2:build :fabric:26.2:build :fabric:26.3:build   # all nine
 ```
 
 ## Documentation

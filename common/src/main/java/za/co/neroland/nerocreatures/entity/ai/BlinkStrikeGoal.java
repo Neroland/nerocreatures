@@ -98,7 +98,11 @@ public class BlinkStrikeGoal extends Goal {
             double toX = target.getX() + offsetX;
             double toY = target.getY();
             double toZ = target.getZ() + offsetZ;
+            //? if >=26.3 {
+            /*if (this.mob.randomTeleport(toX, toY, toZ, false, state -> false)) {
+            *///?} else {
             if (this.mob.randomTeleport(toX, toY, toZ, false)) {
+            //?}
                 this.onBlink(level, fromX, fromY, fromZ);
                 this.mob.getNavigation().moveTo(target, 1.0D);
                 return;

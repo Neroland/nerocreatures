@@ -511,7 +511,11 @@ public final class CreatureGallery {
             return null;
         }
         mob.setPersistenceRequired();
+        //? if >=26.3 {
+        /*mob.setPermanentlyInvulnerable(true);
+        *///?} else {
         mob.setInvulnerable(true);
+        //?}
         mob.setTarget(null);
         mob.snapTo(pos.getX() + 0.5D, pos.getY(), pos.getZ() + 0.5D, DISPLAY_YAW, 0.0F);
         mob.setYBodyRot(DISPLAY_YAW);
@@ -544,7 +548,11 @@ public final class CreatureGallery {
         boss.setYHeadRot(DISPLAY_YAW);
         boss.setNoAi(true);
         boss.setSilent(true);
+        //? if >=26.3 {
+        /*boss.setPermanentlyInvulnerable(true);
+        *///?} else {
         boss.setInvulnerable(true);
+        //?}
         boss.setPersistenceRequired();
         return level.addFreshEntity(boss) ? boss : null;
     }
@@ -556,7 +564,11 @@ public final class CreatureGallery {
         stand.setCustomNameVisible(true);
         stand.setInvisible(true);
         stand.setNoGravity(true);
+        //? if >=26.3 {
+        /*stand.setPermanentlyInvulnerable(true);
+        *///?} else {
         stand.setInvulnerable(true);
+        //?}
         stand.setSilent(true);
         stand.addTag(LABEL_TAG);
         level.addFreshEntity(stand);
@@ -572,7 +584,11 @@ public final class CreatureGallery {
         stand.setItemSlot(EquipmentSlot.HEAD, stack);
         stand.setInvisible(true);
         stand.setNoGravity(true);
+        //? if >=26.3 {
+        /*stand.setPermanentlyInvulnerable(true);
+        *///?} else {
         stand.setInvulnerable(true);
+        //?}
         stand.setSilent(true);
         level.addFreshEntity(stand);
     }
