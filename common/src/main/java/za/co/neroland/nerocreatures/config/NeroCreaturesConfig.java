@@ -30,7 +30,7 @@ public final class NeroCreaturesConfig {
                     + "mod/MC/loader/OS/Java versions, your other installed mods, this mod's config, "
                     + "recent in-game actions, anonymous stability/timing; no IP, username, UUID, world "
                     + "data, pet ownership or chat; file paths scrubbed of your account name. "
-                    + "false = opt out of all of it. See PRIVACY.md");
+                    + "On by default; set false to opt out of all of it (takes effect on restart). See PRIVACY.md");
 
     // --- Spawning (server-authoritative) ------------------------------------
     public static final ConfigValue<Boolean> SPAWNS_ENABLED = SCHEMA.bool(

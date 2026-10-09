@@ -26,8 +26,8 @@ materials the rest of the ecosystem spends.
 - **`/nerocreatures` command tree** — `list`, `caps`, `summon-boss`, `export`, `telemetry-test`.
 - **`InvasionBudget`** — the public seam a future NeroEvents raid uses to place a wave inside the
   population caps and clean it up again afterwards.
-- **Opt-out, PII-free crash reporting** — this mod's own crashes only; set `telemetryEnabled=false`
-  to switch it off.
+- **PII-free crash reporting, on by default and opt-out** — this mod's own crashes only; set
+  `telemetryEnabled=false` in `config/nerocreatures.properties` to switch it off.
 
 ## Requirements
 
@@ -60,6 +60,14 @@ The build is the repo root, with a flattened cross-loader structure driven by St
           :forge:26.1.2:build :forge:26.2:build :forge:26.3:build \
           :fabric:26.1.2:build :fabric:26.2:build :fabric:26.3:build   # all nine
 ```
+
+## Privacy
+
+NeroCreatures stores no personal data beyond world-save gameplay state (pet ownership, boss
+contribution), all erasable through Neroland Core's shared erasure hook. Anonymous,
+NeroCreatures-only crash reporting via Sentry (EU servers) is **on by default** and **opt-out**:
+set `telemetryEnabled=false` in `config/nerocreatures.properties` to switch it off. Full
+disclosure: [`PRIVACY.md`](PRIVACY.md).
 
 ## Documentation
 

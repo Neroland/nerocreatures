@@ -165,3 +165,14 @@ or contribution data**. `sendDefaultPii` is off, the machine hostname is never a
 Sentry user object is cleared on every event, and file paths are scrubbed of your OS account
 name before sending. Volume is bounded: events are de-duplicated per session and capped at 10
 per game session.
+
+### CurseForge / Modrinth telemetry blurb
+
+Keep the following (or equivalent) in the project description while telemetry is enabled, as
+required by CurseForge moderation policy:
+
+> **Telemetry notice:** NeroCreatures sends anonymous error reports (stack trace + mod/game
+> versions only — never IPs, usernames, UUIDs, pet ownership or world data) to the developers
+> via Sentry (EU servers) so crashes can be fixed. On by default — opt out any time by setting
+> `telemetryEnabled = false` in `config/nerocreatures.properties`. Full details:
+> [PRIVACY.md](https://github.com/Neroland/nerocreatures/blob/main/PRIVACY.md).

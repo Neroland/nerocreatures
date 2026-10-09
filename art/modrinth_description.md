@@ -1,3 +1,11 @@
+[![NeroLink App — Beta](https://img.shields.io/badge/NeroLink_App-Now_in_Beta-60d4e8?style=for-the-badge)](https://nerolandmc.net/nerolink/#beta) [![Explore the Neroland ecosystem](https://img.shields.io/badge/Explore-The_Neroland_Ecosystem-1a5a6c?style=for-the-badge)](https://nerolandmc.net/ecosystem/)
+
+> 📱 **NeroLink App Beta — your Neroland world on your phone.** Check energy, alerts and machines live, claim quest rewards and search your storage without logging in. **[Join the beta at nerolandmc.net →](https://nerolandmc.net/nerolink/#beta)**
+>
+> 🌌 **Explore the Neroland ecosystem.** See how NeroCreatures fits together with the rest of the Nero mods — every mod, wiki and changelog in one place. **[View the ecosystem at nerolandmc.net →](https://nerolandmc.net/ecosystem/)** · [NeroCreatures on the website](https://nerolandmc.net/mods/nerocreatures/)
+
+---
+
 # NeroCreatures
 
 **Mobs across planets and dimensions, with drops that matter — a bestiary that supplies the whole ecosystem.**
@@ -29,7 +37,9 @@ Built on **Neroland Core**, so its shared materials, loot framework, progression
 
 ## Privacy (POPIA / GDPR)
 
-NeroCreatures stores **no personal data**. Pet ownership and boss contribution are ordinary gameplay state tied to the world save, never a player profile; where boss contribution reuses NeroEvents' participation tracking it inherits that mod's minimisation and retention posture. Any optional crash telemetry is anonymous and opt-out, carrying version strings only — never IPs, names, UUIDs or world data.
+NeroCreatures stores **no personal data**. Pet ownership and boss contribution are ordinary gameplay state tied to the world save, never a player profile; where boss contribution reuses NeroEvents' participation tracking it inherits that mod's minimisation and retention posture.
+
+> **Telemetry notice:** NeroCreatures sends anonymous error reports (stack trace + mod/game versions only — never IPs, usernames, UUIDs, pet ownership or world data) to the developers via Sentry (EU servers) so crashes can be fixed. On by default — opt out any time by setting `telemetryEnabled = false` in `config/nerocreatures.properties`. Full details: [PRIVACY.md](https://github.com/Neroland/nerocreatures/blob/main/PRIVACY.md).
 
 ## Why it fits the ecosystem
 

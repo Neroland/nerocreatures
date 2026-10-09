@@ -61,7 +61,7 @@ how much damage each participant has done to it. No names, no coordinates. Both 
 Neroland Core's shared request, retained only as long as the server configures, and exportable on
 request; see [Data storage](Data-Storage.md) for the practical version and
 [`../PRIVACY.md`](../PRIVACY.md) for the full statement. Anything a companion app can read is scoped
-to the asking player and nobody else ([Link module](Link-Module.md)). Crash reporting is opt-out, PII-free and
+to the asking player and nobody else ([Link module](Link-Module.md)). Crash reporting is on by default, opt-out, PII-free and
 covers this mod's own crashes only ([Telemetry](Telemetry.md)).
 
 ## See also

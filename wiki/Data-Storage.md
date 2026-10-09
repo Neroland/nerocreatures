@@ -125,7 +125,8 @@ fight's bonus rewards. Both are better than an unstartable world.
 
 ## Telemetry
 
-Crash reporting is a separate thing entirely, contains no player data, and is opt-out.
+Crash reporting is a separate thing entirely, contains no player data, and is **on by default and
+opt-out** (`telemetryEnabled=false` in `config/nerocreatures.properties`).
 See [Telemetry](Telemetry.md).
 
 ## See also
