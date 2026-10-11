@@ -7,6 +7,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.2.1-alpha.1] - 2026-10-11
+
+Data-only release. No entity, item id, loot or config change.
+
+### Added
+
+- **Drop-family item tags** so other mods can key on a whole family instead of single items:
+  `nerocreatures:drops/organic` (stalker hide, stalker sinew, worm chitin), `drops/mineral` (ore slurry,
+  refined crystal), `drops/tech` (salvaged circuitry, android core), `drops/exotic` (plasma cell, void
+  essence) and `drops/loot` (contraband), plus `nerocreatures:drops` covering all five. The Apex Trophy is
+  deliberately in none of them.
+- The Apex Trophy is added to the optional `neroeconomy:never_commodity` item tag (`"replace": false`), so
+  an economy mod never prices it by id. The tag is ignored when no such mod is installed.
+
 ## [0.2.0-alpha.1] - 2026-09-24
 
 EMI compatibility. No gameplay, id, tag or config change.

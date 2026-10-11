@@ -1,0 +1,13 @@
+{
+  "replace": false,
+  "values": [
+    {
+      "id": "nerocreatures:salvaged_circuitry",
+      "required": false
+    },
+    {
+      "id": "nerocreatures:android_core",
+      "required": false
+    }
+  ]
+}

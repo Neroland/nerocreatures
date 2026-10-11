@@ -1,0 +1,13 @@
+{
+  "replace": false,
+  "values": [
+    {
+      "id": "nerocreatures:plasma_cell",
+      "required": false
+    },
+    {
+      "id": "nerocreatures:void_essence",
+      "required": false
+    }
+  ]
+}

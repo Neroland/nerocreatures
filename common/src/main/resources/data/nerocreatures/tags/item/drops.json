@@ -1,0 +1,25 @@
+{
+  "replace": false,
+  "values": [
+    {
+      "id": "#nerocreatures:drops/organic",
+      "required": false
+    },
+    {
+      "id": "#nerocreatures:drops/mineral",
+      "required": false
+    },
+    {
+      "id": "#nerocreatures:drops/tech",
+      "required": false
+    },
+    {
+      "id": "#nerocreatures:drops/exotic",
+      "required": false
+    },
+    {
+      "id": "#nerocreatures:drops/loot",
+      "required": false
+    }
+  ]
+}

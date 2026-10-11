@@ -1,0 +1,13 @@
+{
+  "replace": false,
+  "values": [
+    {
+      "id": "nerocreatures:ore_slurry",
+      "required": false
+    },
+    {
+      "id": "nerocreatures:refined_crystal",
+      "required": false
+    }
+  ]
+}
