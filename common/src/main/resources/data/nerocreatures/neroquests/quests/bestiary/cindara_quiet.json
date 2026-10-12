@@ -1,0 +1,27 @@
+{
+  "title": "quest.nerocreatures.bestiary.cindara_quiet.title",
+  "description": "quest.nerocreatures.bestiary.cindara_quiet.desc",
+  "icon": "minecraft:magma_block",
+  "prerequisites": [],
+  "objectives": [
+    {
+      "type": "neroquests:custom_event",
+      "channel": "nerocreatures:boss_pressure",
+      "event_scope": "nerospace:cindara",
+      "direction": "falling",
+      "audience": "world"
+    }
+  ],
+  "rewards": [
+    {
+      "type": "neroquests:xp",
+      "amount": 100
+    },
+    {
+      "type": "neroquests:currency",
+      "amount": 100
+    }
+  ],
+  "scope": "server",
+  "visible_gate": "nerolandcore:reached_orbit"
+}

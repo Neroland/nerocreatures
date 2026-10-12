@@ -160,6 +160,11 @@ tells a consumer "the fight got worse" from "the fight is over".
 player identifier into a scope, and this channel never does — no UUID, no name, no position ever
 goes on the bus. If you are building a consumer, treat the scope as a dimension id and nothing else.
 
+Crossings are fired with `nerocreatures` as the **source mod id** (Core 1.15.0's sourced bus), so a
+consumer listening with `ThresholdEvents.onSourcedCrossing` can tell this mod's channel from a datapack's.
+The shipped quest pack's `cindara_quiet` world-log quest is one such consumer
+([NeroQuests integration](NeroQuests-Integration.md)).
+
 ## Configuration
 
 All server-authoritative, in `nerocreatures.properties`:

@@ -153,6 +153,12 @@ A tamed pet also carries its owner's UUID in its own entity data. That is vanill
 tameable animal and is inherent to being tameable; it is declared in
 [`../PRIVACY.md`](../PRIVACY.md).
 
+Two **milestone records** are kept outside this mod, as player-scope progression gates in Neroland
+Core's store: `nerocreatures:first_tame` opens the moment you tame your first pet and
+`nerocreatures:first_deploy` the moment you deploy your first drone. They unlock nothing — a quest pack
+reads them, nothing else does — and Core's erasure hook removes them with everything else
+([NeroQuests integration](NeroQuests-Integration.md)).
+
 **Erasure.** `/neroland data eraseme` (or an admin's `/neroland data erase <uuid>`) purges you from
 this index *and* frees the creatures: your pets are returned to the wild — owner cleared, order
 reset, ordinary despawnable animals again — and your drones are recalled, dropping their shells where

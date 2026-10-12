@@ -1,0 +1,30 @@
+{
+  "title": "quest.nerocreatures.bestiary.ember_crown.title",
+  "description": "quest.nerocreatures.bestiary.ember_crown.desc",
+  "icon": "nerocreatures:apex_trophy",
+  "prerequisites": [
+    "nerocreatures:bestiary/shield_breaker"
+  ],
+  "objectives": [
+    {
+      "type": "neroquests:kill_entity",
+      "entity": "nerocreatures:cinder_tyrant"
+    },
+    {
+      "type": "neroquests:collect_item",
+      "item": "nerocreatures:apex_trophy"
+    }
+  ],
+  "rewards": [
+    {
+      "type": "neroquests:xp",
+      "amount": 300
+    },
+    {
+      "type": "neroquests:currency",
+      "amount": 500
+    }
+  ],
+  "scope": "player",
+  "visible_gate": "nerolandcore:reached_orbit"
+}

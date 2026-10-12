@@ -41,6 +41,7 @@ import za.co.neroland.nerocreatures.entity.ai.HoldAreaGoal;
 import za.co.neroland.nerocreatures.entity.base.CreatureTier;
 import za.co.neroland.nerocreatures.entity.base.NeroCreatureEntity;
 import za.co.neroland.nerocreatures.link.CreatureLinkEvents;
+import za.co.neroland.nerocreatures.progression.CreatureMilestones;
 import za.co.neroland.nerocreatures.registry.ModItems;
 
 /**
@@ -159,6 +160,7 @@ public class TerraformingDrone extends NeroCreatureEntity implements OwnableEnti
         this.owner = EntityReference.<LivingEntity>of(player);
         this.workAnchor = anchor.immutable();
         this.setPersistenceRequired();
+        CreatureMilestones.record(player, CreatureMilestones.FIRST_DEPLOY); // record gate, never a lock
     }
 
     @Override

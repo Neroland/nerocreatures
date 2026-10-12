@@ -1,0 +1,28 @@
+{
+  "title": "quest.nerocreatures.bestiary.first_contact.title",
+  "description": "quest.nerocreatures.bestiary.first_contact.desc",
+  "icon": "nerocreatures:void_essence",
+  "prerequisites": [],
+  "objectives": [
+    {
+      "type": "neroquests:kill_entity",
+      "entity": "nerocreatures:void_crawler"
+    },
+    {
+      "type": "neroquests:collect_item",
+      "item": "nerocreatures:void_essence"
+    }
+  ],
+  "rewards": [
+    {
+      "type": "neroquests:xp",
+      "amount": 40
+    },
+    {
+      "type": "neroquests:currency",
+      "amount": 25
+    }
+  ],
+  "scope": "player",
+  "visible_gate": "nerolandcore:reached_orbit"
+}

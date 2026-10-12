@@ -52,6 +52,10 @@ the creatures themselves and severs the link — see below.
 No names, IP addresses, chat, coordinate history, or any other personal information is stored —
 nothing beyond what Minecraft itself already keeps.
 
+Two milestone records — "tamed a first pet" and "deployed a first drone" — are kept as player-scope
+progression gates in Neroland Core's store (`nerocreatures:first_tame`, `nerocreatures:first_deploy`),
+covered by Core's privacy statement and erased by the same shared erasure hook described below.
+
 ## Erasure
 
 NeroCreatures registers with Neroland Core's shared per-player data-erasure hook. A single

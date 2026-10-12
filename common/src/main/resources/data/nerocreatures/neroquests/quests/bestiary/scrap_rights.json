@@ -1,0 +1,32 @@
+{
+  "title": "quest.nerocreatures.bestiary.scrap_rights.title",
+  "description": "quest.nerocreatures.bestiary.scrap_rights.desc",
+  "icon": "nerocreatures:salvaged_circuitry",
+  "prerequisites": [
+    "nerocreatures:bestiary/first_contact"
+  ],
+  "objectives": [
+    {
+      "type": "neroquests:kill_entity",
+      "entity": "nerocreatures:rogue_drone",
+      "count": 3
+    },
+    {
+      "type": "neroquests:collect_item",
+      "item": "nerocreatures:salvaged_circuitry",
+      "count": 4
+    }
+  ],
+  "rewards": [
+    {
+      "type": "neroquests:xp",
+      "amount": 60
+    },
+    {
+      "type": "neroquests:currency",
+      "amount": 40
+    }
+  ],
+  "scope": "player",
+  "visible_gate": "nerolandcore:reached_orbit"
+}

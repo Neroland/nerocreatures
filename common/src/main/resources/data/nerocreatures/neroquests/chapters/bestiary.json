@@ -1,0 +1,77 @@
+{
+  "title": "chapter.nerocreatures.bestiary.title",
+  "icon": "nerocreatures:apex_trophy",
+  "allow_server_scope": true,
+  "quests": [
+    {
+      "quest": "nerocreatures:bestiary/pale_hunters",
+      "x": 0,
+      "y": 2
+    },
+    {
+      "quest": "nerocreatures:bestiary/crystal_clarity",
+      "x": 2,
+      "y": 2
+    },
+    {
+      "quest": "nerocreatures:bestiary/jelly_logic",
+      "x": 4,
+      "y": 2
+    },
+    {
+      "quest": "nerocreatures:bestiary/first_contact",
+      "x": 0,
+      "y": 4
+    },
+    {
+      "quest": "nerocreatures:bestiary/scrap_rights",
+      "x": 2,
+      "y": 4
+    },
+    {
+      "quest": "nerocreatures:bestiary/shield_breaker",
+      "x": 4,
+      "y": 4
+    },
+    {
+      "quest": "nerocreatures:bestiary/second_hands",
+      "x": 6,
+      "y": 3
+    },
+    {
+      "quest": "nerocreatures:bestiary/boarding_party",
+      "x": 0,
+      "y": 6
+    },
+    {
+      "quest": "nerocreatures:bestiary/ember_crown",
+      "x": 6,
+      "y": 5
+    },
+    {
+      "quest": "nerocreatures:bestiary/cindara_quiet",
+      "x": 8,
+      "y": 5
+    },
+    {
+      "quest": "nerocreatures:bestiary/field_guide",
+      "x": 10,
+      "y": 4
+    },
+    {
+      "quest": "nerocreatures:bestiary/new_friend",
+      "x": 2,
+      "y": 0
+    },
+    {
+      "quest": "nerocreatures:bestiary/drone_deployed",
+      "x": 8,
+      "y": 3
+    },
+    {
+      "quest": "nerocreatures:bestiary/scrapyard",
+      "x": 4,
+      "y": 6
+    }
+  ]
+}

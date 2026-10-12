@@ -43,6 +43,7 @@ import za.co.neroland.nerocreatures.entity.ai.HoldAreaGoal;
 import za.co.neroland.nerocreatures.entity.base.CreatureTier;
 import za.co.neroland.nerocreatures.entity.base.NeroCreatureEntity;
 import za.co.neroland.nerocreatures.link.CreatureLinkEvents;
+import za.co.neroland.nerocreatures.progression.CreatureMilestones;
 
 /**
  * Shared base for NeroCreatures' tameable alien pets — everything the two species have in common,
@@ -281,6 +282,7 @@ public abstract class TameableCreature extends TamableAnimal {
             return InteractionResult.SUCCESS_SERVER;
         }
         this.tame(player);
+        CreatureMilestones.record(player, CreatureMilestones.FIRST_TAME); // record gate, never a lock
         this.setCommand(PetCommand.FOLLOW);
         this.setTarget(null);
         state.add(owner, OwnedCreature.of(this, OwnedCreature.Kind.PET));

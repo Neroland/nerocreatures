@@ -7,6 +7,32 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.3.0-alpha.1] - 2026-10-11
+
+Quest-pack release. Requires **Neroland Core 1.15.0** (offline-capable player gates and the sourced
+threshold bus). No entity, item id, loot or config change.
+
+### Added
+
+- **NeroQuests quest pack** — chapter `nerocreatures:bestiary` "Bestiary", 14 quests (13 player, 1 server
+  world-log quest `cindara_quiet` for the first Cinder Tyrant defeat on Cindara) — that appears in the
+  quest book when NeroQuests is installed; inert otherwise, no dependency. Every quest is hidden until
+  Core's `nerolandcore:reached_orbit` gate is open, because every creature spawns in Nerospace biomes.
+- **Milestone gates** (player-scope Neroland Core *record* gates, `data/nerocreatures/neroland_gates/`):
+  `nerocreatures:first_tame` opens the moment a pet is tamed and `nerocreatures:first_deploy` the moment a
+  Terraforming Drone is deployed. They have no `requires`, gate nothing and are read by the pack's
+  `new_friend` and `drone_deployed` quests. Rows live in Core's progression store and are erased through
+  Core's shared erasure hook; nothing new is logged.
+- **Entity-type family tags** so a quest or another mod can say "any mechanical foe":
+  `nerocreatures:mechanical` (rogue drone, rogue android), `crystalline` (crystal golem), `void` (void
+  crawler) and `stalkers` (lunar stalker). The pack's `scrapyard` quest counts kills on `mechanical`.
+
+### Changed
+
+- `nerocreatures:boss_pressure` crossings are now published with `nerocreatures` as the source mod id on
+  Core 1.15.0's sourced bus. Channel, scope (dimension id), value and threshold semantics are unchanged.
+- Neroland Core pin raised from 1.13.0 to 1.15.0; the manifests' version floor follows it.
+
 ## [0.2.1-alpha.1] - 2026-10-11
 
 Data-only release. No entity, item id, loot or config change.

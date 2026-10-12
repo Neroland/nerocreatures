@@ -1,0 +1,26 @@
+{
+  "title": "quest.nerocreatures.bestiary.new_friend.title",
+  "description": "quest.nerocreatures.bestiary.new_friend.desc",
+  "icon": "minecraft:bone",
+  "prerequisites": [
+    "nerocreatures:bestiary/crystal_clarity"
+  ],
+  "objectives": [
+    {
+      "type": "neroquests:gate_open",
+      "gate": "nerocreatures:first_tame"
+    }
+  ],
+  "rewards": [
+    {
+      "type": "neroquests:xp",
+      "amount": 80
+    },
+    {
+      "type": "neroquests:currency",
+      "amount": 60
+    }
+  ],
+  "scope": "player",
+  "visible_gate": "nerolandcore:reached_orbit"
+}

@@ -9,22 +9,26 @@
   companions and planet bosses; its drops are raw materials the rest of the ecosystem spends.
 - Mod id: **`nerocreatures`** (matches the registry namespace + every loader manifest). Package
   root: `za.co.neroland.nerocreatures`. Author: **Neroland**.
-- Version: **0.0.1-alpha.1**.
+- Version: **0.3.0-alpha.1**.
 - Targets **MC 26.1.2, 26.2 AND 26.3** on **NeoForge, MinecraftForge/Forge, and Fabric** → the **"9 cells"**.
   **Java 25.** Mappings = official Mojang names (26.x ships de-obfuscated; no Parchment).
 
 ## Dependencies
 
 - **Neroland Core is the ONLY hard dependency** (`nerolandcore_version` in `gradle.properties`,
-  currently `1.10.0`). Declared in all three manifests as required with `ordering = "AFTER"`, with
+  currently `1.15.0`). Declared in all three manifests as required with `ordering = "AFTER"`, with
   the version range floored at the compiled Core version.
 - **No other Nero mod may appear in any manifest.** Cross-mod integration is soft: tag entries use
   `"required": false` and runtime checks go through `isModLoaded(...)`. Everything must degrade
   gracefully when a sibling mod is absent.
 - What NeroCreatures consumes from Core: `RegistrationProvider`, `CoreCreativeTab`, the config
   framework (`ConfigSchema`/`ConfigManager`), `data.PlayerDataErasure`, `worldgen.SpaceTags`
-  (the `neroland:space/*` biome + dimension vocabulary) and `entity.EntityRegistrationSupport`
-  (cross-loader default attributes + spawn placements).
+  (the `neroland:space/*` biome + dimension vocabulary), `entity.EntityRegistrationSupport`
+  (cross-loader default attributes + spawn placements), `progression.ProgressionGates` (record gates)
+  and `event.ThresholdEvents` (the sourced `boss_pressure` channel).
+- **NeroQuests is never a dependency.** The quest chapter under
+  `data/nerocreatures/neroquests/` is inert data + lang keys; no class import, manifest entry or
+  `compileOnly` may ever reference it.
 
 ## Working rules
 
@@ -149,6 +153,11 @@
   no-op-defaulted). **No reflection into another mod, ever.** The boundary: NeroCreatures owns
   taming, ownership/caps, the command cycle, owner-only interaction, defending the owner and the
   species perk; everything deeper is NeroCompanion's. Documented in `wiki/Pets-and-Drones.md`.
+- `progression/CreatureMilestones` — the two player-scope Core **record** gates
+  (`nerocreatures:first_tame`, opened in `TameableCreature.tryTame`; `nerocreatures:first_deploy`,
+  opened in `TerraformingDrone.deployBy`), shipped as `data/nerocreatures/neroland_gates/*.json`.
+  They have no `requires` and are **never checked for access** — a quest pack reads them with
+  `gate_open`. The UUID goes only into `ProgressionGates.open`; never log it.
 - `spawn/` — `SpawnRule` (code-declared spawn table entries against Core's space tags, plus an
   optional cheap per-level `gate` used only by the boss rule — it is tested **before** the biome
   lookup, so a gate must stay cheap), `CreatureSpawns` (the server-tick placement sweep; it also

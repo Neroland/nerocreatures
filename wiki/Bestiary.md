@@ -365,6 +365,20 @@ Minecraft day.
 
 ---
 
+## Family tags
+
+Four entity-type tags group the roster into families, so a quest or another mod can say "any
+mechanical foe" without naming each creature:
+
+| Tag | Members |
+| --- | ------- |
+| `nerocreatures:mechanical` | Rogue Drone, Rogue Android |
+| `nerocreatures:crystalline` | Crystal Golem |
+| `nerocreatures:void` | Void Crawler |
+| `nerocreatures:stalkers` | Lunar Stalker |
+
+They are plain datapack tags (`data/nerocreatures/tags/entity_type/`), so a pack may add to them.
+
 ## Spawn eggs
 
 Each creature has a spawn egg in Core's shared creative tab, tagged into

@@ -43,6 +43,8 @@ drops are deliberately raw materials that other mods spend.
   practical terms.
 - [Telemetry](Telemetry.md) — opt-out crash reporting: what it sends, what it never sends, and how
   to switch it off.
+- [NeroQuests integration](NeroQuests-Integration.md) — the optional "Bestiary" quest chapter, the
+  two milestone gates and the family tags a quest can count on.
 
 ## Requirements
 

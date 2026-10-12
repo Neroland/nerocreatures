@@ -1,0 +1,27 @@
+{
+  "title": "quest.nerocreatures.bestiary.scrapyard.title",
+  "description": "quest.nerocreatures.bestiary.scrapyard.desc",
+  "icon": "nerocreatures:salvaged_circuitry",
+  "prerequisites": [
+    "nerocreatures:bestiary/shield_breaker"
+  ],
+  "objectives": [
+    {
+      "type": "neroquests:kill_entity",
+      "tag": "nerocreatures:mechanical",
+      "count": 10
+    }
+  ],
+  "rewards": [
+    {
+      "type": "neroquests:xp",
+      "amount": 120
+    },
+    {
+      "type": "neroquests:currency",
+      "amount": 120
+    }
+  ],
+  "scope": "player",
+  "visible_gate": "nerolandcore:reached_orbit"
+}

@@ -1,0 +1,41 @@
+{
+  "title": "quest.nerocreatures.bestiary.field_guide.title",
+  "description": "quest.nerocreatures.bestiary.field_guide.desc",
+  "icon": "minecraft:writable_book",
+  "prerequisites": [
+    "nerocreatures:bestiary/crystal_clarity",
+    "nerocreatures:bestiary/second_hands",
+    "nerocreatures:bestiary/boarding_party",
+    "nerocreatures:bestiary/ember_crown"
+  ],
+  "objectives": [
+    {
+      "type": "neroquests:quest_complete",
+      "quest": "nerocreatures:bestiary/crystal_clarity"
+    },
+    {
+      "type": "neroquests:quest_complete",
+      "quest": "nerocreatures:bestiary/second_hands"
+    },
+    {
+      "type": "neroquests:quest_complete",
+      "quest": "nerocreatures:bestiary/boarding_party"
+    },
+    {
+      "type": "neroquests:quest_complete",
+      "quest": "nerocreatures:bestiary/ember_crown"
+    }
+  ],
+  "rewards": [
+    {
+      "type": "neroquests:xp",
+      "amount": 200
+    },
+    {
+      "type": "neroquests:currency",
+      "amount": 250
+    }
+  ],
+  "scope": "player",
+  "visible_gate": "nerolandcore:reached_orbit"
+}

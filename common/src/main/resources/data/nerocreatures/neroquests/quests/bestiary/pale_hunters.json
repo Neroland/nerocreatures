@@ -1,0 +1,30 @@
+{
+  "title": "quest.nerocreatures.bestiary.pale_hunters.title",
+  "description": "quest.nerocreatures.bestiary.pale_hunters.desc",
+  "icon": "nerocreatures:stalker_sinew",
+  "prerequisites": [],
+  "objectives": [
+    {
+      "type": "neroquests:kill_entity",
+      "entity": "nerocreatures:lunar_stalker",
+      "count": 4
+    },
+    {
+      "type": "neroquests:collect_item",
+      "item": "nerocreatures:stalker_sinew",
+      "count": 2
+    }
+  ],
+  "rewards": [
+    {
+      "type": "neroquests:xp",
+      "amount": 40
+    },
+    {
+      "type": "neroquests:currency",
+      "amount": 25
+    }
+  ],
+  "scope": "player",
+  "visible_gate": "nerolandcore:reached_orbit"
+}

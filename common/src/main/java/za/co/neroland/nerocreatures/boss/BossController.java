@@ -443,11 +443,12 @@ public final class BossController {
     }
 
     /**
-     * Publishes one crossing. The scope is the dimension id — a place. Nothing player-shaped ever
-     * goes on this bus (POPIA/GDPR; Core's {@code ThresholdCrossing} contract).
+     * Publishes one crossing, with this mod id as the source (Core 1.15.0's sourced bus). The scope is
+     * the dimension id — a place. Nothing player-shaped ever goes on this bus (POPIA/GDPR; Core's
+     * {@code ThresholdCrossing} contract).
      */
     private void fire(ServerLevel level, long value, long threshold, boolean rising) {
-        ThresholdEvents.fire(new ThresholdEvents.ThresholdCrossing(
+        ThresholdEvents.fire(NeroCreaturesCommon.MOD_ID, new ThresholdEvents.ThresholdCrossing(
                 PRESSURE_CHANNEL, level.dimension().identifier().toString(), value, threshold, rising));
     }
 

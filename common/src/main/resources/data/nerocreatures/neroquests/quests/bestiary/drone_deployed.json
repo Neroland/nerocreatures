@@ -1,0 +1,27 @@
+{
+  "title": "quest.nerocreatures.bestiary.drone_deployed.title",
+  "description": "quest.nerocreatures.bestiary.drone_deployed.desc",
+  "icon": "minecraft:bone_meal",
+  "prerequisites": [
+    "nerocreatures:bestiary/second_hands"
+  ],
+  "objectives": [
+    {
+      "type": "neroquests:gate_open",
+      "gate": "nerocreatures:first_deploy"
+    }
+  ],
+  "rewards": [
+    {
+      "type": "neroquests:xp",
+      "amount": 100
+    },
+    {
+      "type": "neroquests:item",
+      "item": "minecraft:bone_meal",
+      "count": 16
+    }
+  ],
+  "scope": "player",
+  "visible_gate": "nerolandcore:reached_orbit"
+}

@@ -1,0 +1,30 @@
+{
+  "title": "quest.nerocreatures.bestiary.shield_breaker.title",
+  "description": "quest.nerocreatures.bestiary.shield_breaker.desc",
+  "icon": "nerocreatures:android_core",
+  "prerequisites": [
+    "nerocreatures:bestiary/scrap_rights"
+  ],
+  "objectives": [
+    {
+      "type": "neroquests:kill_entity",
+      "entity": "nerocreatures:rogue_android"
+    },
+    {
+      "type": "neroquests:collect_item",
+      "item": "nerocreatures:android_core"
+    }
+  ],
+  "rewards": [
+    {
+      "type": "neroquests:xp",
+      "amount": 100
+    },
+    {
+      "type": "neroquests:currency",
+      "amount": 100
+    }
+  ],
+  "scope": "player",
+  "visible_gate": "nerolandcore:reached_orbit"
+}

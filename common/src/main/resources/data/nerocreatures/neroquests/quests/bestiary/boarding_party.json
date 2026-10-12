@@ -1,0 +1,29 @@
+{
+  "title": "quest.nerocreatures.bestiary.boarding_party.title",
+  "description": "quest.nerocreatures.bestiary.boarding_party.desc",
+  "icon": "nerocreatures:contraband",
+  "prerequisites": [],
+  "objectives": [
+    {
+      "type": "neroquests:kill_entity",
+      "entity": "nerocreatures:space_pirate",
+      "count": 5
+    },
+    {
+      "type": "neroquests:collect_item",
+      "item": "nerocreatures:contraband"
+    }
+  ],
+  "rewards": [
+    {
+      "type": "neroquests:xp",
+      "amount": 80
+    },
+    {
+      "type": "neroquests:currency",
+      "amount": 75
+    }
+  ],
+  "scope": "player",
+  "visible_gate": "nerolandcore:reached_orbit"
+}

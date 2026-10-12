@@ -31,7 +31,10 @@ materials the rest of the ecosystem spends.
 
 ## Requirements
 
-- **Neroland Core 1.10.0+** — required, and the only hard dependency.
+- **Neroland Core 1.15.0+** — required, and the only hard dependency.
+- **NeroQuests** is optional. NeroCreatures ships a quest chapter, `nerocreatures:bestiary` "Bestiary",
+  inside its own jar; it appears in the quest book when NeroQuests is installed and is inert data
+  otherwise. There is no dependency in either direction.
 - Every other Nero mod is optional. With no planet mod installed, Core's `neroland:space/*` biome
   tags are empty, so NeroCreatures spawns nothing at all and vanilla Earth is left alone by design.
 

@@ -1,0 +1,28 @@
+{
+  "title": "quest.nerocreatures.bestiary.second_hands.title",
+  "description": "quest.nerocreatures.bestiary.second_hands.desc",
+  "icon": "nerocreatures:drone_shell",
+  "prerequisites": [
+    "nerocreatures:bestiary/shield_breaker",
+    "nerocreatures:bestiary/jelly_logic"
+  ],
+  "objectives": [
+    {
+      "type": "neroquests:craft_item",
+      "item": "nerocreatures:drone_shell"
+    }
+  ],
+  "rewards": [
+    {
+      "type": "neroquests:xp",
+      "amount": 120
+    },
+    {
+      "type": "neroquests:item",
+      "item": "minecraft:iron_ingot",
+      "count": 8
+    }
+  ],
+  "scope": "player",
+  "visible_gate": "nerolandcore:reached_orbit"
+}
