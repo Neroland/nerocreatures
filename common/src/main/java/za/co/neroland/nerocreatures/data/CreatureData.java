@@ -72,11 +72,17 @@ public final class CreatureData {
      * creature that was bound to them.
      */
     public static void erasePlayer(MinecraftServer server, UUID player) {
-        erasePlayer(server, player, CreatureOwnershipState.get(server));
+        CreatureOwnershipState ownership = CreatureOwnershipState.get(server);
+        erasePlayer(server, player, ownership);
         // The second player-keyed store: damage totals for in-progress summoned boss fights. It is
         // normally empty (a fight's row is deleted the moment the fight ends), but "normally" is not
         // a data-protection control, so erasure reaches it unconditionally.
-        BossContributionState.get(server).forgetPlayer(player);
+        BossContributionState contributions = BossContributionState.get(server);
+        contributions.forgetPlayer(player);
+        // Core's last-known-good backups are a second copy of the same rows: erasure must reach them
+        // in the same request, not at the next periodic backup pass (POPIA/GDPR).
+        ownership.backupNow(server);
+        contributions.backupNow(server);
     }
 
     /**

@@ -22,6 +22,12 @@ Minecraft game UUID:
   (player UUID, damage) pairs. Plus one "last updated" timestamp per player, used only for
   retention.
 
+Each store also has a **last-known-good backup** kept by Neroland Core's crash-recovery guard, in the
+same world save (`data/nerocreatures_ownership_backup.dat` and
+`data/nerocreatures_boss_contribution_backup.dat`). A backup holds exactly the same fields as its
+store — nothing more — and exists only so a corrupt file can be restored instead of lost. Erasure and
+retention reach it in the same request (see below).
+
 The dimension id in the ownership store is there for exactly one reason: so an erase request knows
 which level to look in instead of having to walk the whole save. **No coordinates and no position
 history are stored anywhere in this mod** — where your pets have been, and where you fought a boss,
@@ -73,7 +79,9 @@ For NeroCreatures the request does four things:
 3. sweeps every loaded level for any pet or drone still carrying that UUID and frees those too,
    so the erase is complete even if the index and the world had drifted apart;
 4. removes that UUID from every boss fight it appears in, and drops any fight it was the last
-   participant in.
+   participant in;
+5. refreshes both stores' last-known-good backups straight away, so the erased rows do not linger
+   in the backup copy. Retention purges do the same.
 
 Erasure never logs player identity — only a count of how many creatures were released.
 

@@ -1,11 +1,12 @@
 package za.co.neroland.nerocreatures.registry;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.level.ItemLike;
 
-import za.co.neroland.nerolandcore.registry.CoreCreativeTab;
 import za.co.neroland.nerolandcore.registry.RegistrationProvider;
 import za.co.neroland.nerolandcore.registry.RegistrationProvider.RegistryEntry;
 
@@ -102,7 +103,7 @@ public final class ModItems {
             VOID_ESSENCE, STALKER_HIDE, STALKER_SINEW, REFINED_CRYSTAL, WORM_CHITIN,
             ORE_SLURRY, PLASMA_CELL, CONTRABAND, SALVAGED_CIRCUITRY, ANDROID_CORE, APEX_TROPHY);
 
-    /** Crafted deployables — contributed to the creative tab after the drops. */
+    /** Crafted deployables — shown in the creative tab after the drops. */
     private static final List<RegistryEntry<Item>> DEPLOYABLES = List.of(DRONE_SHELL);
 
     private ModItems() {
@@ -113,16 +114,17 @@ public final class ModItems {
     }
 
     /**
-     * Contributes the drops to Core's shared creative tab. NeroCreatures adds no tab of its own —
-     * the whole ecosystem shares Core's. The suppliers are lazy on purpose: on the deferred loaders
-     * the items do not exist yet when this runs.
+     * The drops, then the deployables, for {@link ModCreativeTab}. Called only when the tab is built,
+     * by which point the items exist on every loader.
      */
-    public static void addToCreativeTab() {
+    public static List<ItemLike> creativeContents() {
+        List<ItemLike> contents = new ArrayList<>();
         for (RegistryEntry<Item> drop : DROPS) {
-            CoreCreativeTab.add(drop::get);
+            contents.add(drop.get());
         }
         for (RegistryEntry<Item> deployable : DEPLOYABLES) {
-            CoreCreativeTab.add(deployable::get);
+            contents.add(deployable.get());
         }
+        return contents;
     }
 }

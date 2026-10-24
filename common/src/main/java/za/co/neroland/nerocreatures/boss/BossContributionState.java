@@ -17,9 +17,10 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.level.saveddata.SavedData;
 import net.minecraft.world.level.saveddata.SavedDataType;
 
+import za.co.neroland.nerolandcore.data.SavedDataRecovery;
+
 import za.co.neroland.nerocreatures.NeroCreaturesCommon;
 import za.co.neroland.nerocreatures.data.CreatureData;
-import za.co.neroland.nerocreatures.data.SavedDataRecovery;
 
 /**
  * Damage totals for <b>summoned</b> boss fights: {@code fight id → (player UUID → damage dealt)},
@@ -45,9 +46,9 @@ import za.co.neroland.nerocreatures.data.SavedDataRecovery;
  *
  * <p>Persisted as vanilla {@link SavedData} on the overworld through the same
  * {@link SavedDataType} + Codec pattern as {@code data/CreatureOwnershipState}, and reached only
- * through {@link SavedDataRecovery}, so a corrupt file degrades to an empty store rather than
- * crashing the server mid-fight (the cost of that degradation is one fight's rewards, which is the
- * right trade).
+ * through Neroland Core's {@link SavedDataRecovery}, so a corrupt file degrades to Core's
+ * last-known-good backup (or an empty store) rather than crashing the server mid-fight (the cost of
+ * that degradation is at most one fight's rewards, which is the right trade).
  *
  * <p><b>Threading:</b> server thread only. Nothing here is synchronised.
  *
@@ -55,7 +56,8 @@ import za.co.neroland.nerocreatures.data.SavedDataRecovery;
  * <ul>
  *   <li><b>Erasure</b> — {@link #forgetPlayer(UUID)} removes a UUID from every fight it appears in
  *       and from the retention stamps. It is reached from Core's shared {@code PlayerDataErasure}
- *       hook via {@code data/CreatureData}. Nothing on that path logs who was erased.</li>
+ *       hook via {@code data/CreatureData}, which then calls {@link #backupNow} so the purge also
+ *       reaches Core's backup copy. Nothing on that path logs who was erased.</li>
  *   <li><b>Retention</b> — {@link #stalerThan(int)} against Core's {@code dataRetentionDays}, swept
  *       lazily on the first access per server session, plus the unconditional stale-fight prune.</li>
  *   <li><b>Access</b> — {@link #exportPlayer} returns exactly one player's own contribution and
@@ -124,8 +126,20 @@ public final class BossContributionState extends SavedData {
             prunedFor = server; // set first: pruning must never re-enter this sweep
             state.pruneStaleFights();
             CreatureData.applyContributionRetention(state);
+            // The sweep purged rows after Core's get() refreshed the backup; push the purge into it.
+            state.backupNow(server);
         }
         return state;
+    }
+
+    /**
+     * Refreshes Core's last-known-good backup of this store now (hash-compared, so unchanged state
+     * writes nothing). The backup is a second copy of the same player-keyed rows, so every erasure
+     * and retention purge calls this straight after (POPIA/GDPR; Core's {@code SavedDataRecovery}
+     * contract).
+     */
+    public void backupNow(MinecraftServer server) {
+        SavedDataRecovery.backupNow(server.overworld(), TYPE, this, NAME, server.registryAccess());
     }
 
     // --- recording ----------------------------------------------------------

@@ -9,7 +9,7 @@
   companions and planet bosses; its drops are raw materials the rest of the ecosystem spends.
 - Mod id: **`nerocreatures`** (matches the registry namespace + every loader manifest). Package
   root: `za.co.neroland.nerocreatures`. Author: **Neroland**.
-- Version: **0.3.0-alpha.1**.
+- Version: **0.3.1-alpha.1**.
 - Targets **MC 26.1.2, 26.2 AND 26.3** on **NeoForge, MinecraftForge/Forge, and Fabric** → the **"9 cells"**.
   **Java 25.** Mappings = official Mojang names (26.x ships de-obfuscated; no Parchment).
 
@@ -21,7 +21,7 @@
 - **No other Nero mod may appear in any manifest.** Cross-mod integration is soft: tag entries use
   `"required": false` and runtime checks go through `isModLoaded(...)`. Everything must degrade
   gracefully when a sibling mod is absent.
-- What NeroCreatures consumes from Core: `RegistrationProvider`, `CoreCreativeTab`, the config
+- What NeroCreatures consumes from Core: `RegistrationProvider`, the config
   framework (`ConfigSchema`/`ConfigManager`), `data.PlayerDataErasure`, `worldgen.SpaceTags`
   (the `neroland:space/*` biome + dimension vocabulary), `entity.EntityRegistrationSupport`
   (cross-loader default attributes + spawn placements), `progression.ProgressionGates` (record gates)
@@ -80,8 +80,10 @@
   clear the player out of every live boss fight. `CreatureOwnershipState` is the codec-based
   `SavedData` index (`nerocreatures:ownership`) — `OwnedCreature` rows carry entity UUID + kind +
   type id + dimension id and a per-player `updated_at`, and **never coordinates**.
-  `SavedDataRecovery` is the ported Nerospace guard: **every** `SavedData` accessor in this mod goes
-  through it, never `getDataStorage().computeIfAbsent` directly. Retention honours Core's
+  Neroland Core's `data.SavedDataRecovery` (Core 1.15.0+) is the guard: **every** `SavedData` accessor
+  in this mod goes through it, never `getDataStorage().computeIfAbsent` directly. Its last-known-good
+  backup is a second copy of the same rows, so every erasure and retention purge calls the store's
+  `backupNow(server)` straight after. Retention honours Core's
   `dataRetentionDays`. Nothing on any of these paths may log a player UUID. **There are exactly two
   player-keyed stores** — this one and `boss/BossContributionState`; adding a third means wiring it
   into `CreatureData` and declaring it in `PRIVACY.md` in the same change.
@@ -199,7 +201,8 @@
   player-keyed record to erase, retain and declare.
 - `registry/ModItems` — the eleven creature drops (ten roster drops plus the boss `apex_trophy`)
   plus the crafted `drone_shell` deployable (kept out of the drops list and tagged as a tool, not a
-  material), registered through Core's seam and contributed to Core's shared creative tab. Three
+  material), registered through Core's seam and shown in NeroCreatures' own creative tab
+  (`registry/ModCreativeTab`). Three
   things add **bonus rolls** in code on top of a loot table (golem pickaxe kill, android salvage,
   and a summoned boss's contribution split); those are the only things `dropRateMultiplier` scales,
   and `wiki/Drop-Map.md` is where that contract is written down.
@@ -321,7 +324,8 @@
 - Add loader-specific code to `common/` — use the platform seams.
 - Add any Nero mod other than `nerolandcore` to a manifest.
 - Assume a Core space tag has members — an empty tag means "no spawns", and must never crash.
-- Reach a `SavedData` any way except through `data/SavedDataRecovery`.
+- Reach a `SavedData` any way except through Core's `data.SavedDataRecovery`, or purge a player from
+  one without calling its `backupNow(server)` afterwards.
 - Log a player UUID (or anything else identifying) on an erasure, retention or export path.
 - Put anything player-shaped into a `ThresholdEvents` scope — Core's contract says a scope is a
   place or a system, and `nerocreatures:boss_pressure` publishes a dimension id and nothing else.

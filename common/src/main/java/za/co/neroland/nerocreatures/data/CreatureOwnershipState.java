@@ -16,6 +16,8 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.level.saveddata.SavedData;
 import net.minecraft.world.level.saveddata.SavedDataType;
 
+import za.co.neroland.nerolandcore.data.SavedDataRecovery;
+
 import za.co.neroland.nerocreatures.NeroCreaturesCommon;
 
 /**
@@ -37,8 +39,8 @@ import za.co.neroland.nerocreatures.NeroCreaturesCommon;
  *
  * <p>Persisted as vanilla {@link SavedData} on the overworld (so it is always loaded) through the
  * same {@link SavedDataType} + Codec pattern Neroland Core uses for its own state. Every accessor
- * goes through {@link SavedDataRecovery}, so a corrupt file degrades to an empty index instead of
- * crashing the server.
+ * goes through Neroland Core's {@link SavedDataRecovery}, so a corrupt file degrades to Core's
+ * last-known-good backup (or an empty index) instead of crashing the server.
  *
  * <p><b>Threading:</b> server thread only — interactions, the deploy item, commands and the erasure
  * hook all run there. Nothing here is synchronised.
@@ -49,8 +51,9 @@ import za.co.neroland.nerocreatures.NeroCreaturesCommon;
  * <ul>
  *   <li><b>Erasure</b> — {@link #forgetPlayer(UUID)} purges a UUID completely and hands back what it
  *       removed so {@link CreatureData} can free the creatures themselves. It is wired into Core's
- *       shared {@code PlayerDataErasure} hook from {@link CreatureData#init()}. Erasure never logs
- *       player identity.</li>
+ *       shared {@code PlayerDataErasure} hook from {@link CreatureData#init()}, which then calls
+ *       {@link #backupNow} so the purge also reaches Core's backup copy. Erasure never logs player
+ *       identity.</li>
  *   <li><b>Retention</b> — when Core's {@code dataRetentionDays} is above zero, rows whose stamp is
  *       older than that are pruned on the first access per server session; only the number pruned is
  *       logged.</li>
@@ -106,8 +109,20 @@ public final class CreatureOwnershipState extends SavedData {
         if (prunedFor != server) {
             prunedFor = server; // set first: pruning must never re-enter this sweep
             CreatureData.applyRetention(server, state);
+            // The sweep purged rows after Core's get() refreshed the backup; push the purge into it.
+            state.backupNow(server);
         }
         return state;
+    }
+
+    /**
+     * Refreshes Core's last-known-good backup of this store now (hash-compared, so unchanged state
+     * writes nothing). The backup is a second copy of the same player-keyed rows, so every erasure
+     * and retention purge calls this straight after (POPIA/GDPR; Core's {@code SavedDataRecovery}
+     * contract).
+     */
+    public void backupNow(MinecraftServer server) {
+        SavedDataRecovery.backupNow(server.overworld(), TYPE, this, NAME, server.registryAccess());
     }
 
     // --- queries ------------------------------------------------------------

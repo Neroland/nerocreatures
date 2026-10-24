@@ -9,6 +9,7 @@ import za.co.neroland.nerocreatures.config.NeroCreaturesConfig;
 import za.co.neroland.nerocreatures.data.CreatureData;
 import za.co.neroland.nerocreatures.link.CreatureLinkModule;
 import za.co.neroland.nerocreatures.network.CreatureNetwork;
+import za.co.neroland.nerocreatures.registry.ModCreativeTab;
 import za.co.neroland.nerocreatures.registry.ModEntities;
 import za.co.neroland.nerocreatures.registry.ModItems;
 import za.co.neroland.nerocreatures.registry.ModSpawnEggs;
@@ -48,11 +49,8 @@ public final class NeroCreaturesCommon {
         ModEntities.init();
         ModItems.init();
         ModSpawnEggs.init();
-        // 4. The drops and eggs join Neroland Core's shared creative tab — no NeroCreatures tab of
-        //    its own. Core's tab reads its contents lazily when displayed, so contributing after
-        //    Core has already built the tab is fine.
-        ModItems.addToCreativeTab();
-        ModSpawnEggs.addToCreativeTab();
+        // 4. NeroCreatures' own creative tab (drops, deployables, eggs), after the items it lists.
+        ModCreativeTab.init();
         // 5. Default attributes and spawn placements, through Core's entity seam. After the types
         //    exist, because Fabric applies these the moment they are declared.
         ModEntities.registerEntitySupport();

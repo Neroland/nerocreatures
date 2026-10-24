@@ -381,7 +381,7 @@ They are plain datapack tags (`data/nerocreatures/tags/entity_type/`), so a pack
 
 ## Spawn eggs
 
-Each creature has a spawn egg in Core's shared creative tab, tagged into
+Each creature has a spawn egg in the NeroCreatures creative tab, tagged into
 `neroland:highlight/tools` so it takes the tool highlight rather than the material one. The eggs
 resolve their creature lazily, so they work identically on Fabric, Forge and NeoForge, and they
 ignore biome and light rules — an egg places the creature wherever you click.

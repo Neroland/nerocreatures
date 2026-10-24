@@ -115,11 +115,16 @@ The same data is readable through a companion app, scoped to the asking player a
 
 ## Resilience: `SavedDataRecovery`
 
-Every saved-data read in this mod goes through a recovery guard (ported from Nerospace by way of
-NeroQuests): a corrupt or unreadable file degrades to an **empty store** and a clean file at the next
-save, instead of crashing the server repeatedly on every load.
+Every saved-data read in this mod goes through Neroland Core's shared recovery guard (Core 1.15.0+):
+a corrupt or unreadable file is restored from Core's **last-known-good backup**
+(`data/nerocreatures_ownership_backup.dat` and `data/nerocreatures_boss_contribution_backup.dat` in the
+overworld folder), or degrades to an **empty store** if there is no usable backup, and a clean file is
+written at the next save — instead of crashing the server repeatedly on every load.
 
-The cost of that degradation is bounded and deliberate — an unreadable ownership index means pets
+The backups hold exactly the same fields as the stores themselves, so erasure and retention purges
+refresh them in the same request.
+
+The cost of the no-backup case is bounded and deliberate — an unreadable ownership index means pets
 have to be re-registered by interacting with them; an unreadable contribution store means one
 fight's bonus rewards. Both are better than an unstartable world.
 

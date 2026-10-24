@@ -49,7 +49,7 @@ drops are deliberately raw materials that other mods spend.
 ## Requirements
 
 - **Neroland Core** — required, and the only hard dependency. NeroCreatures uses Core's
-  registration seam, config framework, shared creative tab, data-erasure hook, space biome tags,
+  registration seam, config framework, data-erasure hook, space biome tags,
   entity registration seam and link API.
 - Every other Nero mod is **optional**. NeroCreatures degrades gracefully without them: with no
   planet mod installed, Core's space biome tags are empty and nothing spawns — vanilla Earth is

@@ -1,5 +1,6 @@
 package za.co.neroland.nerocreatures.registry;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
 
@@ -7,8 +8,8 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.level.ItemLike;
 
-import za.co.neroland.nerolandcore.registry.CoreCreativeTab;
 import za.co.neroland.nerolandcore.registry.RegistrationProvider;
 import za.co.neroland.nerolandcore.registry.RegistrationProvider.RegistryEntry;
 
@@ -99,10 +100,12 @@ public final class ModSpawnEggs {
     public static void init() {
     }
 
-    /** Contributes the eggs to Core's shared creative tab, after the drops. */
-    public static void addToCreativeTab() {
+    /** The spawn eggs, for {@link ModCreativeTab} (shown after the drops). Called when the tab is built. */
+    public static List<ItemLike> creativeContents() {
+        List<ItemLike> contents = new ArrayList<>();
         for (RegistryEntry<Item> egg : EGGS) {
-            CoreCreativeTab.add(egg::get);
+            contents.add(egg.get());
         }
+        return contents;
     }
 }
