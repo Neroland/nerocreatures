@@ -15,7 +15,9 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
+//? if >=1.21.5 {
 import net.minecraft.world.entity.EntityReference;
+//?}
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.OwnableEntity;
@@ -115,8 +117,15 @@ public class TerraformingDrone extends NeroCreatureEntity implements OwnableEnti
     @Nullable
     private BlockPos workAnchor;
 
+    //? if >=1.21.5 {
     @Nullable
     private EntityReference<LivingEntity> owner;
+    //?} else {
+    /*// Before 1.21.5 there is no EntityReference; the owner is its plain UUID (same "Owner" save key and
+    // int-array form, so a world upgraded to a newer line keeps its drones bound).
+    @Nullable
+    private UUID owner;
+    *///?}
 
     private int dutyTicks;
 
@@ -157,22 +166,40 @@ public class TerraformingDrone extends NeroCreatureEntity implements OwnableEnti
      */
     public void deployBy(Player player, BlockPos anchor) {
         // Explicit witness: the field is an owner reference to a LivingEntity, not to a Player.
+        //? if >=1.21.9 {
         this.owner = EntityReference.<LivingEntity>of(player);
+        //?} else if >=1.21.5 {
+        /*this.owner = new EntityReference<LivingEntity>(player);
+        *///?} else {
+        /*this.owner = player.getUUID();
+        *///?}
         this.workAnchor = anchor.immutable();
         this.setPersistenceRequired();
         CreatureMilestones.record(player, CreatureMilestones.FIRST_DEPLOY); // record gate, never a lock
     }
 
+    //? if >=1.21.5 {
     @Override
     @Nullable
     public EntityReference<LivingEntity> getOwnerReference() {
         return this.owner;
     }
+    //?} else {
+    /*@Override
+    @Nullable
+    public UUID getOwnerUUID() {
+        return this.owner;
+    }
+    *///?}
 
     /** The owner's game UUID, or {@code null} for an unbound drone. Never logged. */
     @Nullable
     public UUID ownerId() {
+        //? if >=1.21.5 {
         return this.owner == null ? null : this.owner.getUUID();
+        //?} else {
+        /*return this.owner;
+        *///?}
     }
 
     /** Whether this player deployed this drone. */
@@ -236,9 +263,17 @@ public class TerraformingDrone extends NeroCreatureEntity implements OwnableEnti
 
     // --- the duty cycle -----------------------------------------------------
 
+    //? if >=1.21.2 {
     @Override
     protected void customServerAiStep(ServerLevel level) {
         super.customServerAiStep(level);
+    //?} else {
+    /*@Override
+    protected void customServerAiStep() {
+        super.customServerAiStep();
+        // Server-side only, so the level is always a ServerLevel here.
+        ServerLevel level = (ServerLevel) this.level();
+    *///?}
         if (this.workAnchor == null || --this.dutyTicks > 0) {
             return;
         }
@@ -328,11 +363,24 @@ public class TerraformingDrone extends NeroCreatureEntity implements OwnableEnti
 
     // --- persistence --------------------------------------------------------
 
+    //? if >=1.21.6 {
     @Override
     protected void addAdditionalSaveData(ValueOutput output) {
         super.addAdditionalSaveData(output);
+    //?} else {
+    /*@Override
+    public void addAdditionalSaveData(net.minecraft.nbt.CompoundTag nbt) {
+        super.addAdditionalSaveData(nbt);
+        ValueOutput output = ValueOutput.of(nbt, this.registryAccess());
+    *///?}
         if (this.owner != null) {
+            //? if >=1.21.6 {
             this.owner.store(output, "Owner");
+            //?} else if >=1.21.5 {
+            /*this.owner.store(output.tag(), "Owner");
+            *///?} else {
+            /*output.store("Owner", net.minecraft.core.UUIDUtil.CODEC, this.owner);
+            *///?}
         }
         if (this.workAnchor != null) {
             output.putInt("AnchorX", this.workAnchor.getX());
@@ -341,11 +389,26 @@ public class TerraformingDrone extends NeroCreatureEntity implements OwnableEnti
         }
     }
 
+    //? if >=1.21.6 {
     @Override
     protected void readAdditionalSaveData(ValueInput input) {
         super.readAdditionalSaveData(input);
+    //?} else {
+    /*@Override
+    public void readAdditionalSaveData(net.minecraft.nbt.CompoundTag nbt) {
+        super.readAdditionalSaveData(nbt);
+        ValueInput input = ValueInput.of(nbt, this.registryAccess());
+    *///?}
+        //? if >=1.21.6 {
         this.owner = EntityReference.read(input, "Owner");
         if (input.getInt("AnchorX").isPresent()) {
+        //?} else if >=1.21.5 {
+        /*this.owner = EntityReference.read(input.tag(), "Owner");
+        if (input.tag().contains("AnchorX")) {
+        *///?} else {
+        /*this.owner = input.read("Owner", net.minecraft.core.UUIDUtil.CODEC).orElse(null);
+        if (input.tag().contains("AnchorX")) {
+        *///?}
             this.workAnchor = new BlockPos(input.getIntOr("AnchorX", 0), input.getIntOr("AnchorY", 0),
                     input.getIntOr("AnchorZ", 0));
         }
@@ -361,11 +424,11 @@ public class TerraformingDrone extends NeroCreatureEntity implements OwnableEnti
 
     @Override
     protected SoundEvent getHurtSound(DamageSource damageSource) {
-        return SoundEvents.COPPER_GOLEM_HURT;
+        return MechanicalSounds.hurt();
     }
 
     @Override
     protected SoundEvent getDeathSound() {
-        return SoundEvents.COPPER_GOLEM_DEATH;
+        return MechanicalSounds.death();
     }
 }

@@ -29,7 +29,12 @@ public final class NeroCreaturesNeoForge {
         NeoForgeCreatureNetwork.register(modEventBus);
         NeoForgeCreatureEvents.register();
         // Client-only: renderers. Gated so the client classes never load on a dedicated server.
-        if (FMLEnvironment.getDist() == Dist.CLIENT) {
+        //? if >=1.21.9 {
+        boolean client = FMLEnvironment.getDist() == Dist.CLIENT;
+        //?} else {
+        /*boolean client = FMLEnvironment.dist == Dist.CLIENT;
+        *///?}
+        if (client) {
             NeoForgeClientSetup.init(modEventBus);
         }
     }

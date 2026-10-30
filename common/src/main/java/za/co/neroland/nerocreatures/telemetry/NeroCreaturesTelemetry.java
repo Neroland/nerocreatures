@@ -161,7 +161,7 @@ public final class NeroCreaturesTelemetry {
             // Performance: sample a small fraction of traced operations (spawn sweep, boss phase).
             // Timing data only — no personal data in a transaction.
             options.setTracesSampleRate(0.05D);
-            options.setBeforeSend((event, hint) -> filterAndScrub(event));
+            options.setBeforeSend((event, hint) -> ForeignMixinFailure.matches(event) ? null : filterAndScrub(event));
         });
         Sentry.configureScope(scope -> {
             scope.setTag("loader", Services.PLATFORM.getPlatformName().toLowerCase(Locale.ROOT));

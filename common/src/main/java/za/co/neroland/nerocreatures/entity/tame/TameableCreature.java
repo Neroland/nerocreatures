@@ -11,7 +11,9 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.AgeableMob;
+//? if >=1.21.5 {
 import net.minecraft.world.entity.EntityReference;
+//?}
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.TamableAnimal;
@@ -170,8 +172,12 @@ public abstract class TameableCreature extends TamableAnimal {
     /** The owner's game UUID, or {@code null} if this pet is wild. Never logged. */
     @Nullable
     public UUID ownerId() {
+        //? if >=1.21.5 {
         EntityReference<LivingEntity> reference = this.getOwnerReference();
         return reference == null ? null : reference.getUUID();
+        //?} else {
+        /*return this.getOwnerUUID();
+        *///?}
     }
 
     /** The pet's current standing order. */
@@ -208,7 +214,11 @@ public abstract class TameableCreature extends TamableAnimal {
         UUID formerOwner = this.ownerId();
         this.setCommand(PetCommand.FOLLOW);
         this.setTame(false, false);
+        //? if >=1.21.5 {
         this.setOwnerReference(null);
+        //?} else {
+        /*this.setOwnerUUID(null);
+        *///?}
         CompanionBridge.hooks().onPetReleased(this);
         if (this.level() instanceof ServerLevel level) {
             CreatureLinkEvents.petStateChanged(level, formerOwner, this, OwnedCreature.Kind.PET,
@@ -316,9 +326,17 @@ public abstract class TameableCreature extends TamableAnimal {
      * squared distance every {@value #PERK_INTERVAL_TICKS} ticks, and nothing at all while the pet
      * is wild or a companion mod is driving it.
      */
+    //? if >=1.21.2 {
     @Override
     protected void customServerAiStep(ServerLevel level) {
         super.customServerAiStep(level);
+    //?} else {
+    /*@Override
+    protected void customServerAiStep() {
+        super.customServerAiStep();
+        // Server-side only, so the level is always a ServerLevel here.
+        ServerLevel level = (ServerLevel) this.level();
+    *///?}
         if (!this.isTame() || --this.perkCooldown > 0) {
             return;
         }
@@ -378,15 +396,29 @@ public abstract class TameableCreature extends TamableAnimal {
 
     // --- persistence --------------------------------------------------------
 
+    //? if >=1.21.6 {
     @Override
     protected void addAdditionalSaveData(ValueOutput output) {
         super.addAdditionalSaveData(output);
+    //?} else {
+    /*@Override
+    public void addAdditionalSaveData(net.minecraft.nbt.CompoundTag nbt) {
+        super.addAdditionalSaveData(nbt);
+        ValueOutput output = ValueOutput.of(nbt, this.registryAccess());
+    *///?}
         output.putString("Command", this.command.key());
     }
 
+    //? if >=1.21.6 {
     @Override
     protected void readAdditionalSaveData(ValueInput input) {
         super.readAdditionalSaveData(input);
+    //?} else {
+    /*@Override
+    public void readAdditionalSaveData(net.minecraft.nbt.CompoundTag nbt) {
+        super.readAdditionalSaveData(nbt);
+        ValueInput input = ValueInput.of(nbt, this.registryAccess());
+    *///?}
         // setCommand rather than a bare assignment: it also restores the sitting flags the client
         // renders, and re-anchors a guarding pet where it woke up.
         this.setCommand(PetCommand.fromKey(input.getStringOr("Command", PetCommand.FOLLOW.key())));

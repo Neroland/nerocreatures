@@ -134,8 +134,17 @@ public class AsteroidWorm extends NeroCreatureEntity implements Enemy, Burrower 
      * protected from ({@code /kill}, the void). Without that exception a burrowed worm in an
      * unloadable spot would be genuinely unkillable.
      */
+    //? if >=1.21.2 {
     @Override
     public boolean hurtServer(ServerLevel level, DamageSource source, float amount) {
+    //?} else {
+    /*// Before 1.21.2 damage arrives through hurt(..) on both sides; the client half is left to vanilla.
+    @Override
+    public boolean hurt(DamageSource source, float amount) {
+        if (!(this.level() instanceof ServerLevel level)) {
+            return super.hurt(source, amount);
+        }
+    *///?}
         if (this.isBurrowed() && !source.is(DamageTypeTags.BYPASSES_INVULNERABILITY)) {
             return false;
         }
@@ -165,15 +174,29 @@ public class AsteroidWorm extends NeroCreatureEntity implements Enemy, Burrower 
 
     // --- Persistence --------------------------------------------------------
 
+    //? if >=1.21.6 {
     @Override
     protected void addAdditionalSaveData(ValueOutput output) {
         super.addAdditionalSaveData(output);
+    //?} else {
+    /*@Override
+    public void addAdditionalSaveData(net.minecraft.nbt.CompoundTag nbt) {
+        super.addAdditionalSaveData(nbt);
+        ValueOutput output = ValueOutput.of(nbt, this.registryAccess());
+    *///?}
         output.putBoolean("Burrowed", this.isBurrowed());
     }
 
+    //? if >=1.21.6 {
     @Override
     protected void readAdditionalSaveData(ValueInput input) {
         super.readAdditionalSaveData(input);
+    //?} else {
+    /*@Override
+    public void readAdditionalSaveData(net.minecraft.nbt.CompoundTag nbt) {
+        super.readAdditionalSaveData(nbt);
+        ValueInput input = ValueInput.of(nbt, this.registryAccess());
+    *///?}
         this.setBurrowed(input.getBooleanOr("Burrowed", false));
     }
 

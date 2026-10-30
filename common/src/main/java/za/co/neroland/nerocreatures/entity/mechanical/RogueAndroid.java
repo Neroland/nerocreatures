@@ -132,8 +132,17 @@ public class RogueAndroid extends AbstractAndroid {
         return this.staggerTicks > 0;
     }
 
+    //? if >=1.21.2 {
     @Override
     public boolean hurtServer(ServerLevel level, DamageSource source, float amount) {
+    //?} else {
+    /*// Before 1.21.2 damage arrives through hurt(..) on both sides; the client half is left to vanilla.
+    @Override
+    public boolean hurt(DamageSource source, float amount) {
+        if (!(this.level() instanceof ServerLevel level)) {
+            return super.hurt(source, amount);
+        }
+    *///?}
         if (source.is(DamageTypeTags.BYPASSES_INVULNERABILITY)) {
             return super.hurtServer(level, source, amount);
         }
@@ -172,16 +181,24 @@ public class RogueAndroid extends AbstractAndroid {
      * window is open one multiply on the existing movement vector — no navigation calls, no
      * attribute modifiers to add and remove.
      */
+    //? if >=1.21.2 {
     @Override
     protected void customServerAiStep(ServerLevel level) {
         super.customServerAiStep(level);
+    //?} else {
+    /*@Override
+    protected void customServerAiStep() {
+        super.customServerAiStep();
+        // Server-side only, so the level is always a ServerLevel here.
+        ServerLevel level = (ServerLevel) this.level();
+    *///?}
         if (this.staggerTicks <= 0) {
             return;
         }
         this.setDeltaMovement(this.getDeltaMovement().multiply(STAGGER_DRAG, 1.0D, STAGGER_DRAG));
         if (--this.staggerTicks == 0) {
             this.shieldCharges = SHIELD_CHARGES;
-            this.playSound(SoundEvents.COPPER_GOLEM_SPIN, 0.6F, 1.2F);
+            this.playSound(MechanicalSounds.spin(), 0.6F, 1.2F);
         }
     }
 
@@ -205,16 +222,30 @@ public class RogueAndroid extends AbstractAndroid {
 
     // --- Persistence --------------------------------------------------------
 
+    //? if >=1.21.6 {
     @Override
     protected void addAdditionalSaveData(ValueOutput output) {
         super.addAdditionalSaveData(output);
+    //?} else {
+    /*@Override
+    public void addAdditionalSaveData(net.minecraft.nbt.CompoundTag nbt) {
+        super.addAdditionalSaveData(nbt);
+        ValueOutput output = ValueOutput.of(nbt, this.registryAccess());
+    *///?}
         output.putInt("ShieldCharges", this.shieldCharges);
         output.putInt("StaggerTicks", this.staggerTicks);
     }
 
+    //? if >=1.21.6 {
     @Override
     protected void readAdditionalSaveData(ValueInput input) {
         super.readAdditionalSaveData(input);
+    //?} else {
+    /*@Override
+    public void readAdditionalSaveData(net.minecraft.nbt.CompoundTag nbt) {
+        super.readAdditionalSaveData(nbt);
+        ValueInput input = ValueInput.of(nbt, this.registryAccess());
+    *///?}
         this.shieldCharges = Math.clamp(input.getIntOr("ShieldCharges", SHIELD_CHARGES),
                 0, SHIELD_CHARGES);
         this.staggerTicks = Math.clamp(input.getIntOr("StaggerTicks", 0), 0, STAGGER_TICKS);
@@ -224,6 +255,6 @@ public class RogueAndroid extends AbstractAndroid {
 
     @Override
     protected SoundEvent getAmbientSound() {
-        return SoundEvents.COPPER_GOLEM_STEP;
+        return MechanicalSounds.step();
     }
 }

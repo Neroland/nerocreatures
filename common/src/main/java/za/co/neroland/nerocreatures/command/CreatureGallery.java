@@ -164,7 +164,11 @@ public final class CreatureGallery {
         if (player == null) {
             return 0;
         }
+        //? if >=1.21.6 {
         ServerLevel level = player.level();
+        //?} else {
+        /*ServerLevel level = player.serverLevel();
+        *///?}
         BlockPos origin = player.blockPosition();
         int ox = origin.getX();
         int oz = origin.getZ();
@@ -405,7 +409,11 @@ public final class CreatureGallery {
         if (player == null) {
             return 0;
         }
+        //? if >=1.21.6 {
         ServerLevel level = player.level();
+        //?} else {
+        /*ServerLevel level = player.serverLevel();
+        *///?}
         BlockPos origin = player.blockPosition();
         int minX = origin.getX() + CLEAR_MIN_X;
         int maxX = origin.getX() + CLEAR_MAX_X;

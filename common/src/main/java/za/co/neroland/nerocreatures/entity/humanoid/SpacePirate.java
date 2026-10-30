@@ -177,15 +177,29 @@ public class SpacePirate extends NeroCreatureEntity implements Enemy, RangedAtta
 
     // --- Persistence --------------------------------------------------------
 
+    //? if >=1.21.6 {
     @Override
     protected void addAdditionalSaveData(ValueOutput output) {
         super.addAdditionalSaveData(output);
+    //?} else {
+    /*@Override
+    public void addAdditionalSaveData(net.minecraft.nbt.CompoundTag nbt) {
+        super.addAdditionalSaveData(nbt);
+        ValueOutput output = ValueOutput.of(nbt, this.registryAccess());
+    *///?}
         output.putString("Loadout", this.loadout.name());
     }
 
+    //? if >=1.21.6 {
     @Override
     protected void readAdditionalSaveData(ValueInput input) {
         super.readAdditionalSaveData(input);
+    //?} else {
+    /*@Override
+    public void readAdditionalSaveData(net.minecraft.nbt.CompoundTag nbt) {
+        super.readAdditionalSaveData(nbt);
+        ValueInput input = ValueInput.of(nbt, this.registryAccess());
+    *///?}
         // Only the kit identity is restored; the equipment itself is ordinary mob equipment and is
         // already saved by vanilla, so re-applying it here would overwrite battle damage.
         this.loadout = PirateLoadout.byName(input.getStringOr("Loadout", PirateLoadout.RECRUIT_BLADE.name()));
@@ -257,7 +271,11 @@ public class SpacePirate extends NeroCreatureEntity implements Enemy, RangedAtta
         RaidTargetGoal(SpacePirate pirate) {
             super(pirate, Mob.class, 10, true, false,
                     // Via the type's registry holder: EntityType itself carries no tag test in 26.x.
+                    //? if >=1.21.2 {
                     (candidate, level) -> candidate.getType().builtInRegistryHolder().is(RAID_TARGETS));
+                    //?} else {
+                    /*candidate -> candidate.getType().builtInRegistryHolder().is(RAID_TARGETS));
+                    *///?}
         }
 
         @Override

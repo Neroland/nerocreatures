@@ -5,7 +5,9 @@ import java.util.List;
 
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.geom.ModelPart;
+//? if >=1.21.2 {
 import net.minecraft.client.renderer.entity.state.LivingEntityRenderState;
+//?}
 import net.minecraft.util.Mth;
 
 /**
@@ -30,7 +32,13 @@ import net.minecraft.util.Mth;
  * {@code common/} like every other shared class, since {@code common/} is the only source set spliced
  * into all six cells.
  */
+//? if >=1.21.2 {
 public abstract class CreatureModel extends EntityModel<LivingEntityRenderState> {
+//?} else {
+/*// 1.21.1 models are driven by the entity itself (no render state); HierarchicalModel supplies the
+// root-part rendering that EntityModel(ModelPart) provides from 1.21.2 on.
+public abstract class CreatureModel extends net.minecraft.client.model.HierarchicalModel<net.minecraft.world.entity.Mob> {
+*///?}
 
     /** Which rotation a registered idle wave drives. */
     protected enum Axis {
@@ -47,9 +55,24 @@ public abstract class CreatureModel extends EntityModel<LivingEntityRenderState>
     private final List<Swing> swings = new ArrayList<>();
     private final List<Wave> waves = new ArrayList<>();
 
+    //? if <1.21.2 {
+    /*private final ModelPart rootPart;
+    *///?}
+
     protected CreatureModel(ModelPart root) {
+        //? if >=1.21.2 {
         super(root);
+        //?} else {
+        /*this.rootPart = root;
+        *///?}
     }
+
+    //? if <1.21.2 {
+    /*@Override
+    public ModelPart root() {
+        return this.rootPart;
+    }
+    *///?}
 
     /**
      * Registers a hip-pivoted limb to swing with the walk cycle.
@@ -94,10 +117,20 @@ public abstract class CreatureModel extends EntityModel<LivingEntityRenderState>
     }
 
     @Override
+    //? if >=1.21.2 {
     public void setupAnim(LivingEntityRenderState state) {
         super.setupAnim(state);
         float walkPos = state.walkAnimationPos;
         float walkSpeed = Math.min(1.0F, state.walkAnimationSpeed);
+        float ageInTicks = state.ageInTicks;
+    //?} else {
+    /*public void setupAnim(net.minecraft.world.entity.Mob entity, float limbSwing, float limbSwingAmount,
+            float ageInTicks, float netHeadYaw, float headPitch) {
+        // 1.21.2+ EntityModel.setupAnim resets every part to its baked pose first; do the same here.
+        this.root().getAllParts().forEach(ModelPart::resetPose);
+        float walkPos = limbSwing;
+        float walkSpeed = Math.min(1.0F, limbSwingAmount);
+    *///?}
         for (Swing swing : this.swings) {
             swing.part().xRot = swing.baseXRot()
                     + Mth.cos(walkPos * 0.6662F + swing.phase()) * swing.amplitude() * walkSpeed;
@@ -105,7 +138,7 @@ public abstract class CreatureModel extends EntityModel<LivingEntityRenderState>
         float idle = 1.0F - walkSpeed;
         for (Wave wave : this.waves) {
             float strength = wave.fadeWithWalk() ? idle : 1.0F;
-            float delta = Mth.sin(state.ageInTicks * wave.frequency() + wave.phase())
+            float delta = Mth.sin(ageInTicks * wave.frequency() + wave.phase())
                     * wave.amplitude() * strength;
             ModelPart part = wave.part();
             switch (wave.axis()) {

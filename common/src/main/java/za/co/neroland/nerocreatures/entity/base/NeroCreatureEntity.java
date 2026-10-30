@@ -159,17 +159,31 @@ public abstract class NeroCreatureEntity extends PathfinderMob {
      * down would otherwise leave its mobs behind with nothing left to identify them by, and
      * {@code spawn/InvasionBudget#sweep} exists precisely to clear that up.
      */
+    //? if >=1.21.6 {
     @Override
     protected void addAdditionalSaveData(ValueOutput output) {
         super.addAdditionalSaveData(output);
+    //?} else {
+    /*@Override
+    public void addAdditionalSaveData(net.minecraft.nbt.CompoundTag nbt) {
+        super.addAdditionalSaveData(nbt);
+        ValueOutput output = ValueOutput.of(nbt, this.registryAccess());
+    *///?}
         if (this.waveId != null) {
             output.putString("WaveId", this.waveId.toString());
         }
     }
 
+    //? if >=1.21.6 {
     @Override
     protected void readAdditionalSaveData(ValueInput input) {
         super.readAdditionalSaveData(input);
+    //?} else {
+    /*@Override
+    public void readAdditionalSaveData(net.minecraft.nbt.CompoundTag nbt) {
+        super.readAdditionalSaveData(nbt);
+        ValueInput input = ValueInput.of(nbt, this.registryAccess());
+    *///?}
         String stored = input.getStringOr("WaveId", "");
         if (stored.isEmpty()) {
             this.waveId = null;

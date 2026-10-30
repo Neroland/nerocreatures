@@ -5,7 +5,9 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.damagesource.DamageSource;
+//? if >=1.21.11 {
 import net.minecraft.world.entity.EntityReference;
+//?}
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.NeutralMob;
@@ -72,12 +74,21 @@ public class CrystalGolem extends NeroCreatureEntity implements NeutralMob {
     /** Exclusive upper bound of the pickaxe bonus roll. */
     private static final int PICKAXE_BONUS_MAX_EXCLUSIVE = 3;
 
+    //? if >=1.21.11 {
     /** Game time (ticks) at which anger lapses. Not saved — see the class docs. */
     private long persistentAngerEndTime = NO_ANGER_END_TIME;
 
     /** Who the golem is angry at, while loaded. Never written to disk (POPIA/GDPR). */
     @Nullable
     private EntityReference<LivingEntity> persistentAngerTarget;
+    //?} else {
+    /*// Before 1.21.11 NeutralMob tracks the remaining anger in ticks and the target as a plain UUID.
+    // Neither is saved, as above; the target is never written to disk (POPIA/GDPR).
+    private int remainingPersistentAngerTime;
+
+    @Nullable
+    private java.util.UUID persistentAngerTarget;
+    *///?}
 
     public CrystalGolem(EntityType<? extends CrystalGolem> type, Level level) {
         super(type, level, CreatureTier.GREATER);
@@ -120,6 +131,7 @@ public class CrystalGolem extends NeroCreatureEntity implements NeutralMob {
 
     // --- NeutralMob ---------------------------------------------------------
 
+    //? if >=1.21.11 {
     @Override
     public long getPersistentAngerEndTime() {
         return this.persistentAngerEndTime;
@@ -140,20 +152,55 @@ public class CrystalGolem extends NeroCreatureEntity implements NeutralMob {
     public void setPersistentAngerTarget(@Nullable EntityReference<LivingEntity> target) {
         this.persistentAngerTarget = target;
     }
+    //?} else {
+    /*@Override
+    public int getRemainingPersistentAngerTime() {
+        return this.remainingPersistentAngerTime;
+    }
+
+    @Override
+    public void setRemainingPersistentAngerTime(int ticks) {
+        this.remainingPersistentAngerTime = ticks;
+    }
+
+    @Override
+    @Nullable
+    public java.util.UUID getPersistentAngerTarget() {
+        return this.persistentAngerTarget;
+    }
+
+    @Override
+    public void setPersistentAngerTarget(@Nullable java.util.UUID target) {
+        this.persistentAngerTarget = target;
+    }
+    *///?}
 
     @Override
     public void startPersistentAngerTimer() {
+        //? if >=1.21.11 {
         this.setTimeToRemainAngry(ANGER_MIN_TICKS
                 + this.random.nextInt(ANGER_MAX_TICKS_EXCLUSIVE - ANGER_MIN_TICKS));
+        //?} else {
+        /*this.setRemainingPersistentAngerTime(ANGER_MIN_TICKS
+                + this.random.nextInt(ANGER_MAX_TICKS_EXCLUSIVE - ANGER_MIN_TICKS));
+        *///?}
     }
 
     /**
      * Ticks the anger timer down. {@code true} means universal anger (someone attacked one of us) is
      * allowed to spread to nearby golems, which is what makes a crystal field react as a group.
      */
+    //? if >=1.21.2 {
     @Override
     protected void customServerAiStep(ServerLevel level) {
         super.customServerAiStep(level);
+    //?} else {
+    /*@Override
+    protected void customServerAiStep() {
+        super.customServerAiStep();
+        // Server-side only, so the level is always a ServerLevel here.
+        ServerLevel level = (ServerLevel) this.level();
+    *///?}
         this.updatePersistentAnger(level, true);
     }
 

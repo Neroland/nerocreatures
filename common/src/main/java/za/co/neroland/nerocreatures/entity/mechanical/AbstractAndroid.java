@@ -1,7 +1,6 @@
 package za.co.neroland.nerocreatures.entity.mechanical;
 
 import net.minecraft.sounds.SoundEvent;
-import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
@@ -49,11 +48,11 @@ public abstract class AbstractAndroid extends NeroCreatureEntity implements Enem
 
     @Override
     protected SoundEvent getHurtSound(DamageSource damageSource) {
-        return SoundEvents.COPPER_GOLEM_HURT;
+        return MechanicalSounds.hurt();
     }
 
     @Override
     protected SoundEvent getDeathSound() {
-        return SoundEvents.COPPER_GOLEM_DEATH;
+        return MechanicalSounds.death();
     }
 }

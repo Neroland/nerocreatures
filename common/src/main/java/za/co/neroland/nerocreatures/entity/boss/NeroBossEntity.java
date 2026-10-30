@@ -97,9 +97,17 @@ public abstract class NeroBossEntity extends NeroCreatureEntity implements Enemy
         return result;
     }
 
+    //? if >=1.21.2 {
     @Override
     protected void customServerAiStep(ServerLevel level) {
         super.customServerAiStep(level);
+    //?} else {
+    /*@Override
+    protected void customServerAiStep() {
+        super.customServerAiStep();
+        // Server-side only, so the level is always a ServerLevel here.
+        ServerLevel level = (ServerLevel) this.level();
+    *///?}
         this.controller.tick(level);
     }
 
@@ -107,8 +115,17 @@ public abstract class NeroBossEntity extends NeroCreatureEntity implements Enemy
      * Records what actually landed. The clamp matters: without it the killing blow would be recorded
      * at its raw value, so one big hit on a boss already at 1 health would outweigh the whole fight.
      */
+    //? if >=1.21.2 {
     @Override
     public boolean hurtServer(ServerLevel level, DamageSource source, float amount) {
+    //?} else {
+    /*// Before 1.21.2 damage arrives through hurt(..) on both sides; the client half is left to vanilla.
+    @Override
+    public boolean hurt(DamageSource source, float amount) {
+        if (!(this.level() instanceof ServerLevel level)) {
+            return super.hurt(source, amount);
+        }
+    *///?}
         float before = this.getHealth();
         boolean hurt = super.hurtServer(level, source, amount);
         if (hurt) {
@@ -154,15 +171,29 @@ public abstract class NeroBossEntity extends NeroCreatureEntity implements Enemy
 
     // --- persistence --------------------------------------------------------
 
+    //? if >=1.21.6 {
     @Override
     protected void addAdditionalSaveData(ValueOutput output) {
         super.addAdditionalSaveData(output);
+    //?} else {
+    /*@Override
+    public void addAdditionalSaveData(net.minecraft.nbt.CompoundTag nbt) {
+        super.addAdditionalSaveData(nbt);
+        ValueOutput output = ValueOutput.of(nbt, this.registryAccess());
+    *///?}
         this.controller.save(output);
     }
 
+    //? if >=1.21.6 {
     @Override
     protected void readAdditionalSaveData(ValueInput input) {
         super.readAdditionalSaveData(input);
+    //?} else {
+    /*@Override
+    public void readAdditionalSaveData(net.minecraft.nbt.CompoundTag nbt) {
+        super.readAdditionalSaveData(nbt);
+        ValueInput input = ValueInput.of(nbt, this.registryAccess());
+    *///?}
         this.controller.load(input);
     }
 

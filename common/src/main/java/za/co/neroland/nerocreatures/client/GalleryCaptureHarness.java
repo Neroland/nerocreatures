@@ -169,13 +169,13 @@ public final class GalleryCaptureHarness {
             return 0;
         }
         if (running) {
-            mc.player.sendSystemMessage(Component.literal("Gallery capture already running."));
+            chat(mc, Component.literal("Gallery capture already running."));
             return 0;
         }
         QUEUE.clear();
         QUEUE.addAll(galleryQueue(time));
         begin(mc);
-        mc.player.sendSystemMessage(Component.literal("Gallery capture: rebuilding the scene, time="
+        chat(mc, Component.literal("Gallery capture: rebuilding the scene, time="
                 + time + ", " + QUEUE.size() + " shots → screenshots/nerocreatures/ (overlays hidden)."));
         return Command.SINGLE_SUCCESS;
     }
@@ -361,14 +361,18 @@ public final class GalleryCaptureHarness {
         RenderTarget target = mainRenderTarget(mc);
         if (target == null) {
             if (mc.player != null) {
-                mc.player.sendSystemMessage(Component.literal("Capture: could not resolve the render target."));
+                chat(mc, Component.literal("Capture: could not resolve the render target."));
             }
             return;
         }
+        //? if >=1.21.6 {
         Screenshot.grab(mc.gameDirectory, "nerocreatures/" + name + ".png", target, 1,
+        //?} else {
+        /*Screenshot.grab(mc.gameDirectory, "nerocreatures/" + name + ".png", target,
+        *///?}
                 msg -> {
                     if (mc.player != null) {
-                        mc.player.sendSystemMessage(msg);
+                        chat(mc, msg);
                     }
                 });
     }
@@ -384,7 +388,7 @@ public final class GalleryCaptureHarness {
         current = null;
         QUEUE.clear();
         if (mc.player != null) {
-            mc.player.sendSystemMessage(
+            chat(mc, 
                     Component.literal("Capture done — see screenshots/nerocreatures/."));
         }
     }
@@ -533,5 +537,14 @@ public final class GalleryCaptureHarness {
     /** Sweep dropped items + XP-orb litter off the pads (run after a {@link #CLEANUP_TICKS} pause). */
     private static List<String> groundClear() {
         return List.of("kill @e[type=item]", "kill @e[type=experience_orb]");
+    }
+
+    /** A local chat line to the capturing player; LocalPlayer.sendSystemMessage exists only from 26.1. */
+    private static void chat(Minecraft mc, Component message) {
+        //? if >=26.1 {
+        mc.player.sendSystemMessage(message);
+        //?} else {
+        /*mc.player.displayClientMessage(message, false);
+        *///?}
     }
 }

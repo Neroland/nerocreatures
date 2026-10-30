@@ -2,6 +2,9 @@ package za.co.neroland.nerocreatures.forge;
 
 import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.event.TickEvent;
+//? if <1.21.6 {
+/*import net.minecraftforge.common.MinecraftForge;
+*///?}
 
 import za.co.neroland.nerocreatures.command.CreatureCommands;
 import za.co.neroland.nerocreatures.spawn.CreatureSpawns;
@@ -23,9 +26,25 @@ public final class ForgeCreatureEvents {
 
     /** Called once from the Forge entry point. */
     public static void register() {
-        TickEvent.ServerTickEvent.Post.BUS.addListener(event ->
-                CreatureSpawns.serverTick(event.server()));
+        //? if >=1.21.6 {
+        TickEvent.ServerTickEvent.Post.BUS.addListener(ForgeCreatureEvents::onServerTick);
+        RegisterCommandsEvent.BUS.addListener(ForgeCreatureEvents::onRegisterCommands);
+        //?} else {
+        /*// Forge before 1.21.6 (EventBus 6) has one game event bus instead of per-event buses.
+        MinecraftForge.EVENT_BUS.addListener(ForgeCreatureEvents::onServerTick);
+        MinecraftForge.EVENT_BUS.addListener(ForgeCreatureEvents::onRegisterCommands);
+        *///?}
+    }
 
-        RegisterCommandsEvent.BUS.addListener(event -> CreatureCommands.register(event.getDispatcher()));
+    private static void onServerTick(TickEvent.ServerTickEvent.Post event) {
+        //? if >=1.21.9 {
+        CreatureSpawns.serverTick(event.server());
+        //?} else {
+        /*CreatureSpawns.serverTick(event.getServer());
+        *///?}
+    }
+
+    private static void onRegisterCommands(RegisterCommandsEvent event) {
+        CreatureCommands.register(event.getDispatcher());
     }
 }

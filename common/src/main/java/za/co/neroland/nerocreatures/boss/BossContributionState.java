@@ -17,6 +17,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.level.saveddata.SavedData;
 import net.minecraft.world.level.saveddata.SavedDataType;
 
+import za.co.neroland.nerolandcore.data.SavedDataCompat;
 import za.co.neroland.nerolandcore.data.SavedDataRecovery;
 
 import za.co.neroland.nerocreatures.NeroCreaturesCommon;
@@ -73,7 +74,7 @@ public final class BossContributionState extends SavedData {
             Identifier.fromNamespaceAndPath(NeroCreaturesCommon.MOD_ID, "boss_contribution");
 
     public static final SavedDataType<BossContributionState> TYPE =
-            new SavedDataType<>(ID, BossContributionState::new, codec(), null);
+            SavedDataCompat.type(ID, BossContributionState::new, codec());
 
     /** A fight untouched for this long is abandoned and pruned, rewards unpaid. */
     private static final int FIGHT_MAX_AGE_HOURS = 6;

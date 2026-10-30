@@ -162,8 +162,13 @@ public final class BossController {
         this.bossName = bossName;
         this.phases = List.copyOf(phases);
         this.arenaRadius = arenaRadius;
+        //? if >=26.1 {
         this.bar = new ServerBossEvent(UUID.randomUUID(), bossName, colour,
                 BossEvent.BossBarOverlay.PROGRESS);
+        //?} else {
+        /*// Before 26.1 the boss event picks its own random id.
+        this.bar = new ServerBossEvent(bossName, colour, BossEvent.BossBarOverlay.PROGRESS);
+        *///?}
         this.bar.setDarkenScreen(true);
         this.bar.setPlayBossMusic(true);
     }

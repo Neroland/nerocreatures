@@ -5,7 +5,9 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;
+//? if >=1.21.2 {
 import net.minecraft.client.renderer.entity.state.LivingEntityRenderState;
+//?}
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.Mob;
 
@@ -20,7 +22,12 @@ import net.minecraft.world.entity.Mob;
  * attribute (which vanilla applies to both the hitbox and the model). Keeping the client dumb is
  * what lets this mod stay server-authoritative.
  */
+//? if >=1.21.2 {
 public class CreatureRenderer extends MobRenderer<Mob, LivingEntityRenderState, EntityModel<LivingEntityRenderState>> {
+//?} else {
+/*// 1.21.1 renderers read the entity directly; there is no render-state object yet.
+public class CreatureRenderer extends MobRenderer<Mob, EntityModel<Mob>> {
+*///?}
 
     private final Identifier texture;
     private final float scale;
@@ -33,12 +40,13 @@ public class CreatureRenderer extends MobRenderer<Mob, LivingEntityRenderState, 
      * @param shadow  shadow radius in blocks
      */
     public CreatureRenderer(EntityRendererProvider.Context context,
-            EntityModel<LivingEntityRenderState> model, Identifier texture, float scale, float shadow) {
+            CreatureModel model, Identifier texture, float scale, float shadow) {
         super(context, model, shadow);
         this.texture = texture;
         this.scale = scale;
     }
 
+    //? if >=1.21.2 {
     @Override
     protected void scale(LivingEntityRenderState state, PoseStack poseStack) {
         poseStack.scale(this.scale, this.scale, this.scale);
@@ -53,4 +61,15 @@ public class CreatureRenderer extends MobRenderer<Mob, LivingEntityRenderState, 
     public Identifier getTextureLocation(LivingEntityRenderState state) {
         return this.texture;
     }
+    //?} else {
+    /*@Override
+    protected void scale(Mob entity, PoseStack poseStack, float partialTick) {
+        poseStack.scale(this.scale, this.scale, this.scale);
+    }
+
+    @Override
+    public Identifier getTextureLocation(Mob entity) {
+        return this.texture;
+    }
+    *///?}
 }

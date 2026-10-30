@@ -16,6 +16,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.level.saveddata.SavedData;
 import net.minecraft.world.level.saveddata.SavedDataType;
 
+import za.co.neroland.nerolandcore.data.SavedDataCompat;
 import za.co.neroland.nerolandcore.data.SavedDataRecovery;
 
 import za.co.neroland.nerocreatures.NeroCreaturesCommon;
@@ -75,7 +76,7 @@ public final class CreatureOwnershipState extends SavedData {
             Identifier.fromNamespaceAndPath(NeroCreaturesCommon.MOD_ID, "ownership");
 
     public static final SavedDataType<CreatureOwnershipState> TYPE =
-            new SavedDataType<>(ID, CreatureOwnershipState::new, codec(), null);
+            SavedDataCompat.type(ID, CreatureOwnershipState::new, codec());
 
     /**
      * Upper bound on rows kept for one player. Far above any sane cap

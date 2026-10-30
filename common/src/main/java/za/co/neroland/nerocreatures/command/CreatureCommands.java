@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.UUID;
+import java.util.function.Predicate;
 
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
@@ -101,10 +102,19 @@ public final class CreatureCommands {
 
     // --- tree ---------------------------------------------------------------
 
+    /** Gamemaster-level (op 2) requirement; 1.21.6+ expresses it as a permission check object. */
+    private static Predicate<CommandSourceStack> gamemasters() {
+        //? if >=1.21.6 {
+        return Commands.hasPermission(Commands.LEVEL_GAMEMASTERS);
+        //?} else {
+        /*return source -> source.hasPermission(Commands.LEVEL_GAMEMASTERS);
+        *///?}
+    }
+
     /** Builds {@code /nerocreatures …}. Called once per loader from its command-registration hook. */
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
         dispatcher.register(Commands.literal("nerocreatures")
-                .requires(Commands.hasPermission(Commands.LEVEL_GAMEMASTERS))
+                .requires(gamemasters())
                 .then(Commands.literal("list")
                         .executes(ctx -> runSafely(ctx.getSource(), "list",
                                 () -> list(ctx.getSource()))))
