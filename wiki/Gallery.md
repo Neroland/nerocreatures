@@ -1,7 +1,7 @@
 # Gallery & screenshot capture
 
 NeroCreatures ships a **creative-only showcase scene** and a **client-side screenshot harness** that
-photographs it. Together they exist so the project's Modrinth gallery can be re-rendered identically
+photographs it. Together they exist so the project's screenshot gallery can be re-rendered identically
 after a model or texture change, instead of somebody hand-framing a dozen shots and hoping the next
 person matches them.
 
@@ -135,25 +135,15 @@ Written to `screenshots/nerocreatures/<name>.png` inside the game directory.
 Camera positions live next to the shot list in the harness and mirror the cluster positions in the
 scene builder. **If you move a cluster, move its camera in the same change.**
 
-## How the screenshots reach Modrinth
+## Capture output
 
-The repository's `modrinth-gallery.yml` workflow mirrors the tracked PNGs to the Modrinth project
-gallery whenever they change. It reads them from the **NeoForge 26.2 client run directory**:
+The NeoForge 26.2 dev client saves reviewed captures under:
 
 ```text
 neoforge/versions/26.2/runs/client/screenshots/nerocreatures/
 ```
 
-That is exactly where the harness writes when run from the NeoForge 26.2 dev client, so the workflow
-path and the harness output line up with no copying step. Run the pass from that cell, review the
-PNGs, commit them, and the sync happens on push.
-
-The workflow wipes and re-uploads the gallery in a fixed order, featuring the first shot as the
-project card. Shots not named in that order list are appended alphabetically, so a newly added shot
-still syncs without touching the workflow.
-
-Native-resolution captures can be several megabytes; downscale before committing if the window is
-large.
+Review the PNGs before publishing them. Downscale large captures before committing.
 
 ## See also
 

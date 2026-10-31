@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.4.1-alpha.2] - 2026-10-31
+
+### Changed
+
+- Release uploads now target CurseForge and GitHub Releases only.
+- Removed automatic project description and gallery uploads.
+- Renamed the website overview source to `art/description.md` and refreshed public documentation links.
+
 ## [0.4.0-alpha.2] - 2026-10-31
 
 NeroCreatures now also runs on Minecraft 1.21.x, alongside the 26.x builds. Existing worlds load
@@ -457,7 +465,7 @@ Minecraft **26.3** support, plus the changes previously listed under *Unreleased
   client-tick hooks, and dist-gated so it never loads on a dedicated server.
 - The client root is `/ncgallery`, deliberately **not** `/nerocreatures`: a client-dispatcher root
   that shares its name with a server command shadows the server subtree.
-- Output lands in `screenshots/nerocreatures/`, which is the folder the repository's Modrinth gallery
+- Output lands in `screenshots/nerocreatures/`, which is the folder the repository's screenshot gallery
   sync already reads from the NeoForge 26.2 client run directory.
 - Documented in the new [`wiki/Gallery.md`](wiki/Gallery.md).
 

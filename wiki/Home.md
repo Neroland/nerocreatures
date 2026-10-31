@@ -36,7 +36,7 @@ drops are deliberately raw materials that other mods spend.
 - [Commands](Commands.md) — the `/nerocreatures` operator tree: `list`, `caps`, `summon-boss`,
   `export`, `telemetry-test` and `gallery`.
 - [Gallery & screenshot capture](Gallery.md) — the creative showcase scene, the `/ncgallery` capture
-  harness, the shot list, and how the screenshots reach the Modrinth gallery.
+  harness, the shot list, and where the screenshots are saved.
 - [Link module](Link-Module.md) — what a Neroland companion app can see and do, section by section,
   and the own-data-only rule behind it.
 - [Data storage](Data-Storage.md) — the two player-keyed stores, erasure, retention and export, in

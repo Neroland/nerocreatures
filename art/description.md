@@ -50,8 +50,8 @@ NeroCreatures stores **no personal data**. Pet ownership and boss contribution a
 
 ## Requirements & compatibility
 
-- **Requires [Neroland Core](https://modrinth.com/mod/nerolandcore)** — install it alongside NeroCreatures (it loads first).
-- Optional but recommended: **[Nerospace](https://modrinth.com/mod/nerospace)** for the planets, moons and biomes the roster spawns across.
+- **Requires [Neroland Core](https://nerolandmc.net/mods/neroland-core/)** — install it alongside NeroCreatures (it loads first).
+- Optional but recommended: **[Nerospace](https://nerolandmc.net/mods/nerospace/)** for the planets, moons and biomes the roster spawns across.
 - Conventional `c:` material tags and Core space compat tags mean Create, AE2, Mekanism, Ad Astra and Energized Power interoperate as the 26.x ecosystem fills in — no hard dependency on any of them.
 - **Modpacks are allowed and encouraged** — any platform, no need to ask. Use the official files and credit *NeroCreatures by Neroland* with links to the [CurseForge page](https://www.curseforge.com/minecraft/mc-mods/nerocreatures) and the [GitHub repository](https://github.com/Neroland/nerocreatures). Full terms: [LICENSE](https://github.com/Neroland/nerocreatures/blob/main/LICENSE).
 

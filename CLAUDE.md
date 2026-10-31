@@ -1,5 +1,7 @@
 # Project context for AI coding agents — nerocreatures
 
+> Modrinth is temporarily being removed from the upload and is no longer being referenced. Avoid making references to modrinth.
+
 > This and `CLAUDE.md` are kept identical; update both together.
 
 ## The mod
@@ -9,7 +11,7 @@
   companions and planet bosses; its drops are raw materials the rest of the ecosystem spends.
 - Mod id: **`nerocreatures`** (matches the registry namespace + every loader manifest). Package
   root: `za.co.neroland.nerocreatures`. Author: **Neroland**.
-- Version: **0.3.1-alpha.1**.
+- Version: **0.4.1-alpha.2**.
 - Targets **MC 26.1.2, 26.2 AND 26.3** on **NeoForge, MinecraftForge/Forge, and Fabric** → the **"9 cells"**.
   **Java 25.** Mappings = official Mojang names (26.x ships de-obfuscated; no Parchment).
 
@@ -235,8 +237,7 @@
   client-dispatcher root that shares a name with a server command SHADOWS the server subtree** — the
   client parser matches the root, fails on the server-only child and never forwards. The HUD-hide
   flag and the main render target diverge across 26.1.2 ↔ 26.2 and are resolved reflectively.
-  Output is `screenshots/nerocreatures/<shot>.png`, which is the folder the Modrinth gallery
-  workflow reads from the NeoForge 26.2 run directory.
+  Output is `screenshots/nerocreatures/<shot>.png`, under the NeoForge 26.2 run directory.
 
 ## Build & verify
 
@@ -306,7 +307,7 @@
   event mods. A change to a weight, a group size or a cap default goes there in the same commit.
 - `wiki/Gallery.md` is the contract for the creative showcase scene and the `/ncgallery` capture
   harness: the two commands, what the scene contains, what it deliberately does not write, the shot
-  list and how the PNGs reach the Modrinth gallery. A new shot, a moved cluster or a changed camera
+  list and where the PNGs are saved. A new shot, a moved cluster or a changed camera
   goes there in the same change.
 - `wiki/Link-Module.md` is the companion-app contract (sections, action, events, alerts, and the
   own-data-only rule), `wiki/Commands.md` documents the `/nerocreatures` tree, `wiki/Data-Storage.md`
