@@ -345,3 +345,7 @@
   every publisher and snapshot section is wrapped; a companion client is a nice-to-have and the
   creature layer is not.
 - Reference any out-of-repo planning docs (or any absolute path) from anything in this repository.
+
+## Translation workflow
+
+English is the source language for new and changed text. Community translations are intended to be contributed through Weblate; other-language translations are not required when implementing a feature. Preserve existing translations. This supersedes older instructions that require translating every change.
