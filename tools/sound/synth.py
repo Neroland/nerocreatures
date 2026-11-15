@@ -17,6 +17,12 @@ verifies each committed .ogg (hash, Ogg/Vorbis header, mono, 44.1 kHz) and
 that the manifest still matches the event table. --fast skips the
 re-synthesis; use it where a different C maths library could round a sample
 differently from the machine that rendered the files.
+
+CI and the stage gate run `--check --fast` (stdlib only, no ffmpeg, platform
+independent: hashes the committed .ogg files and compares the manifest with
+the event table). Run the full `--check` locally after changing a recipe.
+After synth.py, run `tools/sound/gen_sound_assets.py` to regenerate
+sounds.json, registry/ModSounds.java and the English subtitle keys.
 """
 import hashlib
 import json

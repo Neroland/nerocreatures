@@ -111,6 +111,16 @@ jobs:
       # See USING-CORE.md.
       # --- end Neroland Core dependency ---
 
+      # Asset gates (standard-library Python, no ffmpeg/Pillow): the sound kit with --fast (hash
+      # checks only; full re-synthesis is platform-sensitive and runs locally), the generated sound
+      # wiring, every registered thing's model/texture/lang, and the recipe unlocks.
+      - name: Asset checks
+        run: |
+          python3 -B tools/sound/synth.py --check --fast
+          python3 -B tools/sound/gen_sound_assets.py --check
+          python3 -B tools/check_assets.py --check
+          python3 -B tools/gen_recipe_unlocks.py --check
+
       # Static analysis + unit tests first, so a failure is obvious and stops the publish before any
       # build. ecjCheck is the VS Code Problems-panel analyzer (tools/ecj.prefs); it resolves
       # org.eclipse.jdt:ecj from Maven Central. Tests run on the two bracketing NeoForge cells (they also

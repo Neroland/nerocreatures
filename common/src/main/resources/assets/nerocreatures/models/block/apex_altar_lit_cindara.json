@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/cube_bottom_top",
+  "textures": {
+    "top": "nerocreatures:block/apex_altar_top_lit_cindara",
+    "side": "nerocreatures:block/apex_altar_side",
+    "bottom": "nerocreatures:block/habitat_frame"
+  }
+}

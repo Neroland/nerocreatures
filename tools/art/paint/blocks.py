@@ -8,8 +8,11 @@
 Blocks are station hardware: worn ``white`` plating, ``oxide`` frames and ``hazard`` warning bands
 from the wrecks ramps, with each block's function shown in one accent. Model ids, parents and
 collision boxes are unchanged; the shaped blocks only gain elements inside their existing box.
-Every face is opaque (no block here is registered on a cutout layer), so the incubator and the
-terrarium are open frames rather than glass, which keeps what they display visible.
+Every face is opaque except ``habitat_glass``: the incubator and terrarium panes are cutout glass (a
+few glint texels on a clear sheet), so what they display stays visible. Cutout is how each line gets
+there: 26.x picks the chunk layer from the sprite's transparency; on 1.21.x NeoForge/Forge read the
+model's ``render_type`` and Fabric registers the blocks with ``BlockRenderLayerMap``. The 26.x models
+are written without ``render_type`` into ``resources-26.1.2`` (see ``CUTOUT_OVERLAY``).
 """
 
 from __future__ import annotations
@@ -141,15 +144,27 @@ t.rect(6, 13, 4, 2, "oxide", 0)
 t.rect(7, 13, 2, 1, "hazard", 3)   # status lamp (amber)
 t.rect(7, 14, 2, 1, "hazard", 1)
 
-t = tile("incubator_deck")
-plating(t, seam_rows=(), seam_cols=())
-t.frame(1, 1, 14, 14, "oxide", 1)
-t.rect(4, 4, 8, 8, "oxide", 0)
-t.frame(4, 4, 8, 8, "accent_owned", 1)
-t.rect(6, 6, 4, 4, "white", 3)       # cradle pad
-t.frame(6, 6, 4, 4, "white", 1)
-for x, y in ((5, 5), (10, 5), (5, 10), (10, 10)):
-    t.px(x, y, "accent_owned", 3)
+# Powered (Core energy flowing): the status lamp turns from amber to the owned-accent green.
+t = tile("incubator_base_powered")
+t.image.px = [row[:] for row in TEXTURES["incubator_base"].px]
+t.rect(7, 13, 2, 1, "accent_owned", 4)
+t.rect(7, 14, 2, 1, "accent_owned", 2)
+
+
+def incubator_deck(name: str, powered: bool) -> None:
+    t = tile(name)
+    plating(t, seam_rows=(), seam_cols=())
+    t.frame(1, 1, 14, 14, "oxide", 1)
+    t.rect(4, 4, 8, 8, "oxide", 0)
+    t.frame(4, 4, 8, 8, "accent_owned", 3 if powered else 1)
+    t.rect(6, 6, 4, 4, "white", 3)       # cradle pad
+    t.frame(6, 6, 4, 4, "white", 1)
+    for x, y in ((5, 5), (10, 5), (5, 10), (10, 10)):
+        t.px(x, y, "accent_owned", 4 if powered else 3)
+
+
+incubator_deck("incubator_deck", False)
+incubator_deck("incubator_deck_powered", True)
 
 t = tile("incubator_top")
 plating(t, seam_rows=(), seam_cols=())
@@ -159,6 +174,16 @@ t.frame(4, 4, 8, 8, "white", 4)
 for y in (6, 8):
     t.rect(6, y, 4, 1, "oxide", 1)   # vent slots
 rivets(t, [(3, 3), (12, 3), (3, 12), (12, 12)])
+
+# --------------------------------------------------------------------------- glass (cutout)
+
+GLASS = {"habitat_glass"}
+t = tile("habitat_glass")          # no fill: a clear sheet
+t.frame(0, 0, 16, 16, "white", 4)
+for i in range(4):                 # two short diagonal glints
+    t.px(3 + i, 6 - i, "white", 4)
+    t.px(9 + i, 13 - i, "white", 3)
+t.px(12, 3, "white", 4)
 
 # --------------------------------------------------------------------------- terrarium
 
@@ -347,6 +372,25 @@ def altar_top(name: str, lit: bool) -> None:
 altar_top("apex_altar_top", False)
 altar_top("apex_altar_top_lit", True)
 
+# Per-boss glow (blockstate ``sigil``): only that boss's socket burns, and the slot takes its colour.
+SIGILS = {"cindara": 0, "glacira": 1, "greenxertz": 2, "nyxara": 3}
+
+
+def altar_top_sigil(sigil: str) -> None:
+    t = tile("apex_altar_top_lit_" + sigil, ramp="oxide", step=1)
+    t.image.px = [row[:] for row in TEXTURES["apex_altar_top"].px]
+    accent, x, y = SOCKETS[SIGILS[sigil]]
+    t.rect(x, y, 3, 3, accent, 3)
+    t.px(x + 1, y + 1, accent, 4)
+    t.rect(6, 6, 4, 4, accent, 2)
+    t.rect(7, 7, 2, 2, accent, 4)
+    for gx, gy in ((7, 3), (7, 12), (3, 7), (12, 7)):
+        t.rect(gx, gy, 2 if gy in (3, 12) else 1, 1 if gy in (3, 12) else 2, accent, 3)
+
+
+for _sigil in SIGILS:
+    altar_top_sigil(_sigil)
+
 # --------------------------------------------------------------------------- ephemeral crust
 
 CRACKS = """
@@ -431,22 +475,42 @@ MODELS["feeding_trough"] = shaped(
         box(1, 4, 3, 15, 6, 13, "bottom", up="top"),
     ])
 
-MODELS["incubator"] = shaped(
-    "incubator_base",
-    {"side": "incubator_base", "top": "incubator_top", "deck": "incubator_deck",
-     "bottom": "habitat_frame"}, [
-        box(1, 0, 1, 15, 4, 15, "side", up="deck", down="bottom"),
-        box(2, 4, 2, 3, 12, 3, "bottom"),
-        box(13, 4, 2, 14, 12, 3, "bottom"),
-        box(2, 4, 13, 3, 12, 14, "bottom"),
-        box(13, 4, 13, 14, 12, 14, "bottom"),
-        box(1, 12, 1, 15, 14, 15, "side", up="top", down="bottom"),
-    ])
+def panes(lo: int, hi: int, y1: int, y2: int) -> list:
+    """Four 1-texel cutout glass panes between corner posts at ``lo`` and ``hi - 1``."""
+    return [box(lo + 1, y1, lo, hi - 1, y2, lo + 1, "glass"), box(lo + 1, y1, hi - 1, hi - 1, y2, hi, "glass"),
+            box(lo, y1, lo + 1, lo + 1, y2, hi - 1, "glass"), box(hi - 1, y1, lo + 1, hi, y2, hi - 1, "glass")]
 
-MODELS["terrarium"] = shaped(
+
+def cutout(model: dict) -> dict:
+    """Marks a model for the cutout layer on 1.21.x NeoForge/Forge (``render_type``)."""
+    model["render_type"] = "minecraft:cutout"
+    return model
+
+
+CUTOUT_OVERLAY = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(ASSETS))), "resources-26.1.2",
+                              "assets", "nerocreatures", "models", "block")
+
+
+def incubator(base: str, deck: str) -> dict:
+    return cutout(shaped(
+        base,
+        {"side": base, "top": "incubator_top", "deck": deck, "bottom": "habitat_frame", "glass": "habitat_glass"}, [
+            box(1, 0, 1, 15, 4, 15, "side", up="deck", down="bottom"),
+            box(2, 4, 2, 3, 12, 3, "bottom"),
+            box(13, 4, 2, 14, 12, 3, "bottom"),
+            box(2, 4, 13, 3, 12, 14, "bottom"),
+            box(13, 4, 13, 14, 12, 14, "bottom"),
+            box(1, 12, 1, 15, 14, 15, "side", up="top", down="bottom"),
+        ] + panes(2, 14, 4, 12)))
+
+
+MODELS["incubator"] = incubator("incubator_base", "incubator_deck")
+MODELS["incubator_powered"] = incubator("incubator_base_powered", "incubator_deck_powered")
+
+MODELS["terrarium"] = cutout(shaped(
     "terrarium_base",
     {"side": "terrarium_base", "top": "habitat_plating", "floor": "terrarium_floor",
-     "bottom": "habitat_frame"}, [
+     "bottom": "habitat_frame", "glass": "habitat_glass"}, [
         box(1, 0, 1, 15, 3, 15, "side", up="floor", down="bottom"),
         box(1, 3, 1, 2, 14, 2, "bottom"),
         box(14, 3, 1, 15, 14, 2, "bottom"),
@@ -456,7 +520,7 @@ MODELS["terrarium"] = shaped(
         box(1, 14, 14, 15, 15, 15, "side", up="top", down="bottom"),
         box(1, 14, 2, 2, 15, 14, "side", up="top", down="bottom"),
         box(14, 14, 2, 15, 15, 14, "side", up="top", down="bottom"),
-    ])
+    ] + panes(1, 15, 3, 14)))
 
 MODELS["trophy_plaque"] = shaped(
     "trophy_plaque",
@@ -480,6 +544,9 @@ MODELS["apex_altar"] = cube("cube_bottom_top", top="apex_altar_top", side="apex_
                             bottom="habitat_frame")
 MODELS["apex_altar_lit"] = cube("cube_bottom_top", top="apex_altar_top_lit", side="apex_altar_side",
                                 bottom="habitat_frame")
+for _sigil in SIGILS:
+    MODELS["apex_altar_lit_" + _sigil] = cube("cube_bottom_top", top="apex_altar_top_lit_" + _sigil,
+                                             side="apex_altar_side", bottom="habitat_frame")
 MODELS["ephemeral_crust_slag"] = cube("cube_column", end="ephemeral_crust_slag_end",
                                       side="ephemeral_crust_slag_side")
 MODELS["ephemeral_crust_rime"] = cube("cube_all", all="ephemeral_crust_rime")
@@ -567,9 +634,18 @@ def main(argv: list) -> int:
     for orphan in sorted(set(TEXTURES) - used):
         print("FAIL  textures/block/%s.png is used by no model" % orphan)
         failed += 1
+    for name in sorted(MODELS):
+        if "render_type" in MODELS[name]:
+            plain = {k: v for k, v in MODELS[name].items() if k != "render_type"}
+            body = json.dumps(plain, indent=2) + "\n"
+            failed += not write_text(os.path.join(CUTOUT_OVERLAY, name + ".json"), body, check)
     for image_name, image in TEXTURES.items():
-        if any(c[3] != 255 for row in image.px for c in row):
+        clear = any(c[3] != 255 for row in image.px for c in row)
+        if clear and image_name not in GLASS:
             print("FAIL  textures/block/%s.png has a transparent texel" % image_name)
+            failed += 1
+        if image_name in GLASS and (not clear or any(0 < c[3] < 255 for row in image.px for c in row)):
+            print("FAIL  textures/block/%s.png must be cutout (only clear or opaque texels)" % image_name)
             failed += 1
     if "--sheet" in argv:
         sheet(argv[argv.index("--sheet") + 1])

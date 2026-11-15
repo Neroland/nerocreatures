@@ -4,16 +4,16 @@
       "model": "nerocreatures:block/apex_altar"
     },
     "sigil=cindara": {
-      "model": "nerocreatures:block/apex_altar_lit"
+      "model": "nerocreatures:block/apex_altar_lit_cindara"
     },
     "sigil=glacira": {
-      "model": "nerocreatures:block/apex_altar_lit"
+      "model": "nerocreatures:block/apex_altar_lit_glacira"
     },
     "sigil=greenxertz": {
-      "model": "nerocreatures:block/apex_altar_lit"
+      "model": "nerocreatures:block/apex_altar_lit_greenxertz"
     },
     "sigil=nyxara": {
-      "model": "nerocreatures:block/apex_altar_lit"
+      "model": "nerocreatures:block/apex_altar_lit_nyxara"
     }
   }
 }

@@ -108,4 +108,12 @@ class MagnetCrabRulesTest {
         assertEquals(1, MagnetCrabRules.decode("bad;a:b*x;*3;a:b*2").size(), "malformed slots skipped");
         assertTrue(MagnetCrabRules.decode("").isEmpty());
     }
+
+    @Test
+    void magnetSoundReplaysEveryTwoSecondsAtMost() {
+        assertTrue(MagnetCrabRules.magnetSoundDue(Long.MIN_VALUE / 2, 100L), "first pull sounds");
+        assertFalse(MagnetCrabRules.magnetSoundDue(100L, 139L), "not again inside two seconds");
+        assertTrue(MagnetCrabRules.magnetSoundDue(100L, 140L), "again after forty ticks");
+        assertTrue(MagnetCrabRules.magnetSoundDue(500L, 10L), "a clock that went back never sticks");
+    }
 }

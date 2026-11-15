@@ -42,6 +42,20 @@ public final class NeroCreaturesFabricClient implements ClientModInitializer {
         BlockEntityRenderers.register(ModBlockEntities.INCUBATOR.get(), HabitatDisplayRenderer::new);
         BlockEntityRenderers.register(ModBlockEntities.TERRARIUM.get(), HabitatDisplayRenderer::new);
         BlockEntityRenderers.register(ModBlockEntities.TROPHY_PLAQUE.get(), HabitatDisplayRenderer::new);
+        // Incubator and Terrarium glass panes are cutout. 26.x picks the chunk layer from the sprite's
+        // transparency by itself; 1.21.x Fabric needs the block registered (NeoForge/Forge read the
+        // model's render_type instead).
+        //? if <1.21.6 {
+        /*net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap.INSTANCE.putBlocks(
+                net.minecraft.client.renderer.RenderType.cutout(),
+                za.co.neroland.nerocreatures.registry.ModBlocks.INCUBATOR.get(),
+                za.co.neroland.nerocreatures.registry.ModBlocks.TERRARIUM.get());
+        *///?} else if <26.1 {
+        /*net.fabricmc.fabric.api.client.rendering.v1.BlockRenderLayerMap.putBlocks(
+                net.minecraft.client.renderer.chunk.ChunkSectionLayer.CUTOUT,
+                za.co.neroland.nerocreatures.registry.ModBlocks.INCUBATOR.get(),
+                za.co.neroland.nerocreatures.registry.ModBlocks.TERRARIUM.get());
+        *///?}
 
         // Drop any synced mirror caches on leaving a world/server, so one session's state can never
         // be shown in the next (or on a server that does not run NeroCreatures).

@@ -2,5 +2,13 @@
   "parent": "minecraft:item/generated",
   "textures": {
     "layer0": "nerocreatures:item/capture_pod"
-  }
+  },
+  "overrides": [
+    {
+      "predicate": {
+        "custom_model_data": 1
+      },
+      "model": "nerocreatures:item/capture_pod_filled"
+    }
+  ]
 }

@@ -340,8 +340,14 @@ public final class ModItems {
             Item.Properties properties = new Item.Properties().stacksTo(1).rarity(Rarity.UNCOMMON);
             //? if >=1.21.2 {
             if (kind.slot() != null) {
+                // asset_id = nerocreatures:<id> -> assets/nerocreatures/equipment/<id>.json (the worn layer).
                 properties = properties.component(net.minecraft.core.component.DataComponents.EQUIPPABLE,
-                        net.minecraft.world.item.equipment.Equippable.builder(kind.slot()).build());
+                        net.minecraft.world.item.equipment.Equippable.builder(kind.slot())
+                                .setAsset(net.minecraft.resources.ResourceKey.create(
+                                        net.minecraft.world.item.equipment.EquipmentAssets.ROOT_ID,
+                                        net.minecraft.resources.Identifier.fromNamespaceAndPath(
+                                                NeroCreaturesCommon.MOD_ID, id)))
+                                .build());
             }
             //?}
             return new CreatureGearItem(properties.setId(key), kind);

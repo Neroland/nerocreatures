@@ -1,7 +1,10 @@
 {
   "variants": {
-    "": {
+    "powered=false": {
       "model": "nerocreatures:block/incubator"
+    },
+    "powered=true": {
+      "model": "nerocreatures:block/incubator_powered"
     }
   }
 }

@@ -175,13 +175,18 @@ public class IncubatorBlockEntity extends HabitatBlockEntity implements HabitatD
 
     @Override
     void serverTick(ServerLevel level, BlockPos pos, BlockState state) {
-        if (!this.occupied() || ++this.pulse < IncubatorRules.PULSE_TICKS) {
+        if (!this.occupied()) {
+            IncubatorBlock.setPowered(level, pos, state, false);
+            return;
+        }
+        if (++this.pulse < IncubatorRules.PULSE_TICKS) {
             return;
         }
         this.pulse = 0;
         int hatch = Math.max(1, hatchTicks.getAsInt());
         long wanted = IncubatorRules.energyWanted(IncubatorRules.PULSE_TICKS, energyPerTick.getAsInt());
         long got = wanted > 0L ? pullEnergy(level, pos, wanted) : 0L;
+        IncubatorBlock.setPowered(level, pos, state, got > 0L);
         this.progress += IncubatorRules.progressFor(IncubatorRules.PULSE_TICKS, got, wanted, hatch,
                 poweredHatchTicks.getAsInt());
         this.setChanged();

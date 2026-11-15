@@ -43,6 +43,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Breeding:** every livestock and tameable species breeds on its own food (item tags `nerocreatures:food/<species>`). Six species lay eggs (`<species>_egg`, traits carried on the egg) that hatch in the Incubator; hatched tameables tame on their first feed, hatched livestock are born husbanded. At most `maxIncubatingEggsPerPlayer` (8) eggs incubating per player. Wiki page Livestock and Breeding.
 - Space Pirates pick up loose Contraband (up to 16) and drop it on death (`spacePirateTakesContraband`, plus `mobGriefing`).
 - Companion interface: a companion mod can perch small pets, send fetchers on errands, add goals (priorities 3 to 6 only), show a hat and park a tamed pet in its own storage (the ownership row stays, marked parked). No-op without a companion mod.
+- **Original sounds.** Every creature, boss, habitat block and gear item now has its own synthesised sound (187 events: voices, ability cues, boss phase and summon stingers, the Incubator hatch, Lure Beacon pulse, Sonic Ward hum, Apex Altar summon, Capture Pod capture/release, Mirror Shield, Blink Charm, Resonant Whistle, Static Jar), all with English subtitles. The Scrap Hulk no longer borrows the iron golem's sounds, and no creature borrows vanilla voices any more.
+- Worn gear shows on the player (1.21.4+): the Lurker Cloak, Heat Gland Greaves and Graviton Boots have armour layers.
+- A filled Capture Pod looks filled; the Incubator and Terrarium have glass panes; the Incubator's lamp turns green while Core power reaches it; the Apex Altar glows in the colour of the boss whose sigil it holds.
 
 ### Changed
 

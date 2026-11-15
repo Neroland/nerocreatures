@@ -7,8 +7,11 @@ Gradle `genAssets` task.
 
     python tools/gen_textures.py                # write missing textures
     python tools/gen_textures.py --multiloader  # same (flag kept for the shared gradle task)
-    python tools/gen_textures.py --force        # rewrite every generated texture
+    python tools/gen_textures.py --force        # rewrite generated textures the art kit does not own
     python tools/gen_textures.py --list         # print what would be written, write nothing
+
+`--force` never touches real art: an item texture painted by `tools/art/paint/items.py` and an
+entity texture whose species has an art spec (`art/models/<id>.json`) are always kept.
 
 No third-party dependency: PNGs are encoded here with `zlib` + `struct`, so the script runs on a
 bare Python 3 install (Pillow is deliberately not required).
@@ -649,14 +652,29 @@ ENTITY_MOTIFS = {
 }
 
 
-def _write_set(motifs, directory: str, size: int, args) -> tuple:
+def art_owned_items() -> set:
+    """Item texture names the art kit paints (``tools/art/paint/items.py``): never placeholder-written."""
+    sys.path.insert(0, os.path.join(REPO_ROOT, "tools", "art", "paint"))
+    sys.path.insert(0, os.path.join(REPO_ROOT, "tools", "art"))
+    sys.dont_write_bytecode = True
+    import items  # noqa: E402  (standard library only)
+    return set(items.ITEMS)
+
+
+def art_owned_entities() -> set:
+    """Entity ids with an art spec (``art/models/<id>.json``): their textures are the art kit's."""
+    models = os.path.join(REPO_ROOT, "art", "models")
+    return {n[:-5] for n in os.listdir(models) if n.endswith(".json")} if os.path.isdir(models) else set()
+
+
+def _write_set(motifs, directory: str, size: int, args, owned: set = frozenset()) -> tuple:
     """Renders one motif set into `directory`. Returns (written, skipped)."""
     os.makedirs(directory, exist_ok=True)
     written = 0
     skipped = 0
     for name, motif in sorted(motifs.items()):
         path = os.path.join(directory, name + ".png")
-        if os.path.exists(path) and not args.force:
+        if os.path.exists(path) and (not args.force or name in owned):
             skipped += 1
             continue
         if args.list:
@@ -680,8 +698,10 @@ def main(argv: list[str]) -> int:
     parser.add_argument("--list", action="store_true", help="report only, write nothing")
     args = parser.parse_args(argv)
 
-    items = _write_set(MOTIFS, TEXTURE_DIR, SIZE, args)
-    entities = _write_set(ENTITY_MOTIFS, ENTITY_TEXTURE_DIR, ENTITY_SIZE, args)
+    owned_items = art_owned_items() if args.force else frozenset()
+    owned_entities = art_owned_entities() if args.force else frozenset()
+    items = _write_set(MOTIFS, TEXTURE_DIR, SIZE, args, owned_items)
+    entities = _write_set(ENTITY_MOTIFS, ENTITY_TEXTURE_DIR, ENTITY_SIZE, args, owned_entities)
     written = items[0] + entities[0]
     skipped = items[1] + entities[1]
     print("gen_textures: {} written, {} already present".format(written, skipped))

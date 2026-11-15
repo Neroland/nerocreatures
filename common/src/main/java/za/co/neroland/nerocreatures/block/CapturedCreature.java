@@ -12,6 +12,7 @@ import net.minecraft.nbt.NbtOps;
 import net.minecraft.nbt.Tag;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.CustomData;
+import net.minecraft.world.item.component.CustomModelData;
 
 import za.co.neroland.nerocreatures.trait.TraitSet;
 
@@ -139,10 +140,23 @@ public record CapturedCreature(int version, String species, CompoundTag entity, 
         CompoundTag tag = data == null ? new CompoundTag() : data.copyTag();
         tag.put(KEY, this.toTag());
         stack.set(DataComponents.CUSTOM_DATA, CustomData.of(tag));
+        stack.set(DataComponents.CUSTOM_MODEL_DATA, FILLED_MODEL);
     }
+
+    /**
+     * The filled-pod model switch: {@code custom_model_data} flag 0 = true on 1.21.4+ (item model
+     * {@code minecraft:condition}), value 1 on 1.21.1 (model {@code overrides} predicate). Visual only;
+     * {@link #isFilled} still reads {@link #KEY}.
+     */
+    //? if >=1.21.4 {
+    private static final CustomModelData FILLED_MODEL = new CustomModelData(List.of(), List.of(true), List.of(), List.of());
+    //?} else {
+    /*private static final CustomModelData FILLED_MODEL = new CustomModelData(1);
+    *///?}
 
     /** Empties a pod: removes {@link #KEY}, and the component when nothing else is left. */
     public static void clear(ItemStack stack) {
+        stack.remove(DataComponents.CUSTOM_MODEL_DATA);
         CustomData data = stack.get(DataComponents.CUSTOM_DATA);
         if (data == null) {
             return;

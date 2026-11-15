@@ -1,0 +1,9 @@
+{
+  "layers": {
+    "humanoid": [
+      {
+        "texture": "nerocreatures:graviton_boots"
+      }
+    ]
+  }
+}

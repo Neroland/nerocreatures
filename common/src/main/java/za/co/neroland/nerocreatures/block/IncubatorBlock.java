@@ -17,6 +17,9 @@ import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
@@ -42,14 +45,31 @@ public class IncubatorBlock extends HabitatBlock {
 
     private static final VoxelShape SHAPE = Block.box(1.0D, 0.0D, 1.0D, 15.0D, 14.0D, 15.0D);
 
+    /** Core energy reached the egg on the last pulse (lamp green, a little brighter). */
+    public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
+
     public IncubatorBlock(BlockBehaviour.Properties properties) {
         super(properties);
+        this.registerDefaultState(this.stateDefinition.any().setValue(POWERED, false));
+    }
+
+    @Override
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
+        builder.add(POWERED);
+    }
+
+    /** Sets {@link #POWERED} if it changed (client update only, no neighbour churn). */
+    static void setPowered(Level level, BlockPos pos, BlockState state, boolean powered) {
+        if (state.hasProperty(POWERED) && state.getValue(POWERED) != powered) {
+            level.setBlock(pos, state.setValue(POWERED, powered), Block.UPDATE_CLIENTS);
+        }
     }
 
     /** Registration properties without the id (the integrator adds {@code .setId(key)}). */
     public static BlockBehaviour.Properties incubatorProperties() {
         return BlockBehaviour.Properties.of().mapColor(MapColor.METAL).strength(3.0F, 6.0F).sound(SoundType.COPPER)
-                .requiresCorrectToolForDrops().noOcclusion().lightLevel(state -> 4);
+                .requiresCorrectToolForDrops().noOcclusion()
+                .lightLevel(state -> state.hasProperty(POWERED) && state.getValue(POWERED) ? 7 : 4);
     }
 
     // No @Override: 26.3 removed Block.codec(); older lines still call it.
