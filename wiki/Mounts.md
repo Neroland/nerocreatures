@@ -3,6 +3,13 @@
 0.5.0 adds rideable creatures. They share one mount base, so they all work the same way on every
 Minecraft line NeroCreatures supports.
 
+## The mounts
+
+| Mount | World | Food | Jump-bar ability |
+| ----- | ----- | ---- | ---------------- |
+| Dune Loper | [Mars](Mars.md) | beetroot | a bounding low-gravity leap |
+| Void Manta | [Deep Space](Deep-Space.md) | chorus fruit | a blink of up to 8 blocks; flies freely in low or zero gravity, glides elsewhere |
+
 ## Taming and the cap
 
 A mount is tamed like a pet (its species food, one in three feeds) but counts against its own cap,
@@ -41,6 +48,7 @@ when its owner's data is erased.
 
 ## See also
 
+- [Deep Space](Deep-Space.md) — the Void Manta's flight and blink rules
 - [Traits](Traits.md)
 - [Pets & Drones](Pets-and-Drones.md)
 - [Config](Config.md)

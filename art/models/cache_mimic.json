@@ -1,0 +1,364 @@
+{
+  "format": 1,
+  "id": "cache_mimic",
+  "name": "Cache Mimic",
+  "habitat": "wrecks",
+  "size_class": "S",
+  "silhouette": "dormant: exactly one square cargo crate; awake: the same crate up on four short crab legs, lid split open on fangs",
+  "hitbox_guide": [1.0, 1.0],
+  "texture": {"width": 64, "height": 64},
+  "render_type": "cutout",
+  "renderer": {"scale": 1.0, "shadow": 0.0},
+  "materials": ["white", "hazard", "oxide"],
+  "accent": "accent",
+  "glow_organs": [
+    "hairline seam under the lid (the dormant tell)",
+    "the maw floor inside the crate",
+    "tongue tip"
+  ],
+  "radiant": null,
+  "parts": [
+    {
+      "name": "crate",
+      "parent": null,
+      "pivot": [0, 24, 0],
+      "rotation": [0, 0, 0],
+      "visible_when": {"form": [0]},
+      "cubes": [
+        {"name": "base", "origin": [-8, -10, -8], "size": [16, 10, 16], "uv": [0, 0]}
+      ]
+    },
+    {
+      "name": "lid",
+      "parent": "crate",
+      "pivot": [0, -10, 8],
+      "rotation": [0, 0, 0],
+      "cubes": [
+        {"name": "lid", "origin": [-8, -6, -16], "size": [16, 6, 16], "uv": [0, 26]}
+      ]
+    },
+    {
+      "name": "cap",
+      "parent": "lid",
+      "pivot": [0, -6, -8],
+      "rotation": [0, 0, 0],
+      "visible_when": {"variant": [1]},
+      "cubes": [
+        {"name": "cap", "origin": [-5, 0, -5], "size": [10, 1, 10], "inflate": 0.25, "uv": [0, 48]}
+      ]
+    },
+    {
+      "name": "strip",
+      "parent": "crate",
+      "pivot": [0, -5, -8],
+      "rotation": [0, 0, 0],
+      "visible_when": {"variant": [1]},
+      "cubes": [
+        {"name": "strip", "origin": [-6, -2, 0], "size": [12, 3, 1], "inflate": 0.25, "uv": [0, 59]}
+      ]
+    },
+    {
+      "name": "crate_awake",
+      "parent": null,
+      "pivot": [0, 21, 0],
+      "rotation": [0, 0, 0],
+      "visible_when": {"form": [1]},
+      "uv_like": "crate",
+      "cubes": [
+        {"name": "base", "origin": [-8, -10, -8], "size": [16, 10, 16], "uv": [0, 0], "mirror": true}
+      ]
+    },
+    {
+      "name": "lid_awake",
+      "parent": "crate_awake",
+      "pivot": [0, -10, 8],
+      "rotation": [-24, 0, 0],
+      "uv_like": "lid",
+      "cubes": [
+        {"name": "lid", "origin": [-8, -6, -16], "size": [16, 6, 16], "uv": [0, 26], "mirror": true}
+      ]
+    },
+    {
+      "name": "cap_awake",
+      "parent": "lid_awake",
+      "pivot": [0, -6, -8],
+      "rotation": [0, 0, 0],
+      "visible_when": {"variant": [1]},
+      "uv_like": "cap",
+      "cubes": [
+        {"name": "cap", "origin": [-5, 0, -5], "size": [10, 1, 10], "inflate": 0.25, "uv": [0, 48], "mirror": true}
+      ]
+    },
+    {
+      "name": "strip_awake",
+      "parent": "crate_awake",
+      "pivot": [0, -5, -8],
+      "rotation": [0, 0, 0],
+      "visible_when": {"variant": [1]},
+      "uv_like": "strip",
+      "cubes": [
+        {"name": "strip", "origin": [-6, -2, 0], "size": [12, 3, 1], "inflate": 0.25, "uv": [0, 59], "mirror": true}
+      ]
+    },
+    {
+      "name": "fangs_top",
+      "parent": "lid_awake",
+      "pivot": [0, 0, -15],
+      "rotation": [0, 0, 0],
+      "cubes": [
+        {"name": "fang_l", "origin": [2, 0, -0.5], "size": [2, 3, 1], "uv": [40, 55]},
+        {"name": "fang_r", "origin": [-4, 0, -0.5], "size": [2, 3, 1], "uv": [46, 55]}
+      ]
+    },
+    {
+      "name": "fangs_low",
+      "parent": "crate_awake",
+      "pivot": [0, -10, -7],
+      "rotation": [0, 0, 0],
+      "cubes": [
+        {"name": "fang_l", "origin": [5, -2, -0.5], "size": [2, 2, 1], "uv": [52, 55]},
+        {"name": "fang_r", "origin": [-7, -2, -0.5], "size": [2, 2, 1], "uv": [58, 55]}
+      ]
+    },
+    {
+      "name": "tongue",
+      "parent": "crate_awake",
+      "pivot": [0, -9, 3],
+      "rotation": [0, 0, 0],
+      "cubes": [
+        {"name": "tongue", "origin": [-1, 0, -6], "size": [2, 1, 6], "uv": [40, 48]}
+      ]
+    },
+    {
+      "name": "leg_fl",
+      "parent": null,
+      "pivot": [7, 20, -5],
+      "rotation": [0, 0, -36],
+      "visible_when": {"form": [1]},
+      "cubes": [
+        {"name": "leg", "origin": [-1, 0, -1], "size": [2, 5, 2], "uv": [56, 48]}
+      ]
+    },
+    {
+      "name": "leg_fr",
+      "parent": null,
+      "pivot": [-7, 20, -5],
+      "rotation": [0, 0, 36],
+      "visible_when": {"form": [1]},
+      "uv_like": "leg_fl",
+      "cubes": [
+        {"name": "leg", "origin": [-1, 0, -1], "size": [2, 5, 2], "uv": [56, 48], "mirror": true}
+      ]
+    },
+    {
+      "name": "leg_bl",
+      "parent": null,
+      "pivot": [7, 20, 5],
+      "rotation": [0, 0, -36],
+      "visible_when": {"form": [1]},
+      "uv_like": "leg_fl",
+      "cubes": [
+        {"name": "leg", "origin": [-1, 0, -1], "size": [2, 5, 2], "uv": [56, 48], "mirror": true}
+      ]
+    },
+    {
+      "name": "leg_br",
+      "parent": null,
+      "pivot": [-7, 20, 5],
+      "rotation": [0, 0, 36],
+      "visible_when": {"form": [1]},
+      "uv_like": "leg_fl",
+      "cubes": [
+        {"name": "leg", "origin": [-1, 0, -1], "size": [2, 5, 2], "uv": [56, 48], "mirror": true}
+      ]
+    }
+  ],
+  "procedural": {
+    "swing": [
+      {"part": "leg_fl", "phase": 0, "amplitude": 34},
+      {"part": "leg_br", "phase": 0, "amplitude": 34},
+      {"part": "leg_fr", "phase": 180, "amplitude": 34},
+      {"part": "leg_bl", "phase": 180, "amplitude": 34}
+    ]
+  },
+  "clips": {
+    "idle": {
+      "length": 200,
+      "loop": true,
+      "key_pose": 4,
+      "note": "dormant tell: every 10 s the lid lifts one texel and settles (form 0 lid); awake, the open lid chews once on the same beat",
+      "tracks": {
+        "lid": {
+          "rot": [
+            {"t": 0, "v": [0.0, 0.0, 0.0]},
+            {"t": 4, "v": [-4.0, 0.0, 0.0], "ease": "smooth"},
+            {"t": 9, "v": [0.0, 0.0, 0.0], "ease": "smooth"},
+            {"t": 200, "v": [0.0, 0.0, 0.0], "ease": "smooth"}
+          ]
+        },
+        "lid_awake": {
+          "rot": [
+            {"t": 0, "v": [0.0, 0.0, 0.0]},
+            {"t": 4, "v": [-8.0, 0.0, 0.0], "ease": "smooth"},
+            {"t": 9, "v": [3.0, 0.0, 0.0], "ease": "smooth"},
+            {"t": 14, "v": [0.0, 0.0, 0.0], "ease": "smooth"},
+            {"t": 200, "v": [0.0, 0.0, 0.0], "ease": "smooth"}
+          ]
+        }
+      }
+    },
+    "move": {
+      "length": 20,
+      "loop": true,
+      "key_pose": 5,
+      "note": "crab scuttle: legs on the swing, crate rocks side to side over them, lid flaps",
+      "tracks": {
+        "crate_awake": {
+          "rot": [
+            {"t": 0, "v": [0.0, 0.0, -5.0]},
+            {"t": 10, "v": [0.0, 0.0, 5.0], "ease": "smooth"},
+            {"t": 20, "v": [0.0, 0.0, -5.0], "ease": "smooth"}
+          ],
+          "pos": [
+            {"t": 0, "v": [0.0, 0.0, 0.0]},
+            {"t": 5, "v": [0.0, -1.0, 0.0], "ease": "smooth"},
+            {"t": 10, "v": [0.0, 0.0, 0.0], "ease": "smooth"},
+            {"t": 15, "v": [0.0, -1.0, 0.0], "ease": "smooth"},
+            {"t": 20, "v": [0.0, 0.0, 0.0], "ease": "smooth"}
+          ]
+        },
+        "lid_awake": {
+          "rot": [
+            {"t": 0, "v": [0.0, 0.0, 0.0]},
+            {"t": 5, "v": [-7.0, 0.0, 0.0], "ease": "smooth"},
+            {"t": 10, "v": [0.0, 0.0, 0.0], "ease": "smooth"},
+            {"t": 15, "v": [-7.0, 0.0, 0.0], "ease": "smooth"},
+            {"t": 20, "v": [0.0, 0.0, 0.0], "ease": "smooth"}
+          ]
+        }
+      }
+    },
+    "ability": {
+      "length": 20,
+      "loop": false,
+      "key_pose": 12,
+      "damaging": false,
+      "telegraph": 20,
+      "glow": [
+        {"t": 0, "v": 0.35},
+        {"t": 5, "v": 0.35},
+        {"t": 9, "v": 1.0},
+        {"t": 15, "v": 1.0},
+        {"t": 20, "v": 0.35}
+      ],
+      "note": "reveal (form 1 is set as it starts; no bite before it ends): crate drops and clamps shut, then the lid flies open, legs kick out and the tongue lashes",
+      "tracks": {
+        "crate_awake": {
+          "pos": [
+            {"t": 0, "v": [0.0, 3.0, 0.0]},
+            {"t": 5, "v": [0.0, 3.0, 0.0], "ease": "smooth"},
+            {"t": 9, "v": [0.0, -2.0, 0.0], "ease": "smooth"},
+            {"t": 14, "v": [0.0, 0.0, 0.0], "ease": "smooth"},
+            {"t": 20, "v": [0.0, 0.0, 0.0], "ease": "smooth"}
+          ]
+        },
+        "lid_awake": {
+          "rot": [
+            {"t": 0, "v": [24.0, 0.0, 0.0]},
+            {"t": 5, "v": [24.0, 0.0, 0.0], "ease": "smooth"},
+            {"t": 9, "v": [-58.0, 0.0, 0.0], "ease": "smooth"},
+            {"t": 15, "v": [-50.0, 0.0, 0.0], "ease": "smooth"},
+            {"t": 20, "v": [0.0, 0.0, 0.0], "ease": "smooth"}
+          ]
+        },
+        "tongue": {
+          "pos": [
+            {"t": 0, "v": [0.0, 0.0, 0.0]},
+            {"t": 8, "v": [0.0, 0.0, 0.0], "ease": "smooth"},
+            {"t": 12, "v": [0.0, -4.0, -9.0], "ease": "smooth"},
+            {"t": 15, "v": [0.0, -3.0, -6.0], "ease": "smooth"},
+            {"t": 20, "v": [0.0, 0.0, 0.0], "ease": "smooth"}
+          ],
+          "rot": [
+            {"t": 0, "v": [0.0, 0.0, 0.0]},
+            {"t": 8, "v": [0.0, 0.0, 0.0], "ease": "smooth"},
+            {"t": 12, "v": [-22.0, 0.0, 0.0], "ease": "smooth"},
+            {"t": 15, "v": [14.0, 0.0, 0.0], "ease": "smooth"},
+            {"t": 20, "v": [0.0, 0.0, 0.0], "ease": "smooth"}
+          ]
+        },
+        "leg_fl": {
+          "rot": [
+            {"t": 0, "v": [0.0, 0.0, 36.0]},
+            {"t": 5, "v": [0.0, 0.0, 36.0], "ease": "smooth"},
+            {"t": 9, "v": [0.0, 0.0, -30.0], "ease": "smooth"},
+            {"t": 14, "v": [0.0, 0.0, 0.0], "ease": "smooth"}
+          ]
+        },
+        "leg_bl": {
+          "rot": [
+            {"t": 0, "v": [0.0, 0.0, 36.0]},
+            {"t": 5, "v": [0.0, 0.0, 36.0], "ease": "smooth"},
+            {"t": 9, "v": [0.0, 0.0, -30.0], "ease": "smooth"},
+            {"t": 14, "v": [0.0, 0.0, 0.0], "ease": "smooth"}
+          ]
+        },
+        "leg_fr": {
+          "rot": [
+            {"t": 0, "v": [0.0, 0.0, -36.0]},
+            {"t": 5, "v": [0.0, 0.0, -36.0], "ease": "smooth"},
+            {"t": 9, "v": [0.0, 0.0, 30.0], "ease": "smooth"},
+            {"t": 14, "v": [0.0, 0.0, 0.0], "ease": "smooth"}
+          ]
+        },
+        "leg_br": {
+          "rot": [
+            {"t": 0, "v": [0.0, 0.0, -36.0]},
+            {"t": 5, "v": [0.0, 0.0, -36.0], "ease": "smooth"},
+            {"t": 9, "v": [0.0, 0.0, 30.0], "ease": "smooth"},
+            {"t": 14, "v": [0.0, 0.0, 0.0], "ease": "smooth"}
+          ]
+        }
+      }
+    },
+    "hurt": {
+      "length": 6,
+      "loop": false,
+      "key_pose": 2,
+      "note": "lid slams shut and springs back",
+      "tracks": {
+        "lid_awake": {
+          "rot": [
+            {"t": 0, "v": [0.0, 0.0, 0.0]},
+            {"t": 2, "v": [24.0, 0.0, 0.0], "ease": "smooth"},
+            {"t": 6, "v": [0.0, 0.0, 0.0], "ease": "smooth"}
+          ]
+        },
+        "crate_awake": {
+          "pos": [
+            {"t": 0, "v": [0.0, 0.0, 0.0]},
+            {"t": 2, "v": [0.0, 1.0, 0.0], "ease": "smooth"},
+            {"t": 6, "v": [0.0, 0.0, 0.0], "ease": "smooth"}
+          ]
+        }
+      }
+    },
+    "rest": {
+      "length": 10,
+      "loop": false,
+      "key_pose": 3,
+      "note": "going dormant (form 0 is set as it starts): the lid claps down and settles",
+      "tracks": {
+        "lid": {
+          "rot": [
+            {"t": 0, "v": [-22.0, 0.0, 0.0]},
+            {"t": 5, "v": [0.0, 0.0, 0.0], "ease": "smooth"},
+            {"t": 7, "v": [-4.0, 0.0, 0.0], "ease": "smooth"},
+            {"t": 10, "v": [0.0, 0.0, 0.0], "ease": "smooth"}
+          ]
+        }
+      }
+    }
+  },
+  "uv_fill": 0.944
+}

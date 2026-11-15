@@ -224,28 +224,28 @@
       ]
     }
   ],
-  "procedural": {"swing": [], "wave": [], "look": []},
+  "procedural": {
+    "swing": [],
+    "wave": [],
+    "look": [],
+    "spin": [
+      {"part": "ring", "axis": "y", "speed": 1.5, "phase": 0, "when": {"pose": ["idle"], "phase": [0, 1]}},
+      {"part": "ring", "axis": "y", "speed": 3.0, "phase": 0, "when": {"pose": ["idle"], "phase": [2]}},
+      {"part": "ring", "axis": "y", "speed": 0.75, "phase": 0, "when": {"pose": ["idle"], "phase": [3]}}
+    ]
+  },
   "clips": {
     "idle": {
       "length": 240,
       "loop": true,
       "key_pose": 30,
-      "note": "ring turns slowly in its tilted plane (a third of a turn out and back each way); the core hums (crown bobs)",
+      "note": "ring spins slowly in its tilted plane (procedural spin, a full turn every 12 s); the core hums (crown bobs)",
       "glow": [
         {"t": 0, "v": 0.35},
         {"t": 120, "v": 0.5, "ease": "smooth"},
         {"t": 240, "v": 0.35, "ease": "smooth"}
       ],
       "tracks": {
-        "ring": {
-          "rot": [
-            {"t": 0, "v": [0, 0, 0]},
-            {"t": 60, "v": [0, 120, 0], "ease": "smooth"},
-            {"t": 120, "v": [0, 0, 0], "ease": "smooth"},
-            {"t": 180, "v": [0, -120, 0], "ease": "smooth"},
-            {"t": 240, "v": [0, 0, 0], "ease": "smooth"}
-          ]
-        },
         "crown": {
           "pos": [
             {"t": 0, "v": [0, 0, 0]},
@@ -422,7 +422,7 @@
       "length": 240,
       "loop": true,
       "key_pose": 30,
-      "note": "ring level, turning slowly; one facet lit (variant = facet index)",
+      "note": "ring level, spinning slowly; one facet lit (variant = facet index)",
       "glow": [
         {"t": 0, "v": 0.35},
         {"t": 120, "v": 0.5, "ease": "smooth"},
@@ -432,10 +432,7 @@
         "ring": {
           "rot": [
             {"t": 0, "v": [0, 0, -18]},
-            {"t": 60, "v": [0, 120, -18], "ease": "smooth"},
-            {"t": 120, "v": [0, 0, -18], "ease": "smooth"},
-            {"t": 180, "v": [0, -120, -18], "ease": "smooth"},
-            {"t": 240, "v": [0, 0, -18], "ease": "smooth"}
+            {"t": 240, "v": [0, 0, -18]}
           ]
         },
         "crown": {
@@ -455,7 +452,7 @@
       "length": 120,
       "loop": true,
       "key_pose": 15,
-      "note": "ring tilted hard and turning at twice the rate; the lit facet is the vulnerable one",
+      "note": "ring tilted hard and spinning at twice the rate; the lit facet is the vulnerable one",
       "glow": [
         {"t": 0, "v": 0.6},
         {"t": 60, "v": 0.85, "ease": "smooth"},
@@ -465,10 +462,7 @@
         "ring": {
           "rot": [
             {"t": 0, "v": [0, 0, 10]},
-            {"t": 30, "v": [0, 120, 10], "ease": "smooth"},
-            {"t": 60, "v": [0, 0, 10], "ease": "smooth"},
-            {"t": 90, "v": [0, -120, 10], "ease": "smooth"},
-            {"t": 120, "v": [0, 0, 10], "ease": "smooth"}
+            {"t": 120, "v": [0, 0, 10]}
           ]
         },
         "crown": {
@@ -500,10 +494,7 @@
         "ring": {
           "rot": [
             {"t": 0, "v": [0, 0, -6]},
-            {"t": 40, "v": [0, 60, -6], "ease": "smooth"},
-            {"t": 80, "v": [0, 0, -6], "ease": "smooth"},
-            {"t": 120, "v": [0, -60, -6], "ease": "smooth"},
-            {"t": 160, "v": [0, 0, -6], "ease": "smooth"}
+            {"t": 160, "v": [0, 0, -6]}
           ]
         },
         "crown": {

@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "nerocreatures:static_jar",
+    "minecraft:redstone"
+  ],
+  "result": {
+    "count": 2,
+    "id": "nerocreatures:plasma_cell"
+  }
+}

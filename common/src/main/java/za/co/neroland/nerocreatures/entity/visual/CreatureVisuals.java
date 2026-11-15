@@ -1,7 +1,6 @@
 package za.co.neroland.nerocreatures.entity.visual;
 
 import net.minecraft.network.syncher.EntityDataAccessor;
-import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.world.entity.Entity;
 
@@ -24,7 +23,10 @@ import net.minecraft.world.entity.Entity;
  *
  * <h2>Wiring in a class root (once per root, not per species)</h2>
  * <pre>{@code
- * private static final CreatureVisuals.Ids VISUALS_IDS = CreatureVisuals.defineIds(NeroCreatureEntity.class);
+ * private static final CreatureVisuals.Ids VISUALS_IDS = new CreatureVisuals.Ids(
+ *         SynchedEntityData.defineId(Root.class, EntityDataSerializers.INT),
+ *         SynchedEntityData.defineId(Root.class, EntityDataSerializers.INT));
+ * (call defineId in the root class itself; NeoForge 26.x rejects ids allocated from a helper)
  * private final CreatureVisuals visuals = new CreatureVisuals(this, VISUALS_IDS);
  *
  * @Override protected void defineSynchedData(SynchedEntityData.Builder builder) {
@@ -66,15 +68,6 @@ public final class CreatureVisuals {
     public CreatureVisuals(Entity entity, Ids ids) {
         this.entity = entity;
         this.ids = ids;
-    }
-
-    /**
-     * Allocates the two ids. Call exactly once per class root, in a {@code static final} field of
-     * that root (data ids are allocated per class hierarchy).
-     */
-    public static Ids defineIds(Class<? extends Entity> root) {
-        return new Ids(SynchedEntityData.defineId(root, EntityDataSerializers.INT),
-                SynchedEntityData.defineId(root, EntityDataSerializers.INT));
     }
 
     /** Defines the default values. Call from the root's {@code defineSynchedData}. */

@@ -1,0 +1,288 @@
+{
+  "format": 1,
+  "id": "plasma_slime",
+  "name": "Plasma Slime",
+  "habitat": "deep_space",
+  "size_class": "S",
+  "silhouette": "a teardrop droplet with a bright floating nucleus and two small orbiting sub-drops",
+  "hitbox_guide": [1.0, 1.0],
+  "texture": {"width": 64, "height": 64},
+  "render_type": "translucent",
+  "renderer": {"scale": 1.0, "shadow": 0.5},
+  "materials": ["indigo", "navy"],
+  "accent": "accent",
+  "glow_organs": ["nucleus (the aura; exempt from the glow cap)", "sub-drop cores"],
+  "radiant": null,
+  "parts": [
+    {
+      "name": "nucleus",
+      "parent": null,
+      "pivot": [0, 18, 0],
+      "rotation": [20, 30, 0],
+      "cubes": [
+        {"name": "core", "origin": [-2, -2, -2], "size": [4, 4, 4], "uv": [48, 0]}
+      ]
+    },
+    {
+      "name": "shell",
+      "parent": null,
+      "pivot": [0, 24, 0],
+      "rotation": [0, 0, 0],
+      "cubes": [
+        {"name": "base", "origin": [-6, -5, -6], "size": [12, 5, 12], "uv": [0, 0]}
+      ]
+    },
+    {
+      "name": "mid",
+      "parent": "shell",
+      "pivot": [0, -5, 0],
+      "rotation": [0, 0, 0],
+      "cubes": [
+        {"name": "belly", "origin": [-5, -4, -5], "size": [10, 5, 10], "uv": [0, 17]}
+      ]
+    },
+    {
+      "name": "top",
+      "parent": "mid",
+      "pivot": [0, -4, 0],
+      "rotation": [0, 0, 0],
+      "cubes": [
+        {"name": "cone", "origin": [-3, -3, -3], "size": [6, 4, 6], "uv": [40, 17]},
+        {"name": "tip", "origin": [0, -6, -1], "size": [2, 3, 2], "uv": [40, 27]}
+      ]
+    },
+    {
+      "name": "drop_a",
+      "parent": null,
+      "pivot": [9, 13, 0],
+      "rotation": [0, 0, 0],
+      "cubes": [
+        {"name": "drop", "origin": [-1.5, -1.5, -1.5], "size": [3, 3, 3], "uv": [48, 8]}
+      ]
+    },
+    {
+      "name": "drop_b",
+      "parent": null,
+      "pivot": [-9, 16, 0],
+      "rotation": [0, 0, 0],
+      "cubes": [
+        {"name": "drop", "origin": [-1, -1, -1], "size": [2, 2, 2], "uv": [48, 27]}
+      ]
+    }
+  ],
+  "procedural": {
+    "wave": [
+      {"part": "nucleus", "axis": "x", "frequency": 0.07, "phase": 0, "amplitude": 28, "fade_with_walk": false},
+      {"part": "nucleus", "axis": "z", "frequency": 0.11, "phase": 60, "amplitude": 28, "fade_with_walk": false},
+      {"part": "top", "axis": "z", "frequency": 0.09, "phase": 0, "amplitude": 5, "fade_with_walk": true}
+    ]
+  },
+  "clips": {
+    "idle": {
+      "length": 60,
+      "loop": true,
+      "key_pose": 10,
+      "glow": [
+        {"t": 0, "v": 0.5},
+        {"t": 30, "v": 0.7, "ease": "smooth"},
+        {"t": 60, "v": 0.5, "ease": "smooth"}
+      ],
+      "note": "nucleus tumbles (two procedural waves) and bobs; the two sub-drops orbit the droplet on a six-point ring, opposite each other",
+      "tracks": {
+        "drop_a": {
+          "pos": [
+            {"t": 0, "v": [0.0, 0.0, 0.0]},
+            {"t": 10, "v": [-4.5, 0.87, 7.79]},
+            {"t": 20, "v": [-13.5, -0.87, 7.79]},
+            {"t": 30, "v": [-18.0, -0.0, 0.0]},
+            {"t": 40, "v": [-13.5, 0.87, -7.79]},
+            {"t": 50, "v": [-4.5, -0.87, -7.79]},
+            {"t": 60, "v": [0.0, 0.0, 0.0]}
+          ]
+        },
+        "drop_b": {
+          "pos": [
+            {"t": 0, "v": [0.0, -0.0, 0.0]},
+            {"t": 10, "v": [4.5, 0.87, -7.79]},
+            {"t": 20, "v": [13.5, -0.87, -7.79]},
+            {"t": 30, "v": [18.0, -0.0, -0.0]},
+            {"t": 40, "v": [13.5, 0.87, 7.79]},
+            {"t": 50, "v": [4.5, -0.87, 7.79]},
+            {"t": 60, "v": [0.0, -0.0, 0.0]}
+          ]
+        },
+        "nucleus": {
+          "pos": [
+            {"t": 0, "v": [0.0, 0.0, 0.0]},
+            {"t": 30, "v": [0.0, 0.0, 0.0], "ease": "smooth"},
+            {"t": 60, "v": [0.0, 0.0, 0.0], "ease": "smooth"}
+          ]
+        }
+      }
+    },
+    "move": {
+      "length": 12,
+      "loop": true,
+      "key_pose": 6,
+      "note": "squash and stretch hop: the three tiers telescope flat on landing (tick 0) and tall at the top of the hop (tick 6); sub-drops keep orbiting",
+      "tracks": {
+        "shell": {
+          "pos": [
+            {"t": 0, "v": [0.0, 0.0, 0.0]},
+            {"t": 6, "v": [0.0, -4.0, 0.0], "ease": "smooth"},
+            {"t": 12, "v": [0.0, 0.0, 0.0], "ease": "smooth"}
+          ]
+        },
+        "mid": {
+          "pos": [
+            {"t": 0, "v": [0.0, 1.5, 0.0]},
+            {"t": 6, "v": [0.0, -1.0, 0.0], "ease": "smooth"},
+            {"t": 12, "v": [0.0, 1.5, 0.0], "ease": "smooth"}
+          ]
+        },
+        "top": {
+          "pos": [
+            {"t": 0, "v": [0.0, 1.5, 0.0]},
+            {"t": 6, "v": [0.0, -1.0, 0.0], "ease": "smooth"},
+            {"t": 12, "v": [0.0, 1.5, 0.0], "ease": "smooth"}
+          ]
+        },
+        "nucleus": {
+          "pos": [
+            {"t": 0, "v": [0.0, 1.5, 0.0]},
+            {"t": 6, "v": [0.0, -5.0, 0.0], "ease": "smooth"},
+            {"t": 12, "v": [0.0, 1.5, 0.0], "ease": "smooth"}
+          ]
+        },
+        "drop_a": {
+          "pos": [
+            {"t": 0, "v": [0.0, 0.0, 0.0]},
+            {"t": 2, "v": [-4.5, 0.87, 7.79]},
+            {"t": 4, "v": [-13.5, -0.87, 7.79]},
+            {"t": 6, "v": [-18.0, -0.0, 0.0]},
+            {"t": 8, "v": [-13.5, 0.87, -7.79]},
+            {"t": 10, "v": [-4.5, -0.87, -7.79]},
+            {"t": 12, "v": [0.0, 0.0, 0.0]}
+          ]
+        },
+        "drop_b": {
+          "pos": [
+            {"t": 0, "v": [0.0, -0.0, 0.0]},
+            {"t": 2, "v": [4.5, 0.87, -7.79]},
+            {"t": 4, "v": [13.5, -0.87, -7.79]},
+            {"t": 6, "v": [18.0, -0.0, -0.0]},
+            {"t": 8, "v": [13.5, 0.87, 7.79]},
+            {"t": 10, "v": [4.5, -0.87, 7.79]},
+            {"t": 12, "v": [0.0, -0.0, 0.0]}
+          ]
+        }
+      }
+    },
+    "ability": {
+      "length": 24,
+      "loop": false,
+      "key_pose": 12,
+      "telegraph": 10,
+      "damaging": true,
+      "glow": [
+        {"t": 0, "v": 0.5},
+        {"t": 10, "v": 1.0},
+        {"t": 18, "v": 1.0},
+        {"t": 24, "v": 0.5}
+      ],
+      "note": "aura pulse (timed, 24 ticks): the droplet sinks and gathers through the 10-tick telegraph, then swells tall as the nucleus rises and flashes and the sub-drops are thrown outward",
+      "tracks": {
+        "mid": {
+          "pos": [
+            {"t": 0, "v": [0.0, 0.0, 0.0]},
+            {"t": 10, "v": [0.0, 1.5, 0.0], "ease": "smooth"},
+            {"t": 13, "v": [0.0, -1.0, 0.0], "ease": "smooth"},
+            {"t": 18, "v": [0.0, -1.0, 0.0]},
+            {"t": 24, "v": [0.0, 0.0, 0.0], "ease": "smooth"}
+          ]
+        },
+        "top": {
+          "pos": [
+            {"t": 0, "v": [0.0, 0.0, 0.0]},
+            {"t": 10, "v": [0.0, 1.5, 0.0], "ease": "smooth"},
+            {"t": 13, "v": [0.0, -1.0, 0.0], "ease": "smooth"},
+            {"t": 18, "v": [0.0, -1.0, 0.0]},
+            {"t": 24, "v": [0.0, 0.0, 0.0], "ease": "smooth"}
+          ]
+        },
+        "nucleus": {
+          "pos": [
+            {"t": 0, "v": [0.0, 0.0, 0.0]},
+            {"t": 10, "v": [0.0, 2.0, 0.0], "ease": "smooth"},
+            {"t": 13, "v": [0.0, -3.0, 0.0], "ease": "smooth"},
+            {"t": 18, "v": [0.0, -3.0, 0.0]},
+            {"t": 24, "v": [0.0, 0.0, 0.0], "ease": "smooth"}
+          ]
+        },
+        "drop_a": {
+          "pos": [
+            {"t": 0, "v": [0.0, 0.0, 0.0]},
+            {"t": 10, "v": [-3.0, 2.0, 0.0], "ease": "smooth"},
+            {"t": 13, "v": [4.0, -2.0, 0.0], "ease": "smooth"},
+            {"t": 18, "v": [4.0, -2.0, 0.0]},
+            {"t": 24, "v": [0.0, 0.0, 0.0], "ease": "smooth"}
+          ]
+        },
+        "drop_b": {
+          "pos": [
+            {"t": 0, "v": [0.0, 0.0, 0.0]},
+            {"t": 10, "v": [3.0, 1.0, 0.0], "ease": "smooth"},
+            {"t": 13, "v": [-4.0, -3.0, 0.0], "ease": "smooth"},
+            {"t": 18, "v": [-4.0, -3.0, 0.0]},
+            {"t": 24, "v": [0.0, 0.0, 0.0], "ease": "smooth"}
+          ]
+        }
+      }
+    },
+    "hurt": {
+      "length": 6,
+      "loop": false,
+      "key_pose": 2,
+      "note": "droplet wobbles: the upper tiers shear sideways and spring back, the nucleus is knocked off centre",
+      "tracks": {
+        "mid": {
+          "rot": [
+            {"t": 0, "v": [0.0, 0.0, 0.0]},
+            {"t": 2, "v": [0.0, 0.0, 8.0], "ease": "smooth"},
+            {"t": 4, "v": [0.0, 0.0, -4.0], "ease": "smooth"},
+            {"t": 6, "v": [0.0, 0.0, 0.0], "ease": "smooth"}
+          ],
+          "pos": [
+            {"t": 0, "v": [0.0, 0.0, 0.0]},
+            {"t": 2, "v": [1.0, 0.5, 0.0], "ease": "smooth"},
+            {"t": 4, "v": [-0.5, -0.25, 0.0], "ease": "smooth"},
+            {"t": 6, "v": [0.0, 0.0, 0.0], "ease": "smooth"}
+          ]
+        },
+        "top": {
+          "rot": [
+            {"t": 0, "v": [0.0, 0.0, 0.0]},
+            {"t": 2, "v": [0.0, 0.0, 16.0], "ease": "smooth"},
+            {"t": 4, "v": [0.0, 0.0, -8.0], "ease": "smooth"},
+            {"t": 6, "v": [0.0, 0.0, 0.0], "ease": "smooth"}
+          ],
+          "pos": [
+            {"t": 0, "v": [0.0, 0.0, 0.0]},
+            {"t": 2, "v": [1.0, 0.5, 0.0], "ease": "smooth"},
+            {"t": 4, "v": [-0.5, -0.25, 0.0], "ease": "smooth"},
+            {"t": 6, "v": [0.0, 0.0, 0.0], "ease": "smooth"}
+          ]
+        },
+        "nucleus": {
+          "pos": [
+            {"t": 0, "v": [0.0, 0.0, 0.0]},
+            {"t": 2, "v": [-2.0, 1.0, 0.0], "ease": "smooth"},
+            {"t": 4, "v": [1.0, -0.5, 0.0], "ease": "smooth"},
+            {"t": 6, "v": [0.0, 0.0, 0.0], "ease": "smooth"}
+          ]
+        }
+      }
+    }
+  },
+  "uv_fill": 0.471
+}

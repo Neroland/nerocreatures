@@ -1,0 +1,419 @@
+{
+  "format": 1,
+  "id": "void_crawler",
+  "name": "Void Crawler",
+  "habitat": "deep_space",
+  "size_class": "S",
+  "silhouette": "low and longer than wide, six legs arching above the line of the back, forward-thrust head",
+  "hitbox_guide": [0.9, 0.8],
+  "texture": {"width": 64, "height": 64},
+  "render_type": "cutout",
+  "renderer": {"scale": 1.0, "shadow": 0.6},
+  "materials": ["indigo", "navy"],
+  "accent": "accent",
+  "glow_organs": ["eyes", "blink gland at the abdomen tip"],
+  "radiant": null,
+  "parts": [
+    {
+      "name": "body",
+      "parent": null,
+      "pivot": [0, 19, 0],
+      "rotation": [0, 0, 0],
+      "cubes": [
+        {"name": "thorax", "origin": [-3, -2, -6], "size": [6, 4, 7], "uv": [12, 0]},
+        {"name": "abdomen", "origin": [-2, -1.5, 1], "size": [4, 3, 7], "uv": [38, 0]},
+        {"name": "gland", "origin": [-1, -1, 8], "size": [2, 2, 2], "uv": [56, 10]}
+      ]
+    },
+    {
+      "name": "head",
+      "parent": "body",
+      "pivot": [0, 0, -6],
+      "rotation": [6, 0, 0],
+      "cubes": [
+        {"name": "skull", "origin": [-2, -1.5, -5], "size": [4, 3, 5], "uv": [38, 10]},
+        {"name": "fang_l", "origin": [1, 0, -7], "size": [1, 2, 2], "uv": [12, 11]},
+        {"name": "fang_r", "origin": [-2, 0, -7], "size": [1, 2, 2], "uv": [18, 11]}
+      ]
+    },
+    {
+      "name": "leg_l1",
+      "parent": null,
+      "pivot": [3, 18, -4.5],
+      "rotation": [0, 32, -60],
+      "cubes": [
+        {"name": "thigh", "origin": [0, -0.5, -0.5], "size": [5, 1, 1], "uv": [24, 11]}
+      ]
+    },
+    {
+      "name": "shin_l1",
+      "parent": "leg_l1",
+      "pivot": [5, 0, 0],
+      "rotation": [0, 0, 50],
+      "cubes": [
+        {"name": "shin", "origin": [-0.5, 0, -0.5], "size": [1, 11, 1], "uv": [0, 0]}
+      ]
+    },
+    {
+      "name": "leg_r1",
+      "parent": null,
+      "pivot": [-3, 18, -4.5],
+      "rotation": [0, -32, 60],
+      "uv_like": "leg_l1",
+      "cubes": [
+        {"name": "thigh", "origin": [-5, -0.5, -0.5], "size": [5, 1, 1], "uv": [24, 11], "mirror": true}
+      ]
+    },
+    {
+      "name": "shin_r1",
+      "parent": "leg_r1",
+      "pivot": [-5, 0, 0],
+      "rotation": [0, 0, -50],
+      "uv_like": "shin_l1",
+      "cubes": [
+        {"name": "shin", "origin": [-0.5, 0, -0.5], "size": [1, 11, 1], "uv": [0, 0], "mirror": true}
+      ]
+    },
+    {
+      "name": "leg_l2",
+      "parent": null,
+      "pivot": [3, 18, -2],
+      "rotation": [0, 0, -60],
+      "cubes": [
+        {"name": "thigh", "origin": [0, -0.5, -0.5], "size": [5, 1, 1], "uv": [0, 12]}
+      ]
+    },
+    {
+      "name": "shin_l2",
+      "parent": "leg_l2",
+      "pivot": [5, 0, 0],
+      "rotation": [0, 0, 50],
+      "cubes": [
+        {"name": "shin", "origin": [-0.5, 0, -0.5], "size": [1, 11, 1], "uv": [4, 0]}
+      ]
+    },
+    {
+      "name": "leg_r2",
+      "parent": null,
+      "pivot": [-3, 18, -2],
+      "rotation": [0, 0, 60],
+      "uv_like": "leg_l2",
+      "cubes": [
+        {"name": "thigh", "origin": [-5, -0.5, -0.5], "size": [5, 1, 1], "uv": [0, 12], "mirror": true}
+      ]
+    },
+    {
+      "name": "shin_r2",
+      "parent": "leg_r2",
+      "pivot": [-5, 0, 0],
+      "rotation": [0, 0, -50],
+      "uv_like": "shin_l2",
+      "cubes": [
+        {"name": "shin", "origin": [-0.5, 0, -0.5], "size": [1, 11, 1], "uv": [4, 0], "mirror": true}
+      ]
+    },
+    {
+      "name": "leg_l3",
+      "parent": null,
+      "pivot": [3, 18, 0.5],
+      "rotation": [0, -32, -60],
+      "cubes": [
+        {"name": "thigh", "origin": [0, -0.5, -0.5], "size": [5, 1, 1], "uv": [24, 13]}
+      ]
+    },
+    {
+      "name": "shin_l3",
+      "parent": "leg_l3",
+      "pivot": [5, 0, 0],
+      "rotation": [0, 0, 50],
+      "cubes": [
+        {"name": "shin", "origin": [-0.5, 0, -0.5], "size": [1, 11, 1], "uv": [8, 0]}
+      ]
+    },
+    {
+      "name": "leg_r3",
+      "parent": null,
+      "pivot": [-3, 18, 0.5],
+      "rotation": [0, 32, 60],
+      "uv_like": "leg_l3",
+      "cubes": [
+        {"name": "thigh", "origin": [-5, -0.5, -0.5], "size": [5, 1, 1], "uv": [24, 13], "mirror": true}
+      ]
+    },
+    {
+      "name": "shin_r3",
+      "parent": "leg_r3",
+      "pivot": [-5, 0, 0],
+      "rotation": [0, 0, -50],
+      "uv_like": "shin_l3",
+      "cubes": [
+        {"name": "shin", "origin": [-0.5, 0, -0.5], "size": [1, 11, 1], "uv": [8, 0], "mirror": true}
+      ]
+    }
+  ],
+  "procedural": {
+    "look": [
+      {"part": "head", "yaw": 0.6, "pitch": 0.5, "limit": 35}
+    ]
+  },
+  "clips": {
+    "idle": {
+      "length": 60,
+      "loop": true,
+      "key_pose": 15,
+      "note": "head sways side to side as it tastes the dark; the body breathes on its legs",
+      "tracks": {
+        "head": {
+          "rot": [
+            {"t": 0, "v": [0.0, 0.0, 0.0]},
+            {"t": 15, "v": [0.0, 12.0, 0.0], "ease": "smooth"},
+            {"t": 30, "v": [0.0, 0.0, 0.0], "ease": "smooth"},
+            {"t": 45, "v": [-0.0, -12.0, -0.0], "ease": "smooth"},
+            {"t": 60, "v": [0.0, 0.0, 0.0], "ease": "smooth"}
+          ]
+        },
+        "body": {
+          "pos": [
+            {"t": 0, "v": [-0.0, -0.5, -0.0]},
+            {"t": 30, "v": [0.0, 0.5, 0.0], "ease": "smooth"},
+            {"t": 60, "v": [-0.0, -0.5, -0.0], "ease": "smooth"}
+          ]
+        }
+      }
+    },
+    "move": {
+      "length": 8,
+      "loop": true,
+      "key_pose": 2,
+      "note": "two-tripod skitter: three legs lift over the back and reach while three push, body rolls slightly",
+      "tracks": {
+        "leg_l1": {
+          "rot": [
+            {"t": 0, "v": [0.0, -18.0, 0.0]},
+            {"t": 2, "v": [0.0, 0.0, -14.0], "ease": "smooth"},
+            {"t": 4, "v": [0.0, 18.0, 0.0], "ease": "smooth"},
+            {"t": 8, "v": [0.0, -18.0, 0.0]}
+          ]
+        },
+        "leg_r2": {
+          "rot": [
+            {"t": 0, "v": [0.0, 18.0, 0.0]},
+            {"t": 2, "v": [0.0, 0.0, 14.0], "ease": "smooth"},
+            {"t": 4, "v": [0.0, -18.0, 0.0], "ease": "smooth"},
+            {"t": 8, "v": [0.0, 18.0, 0.0]}
+          ]
+        },
+        "leg_l3": {
+          "rot": [
+            {"t": 0, "v": [0.0, -18.0, 0.0]},
+            {"t": 2, "v": [0.0, 0.0, -14.0], "ease": "smooth"},
+            {"t": 4, "v": [0.0, 18.0, 0.0], "ease": "smooth"},
+            {"t": 8, "v": [0.0, -18.0, 0.0]}
+          ]
+        },
+        "leg_r1": {
+          "rot": [
+            {"t": 0, "v": [0.0, -18.0, 0.0]},
+            {"t": 4, "v": [0.0, 18.0, 0.0]},
+            {"t": 6, "v": [0.0, 0.0, 14.0], "ease": "smooth"},
+            {"t": 8, "v": [0.0, -18.0, 0.0], "ease": "smooth"}
+          ]
+        },
+        "leg_l2": {
+          "rot": [
+            {"t": 0, "v": [0.0, 18.0, 0.0]},
+            {"t": 4, "v": [0.0, -18.0, 0.0]},
+            {"t": 6, "v": [0.0, 0.0, -14.0], "ease": "smooth"},
+            {"t": 8, "v": [0.0, 18.0, 0.0], "ease": "smooth"}
+          ]
+        },
+        "leg_r3": {
+          "rot": [
+            {"t": 0, "v": [0.0, -18.0, 0.0]},
+            {"t": 4, "v": [0.0, 18.0, 0.0]},
+            {"t": 6, "v": [0.0, 0.0, 14.0], "ease": "smooth"},
+            {"t": 8, "v": [0.0, -18.0, 0.0], "ease": "smooth"}
+          ]
+        },
+        "body": {
+          "rot": [
+            {"t": 0, "v": [0.0, 0.0, 0.0]},
+            {"t": 2, "v": [0.0, 0.0, 3.0], "ease": "smooth"},
+            {"t": 4, "v": [0.0, 0.0, 0.0], "ease": "smooth"},
+            {"t": 6, "v": [-0.0, -0.0, -3.0], "ease": "smooth"},
+            {"t": 8, "v": [0.0, 0.0, 0.0], "ease": "smooth"}
+          ],
+          "pos": [
+            {"t": 0, "v": [-0.0, -0.5, -0.0]},
+            {"t": 4, "v": [0.0, 0.5, 0.0], "ease": "smooth"},
+            {"t": 8, "v": [-0.0, -0.5, -0.0], "ease": "smooth"}
+          ]
+        }
+      }
+    },
+    "ability": {
+      "length": 22,
+      "loop": false,
+      "key_pose": 10,
+      "telegraph": 10,
+      "damaging": true,
+      "glow": [
+        {"t": 0, "v": 0.35},
+        {"t": 10, "v": 1.0},
+        {"t": 14, "v": 1.0},
+        {"t": 22, "v": 0.35}
+      ],
+      "note": "blink strike (timed, 22 ticks): body compresses onto splayed legs through the 10-tick telegraph, blinks, and lunges out of the gap with legs raked back; key pose is the crouch",
+      "tracks": {
+        "body": {
+          "pos": [
+            {"t": 0, "v": [0.0, 0.0, 0.0]},
+            {"t": 10, "v": [0.0, 2.5, 1.5], "ease": "smooth"},
+            {"t": 13, "v": [0.0, 0.0, -7.0], "ease": "smooth"},
+            {"t": 16, "v": [0.0, 0.0, -7.0]},
+            {"t": 22, "v": [0.0, 0.0, 0.0], "ease": "smooth"}
+          ],
+          "rot": [
+            {"t": 0, "v": [0.0, 0.0, 0.0]},
+            {"t": 10, "v": [8.0, 0.0, 0.0], "ease": "smooth"},
+            {"t": 13, "v": [-10.0, 0.0, 0.0], "ease": "smooth"},
+            {"t": 22, "v": [0.0, 0.0, 0.0], "ease": "smooth"}
+          ]
+        },
+        "head": {
+          "pos": [
+            {"t": 0, "v": [0.0, 0.0, 0.0]},
+            {"t": 10, "v": [0.0, 0.0, 1.5], "ease": "smooth"},
+            {"t": 13, "v": [0.0, 0.0, -1.0], "ease": "smooth"},
+            {"t": 22, "v": [0.0, 0.0, 0.0], "ease": "smooth"}
+          ],
+          "rot": [
+            {"t": 0, "v": [0.0, 0.0, 0.0]},
+            {"t": 10, "v": [10.0, 0.0, 0.0], "ease": "smooth"},
+            {"t": 13, "v": [-16.0, 0.0, 0.0], "ease": "smooth"},
+            {"t": 22, "v": [0.0, 0.0, 0.0], "ease": "smooth"}
+          ]
+        },
+        "leg_l1": {
+          "rot": [
+            {"t": 0, "v": [0.0, 0.0, 0.0]},
+            {"t": 10, "v": [0.0, 0.0, 14.0], "ease": "smooth"},
+            {"t": 13, "v": [0.0, -22.0, -10.0], "ease": "smooth"},
+            {"t": 16, "v": [0.0, -22.0, -10.0]},
+            {"t": 22, "v": [0.0, 0.0, 0.0], "ease": "smooth"}
+          ]
+        },
+        "leg_r2": {
+          "rot": [
+            {"t": 0, "v": [0.0, 0.0, 0.0]},
+            {"t": 10, "v": [0.0, 0.0, -14.0], "ease": "smooth"},
+            {"t": 13, "v": [0.0, 22.0, 10.0], "ease": "smooth"},
+            {"t": 16, "v": [0.0, 22.0, 10.0]},
+            {"t": 22, "v": [0.0, 0.0, 0.0], "ease": "smooth"}
+          ]
+        },
+        "leg_l3": {
+          "rot": [
+            {"t": 0, "v": [0.0, 0.0, 0.0]},
+            {"t": 10, "v": [0.0, 0.0, 14.0], "ease": "smooth"},
+            {"t": 13, "v": [0.0, -22.0, -10.0], "ease": "smooth"},
+            {"t": 16, "v": [0.0, -22.0, -10.0]},
+            {"t": 22, "v": [0.0, 0.0, 0.0], "ease": "smooth"}
+          ]
+        },
+        "leg_r1": {
+          "rot": [
+            {"t": 0, "v": [0.0, 0.0, 0.0]},
+            {"t": 10, "v": [0.0, 0.0, -14.0], "ease": "smooth"},
+            {"t": 13, "v": [0.0, 22.0, 10.0], "ease": "smooth"},
+            {"t": 16, "v": [0.0, 22.0, 10.0]},
+            {"t": 22, "v": [0.0, 0.0, 0.0], "ease": "smooth"}
+          ]
+        },
+        "leg_l2": {
+          "rot": [
+            {"t": 0, "v": [0.0, 0.0, 0.0]},
+            {"t": 10, "v": [0.0, 0.0, 14.0], "ease": "smooth"},
+            {"t": 13, "v": [0.0, -22.0, -10.0], "ease": "smooth"},
+            {"t": 16, "v": [0.0, -22.0, -10.0]},
+            {"t": 22, "v": [0.0, 0.0, 0.0], "ease": "smooth"}
+          ]
+        },
+        "leg_r3": {
+          "rot": [
+            {"t": 0, "v": [0.0, 0.0, 0.0]},
+            {"t": 10, "v": [0.0, 0.0, -14.0], "ease": "smooth"},
+            {"t": 13, "v": [0.0, 22.0, 10.0], "ease": "smooth"},
+            {"t": 16, "v": [0.0, 22.0, 10.0]},
+            {"t": 22, "v": [0.0, 0.0, 0.0], "ease": "smooth"}
+          ]
+        }
+      }
+    },
+    "hurt": {
+      "length": 6,
+      "loop": false,
+      "key_pose": 2,
+      "note": "legs splay flat, body drops between them, head jerks up",
+      "tracks": {
+        "body": {
+          "pos": [
+            {"t": 0, "v": [0.0, 0.0, 0.0]},
+            {"t": 2, "v": [0.0, 2.0, 1.0], "ease": "smooth"},
+            {"t": 6, "v": [0.0, 0.0, 0.0], "ease": "smooth"}
+          ]
+        },
+        "head": {
+          "rot": [
+            {"t": 0, "v": [0.0, 0.0, 0.0]},
+            {"t": 2, "v": [-18.0, 0.0, 0.0], "ease": "smooth"},
+            {"t": 6, "v": [0.0, 0.0, 0.0], "ease": "smooth"}
+          ]
+        },
+        "leg_l1": {
+          "rot": [
+            {"t": 0, "v": [0.0, 0.0, 0.0]},
+            {"t": 2, "v": [0.0, 0.0, 20.0], "ease": "smooth"},
+            {"t": 6, "v": [0.0, 0.0, 0.0], "ease": "smooth"}
+          ]
+        },
+        "leg_r2": {
+          "rot": [
+            {"t": 0, "v": [0.0, 0.0, 0.0]},
+            {"t": 2, "v": [0.0, 0.0, -20.0], "ease": "smooth"},
+            {"t": 6, "v": [0.0, 0.0, 0.0], "ease": "smooth"}
+          ]
+        },
+        "leg_l3": {
+          "rot": [
+            {"t": 0, "v": [0.0, 0.0, 0.0]},
+            {"t": 2, "v": [0.0, 0.0, 20.0], "ease": "smooth"},
+            {"t": 6, "v": [0.0, 0.0, 0.0], "ease": "smooth"}
+          ]
+        },
+        "leg_r1": {
+          "rot": [
+            {"t": 0, "v": [0.0, 0.0, 0.0]},
+            {"t": 2, "v": [0.0, 0.0, -20.0], "ease": "smooth"},
+            {"t": 6, "v": [0.0, 0.0, 0.0], "ease": "smooth"}
+          ]
+        },
+        "leg_l2": {
+          "rot": [
+            {"t": 0, "v": [0.0, 0.0, 0.0]},
+            {"t": 2, "v": [0.0, 0.0, 20.0], "ease": "smooth"},
+            {"t": 6, "v": [0.0, 0.0, 0.0], "ease": "smooth"}
+          ]
+        },
+        "leg_r3": {
+          "rot": [
+            {"t": 0, "v": [0.0, 0.0, 0.0]},
+            {"t": 2, "v": [0.0, 0.0, -20.0], "ease": "smooth"},
+            {"t": 6, "v": [0.0, 0.0, 0.0], "ease": "smooth"}
+          ]
+        }
+      }
+    }
+  },
+  "uv_fill": 0.231
+}

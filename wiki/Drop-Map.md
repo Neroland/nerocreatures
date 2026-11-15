@@ -5,9 +5,9 @@ shared contract between NeroCreatures and the mods that consume its materials �
 elsewhere in the ecosystem wants a creature drop, it references the **tag** listed here, never the
 item id.
 
-> **Status:** every item, texture and tag below exists and is registered, and **all eleven drops are
-> now obtainable in survival** — the four hostile fauna, the Crystal Golem, the Space Pirate, the
-> two Rogue Androids and now the first planet boss have all shipped with the loot tables in
+> **Status:** every item, texture and tag below exists and is registered, and **every drop is
+> obtainable in survival** — the original fauna, the Crystal Golem, the Space Pirate, the Rogue
+> Androids, the first planet boss and the 0.5.0 habitat creatures have all shipped with the loot tables in
 > [Shipped drop rates](#shipped-drop-rates) below. The tameables are the first **consumers**: see
 > [Consumption inside NeroCreatures](#consumption-inside-nerocreatures). See the
 > [Bestiary](Bestiary.md) for where each creature lives, and [Bosses](Bosses.md) for the Apex
@@ -27,11 +27,33 @@ item id.
 | Space Pirate | Contraband | `nerocreatures:contraband` | `neroland:materials/contraband`, `neroland:highlight/materials` | NeroEconomy, NeroFactions | Not a crafting input: a sell-only trade good, and a reputation lever with the factions that want it back. |
 | Rogue Android | Salvaged Circuitry | `nerocreatures:salvaged_circuitry` | `neroland:materials/salvaged_circuitry`, `neroland:highlight/materials` | Nerotech, NeroLogistics, NeroSecurity, NeroCreatures (Drone Shell) | General electronics: control boards, logic units, terminal parts. The workhorse drop. |
 | Rogue Android (heavy frame only) | Android Core | `nerocreatures:android_core` | `neroland:materials/android_core`, `neroland:highlight/materials` | Nerotech, NeroColonies, NeroCreatures (Drone Shell) | Rare automation brain: autocrafters, colony managers, anything that needs to "decide". Stacks to 16 — it is meant to feel scarce. |
+| Lumen Moth | Lumen Dust | `nerocreatures:lumen_dust` | `neroland:materials/lumen_dust`, `c:dusts/lumen`, `neroland:highlight/materials` | NeroCreatures (Glowstone Dust now; Field Scanner lens later), NeroDecor, Nerotech | Light: glowing decor, lamp and display components. |
+| Echo Shrike | Resonant Membrane | `nerocreatures:resonant_membrane` | `neroland:materials/resonant_membrane`, `neroland:highlight/materials` | NeroCreatures (Resonant Whistle, Sonic Ward: coming with the gear and habitat blocks), NeroNotes, NeroSecurity | Sound: instrument reeds and speakers, acoustic sensors. |
+| Lode Tortoise | Lode Scute | `nerocreatures:lode_scute` | `neroland:materials/lode_scute`, `neroland:highlight/materials` | NeroCreatures (Incubator casing: coming with the habitat blocks), Nerotech, Nerospace | Mineral plate: machine and suit plating. Also shed on 20% of nodule harvests. |
+| Dust Devil | Charged Sand | `nerocreatures:charged_sand` | `neroland:materials/charged_sand`, `c:dusts/charged_sand`, `neroland:highlight/materials` | NeroCreatures (Field Scanner sensor: coming with the scanner), Nerotech, Nerospace | Static charge: capacitor and battery dust, a static-charge reagent. |
+| Slag Beetle | Slag Carapace | `nerocreatures:slag_carapace` | `neroland:materials/slag_carapace`, `neroland:highlight/materials` | NeroCreatures (Chitin Bulwark: coming with the gear), Nerotech, Nerospace | Heat-proof plating: shield facing, furnace linings, heat shields. |
+| Magma Wader | Heat Gland | `nerocreatures:heat_gland` | `neroland:materials/heat_gland`, `neroland:highlight/materials` | NeroCreatures (Heat-gland Greaves: coming with the gear), Nerotech, Nerospace | Thermal reagent: short lava walking in gear; heat exchangers and re-entry shielding elsewhere. |
+| Rime Yak (shearing) | Rime Wool | `nerocreatures:rime_wool` | `neroland:materials/rime_wool`, `neroland:highlight/materials` | NeroCreatures (Lurker Cloak: coming with the gear), Nerospace, Nerotech | Insulation: cloak lining; cold-world suits and cryo-line lagging elsewhere. |
+| Rime Yak (milking, bucket) | Coolant Milk | `nerocreatures:coolant_milk` | `neroland:materials/coolant_milk`, `neroland:highlight/materials` | NeroCreatures (Rime Flask: coming with the gear), Nerotech, Nerospace | Cooling reagent: machine coolant and thermal loops. Stacks to 16; the bucket comes back when crafted with. |
+| Frost Lurker | Cryo Fang | `nerocreatures:cryo_fang` | `neroland:materials/cryo_fang`, `neroland:highlight/materials` | NeroCreatures (Lurker Cloak: coming with the gear), Nerotech, Nerospace | Cryogenic reagent: freezers and cryo storage. |
+| Spore Drifter (bottling) | Drifter Spores | `nerocreatures:drifter_spores` | `neroland:materials/drifter_spores`, `neroland:highlight/materials` | NeroCreatures (use: two bone-meal growths), NeroAgriculture | Renewable fertiliser bottled from a pet. |
+| Bloom Host | Bloom Heart | `nerocreatures:bloom_heart` | `neroland:materials/bloom_heart`, `neroland:highlight/materials` | NeroCreatures (Bloom Amulet: coming with the gear), siblings | Organic regen catalyst. |
+| Mossback | Mossback Hide | `nerocreatures:mossback_hide` | `neroland:materials/mossback_hide`, `c:leathers`, `neroland:highlight/materials` | NeroCreatures (Creature Saddle, alternative recipe), any leather recipe | Leather-class hide. |
+| Mossback | Raw / Cooked Mossback | `nerocreatures:raw_mossback`, `nerocreatures:cooked_mossback` | `c:foods/raw_meat`, `c:foods/cooked_meat` | Food | Livestock meat (smelt, smoke or campfire-cook). |
+| Drift Leviathan (shearing) | Leviathan Barnacle | `nerocreatures:leviathan_barnacle` | `neroland:materials/leviathan_barnacle`, `neroland:highlight/materials` | NeroCreatures (Terrarium: coming with the habitat blocks), Nerospace, Nerotech | Rare renewable: hull sealant, organic polymer. |
+| Prism Stag (shedding) | Prism Antler | `nerocreatures:prism_antler` | `neroland:materials/prism_antler`, `neroland:highlight/materials` | NeroCreatures (2 Refined Crystal; Facet Colossus sigil later), Nerotech, Nerospace | Renewable optical crystal, shed by living stags; lenses and resonators elsewhere. |
+| Shardback | Mirror Scale | `nerocreatures:mirror_scale` | `neroland:materials/mirror_scale`, `neroland:highlight/materials` | NeroCreatures (Mirror Shield: coming with the gear), Nerotech, Nerospace | Reflective plating: solar mirrors and beam relays. |
+| Gravity Leech | Graviton Node | `nerocreatures:graviton_node` | `neroland:materials/graviton_node`, `neroland:highlight/materials` | NeroCreatures (Graviton Boots: coming with the gear), Nerospace, Nerotech | Gravity reagent: controlled low gravity in gear; anti-grav lifts and low-g suit parts elsewhere. |
+| Magnet Crab | Iron Nugget (vanilla) + its stolen shell | `minecraft:iron_nugget` | — | — | Vanilla; stolen metal is always returned on death. |
+| Static Swarm (bottled) | Static Jar | `nerocreatures:static_jar` | `neroland:materials/static_jar`, `neroland:highlight/tools` | NeroCreatures (thrown anti-machine tool; 2 Plasma Cells with a redstone), Nerotech, Nerospace | A bottled charge: disables machines when thrown; EMP/capacitor reagent elsewhere. |
+| Pirate Captain | Captain's Ledger | `nerocreatures:captains_ledger` | `nerocreatures:treasure_maps`, `neroland:quest/treasure_maps`, `neroland:highlight/tools` | NeroCreatures (opens a pirate stash), NeroQuests, structure mods | Marks one stash for the captain's killer; quest and structure hook. |
+| Void Manta | Leather (vanilla), Void Essence | `minecraft:leather`, `nerocreatures:void_essence` | see Void Essence | — | No new drop: Void Essence's second natural source after the Void Crawler. |
 | **Any planet boss** | Apex Trophy | `nerocreatures:apex_trophy` | `neroland:materials/apex_trophy`, `neroland:highlight/materials` | Nerotech (exotic recipes), NeroEconomy (high value) | The top of the ladder: proof of a boss kill, and the gating reagent for the ecosystem's most expensive recipes. Stacks to 8, because a trophy is meant to be counted rather than accumulated. |
 
 ## Consumption inside NeroCreatures
 
-NeroCreatures spends four of its own drops. These are the only in-mod sinks, and they are listed
+NeroCreatures spends these of its own drops (the 0.5.0 habitat drops' in-mod uses are in the table
+above; several arrive with the gear and habitat blocks). These are the direct sinks, and they are listed
 here rather than buried in the code because they are the reason two of the drops have a floor under
 their value even with no other Nero mod installed.
 
@@ -41,6 +63,8 @@ their value even with no other Nero mod installed.
 | Plasma Cell | Taming a **Xertz Forager**; feeding a tamed one; crafting a Drone Shell | 1 per attempt / heal; 2 per shell | Yes |
 | Salvaged Circuitry | Crafting a **Terraforming Drone Shell** | 3 per shell | Yes |
 | Android Core | Crafting a **Terraforming Drone Shell** | 1 per shell | Yes |
+| Static Jar | Thrown: disables machines for 5 s; or crafted with a redstone into 2 Plasma Cells | 1 per throw / craft | Yes |
+| Captain's Ledger | Opening its pirate stash | 1 | Yes |
 
 The reagent is consumed on a *failed* taming attempt as well as a successful one — but never when
 the attempt is refused for being at the pet cap, which is checked first. See
@@ -90,6 +114,40 @@ table is a plain data file — a pack may override any of them without touching 
 | Cinder Tyrant | Refined Crystal | 6–12 |
 | Cinder Tyrant | Plasma Cell | 4–8 |
 | Cinder Tyrant | Void Essence | 1–3, at 50% |
+| Lumen Moth | Lumen Dust | 0–2 |
+| Echo Shrike | Resonant Membrane | 0–2 |
+| Lode Tortoise | Lode Scute | 0–1 |
+| Dune Loper | Leather | 0–2 |
+| Strata Hound | Bone | 0–2 |
+| Dust Devil | Charged Sand | 1–2 |
+| Dust Devil | Red Sand | 0–2 |
+| Slag Beetle | Slag Carapace | 0–1 |
+| Magma Wader | Heat Gland | 0–2 |
+| Rime Yak | Rime Wool | 0–2 (shearing: 2, Bountiful up to 6) |
+| Frost Lurker | Cryo Fang | 0–2 |
+| Spore Drifter | Bone Meal | 0–2 |
+| Bloom Host | Bloom Heart | 0–1 (sporelings: nothing) |
+| Mossback | Mossback Hide | 0–2 |
+| Mossback | Raw Mossback | 1–3 |
+| Drift Leviathan | Leviathan Barnacle | 1–3 (shearing: 2–3 when grown) |
+| Prism Stag | Prism Antler | 0–1 (shedding: 2 per 12000 loaded ticks, Bountiful up to 4) |
+| Shardback | Mirror Scale | 0–2 |
+| Magnet Crab | Iron Nugget | 1–3 (plus everything in its shell) |
+| Gravity Leech | Graviton Node | 0–2 |
+| Cache Mimic | Contraband 2–4, Salvaged Circuitry 2–4, Plasma Cell 1–2, Iron Ingot 3–6, Gold Ingot 1–3 | all guaranteed |
+| Cache Mimic | Android Core 1 at 35%, Diamond 1 at 20% | |
+| Static Swarm | Redstone 1–3, Glowstone Dust 0–2, Plasma Cell 1 at 25% | (bottling: 1 Static Jar) |
+| Scrap Hulk | Salvaged Circuitry 6–12, Android Core 1–2, Iron Ingot 4–8 | +1 circuitry per shed part (up to 3) |
+| Pirate Captain | Contraband 2–5, Gold Ingot 1–3 | (+ the Captain's Ledger, to the killer only) |
+| Pirate stash (ledger) | Contraband 4–8, Gold Ingot 3–7, Plasma Cell 1–3, Salvaged Circuitry 2–5, Emerald 1–4; Android Core 25%, Diamond 30% | `nerocreatures:gameplay/pirate_stash` |
+| Void Manta | Leather 0–2, Void Essence 0–1 | |
+
+Lode Tortoise **nodules** are not loot: they are harvested from a living tortoise and yield vanilla
+coal, raw copper, iron or gold nuggets, redstone, lapis, diamond or emerald, capped by
+`maxNodulesPerHarvest`. Alpha Echo Shrikes, Dust Devils, Magma Waders, Frost Lurkers, Bloom Hosts and Shardbacks
+drop 3, 4, 3, 3, 2 and 3 extra of their signature drop; alpha Gravity Leeches 3 Graviton Nodes, alpha
+Cache Mimics 1 Android Core and alpha Static Swarms 3 Plasma Cells (see [Alphas](Alphas.md)). The
+Scrap Hulk and the Pirate Captain are elites and never alphas.
 
 The two pets drop **nothing**, deliberately: a tameable that pays out would turn a companion into a
 crop. The drone returns its shell whether you recall it or it is killed, so it is never lost.

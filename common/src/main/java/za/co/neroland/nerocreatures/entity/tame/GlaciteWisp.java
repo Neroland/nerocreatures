@@ -15,6 +15,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.level.Level;
 
 import za.co.neroland.nerocreatures.entity.base.CreatureTier;
+import za.co.neroland.nerocreatures.entity.visual.VisualPose;
 import za.co.neroland.nerocreatures.registry.ModItems;
 
 /**
@@ -48,6 +49,9 @@ public class GlaciteWisp extends TameableCreature {
 
     /** Blocks the wisp itself may fall without harm. */
     private static final double DRIFT_SAFE_FALL = 16.0D;
+
+    /** The Frost Cushion {@code ability} pose (art clip length). */
+    private static final int CUSHION_POSE_TICKS = 16;
 
     public GlaciteWisp(EntityType<? extends GlaciteWisp> type, Level level) {
         super(type, level, CreatureTier.LESSER);
@@ -84,6 +88,23 @@ public class GlaciteWisp extends TameableCreature {
                 true, false, true));
         level.sendParticles(ParticleTypes.SNOWFLAKE, this.getX(), this.getY() + 0.4D, this.getZ(),
                 4, 0.3D, 0.2D, 0.3D, 0.0D);
+        if (!this.isOrderedToSit() && this.visuals().abilityDuration() == 0) {
+            this.visuals().playPose(VisualPose.ABILITY, CUSHION_POSE_TICKS);
+        }
+    }
+
+    /** Sitting is the held {@code rest} pose (the 14-tick "perch" clip holds its last frame). */
+    @Override
+    public void tick() {
+        super.tick();
+        if (!(this.level() instanceof ServerLevel)) {
+            return;
+        }
+        if (this.isOrderedToSit()) {
+            this.visuals().holdPose(VisualPose.REST);
+        } else if (this.visuals().pose() == VisualPose.REST) {
+            this.visuals().holdPose(VisualPose.IDLE);
+        }
     }
 
     // Sounds are mapped vanilla events, not shipped audio: the amethyst set is the right register for

@@ -1,6 +1,8 @@
 {
   "replace": false,
   "values": [
-    "nerocreatures:crystal_golem"
+    "nerocreatures:crystal_golem",
+    "nerocreatures:prism_stag",
+    "nerocreatures:shardback"
   ]
 }

@@ -188,6 +188,44 @@ neoForge {
     }
 }
 
+// Dev-only budget probe (BUILD-PROMPT Stage 2 "budget probe"): `gradlew :neoforge:<mc>:runBudgetProbe -PbudgetProbe`.
+// Only exists with -PbudgetProbe. Starts a headless dedicated server on a fresh flat dev world under
+// runs/probe, adds the TEST source set (common/src/test/java .../probe/BudgetProbe) to the dev mod so the
+// probe can hook server ticks, writes runs/probe/budget-probe-<mc>.txt and halts the server on its own.
+// The probe never enters a release jar (jar = main source set only) and is inert without the system property.
+if (project.hasProperty('budgetProbe')) {
+    neoForge {
+        runs {
+            budgetProbe {
+                server()
+                sourceSet = sourceSets.test
+                gameDirectory = file('runs/probe')
+                programArguments.add('--nogui')
+                systemProperty 'nerocreatures.budgetProbe', 'true'
+                systemProperty 'nerocreatures.budgetProbe.mc', mc
+            }
+        }
+        mods {
+            "${rootProject.mod_id}" {
+                sourceSet sourceSets.test
+            }
+        }
+    }
+    tasks.matching { it.name == 'runBudgetProbe' }.configureEach {
+        doFirst {
+            def dir = file('runs/probe')
+            dir.mkdirs()
+            project.delete(new File(dir, 'probe-world'))
+            new File(dir, 'server.properties').text = [
+                'level-name=probe-world', 'level-type=minecraft\\:flat', 'generate-structures=false',
+                'online-mode=false', 'server-port=25599', 'spawn-protection=0', 'difficulty=normal',
+                'view-distance=4', 'simulation-distance=4', 'max-tick-time=-1', 'pause-when-empty-seconds=-1',
+                'sync-chunk-writes=false', 'enable-query=false', 'enable-rcon=false', 'motd=nerocreatures budget probe',
+            ].join('\n') + '\n'
+        }
+    }
+}
+
 // ecjCheck: run the Eclipse compiler (the SAME analyzer VS Code's Java extension uses) over the shared
 // common + neoforge main sources, with the repo-root tools/ecj.prefs mirroring the IDE's diagnostic
 // settings. Surfaces Problems-panel diagnostics (null analysis, unused members, unnecessary

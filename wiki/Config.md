@@ -51,6 +51,15 @@ its owner's own permission to build there.
 `bossArenaBlocks`, `terraformingDroneWork`, `cacheMimicSpawns`, `staticSwarmDrain` (all true), and
 `strataHoundRange` (24, 4-48 blocks).
 
+| Key | Default | Range | What it does |
+| --- | --- | --- | --- |
+| `lodeTortoiseNoduleTicks` | 24000 | 1200-240000 | Grazing ticks for a Lode Tortoise to grow a common-ore nodule (rare ores take 4x). New tortoises use the new value. |
+| `maxNodulesPerHarvest` | 4 | 0-16 | The most items one nodule harvest yields. 0 = nothing. |
+| `rimeYakWoolRegrowTicks` | 6000 | 1200-72000 | Ticks for a shorn Rime Yak to regrow full wool. |
+| `rimeYakMilkCooldownTicks` | 2400 | 200-72000 | Ticks between milkings of one Rime Yak. |
+| `prismStagHerdAura` | true | | Prism Stag herds (3+ adults) give nearby players a short Regeneration I at night. false = no aura; antlers still grow and shed. |
+| `bloomHostInfectsLivestock` | false | | true = Bloom Hosts also hunt and raise sporelings from bred livestock (babies, animals in love or that bred recently). Tamed, owned, named and leashed animals are always spared. |
+
 ## See also
 
 - [Spawning](Spawning.md)

@@ -16,6 +16,9 @@
     "stage 1 (whirl, vulnerable): the arc cage round the bared core"
   ],
   "radiant": null,
+  "glow_rules": [
+    {"when": {"stage": [1]}, "min": 1.0, "flicker": 4}
+  ],
   "parts": [
     {
       "name": "funnel",
@@ -102,6 +105,13 @@
       {"part": "column", "axis": "z", "frequency": 0.5, "phase": 90, "amplitude": 3, "fade_with_walk": false},
       {"part": "halo", "axis": "x", "frequency": 0.4, "phase": 0, "amplitude": 14, "fade_with_walk": false},
       {"part": "halo", "axis": "z", "frequency": 0.4, "phase": -90, "amplitude": 14, "fade_with_walk": false}
+    ],
+    "spin": [
+      {"part": "ring_top", "axis": "y", "speed": 6, "phase": 0},
+      {"part": "ring_mid", "axis": "y", "speed": -8, "phase": 40},
+      {"part": "ring_low", "axis": "y", "speed": 10, "phase": 80},
+      {"part": "column", "axis": "y", "speed": 14, "phase": 0},
+      {"part": "halo", "axis": "y", "speed": -12, "phase": 0}
     ]
   },
   "clips": {
@@ -109,7 +119,7 @@
       "length": 40,
       "loop": true,
       "key_pose": 10,
-      "note": "rings breathe apart and together and the core bobs; the turning is the per-ring precession waves (top and low one way, mid the other)",
+      "note": "rings breathe apart and together and the core bobs; each ring spins all the way round (top and low one way, mid the other) and precesses on its waves",
       "tracks": {
         "ring_top": {
           "pos": [

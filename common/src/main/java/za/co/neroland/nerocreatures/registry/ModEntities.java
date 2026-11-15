@@ -20,12 +20,22 @@ import za.co.neroland.nerolandcore.registry.RegistrationProvider;
 import za.co.neroland.nerolandcore.registry.RegistrationProvider.RegistryEntry;
 
 import za.co.neroland.nerocreatures.NeroCreaturesCommon;
+import za.co.neroland.nerocreatures.entity.asteroid.GravityLeech;
+import za.co.neroland.nerocreatures.entity.asteroid.MagnetCrab;
 import za.co.neroland.nerocreatures.entity.boss.CinderTyrant;
+import za.co.neroland.nerocreatures.entity.deepspace.VoidManta;
+import za.co.neroland.nerocreatures.entity.glacira.FrostLurker;
+import za.co.neroland.nerocreatures.entity.glacira.RimeYak;
+import za.co.neroland.nerocreatures.entity.greenxertz.BloomHost;
+import za.co.neroland.nerocreatures.entity.greenxertz.DriftLeviathan;
+import za.co.neroland.nerocreatures.entity.greenxertz.Mossback;
+import za.co.neroland.nerocreatures.entity.greenxertz.SporeDrifter;
 import za.co.neroland.nerocreatures.entity.hostile.AsteroidWorm;
 import za.co.neroland.nerocreatures.entity.hostile.LunarStalker;
 import za.co.neroland.nerocreatures.entity.hostile.MagmaWader;
 import za.co.neroland.nerocreatures.entity.hostile.PlasmaSlime;
 import za.co.neroland.nerocreatures.entity.hostile.VoidCrawler;
+import za.co.neroland.nerocreatures.entity.humanoid.PirateCaptain;
 import za.co.neroland.nerocreatures.entity.humanoid.SpacePirate;
 import za.co.neroland.nerocreatures.entity.luna.EchoShrike;
 import za.co.neroland.nerocreatures.entity.luna.LodeTortoise;
@@ -37,9 +47,14 @@ import za.co.neroland.nerocreatures.entity.mechanical.RogueAndroid;
 import za.co.neroland.nerocreatures.entity.mechanical.RogueDrone;
 import za.co.neroland.nerocreatures.entity.mechanical.TerraformingDrone;
 import za.co.neroland.nerocreatures.entity.neutral.CrystalGolem;
+import za.co.neroland.nerocreatures.entity.nyxara.PrismStag;
+import za.co.neroland.nerocreatures.entity.nyxara.Shardback;
 import za.co.neroland.nerocreatures.entity.tame.GlaciteWisp;
 import za.co.neroland.nerocreatures.entity.tame.SlagBeetle;
 import za.co.neroland.nerocreatures.entity.tame.XertzForager;
+import za.co.neroland.nerocreatures.entity.wrecks.CacheMimic;
+import za.co.neroland.nerocreatures.entity.wrecks.ScrapHulk;
+import za.co.neroland.nerocreatures.entity.wrecks.StaticSwarm;
 
 /**
  * NeroCreatures' entity types, and the two pieces of mob setup that have no vanilla cross-loader
@@ -218,6 +233,111 @@ public final class ModEntities {
             key -> EntityType.Builder.of(MagmaWader::new, MobCategory.MONSTER)
                     .sized(1.1F, 2.6F).eyeHeight(2.2F).fireImmune().clientTrackingRange(10).build(key));
 
+    // --- 0.5.0 Glacira ------------------------------------------------------------------------
+
+    /** Rime Yak — Glacira's walking cold store. A haystack of wool under wide sweeping horns. */
+    public static final RegistryEntry<EntityType<RimeYak>> RIME_YAK = ENTITY_TYPES.register(
+            "rime_yak",
+            key -> EntityType.Builder.of(RimeYak::new, MobCategory.CREATURE)
+                    .sized(1.3F, 1.5F).eyeHeight(1.25F).clientTrackingRange(10).build(key));
+
+    /** Frost Lurker — the flat ambusher under Glacira's snow. */
+    public static final RegistryEntry<EntityType<FrostLurker>> FROST_LURKER = ENTITY_TYPES.register(
+            "frost_lurker",
+            key -> EntityType.Builder.of(FrostLurker::new, MobCategory.MONSTER)
+                    .sized(1.4F, 0.6F).eyeHeight(0.45F).clientTrackingRange(8).build(key));
+
+    // --- 0.5.0 Greenxertz ---------------------------------------------------------------------
+
+    /** Spore Drifter — Greenxertz's umbrella-canopy crop booster. */
+    public static final RegistryEntry<EntityType<SporeDrifter>> SPORE_DRIFTER = ENTITY_TYPES.register(
+            "spore_drifter",
+            key -> EntityType.Builder.of(SporeDrifter::new, MobCategory.CREATURE)
+                    .sized(0.8F, 1.1F).eyeHeight(0.7F).clientTrackingRange(8).build(key));
+
+    /**
+     * Bloom Host — the flower-capped walker; sporelings and Bloom Sovereign's pods are this type
+     * (form). The registered size is the host's; sporelings and pods size themselves by form.
+     */
+    public static final RegistryEntry<EntityType<BloomHost>> BLOOM_HOST = ENTITY_TYPES.register(
+            "bloom_host",
+            key -> EntityType.Builder.of(BloomHost::new, MobCategory.MONSTER)
+                    .sized(0.9F, 2.2F).eyeHeight(1.8F).clientTrackingRange(8).build(key));
+
+    /** Mossback — the moss-carpeted herd grazer. */
+    public static final RegistryEntry<EntityType<Mossback>> MOSSBACK = ENTITY_TYPES.register(
+            "mossback",
+            key -> EntityType.Builder.of(Mossback::new, MobCategory.CREATURE)
+                    .sized(1.3F, 1.2F).eyeHeight(0.9F).clientTrackingRange(10).build(key));
+
+    /** Drift Leviathan — the enormous sky drifter with a walkable deck. Width = deck length (spawn box). */
+    public static final RegistryEntry<EntityType<DriftLeviathan>> DRIFT_LEVIATHAN = ENTITY_TYPES.register(
+            "drift_leviathan",
+            key -> EntityType.Builder.of(DriftLeviathan::new, MobCategory.CREATURE)
+                    .sized(8.75F, 3.0F).eyeHeight(2.0F).clientTrackingRange(16).build(key));
+
+    // --- 0.5.0 Nyxara -------------------------------------------------------------------------
+
+    /** Prism Stag — Nyxara's crystal-antlered herd deer; sheds antlers, heals its herd's companions at night. */
+    public static final RegistryEntry<EntityType<PrismStag>> PRISM_STAG = ENTITY_TYPES.register(
+            "prism_stag",
+            key -> EntityType.Builder.of(PrismStag::new, MobCategory.CREATURE)
+                    .sized(0.9F, 1.6F).eyeHeight(1.4F).clientTrackingRange(10).build(key));
+
+    /** Shardback — the mirror-fanned charger; reflects from the front, vulnerable behind or while charging. */
+    public static final RegistryEntry<EntityType<Shardback>> SHARDBACK = ENTITY_TYPES.register(
+            "shardback",
+            key -> EntityType.Builder.of(Shardback::new, MobCategory.MONSTER)
+                    .sized(1.2F, 1.1F).eyeHeight(0.8F).clientTrackingRange(10).build(key));
+
+    // --- 0.5.0 Asteroid -----------------------------------------------------------------------
+
+    /** Magnet Crab — the asteroid pet that steals metal when wild and fetches drops when tamed. */
+    public static final RegistryEntry<EntityType<MagnetCrab>> MAGNET_CRAB = ENTITY_TYPES.register(
+            "magnet_crab",
+            key -> EntityType.Builder.of(MagnetCrab::new, MobCategory.CREATURE)
+                    .sized(0.9F, 0.55F).eyeHeight(0.4F).clientTrackingRange(8).build(key));
+
+    /** Gravity Leech — the floating sucker disc whose tether bends a player's gravity. */
+    public static final RegistryEntry<EntityType<GravityLeech>> GRAVITY_LEECH = ENTITY_TYPES.register(
+            "gravity_leech",
+            key -> EntityType.Builder.of(GravityLeech::new, MobCategory.MONSTER)
+                    .sized(0.8F, 0.5F).eyeHeight(0.25F).clientTrackingRange(10).build(key));
+
+    // --- 0.5.0 Wrecks and Pirates -------------------------------------------------------------
+
+    /** Cache Mimic — a salvage crate until someone tries to open it. Exactly one block. */
+    public static final RegistryEntry<EntityType<CacheMimic>> CACHE_MIMIC = ENTITY_TYPES.register(
+            "cache_mimic",
+            key -> EntityType.Builder.of(CacheMimic::new, MobCategory.MONSTER)
+                    .sized(0.98F, 0.98F).eyeHeight(0.6F).clientTrackingRange(8).build(key));
+
+    /** Static Swarm — a cloud of charged motes around a dense core (the hitbox). */
+    public static final RegistryEntry<EntityType<StaticSwarm>> STATIC_SWARM = ENTITY_TYPES.register(
+            "static_swarm",
+            key -> EntityType.Builder.of(StaticSwarm::new, MobCategory.MONSTER)
+                    .sized(0.8F, 0.8F).eyeHeight(0.4F).clientTrackingRange(8).build(key));
+
+    /** Scrap Hulk — the lopsided knuckle-walker built from machine wreckage. Elite; assembled, never spawned by a rule. */
+    public static final RegistryEntry<EntityType<ScrapHulk>> SCRAP_HULK = ENTITY_TYPES.register(
+            "scrap_hulk",
+            key -> EntityType.Builder.of(ScrapHulk::new, MobCategory.MONSTER)
+                    .sized(1.6F, 2.2F).eyeHeight(1.7F).clientTrackingRange(10).build(key));
+
+    /** Pirate Captain — the crew's elite: jet nacelles, long coat, a ledger worth killing for. */
+    public static final RegistryEntry<EntityType<PirateCaptain>> PIRATE_CAPTAIN = ENTITY_TYPES.register(
+            "pirate_captain",
+            key -> EntityType.Builder.of(PirateCaptain::new, MobCategory.MONSTER)
+                    .sized(0.7F, 2.25F).eyeHeight(2.0F).clientTrackingRange(12).build(key));
+
+    // --- 0.5.0 Deep space ---------------------------------------------------------------------
+
+    /** Void Manta — deep-space flying mount (decision 004). Size class L, flat disc. */
+    public static final RegistryEntry<EntityType<VoidManta>> VOID_MANTA = ENTITY_TYPES.register(
+            "void_manta",
+            key -> EntityType.Builder.of(VoidManta::new, MobCategory.CREATURE)
+                    .sized(2.5F, 0.9F).eyeHeight(0.6F).clientTrackingRange(10).build(key));
+
     /**
      * Every creature type this mod registers, in roster order. Declared once here so anything that
      * has to walk the whole roster — the {@code /nerocreatures list} command, the link module's
@@ -231,7 +351,13 @@ public final class ModEntities {
                     GLACITE_WISP, XERTZ_FORAGER, TERRAFORMING_DRONE, CINDER_TYRANT,
                     LUMEN_MOTH, ECHO_SHRIKE, LODE_TORTOISE,
                     DUNE_LOPER, STRATA_HOUND, DUST_DEVIL,
-                    SLAG_BEETLE, MAGMA_WADER);
+                    SLAG_BEETLE, MAGMA_WADER,
+                    RIME_YAK, FROST_LURKER,
+                    SPORE_DRIFTER, BLOOM_HOST, MOSSBACK, DRIFT_LEVIATHAN,
+                    PRISM_STAG, SHARDBACK,
+                    MAGNET_CRAB, GRAVITY_LEECH,
+                    CACHE_MIMIC, STATIC_SWARM, SCRAP_HULK, PIRATE_CAPTAIN,
+                    VOID_MANTA);
 
     private ModEntities() {
     }
@@ -250,6 +376,19 @@ public final class ModEntities {
     }
 
     /**
+     * From 1.21.4 vanilla {@code TemptGoal} reads the {@code minecraft:tempt_range} attribute and throws
+     * if the mob lacks it (vanilla animals get it from {@code createAnimalAttributes}). Every creature
+     * gets the vanilla default so a tempt goal on any of them can never crash the server tick.
+     */
+    private static net.minecraft.world.entity.ai.attributes.AttributeSupplier.Builder withTemptRange(
+            net.minecraft.world.entity.ai.attributes.AttributeSupplier.Builder builder) {
+        //? if >=1.21.4 {
+        builder.add(net.minecraft.world.entity.ai.attributes.Attributes.TEMPT_RANGE, 10.0D);
+        //?}
+        return builder;
+    }
+
+    /**
      * Declares default attributes and natural-spawn placements through Core's entity seam. Must run
      * <b>after</b> {@link #init()} — on Fabric both are applied the moment they are declared.
      */
@@ -257,26 +396,41 @@ public final class ModEntities {
         EntityRegistrationSupport entities =
                 EntityRegistrationSupport.get(NeroCreaturesCommon.MOD_ID);
 
-        entities.registerAttributes(VOID_CRAWLER, VoidCrawler::createAttributes);
-        entities.registerAttributes(LUNAR_STALKER, LunarStalker::createAttributes);
-        entities.registerAttributes(ASTEROID_WORM, AsteroidWorm::createAttributes);
-        entities.registerAttributes(PLASMA_SLIME, PlasmaSlime::createAttributes);
-        entities.registerAttributes(CRYSTAL_GOLEM, CrystalGolem::createAttributes);
-        entities.registerAttributes(SPACE_PIRATE, SpacePirate::createAttributes);
-        entities.registerAttributes(ROGUE_DRONE, RogueDrone::createAttributes);
-        entities.registerAttributes(ROGUE_ANDROID, RogueAndroid::createAttributes);
-        entities.registerAttributes(GLACITE_WISP, GlaciteWisp::createAttributes);
-        entities.registerAttributes(XERTZ_FORAGER, XertzForager::createAttributes);
-        entities.registerAttributes(TERRAFORMING_DRONE, TerraformingDrone::createAttributes);
-        entities.registerAttributes(CINDER_TYRANT, CinderTyrant::createAttributes);
-        entities.registerAttributes(LUMEN_MOTH, LumenMoth::createAttributes);
-        entities.registerAttributes(ECHO_SHRIKE, EchoShrike::createAttributes);
-        entities.registerAttributes(LODE_TORTOISE, LodeTortoise::createAttributes);
-        entities.registerAttributes(DUNE_LOPER, DuneLoper::createAttributes);
-        entities.registerAttributes(STRATA_HOUND, StrataHound::createAttributes);
-        entities.registerAttributes(DUST_DEVIL, DustDevil::createAttributes);
-        entities.registerAttributes(SLAG_BEETLE, SlagBeetle::createAttributes);
-        entities.registerAttributes(MAGMA_WADER, MagmaWader::createAttributes);
+        entities.registerAttributes(VOID_CRAWLER, () -> withTemptRange(VoidCrawler.createAttributes()));
+        entities.registerAttributes(LUNAR_STALKER, () -> withTemptRange(LunarStalker.createAttributes()));
+        entities.registerAttributes(ASTEROID_WORM, () -> withTemptRange(AsteroidWorm.createAttributes()));
+        entities.registerAttributes(PLASMA_SLIME, () -> withTemptRange(PlasmaSlime.createAttributes()));
+        entities.registerAttributes(CRYSTAL_GOLEM, () -> withTemptRange(CrystalGolem.createAttributes()));
+        entities.registerAttributes(SPACE_PIRATE, () -> withTemptRange(SpacePirate.createAttributes()));
+        entities.registerAttributes(ROGUE_DRONE, () -> withTemptRange(RogueDrone.createAttributes()));
+        entities.registerAttributes(ROGUE_ANDROID, () -> withTemptRange(RogueAndroid.createAttributes()));
+        entities.registerAttributes(GLACITE_WISP, () -> withTemptRange(GlaciteWisp.createAttributes()));
+        entities.registerAttributes(XERTZ_FORAGER, () -> withTemptRange(XertzForager.createAttributes()));
+        entities.registerAttributes(TERRAFORMING_DRONE, () -> withTemptRange(TerraformingDrone.createAttributes()));
+        entities.registerAttributes(CINDER_TYRANT, () -> withTemptRange(CinderTyrant.createAttributes()));
+        entities.registerAttributes(LUMEN_MOTH, () -> withTemptRange(LumenMoth.createAttributes()));
+        entities.registerAttributes(ECHO_SHRIKE, () -> withTemptRange(EchoShrike.createAttributes()));
+        entities.registerAttributes(LODE_TORTOISE, () -> withTemptRange(LodeTortoise.createAttributes()));
+        entities.registerAttributes(DUNE_LOPER, () -> withTemptRange(DuneLoper.createAttributes()));
+        entities.registerAttributes(STRATA_HOUND, () -> withTemptRange(StrataHound.createAttributes()));
+        entities.registerAttributes(DUST_DEVIL, () -> withTemptRange(DustDevil.createAttributes()));
+        entities.registerAttributes(SLAG_BEETLE, () -> withTemptRange(SlagBeetle.createAttributes()));
+        entities.registerAttributes(MAGMA_WADER, () -> withTemptRange(MagmaWader.createAttributes()));
+        entities.registerAttributes(RIME_YAK, () -> withTemptRange(RimeYak.createAttributes()));
+        entities.registerAttributes(FROST_LURKER, () -> withTemptRange(FrostLurker.createAttributes()));
+        entities.registerAttributes(SPORE_DRIFTER, () -> withTemptRange(SporeDrifter.createAttributes()));
+        entities.registerAttributes(BLOOM_HOST, () -> withTemptRange(BloomHost.createAttributes()));
+        entities.registerAttributes(MOSSBACK, () -> withTemptRange(Mossback.createAttributes()));
+        entities.registerAttributes(DRIFT_LEVIATHAN, () -> withTemptRange(DriftLeviathan.createAttributes()));
+        entities.registerAttributes(PRISM_STAG, () -> withTemptRange(PrismStag.createAttributes()));
+        entities.registerAttributes(SHARDBACK, () -> withTemptRange(Shardback.createAttributes()));
+        entities.registerAttributes(MAGNET_CRAB, () -> withTemptRange(MagnetCrab.createAttributes()));
+        entities.registerAttributes(GRAVITY_LEECH, () -> withTemptRange(GravityLeech.createAttributes()));
+        entities.registerAttributes(CACHE_MIMIC, () -> withTemptRange(CacheMimic.createAttributes()));
+        entities.registerAttributes(STATIC_SWARM, () -> withTemptRange(StaticSwarm.createAttributes()));
+        entities.registerAttributes(SCRAP_HULK, () -> withTemptRange(ScrapHulk.createAttributes()));
+        entities.registerAttributes(PIRATE_CAPTAIN, () -> withTemptRange(PirateCaptain.createAttributes()));
+        entities.registerAttributes(VOID_MANTA, () -> withTemptRange(VoidManta.createAttributes()));
 
         // Light-shy: crawlers and slimes are creatures of the dark side and the crystal caves.
         entities.registerSpawnPlacement(VOID_CRAWLER, SpawnPlacementTypes.ON_GROUND,
@@ -334,6 +488,44 @@ public final class ModEntities {
         entities.registerSpawnPlacement(SLAG_BEETLE, SpawnPlacementTypes.ON_GROUND,
                 Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, ModEntities::anyLightGround);
         entities.registerSpawnPlacement(MAGMA_WADER, SpawnPlacementTypes.ON_GROUND,
+                Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, ModEntities::anyLightGround);
+        // 0.5.0 Glacira and Nyxara: snowfields and crystal plains, any hour.
+        entities.registerSpawnPlacement(RIME_YAK, SpawnPlacementTypes.ON_GROUND,
+                Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, ModEntities::anyLightGround);
+        entities.registerSpawnPlacement(FROST_LURKER, SpawnPlacementTypes.ON_GROUND,
+                Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, ModEntities::anyLightGround);
+        entities.registerSpawnPlacement(PRISM_STAG, SpawnPlacementTypes.ON_GROUND,
+                Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, ModEntities::anyLightGround);
+        entities.registerSpawnPlacement(SHARDBACK, SpawnPlacementTypes.ON_GROUND,
+                Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, ModEntities::anyLightGround);
+        // 0.5.0 Greenxertz. The drifter is a flyer (airSpot); the host hunts the jungle's dark; the
+        // leviathan is placed at the surface (it needs a free 8.75 x 3 box) and lifts itself to cruise
+        // in finalizeSpawn.
+        entities.registerSpawnPlacement(SPORE_DRIFTER, SpawnPlacementTypes.NO_RESTRICTIONS,
+                Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, ModEntities::airSpot);
+        entities.registerSpawnPlacement(BLOOM_HOST, SpawnPlacementTypes.ON_GROUND,
+                Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, ModEntities::darkGround);
+        entities.registerSpawnPlacement(MOSSBACK, SpawnPlacementTypes.ON_GROUND,
+                Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, ModEntities::anyLightGround);
+        entities.registerSpawnPlacement(DRIFT_LEVIATHAN, SpawnPlacementTypes.NO_RESTRICTIONS,
+                Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, ModEntities::anyLightGround);
+        // 0.5.0 Asteroid: rubble fields, any hour. The leech spawns on the rock and lifts off.
+        entities.registerSpawnPlacement(MAGNET_CRAB, SpawnPlacementTypes.ON_GROUND,
+                Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, ModEntities::anyLightGround);
+        entities.registerSpawnPlacement(GRAVITY_LEECH, SpawnPlacementTypes.ON_GROUND,
+                Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, ModEntities::anyLightGround);
+        // 0.5.0 Wrecks and Pirates. Mimics wait in dark holds; the swarm is a flyer (airSpot keeps
+        // the same block-light ceiling as darkGround for natural spawns, and it is placed in the air
+        // or over open ground in a thunderstorm); a captain camps where it likes. The Scrap Hulk has no
+        // placement: it is assembled, never spawned by a rule.
+        entities.registerSpawnPlacement(CACHE_MIMIC, SpawnPlacementTypes.ON_GROUND,
+                Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, ModEntities::darkGround);
+        entities.registerSpawnPlacement(STATIC_SWARM, SpawnPlacementTypes.NO_RESTRICTIONS,
+                Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, ModEntities::airSpot);
+        entities.registerSpawnPlacement(PIRATE_CAPTAIN, SpawnPlacementTypes.ON_GROUND,
+                Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, ModEntities::anyLightGround);
+        // 0.5.0 Deep space: the manta drifts over dark ground at any hour.
+        entities.registerSpawnPlacement(VOID_MANTA, SpawnPlacementTypes.ON_GROUND,
                 Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, ModEntities::anyLightGround);
     }
 

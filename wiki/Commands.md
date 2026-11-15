@@ -121,6 +121,14 @@ creature tick. The output goes to you alone and names species, never players or 
 Far creatures (no player within `farTickDistance`, default 48 blocks) run their own AI work on one
 tick in `farTickInterval` (default 4). Owned, leashed, ridden and fighting creatures never slow down.
 
+**Measured cost (0.5.0).** A 200-creature world with every species mixed in, on a NeoForge 1.21.1
+dedicated server: **2.0 ms per tick** with every creature at full rate (players near all of them) and
+**1.6 ms per tick** with the default far-tick slowing (no player near). One of each of the 35 species
+costs 0.55 ms. On a NeoForge 26.3 dedicated server the same world costs **2.1 ms** and **1.6 ms**, and
+one of each species 0.58 ms. No species costs more than 0.05 ms per creature. Builders can repeat the measurement with the dev-only probe:
+`gradlew :neoforge:<mc>:runBudgetProbe -PbudgetProbe` (a throwaway flat world; it writes
+`runs/probe/budget-probe-<mc>.txt` and stops on its own).
+
 ## `/nerocreatures telemetry-test`
 
 Fires one synthetic crash-reporting event, to confirm end-to-end reporting on a real jar.

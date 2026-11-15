@@ -176,7 +176,7 @@ public class SporeDrifter extends TameableCreature
         boolean allowed = crop != null && CreatureGriefing.mayAlter(level, this, crop,
                 NeroCreaturesConfig.SPORE_DRIFTER_GROWTH, CreatureGriefing.Change.REPLACE);
         DrifterRules.Growth growth = DrifterRules.growth(crop != null, allowed);
-        if (growth == DrifterRules.Growth.NONE) {
+        if (growth == DrifterRules.Growth.NONE || crop == null) {
             return;
         }
         this.visuals().playPose(VisualPose.ABILITY, DrifterRules.GROWTH_POSE_TICKS);

@@ -1,0 +1,446 @@
+{
+  "format": 1,
+  "id": "magnet_crab",
+  "name": "Magnet Crab",
+  "habitat": "asteroid",
+  "size_class": "S",
+  "silhouette": "wider than long, two raised horseshoe-magnet claws, a dome shell that carries stuck metal plates",
+  "hitbox_guide": [0.9, 0.6],
+  "texture": {"width": 64, "height": 64},
+  "render_type": "cutout",
+  "renderer": {"scale": 1.0, "shadow": 0.5},
+  "materials": ["rust", "gunmetal"],
+  "accent": "accent",
+  "glow_organs": ["magnet claw tips (the pull)", "eye stalk tips"],
+  "radiant": {"rust": "pearl", "gunmetal": "pearl_deep"},
+  "budget_exception": {"boxes": 4},
+  "parts": [
+    {
+      "name": "body",
+      "parent": null,
+      "pivot": [0, 19, 0],
+      "rotation": [0, 0, 0],
+      "cubes": [
+        {"name": "shell", "origin": [-6, -3, -4], "size": [12, 4, 8], "uv": [0, 0]},
+        {"name": "dome", "origin": [-5, -5, -3], "size": [10, 2, 6], "uv": [0, 12]},
+        {"name": "cap", "origin": [-3, -6, -2], "size": [6, 1, 4], "uv": [40, 18]}
+      ]
+    },
+    {
+      "name": "eye_l",
+      "parent": "body",
+      "pivot": [2.5, -2, -4],
+      "rotation": [-18, 0, 14],
+      "cubes": [
+        {"name": "stalk", "origin": [-0.5, -5, -1], "size": [1, 5, 1], "uv": [60, 12]}
+      ]
+    },
+    {
+      "name": "eye_r",
+      "parent": "body",
+      "pivot": [-2.5, -2, -4],
+      "rotation": [-18, 0, -14],
+      "uv_like": "eye_l",
+      "cubes": [
+        {"name": "stalk", "origin": [-0.5, -5, -1], "size": [1, 5, 1], "uv": [60, 12], "mirror": true}
+      ]
+    },
+    {
+      "name": "claw_l",
+      "parent": "body",
+      "pivot": [6, -1, -3],
+      "rotation": [-52, -22, 0],
+      "cubes": [
+        {"name": "arm", "origin": [-1, -1, -4], "size": [2, 2, 4], "uv": [50, 0]},
+        {"name": "yoke", "origin": [-3, -1, -6], "size": [6, 2, 2], "uv": [0, 20]},
+        {"name": "prong_in", "origin": [-3, -1, -10], "size": [2, 2, 4], "uv": [50, 6]},
+        {"name": "prong_out", "origin": [1, -1, -10], "size": [2, 2, 4], "uv": [32, 12]}
+      ]
+    },
+    {
+      "name": "claw_r",
+      "parent": "body",
+      "pivot": [-6, -1, -3],
+      "rotation": [-52, 22, 0],
+      "uv_like": "claw_l",
+      "cubes": [
+        {"name": "arm", "origin": [-1, -1, -4], "size": [2, 2, 4], "uv": [50, 0], "mirror": true},
+        {"name": "yoke", "origin": [-3, -1, -6], "size": [6, 2, 2], "uv": [0, 20], "mirror": true},
+        {"name": "prong_in", "origin": [1, -1, -10], "size": [2, 2, 4], "uv": [50, 6], "mirror": true},
+        {"name": "prong_out", "origin": [-3, -1, -10], "size": [2, 2, 4], "uv": [32, 12], "mirror": true}
+      ]
+    },
+    {
+      "name": "plate_1",
+      "parent": "body",
+      "pivot": [4.5, -5, 0.5],
+      "rotation": [0, 24, 0],
+      "visible_when": {"stage": [1, 2, 3]},
+      "cubes": [
+        {"name": "plate", "origin": [-1.5, -1, -1.5], "size": [3, 1, 3], "uv": [16, 20]}
+      ]
+    },
+    {
+      "name": "plate_2",
+      "parent": "body",
+      "pivot": [-1, -6, 0],
+      "rotation": [0, -16, 0],
+      "visible_when": {"stage": [2, 3]},
+      "cubes": [
+        {"name": "plate", "origin": [-2, -1, -1], "size": [4, 1, 2], "uv": [40, 23]}
+      ]
+    },
+    {
+      "name": "plate_3",
+      "parent": "body",
+      "pivot": [-6, -1, 1],
+      "rotation": [0, 0, -8],
+      "visible_when": {"stage": [3]},
+      "cubes": [
+        {"name": "plate", "origin": [-1, -2, -2], "size": [1, 4, 4], "uv": [40, 0]}
+      ]
+    },
+    {
+      "name": "legs_a",
+      "parent": null,
+      "pivot": [0, 20, 0],
+      "rotation": [0, 0, 0],
+      "cubes": [
+        {"name": "front", "origin": [5, 0, -4], "size": [2, 4, 2], "uv": [44, 12]},
+        {"name": "mid", "origin": [-7, 0, -1], "size": [2, 4, 2], "uv": [52, 12]},
+        {"name": "rear", "origin": [5, 0, 2], "size": [2, 4, 2], "uv": [32, 18]}
+      ]
+    },
+    {
+      "name": "legs_b",
+      "parent": null,
+      "pivot": [0, 20, 0],
+      "rotation": [0, 0, 0],
+      "uv_like": "legs_a",
+      "cubes": [
+        {"name": "front", "origin": [-7, 0, -4], "size": [2, 4, 2], "uv": [44, 12], "mirror": true},
+        {"name": "mid", "origin": [5, 0, -1], "size": [2, 4, 2], "uv": [52, 12], "mirror": true},
+        {"name": "rear", "origin": [-7, 0, 2], "size": [2, 4, 2], "uv": [32, 18], "mirror": true}
+      ]
+    }
+  ],
+  "procedural": {
+    "wave": [
+      {"part": "body", "axis": "z", "frequency": 0.08, "phase": 0, "amplitude": 1.5, "fade_with_walk": true}
+    ]
+  },
+  "clips": {
+    "idle": {
+      "length": 60,
+      "loop": true,
+      "key_pose": 8,
+      "note": "claws open and close twice, eye stalks swivel out of step",
+      "tracks": {
+        "claw_l": {
+          "rot": [
+            {"t": 0, "v": [0.0, 0.0, 0.0]},
+            {"t": 8, "v": [0.0, 16.0, 0.0], "ease": "smooth"},
+            {"t": 11, "v": [0.0, -3.0, 0.0], "ease": "smooth"},
+            {"t": 19, "v": [0.0, 16.0, 0.0], "ease": "smooth"},
+            {"t": 22, "v": [0.0, 0.0, 0.0], "ease": "smooth"},
+            {"t": 60, "v": [0.0, 0.0, 0.0]}
+          ]
+        },
+        "claw_r": {
+          "rot": [
+            {"t": 0, "v": [0.0, -0.0, -0.0]},
+            {"t": 8, "v": [0.0, -16.0, -0.0], "ease": "smooth"},
+            {"t": 11, "v": [0.0, 3.0, -0.0], "ease": "smooth"},
+            {"t": 19, "v": [0.0, -16.0, -0.0], "ease": "smooth"},
+            {"t": 22, "v": [0.0, -0.0, -0.0], "ease": "smooth"},
+            {"t": 60, "v": [0.0, -0.0, -0.0]}
+          ]
+        },
+        "eye_l": {
+          "rot": [
+            {"t": 0, "v": [0.0, 0.0, 0.0]},
+            {"t": 18, "v": [0.0, 26.0, 0.0], "ease": "smooth"},
+            {"t": 30, "v": [0.0, 26.0, 0.0]},
+            {"t": 44, "v": [0.0, -22.0, 0.0], "ease": "smooth"},
+            {"t": 60, "v": [0.0, 0.0, 0.0], "ease": "smooth"}
+          ]
+        },
+        "eye_r": {
+          "rot": [
+            {"t": 0, "v": [0.0, 0.0, 0.0]},
+            {"t": 12, "v": [0.0, -24.0, 0.0], "ease": "smooth"},
+            {"t": 26, "v": [0.0, -24.0, 0.0]},
+            {"t": 40, "v": [0.0, 18.0, 0.0], "ease": "smooth"},
+            {"t": 60, "v": [0.0, 0.0, 0.0], "ease": "smooth"}
+          ]
+        }
+      }
+    },
+    "move": {
+      "length": 8,
+      "loop": true,
+      "key_pose": 2,
+      "note": "fast sideways scuttle: the two leg sets trade places across the body, shell rocks, claws held high",
+      "tracks": {
+        "legs_a": {
+          "pos": [
+            {"t": 0, "v": [1.5, 0.0, 0.0]},
+            {"t": 2, "v": [0.3, -1.0, 0.0], "ease": "smooth"},
+            {"t": 4, "v": [-1.5, 0.0, 0.0], "ease": "smooth"},
+            {"t": 8, "v": [1.5, 0.0, 0.0]}
+          ]
+        },
+        "legs_b": {
+          "pos": [
+            {"t": 0, "v": [-1.5, 0.0, 0.0]},
+            {"t": 4, "v": [1.5, 0.0, 0.0]},
+            {"t": 6, "v": [0.3, -1.0, 0.0], "ease": "smooth"},
+            {"t": 8, "v": [-1.5, 0.0, 0.0], "ease": "smooth"}
+          ]
+        },
+        "body": {
+          "rot": [
+            {"t": 0, "v": [0.0, 0.0, 0.0]},
+            {"t": 2, "v": [0.0, 0.0, 5.0], "ease": "smooth"},
+            {"t": 4, "v": [0.0, 0.0, 0.0], "ease": "smooth"},
+            {"t": 6, "v": [-0.0, -0.0, -5.0], "ease": "smooth"},
+            {"t": 8, "v": [0.0, 0.0, 0.0], "ease": "smooth"}
+          ],
+          "pos": [
+            {"t": 0, "v": [-0.0, -0.5, -0.0]},
+            {"t": 2, "v": [0.0, 0.0, 0.0], "ease": "smooth"},
+            {"t": 4, "v": [0.0, 0.5, 0.0], "ease": "smooth"},
+            {"t": 6, "v": [0.0, 0.0, 0.0], "ease": "smooth"},
+            {"t": 8, "v": [-0.0, -0.5, -0.0], "ease": "smooth"}
+          ]
+        },
+        "claw_l": {
+          "rot": [
+            {"t": 0, "v": [-3.21, -0.0, -0.0]},
+            {"t": 2, "v": [3.83, 0.0, 0.0], "ease": "smooth"},
+            {"t": 4, "v": [3.21, 0.0, 0.0], "ease": "smooth"},
+            {"t": 6, "v": [-3.83, -0.0, -0.0], "ease": "smooth"},
+            {"t": 8, "v": [-3.21, -0.0, -0.0], "ease": "smooth"}
+          ]
+        },
+        "claw_r": {
+          "rot": [
+            {"t": 0, "v": [3.21, 0.0, 0.0]},
+            {"t": 2, "v": [-3.83, -0.0, -0.0], "ease": "smooth"},
+            {"t": 4, "v": [-3.21, -0.0, -0.0], "ease": "smooth"},
+            {"t": 6, "v": [3.83, 0.0, 0.0], "ease": "smooth"},
+            {"t": 8, "v": [3.21, 0.0, 0.0], "ease": "smooth"}
+          ]
+        }
+      }
+    },
+    "ability": {
+      "length": 20,
+      "loop": false,
+      "key_pose": 13,
+      "telegraph": 10,
+      "damaging": false,
+      "glow": [
+        {"t": 0, "v": 0.35},
+        {"t": 10, "v": 1.0},
+        {"t": 13, "v": 1.0},
+        {"t": 20, "v": 0.35}
+      ],
+      "note": "grab (timed, 20 ticks): claws spread through the 10-tick telegraph, snap together at tick 12 on the item; the code raises stage as the plate sticks",
+      "tracks": {
+        "claw_l": {
+          "rot": [
+            {"t": 0, "v": [0.0, 0.0, 0.0]},
+            {"t": 8, "v": [-10.0, -26.0, 0.0], "ease": "smooth"},
+            {"t": 10, "v": [-10.0, -26.0, 0.0]},
+            {"t": 12, "v": [14.0, 40.0, 0.0], "ease": "smooth"},
+            {"t": 16, "v": [14.0, 40.0, 0.0]},
+            {"t": 20, "v": [0.0, 0.0, 0.0], "ease": "smooth"}
+          ]
+        },
+        "claw_r": {
+          "rot": [
+            {"t": 0, "v": [0.0, -0.0, -0.0]},
+            {"t": 8, "v": [-10.0, 26.0, -0.0], "ease": "smooth"},
+            {"t": 10, "v": [-10.0, 26.0, -0.0]},
+            {"t": 12, "v": [14.0, -40.0, -0.0], "ease": "smooth"},
+            {"t": 16, "v": [14.0, -40.0, -0.0]},
+            {"t": 20, "v": [0.0, -0.0, -0.0], "ease": "smooth"}
+          ]
+        },
+        "body": {
+          "rot": [
+            {"t": 0, "v": [0.0, 0.0, 0.0]},
+            {"t": 8, "v": [-6.0, 0.0, 0.0], "ease": "smooth"},
+            {"t": 12, "v": [9.0, 0.0, 0.0], "ease": "smooth"},
+            {"t": 16, "v": [9.0, 0.0, 0.0]},
+            {"t": 20, "v": [0.0, 0.0, 0.0], "ease": "smooth"}
+          ]
+        },
+        "eye_l": {
+          "rot": [
+            {"t": 0, "v": [0.0, 0.0, 0.0]},
+            {"t": 8, "v": [18.0, 0.0, 0.0], "ease": "smooth"},
+            {"t": 16, "v": [18.0, 0.0, 0.0]},
+            {"t": 20, "v": [0.0, 0.0, 0.0], "ease": "smooth"}
+          ]
+        },
+        "eye_r": {
+          "rot": [
+            {"t": 0, "v": [0.0, 0.0, 0.0]},
+            {"t": 8, "v": [18.0, 0.0, 0.0], "ease": "smooth"},
+            {"t": 16, "v": [18.0, 0.0, 0.0]},
+            {"t": 20, "v": [0.0, 0.0, 0.0], "ease": "smooth"}
+          ]
+        }
+      }
+    },
+    "ability_2": {
+      "length": 20,
+      "loop": true,
+      "key_pose": 10,
+      "glow": [
+        {"t": 0, "v": 1.0},
+        {"t": 10, "v": 0.8, "ease": "smooth"},
+        {"t": 20, "v": 1.0, "ease": "smooth"}
+      ],
+      "note": "tamed pull (held, loops): claws spread wide and raised, tips lit, a slow tremble while items drift in",
+      "tracks": {
+        "claw_l": {
+          "rot": [
+            {"t": 0, "v": [-16.0, -34.0, 0.0]},
+            {"t": 10, "v": [-20.0, -38.0, 0.0], "ease": "smooth"},
+            {"t": 20, "v": [-16.0, -34.0, 0.0], "ease": "smooth"}
+          ]
+        },
+        "claw_r": {
+          "rot": [
+            {"t": 0, "v": [-16.0, 34.0, -0.0]},
+            {"t": 10, "v": [-20.0, 38.0, -0.0], "ease": "smooth"},
+            {"t": 20, "v": [-16.0, 34.0, -0.0], "ease": "smooth"}
+          ]
+        },
+        "body": {
+          "rot": [
+            {"t": 0, "v": [-8.0, 0.0, 0.0]},
+            {"t": 20, "v": [-8.0, 0.0, 0.0]}
+          ]
+        }
+      }
+    },
+    "hurt": {
+      "length": 6,
+      "loop": false,
+      "key_pose": 2,
+      "note": "tucks under the shell: shell drops over the legs, claws fold down, stalks pull in",
+      "tracks": {
+        "body": {
+          "pos": [
+            {"t": 0, "v": [0.0, 0.0, 0.0]},
+            {"t": 2, "v": [0.0, 2.0, 0.0], "ease": "smooth"},
+            {"t": 6, "v": [0.0, 0.0, 0.0], "ease": "smooth"}
+          ]
+        },
+        "legs_a": {
+          "pos": [
+            {"t": 0, "v": [0.0, 0.0, 0.0]},
+            {"t": 2, "v": [0.0, -2.0, 0.0], "ease": "smooth"},
+            {"t": 6, "v": [0.0, 0.0, 0.0], "ease": "smooth"}
+          ]
+        },
+        "legs_b": {
+          "pos": [
+            {"t": 0, "v": [0.0, 0.0, 0.0]},
+            {"t": 2, "v": [0.0, -2.0, 0.0], "ease": "smooth"},
+            {"t": 6, "v": [0.0, 0.0, 0.0], "ease": "smooth"}
+          ]
+        },
+        "claw_l": {
+          "rot": [
+            {"t": 0, "v": [0.0, 0.0, 0.0]},
+            {"t": 2, "v": [46.0, 30.0, 0.0], "ease": "smooth"},
+            {"t": 6, "v": [0.0, 0.0, 0.0], "ease": "smooth"}
+          ]
+        },
+        "claw_r": {
+          "rot": [
+            {"t": 0, "v": [0.0, 0.0, 0.0]},
+            {"t": 2, "v": [46.0, -30.0, 0.0], "ease": "smooth"},
+            {"t": 6, "v": [0.0, 0.0, 0.0], "ease": "smooth"}
+          ]
+        },
+        "eye_l": {
+          "rot": [
+            {"t": 0, "v": [0.0, 0.0, 0.0]},
+            {"t": 2, "v": [70.0, 0.0, 0.0], "ease": "smooth"},
+            {"t": 6, "v": [0.0, 0.0, 0.0], "ease": "smooth"}
+          ]
+        },
+        "eye_r": {
+          "rot": [
+            {"t": 0, "v": [0.0, 0.0, 0.0]},
+            {"t": 2, "v": [70.0, 0.0, 0.0], "ease": "smooth"},
+            {"t": 6, "v": [0.0, 0.0, 0.0], "ease": "smooth"}
+          ]
+        }
+      }
+    },
+    "rest": {
+      "length": 80,
+      "loop": true,
+      "key_pose": 40,
+      "glow": [
+        {"t": 0, "v": 0.15},
+        {"t": 40, "v": 0.25, "ease": "smooth"},
+        {"t": 80, "v": 0.15, "ease": "smooth"}
+      ],
+      "note": "perch: shell settled on the ground, legs drawn under it, claws folded across the front, one stalk keeps watch",
+      "tracks": {
+        "body": {
+          "pos": [
+            {"t": 0, "v": [0.0, 2.0, 0.0]},
+            {"t": 80, "v": [0.0, 2.0, 0.0]}
+          ]
+        },
+        "legs_a": {
+          "pos": [
+            {"t": 0, "v": [0.0, -2.0, 0.0]},
+            {"t": 80, "v": [0.0, -2.0, 0.0]}
+          ]
+        },
+        "legs_b": {
+          "pos": [
+            {"t": 0, "v": [0.0, -2.0, 0.0]},
+            {"t": 80, "v": [0.0, -2.0, 0.0]}
+          ]
+        },
+        "claw_l": {
+          "rot": [
+            {"t": 0, "v": [50.0, 46.0, 0.0]},
+            {"t": 80, "v": [50.0, 46.0, 0.0]}
+          ]
+        },
+        "claw_r": {
+          "rot": [
+            {"t": 0, "v": [50.0, -46.0, 0.0]},
+            {"t": 80, "v": [50.0, -46.0, 0.0]}
+          ]
+        },
+        "eye_l": {
+          "rot": [
+            {"t": 0, "v": [40.0, 0.0, 0.0]},
+            {"t": 40, "v": [40.0, 30.0, 0.0], "ease": "smooth"},
+            {"t": 80, "v": [40.0, 0.0, 0.0], "ease": "smooth"}
+          ]
+        },
+        "eye_r": {
+          "rot": [
+            {"t": 0, "v": [75.0, 0.0, 0.0]},
+            {"t": 80, "v": [75.0, 0.0, 0.0]}
+          ]
+        }
+      }
+    }
+  },
+  "uv_fill": 0.354
+}

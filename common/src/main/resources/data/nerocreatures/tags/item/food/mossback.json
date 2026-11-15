@@ -1,0 +1,10 @@
+{
+  "replace": false,
+  "values": [
+    "minecraft:fern",
+    {
+      "id": "minecraft:short_grass",
+      "required": false
+    }
+  ]
+}

@@ -1,0 +1,542 @@
+{
+  "format": 1,
+  "id": "void_manta",
+  "name": "Void Manta",
+  "habitat": "deep_space",
+  "size_class": "L",
+  "silhouette": "a flat diamond disc four blocks across with two forward horn-fins, a saddle deck and a whip tail ending in a fin",
+  "hitbox_guide": [2.5, 0.9],
+  "texture": {"width": 128, "height": 128},
+  "render_type": "cutout",
+  "renderer": {"scale": 1.0, "shadow": 1.6},
+  "materials": ["indigo", "navy"],
+  "accent": "accent",
+  "glow_organs": ["horn-fin tips and tail fin edge (the blink)", "eyes (violet, never green)"],
+  "radiant": {"indigo": "pearl", "navy": "pearl_deep"},
+  "parts": [
+    {
+      "name": "body",
+      "parent": null,
+      "pivot": [0, 12, 0],
+      "rotation": [0, 0, 0],
+      "cubes": [
+        {"name": "core", "origin": [-6, -2, -10], "size": [12, 4, 20], "uv": [0, 0]},
+        {"name": "nose", "origin": [-4, -1.5, -13], "size": [8, 3, 3], "uv": [32, 50]},
+        {"name": "deck", "origin": [-4, -3, -6], "size": [8, 1, 13], "uv": [0, 24]},
+        {"name": "rump", "origin": [-3, -1.5, 10], "size": [6, 3, 4], "uv": [12, 46]}
+      ]
+    },
+    {
+      "name": "horn_l",
+      "parent": "body",
+      "pivot": [3, 0, -12],
+      "rotation": [0, -14, 0],
+      "cubes": [
+        {"name": "fin", "origin": [-1.5, -1, -8], "size": [3, 2, 8], "uv": [42, 24]},
+        {"name": "tip", "origin": [-0.5, -0.5, -11], "size": [1, 1, 3], "uv": [118, 0]}
+      ]
+    },
+    {
+      "name": "horn_r",
+      "parent": "body",
+      "pivot": [-3, 0, -12],
+      "rotation": [0, 14, 0],
+      "uv_like": "horn_l",
+      "cubes": [
+        {"name": "fin", "origin": [-1.5, -1, -8], "size": [3, 2, 8], "uv": [42, 24], "mirror": true},
+        {"name": "tip", "origin": [-0.5, -0.5, -11], "size": [1, 1, 3], "uv": [118, 0], "mirror": true}
+      ]
+    },
+    {
+      "name": "wing_l1",
+      "parent": "body",
+      "pivot": [6, 0, 0],
+      "rotation": [0, 0, 0],
+      "cubes": [
+        {"name": "panel", "origin": [0, -1, -8], "size": [10, 2, 17], "uv": [64, 0]}
+      ]
+    },
+    {
+      "name": "flap_l",
+      "parent": "wing_l1",
+      "pivot": [0, 0, 9],
+      "rotation": [0, 0, 0],
+      "cubes": [
+        {"name": "flap", "origin": [0, -0.5, 0], "size": [10, 1, 4], "uv": [54, 50]}
+      ]
+    },
+    {
+      "name": "wing_l2",
+      "parent": "wing_l1",
+      "pivot": [10, 0, 0],
+      "rotation": [0, 0, 0],
+      "cubes": [
+        {"name": "mid", "origin": [0, -1, -5], "size": [8, 2, 12], "uv": [42, 36]},
+        {"name": "tip", "origin": [8, -0.5, -2], "size": [8, 1, 7], "uv": [12, 38]},
+        {"name": "trail", "origin": [0, -0.5, 7], "size": [8, 1, 3], "uv": [98, 32]}
+      ]
+    },
+    {
+      "name": "wing_r1",
+      "parent": "body",
+      "pivot": [-6, 0, 0],
+      "rotation": [0, 0, 0],
+      "uv_like": "wing_l1",
+      "cubes": [
+        {"name": "panel", "origin": [-10, -1, -8], "size": [10, 2, 17], "uv": [64, 0], "mirror": true}
+      ]
+    },
+    {
+      "name": "flap_r",
+      "parent": "wing_r1",
+      "pivot": [0, 0, 9],
+      "rotation": [0, 0, 0],
+      "uv_like": "flap_l",
+      "cubes": [
+        {"name": "flap", "origin": [-10, -0.5, 0], "size": [10, 1, 4], "uv": [54, 50], "mirror": true}
+      ]
+    },
+    {
+      "name": "wing_r2",
+      "parent": "wing_r1",
+      "pivot": [-10, 0, 0],
+      "rotation": [0, 0, 0],
+      "uv_like": "wing_l2",
+      "cubes": [
+        {"name": "mid", "origin": [-8, -1, -5], "size": [8, 2, 12], "uv": [42, 36], "mirror": true},
+        {"name": "tip", "origin": [-16, -0.5, -2], "size": [8, 1, 7], "uv": [12, 38], "mirror": true},
+        {"name": "trail", "origin": [-8, -0.5, 7], "size": [8, 1, 3], "uv": [98, 32], "mirror": true}
+      ]
+    },
+    {
+      "name": "tail_1",
+      "parent": "body",
+      "pivot": [0, 0, 14],
+      "rotation": [0, 0, 0],
+      "cubes": [
+        {"name": "root", "origin": [-1, -1, -1], "size": [2, 2, 15], "uv": [64, 19]}
+      ]
+    },
+    {
+      "name": "tail_2",
+      "parent": "tail_1",
+      "pivot": [0, 0, 13],
+      "rotation": [0, 0, 0],
+      "cubes": [
+        {"name": "whip", "origin": [-0.5, -0.5, 0], "size": [1, 1, 12], "uv": [98, 19]},
+        {"name": "fin", "origin": [-0.5, -2.5, 12], "size": [1, 5, 5], "uv": [0, 38]}
+      ]
+    },
+    {
+      "name": "saddle",
+      "parent": "body",
+      "pivot": [0, -3, 0],
+      "rotation": [0, 0, 0],
+      "visible_when": {"flag": "saddled"},
+      "cubes": [
+        {"name": "pad", "origin": [-5, -1, -5], "size": [10, 1, 9], "uv": [82, 36]},
+        {"name": "pommel", "origin": [-2, -3, -5], "size": [4, 2, 1], "uv": [118, 4]},
+        {"name": "cantle", "origin": [-4, -3, 3], "size": [8, 2, 1], "uv": [0, 53]},
+        {"name": "girth", "origin": [-6.5, 0.5, -1.5], "size": [13, 5, 3], "uv": [82, 46]}
+      ]
+    }
+  ],
+  "procedural": {
+    "wave": [
+      {"part": "tail_1", "axis": "y", "frequency": 0.06, "phase": 0, "amplitude": 6, "fade_with_walk": false},
+      {"part": "tail_2", "axis": "y", "frequency": 0.06, "phase": -70, "amplitude": 10, "fade_with_walk": false}
+    ]
+  },
+  "clips": {
+    "idle": {
+      "length": 60,
+      "loop": true,
+      "key_pose": 15,
+      "note": "hover: a slow ripple runs from the leading edge out to the tips and back along the trailing flaps; horn-fins scull",
+      "tracks": {
+        "wing_l1": {
+          "rot": [
+            {"t": 0, "v": [0.0, 0.0, -0.0]},
+            {"t": 15, "v": [0.0, 0.0, -5.0], "ease": "smooth"},
+            {"t": 30, "v": [0.0, 0.0, -0.0], "ease": "smooth"},
+            {"t": 45, "v": [-0.0, -0.0, 5.0], "ease": "smooth"},
+            {"t": 60, "v": [0.0, 0.0, -0.0], "ease": "smooth"}
+          ]
+        },
+        "wing_r1": {
+          "rot": [
+            {"t": 0, "v": [0.0, 0.0, 0.0]},
+            {"t": 15, "v": [0.0, 0.0, 5.0], "ease": "smooth"},
+            {"t": 30, "v": [0.0, 0.0, 0.0], "ease": "smooth"},
+            {"t": 45, "v": [-0.0, -0.0, -5.0], "ease": "smooth"},
+            {"t": 60, "v": [0.0, 0.0, 0.0], "ease": "smooth"}
+          ]
+        },
+        "wing_l2": {
+          "rot": [
+            {"t": 0, "v": [-0.0, -0.0, 6.13]},
+            {"t": 15, "v": [0.0, 0.0, -5.14], "ease": "smooth"},
+            {"t": 30, "v": [0.0, 0.0, -6.13], "ease": "smooth"},
+            {"t": 45, "v": [-0.0, -0.0, 5.14], "ease": "smooth"},
+            {"t": 60, "v": [-0.0, -0.0, 6.13], "ease": "smooth"}
+          ]
+        },
+        "wing_r2": {
+          "rot": [
+            {"t": 0, "v": [-0.0, -0.0, -6.13]},
+            {"t": 15, "v": [0.0, 0.0, 5.14], "ease": "smooth"},
+            {"t": 30, "v": [0.0, 0.0, 6.13], "ease": "smooth"},
+            {"t": 45, "v": [-0.0, -0.0, -5.14], "ease": "smooth"},
+            {"t": 60, "v": [-0.0, -0.0, -6.13], "ease": "smooth"}
+          ]
+        },
+        "flap_l": {
+          "rot": [
+            {"t": 0, "v": [-10.0, -0.0, -0.0]},
+            {"t": 15, "v": [0.0, 0.0, 0.0], "ease": "smooth"},
+            {"t": 30, "v": [10.0, 0.0, 0.0], "ease": "smooth"},
+            {"t": 45, "v": [0.0, 0.0, 0.0], "ease": "smooth"},
+            {"t": 60, "v": [-10.0, -0.0, -0.0], "ease": "smooth"}
+          ]
+        },
+        "flap_r": {
+          "rot": [
+            {"t": 0, "v": [-10.0, -0.0, -0.0]},
+            {"t": 15, "v": [0.0, 0.0, 0.0], "ease": "smooth"},
+            {"t": 30, "v": [10.0, 0.0, 0.0], "ease": "smooth"},
+            {"t": 45, "v": [0.0, 0.0, 0.0], "ease": "smooth"},
+            {"t": 60, "v": [-10.0, -0.0, -0.0], "ease": "smooth"}
+          ]
+        },
+        "horn_l": {
+          "rot": [
+            {"t": 0, "v": [-0.0, -2.0, -0.0]},
+            {"t": 15, "v": [0.0, 3.46, 0.0], "ease": "smooth"},
+            {"t": 30, "v": [0.0, 2.0, 0.0], "ease": "smooth"},
+            {"t": 45, "v": [-0.0, -3.46, -0.0], "ease": "smooth"},
+            {"t": 60, "v": [-0.0, -2.0, -0.0], "ease": "smooth"}
+          ]
+        },
+        "horn_r": {
+          "rot": [
+            {"t": 0, "v": [-0.0, 2.0, -0.0]},
+            {"t": 15, "v": [0.0, -3.46, 0.0], "ease": "smooth"},
+            {"t": 30, "v": [0.0, -2.0, 0.0], "ease": "smooth"},
+            {"t": 45, "v": [-0.0, 3.46, -0.0], "ease": "smooth"},
+            {"t": 60, "v": [-0.0, 2.0, -0.0], "ease": "smooth"}
+          ]
+        }
+      }
+    },
+    "move": {
+      "length": 30,
+      "loop": true,
+      "key_pose": 7,
+      "note": "long slow wing beats: root leads, tip follows, flaps trail; the body rides up on the downstroke and the whip tail trails the motion",
+      "tracks": {
+        "wing_l1": {
+          "rot": [
+            {"t": 0, "v": [0.0, 0.0, -0.0]},
+            {"t": 7, "v": [0.0, 0.0, -22.0], "ease": "smooth"},
+            {"t": 15, "v": [0.0, 0.0, -0.0], "ease": "smooth"},
+            {"t": 22, "v": [-0.0, -0.0, 22.0], "ease": "smooth"},
+            {"t": 30, "v": [0.0, 0.0, -0.0], "ease": "smooth"}
+          ]
+        },
+        "wing_r1": {
+          "rot": [
+            {"t": 0, "v": [0.0, 0.0, 0.0]},
+            {"t": 7, "v": [0.0, 0.0, 22.0], "ease": "smooth"},
+            {"t": 15, "v": [0.0, 0.0, 0.0], "ease": "smooth"},
+            {"t": 22, "v": [-0.0, -0.0, -22.0], "ease": "smooth"},
+            {"t": 30, "v": [0.0, 0.0, 0.0], "ease": "smooth"}
+          ]
+        },
+        "wing_l2": {
+          "rot": [
+            {"t": 0, "v": [-0.0, -0.0, 15.32]},
+            {"t": 7, "v": [0.0, 0.0, -12.86], "ease": "smooth"},
+            {"t": 15, "v": [0.0, 0.0, -15.32], "ease": "smooth"},
+            {"t": 22, "v": [-0.0, -0.0, 12.86], "ease": "smooth"},
+            {"t": 30, "v": [-0.0, -0.0, 15.32], "ease": "smooth"}
+          ]
+        },
+        "wing_r2": {
+          "rot": [
+            {"t": 0, "v": [-0.0, -0.0, -15.32]},
+            {"t": 7, "v": [0.0, 0.0, 12.86], "ease": "smooth"},
+            {"t": 15, "v": [0.0, 0.0, 15.32], "ease": "smooth"},
+            {"t": 22, "v": [-0.0, -0.0, -12.86], "ease": "smooth"},
+            {"t": 30, "v": [-0.0, -0.0, -15.32], "ease": "smooth"}
+          ]
+        },
+        "flap_l": {
+          "rot": [
+            {"t": 0, "v": [-14.0, -0.0, -0.0]},
+            {"t": 7, "v": [0.0, 0.0, 0.0], "ease": "smooth"},
+            {"t": 15, "v": [14.0, 0.0, 0.0], "ease": "smooth"},
+            {"t": 22, "v": [0.0, 0.0, 0.0], "ease": "smooth"},
+            {"t": 30, "v": [-14.0, -0.0, -0.0], "ease": "smooth"}
+          ]
+        },
+        "flap_r": {
+          "rot": [
+            {"t": 0, "v": [-14.0, -0.0, -0.0]},
+            {"t": 7, "v": [0.0, 0.0, 0.0], "ease": "smooth"},
+            {"t": 15, "v": [14.0, 0.0, 0.0], "ease": "smooth"},
+            {"t": 22, "v": [0.0, 0.0, 0.0], "ease": "smooth"},
+            {"t": 30, "v": [-14.0, -0.0, -0.0], "ease": "smooth"}
+          ]
+        },
+        "body": {
+          "pos": [
+            {"t": 0, "v": [0.0, 0.0, 0.0]},
+            {"t": 7, "v": [0.0, 1.5, 0.0], "ease": "smooth"},
+            {"t": 15, "v": [0.0, 0.0, 0.0], "ease": "smooth"},
+            {"t": 22, "v": [-0.0, -1.5, -0.0], "ease": "smooth"},
+            {"t": 30, "v": [0.0, 0.0, 0.0], "ease": "smooth"}
+          ],
+          "rot": [
+            {"t": 0, "v": [-2.0, -0.0, -0.0]},
+            {"t": 7, "v": [0.0, 0.0, 0.0], "ease": "smooth"},
+            {"t": 15, "v": [2.0, 0.0, 0.0], "ease": "smooth"},
+            {"t": 22, "v": [0.0, 0.0, 0.0], "ease": "smooth"},
+            {"t": 30, "v": [-2.0, -0.0, -0.0], "ease": "smooth"}
+          ]
+        },
+        "tail_1": {
+          "rot": [
+            {"t": 0, "v": [-4.33, -0.0, -0.0]},
+            {"t": 7, "v": [-2.5, -0.0, -0.0], "ease": "smooth"},
+            {"t": 15, "v": [4.33, 0.0, 0.0], "ease": "smooth"},
+            {"t": 22, "v": [2.5, 0.0, 0.0], "ease": "smooth"},
+            {"t": 30, "v": [-4.33, -0.0, -0.0], "ease": "smooth"}
+          ]
+        },
+        "tail_2": {
+          "rot": [
+            {"t": 0, "v": [2.74, 0.0, 0.0]},
+            {"t": 7, "v": [-7.52, -0.0, -0.0], "ease": "smooth"},
+            {"t": 15, "v": [-2.74, -0.0, -0.0], "ease": "smooth"},
+            {"t": 22, "v": [7.52, 0.0, 0.0], "ease": "smooth"},
+            {"t": 30, "v": [2.74, 0.0, 0.0], "ease": "smooth"}
+          ]
+        }
+      }
+    },
+    "ability": {
+      "length": 20,
+      "loop": false,
+      "key_pose": 10,
+      "telegraph": 10,
+      "damaging": false,
+      "glow": [
+        {"t": 0, "v": 0.35},
+        {"t": 8, "v": 1.0},
+        {"t": 12, "v": 1.0},
+        {"t": 20, "v": 0.35}
+      ],
+      "note": "blink (timed, 20 ticks): wings fold down and back into a dart by tick 8, the blink happens at tick 10 inside the fold, wings snap open past level at tick 15 and settle",
+      "tracks": {
+        "wing_l1": {
+          "rot": [
+            {"t": 0, "v": [0.0, 0.0, 0.0]},
+            {"t": 8, "v": [0.0, 14.0, 68.0], "ease": "smooth"},
+            {"t": 12, "v": [0.0, 14.0, 68.0]},
+            {"t": 15, "v": [0.0, 0.0, -24.0], "ease": "smooth"},
+            {"t": 20, "v": [0.0, 0.0, 0.0], "ease": "smooth"}
+          ]
+        },
+        "wing_r1": {
+          "rot": [
+            {"t": 0, "v": [0.0, 0.0, 0.0]},
+            {"t": 8, "v": [0.0, -14.0, -68.0], "ease": "smooth"},
+            {"t": 12, "v": [0.0, -14.0, -68.0]},
+            {"t": 15, "v": [0.0, 0.0, 24.0], "ease": "smooth"},
+            {"t": 20, "v": [0.0, 0.0, 0.0], "ease": "smooth"}
+          ]
+        },
+        "wing_l2": {
+          "rot": [
+            {"t": 0, "v": [0.0, 0.0, 0.0]},
+            {"t": 8, "v": [0.0, 0.0, 40.0], "ease": "smooth"},
+            {"t": 12, "v": [0.0, 0.0, 40.0]},
+            {"t": 15, "v": [0.0, 0.0, -16.0], "ease": "smooth"},
+            {"t": 20, "v": [0.0, 0.0, 0.0], "ease": "smooth"}
+          ]
+        },
+        "wing_r2": {
+          "rot": [
+            {"t": 0, "v": [0.0, 0.0, 0.0]},
+            {"t": 8, "v": [0.0, 0.0, -40.0], "ease": "smooth"},
+            {"t": 12, "v": [0.0, 0.0, -40.0]},
+            {"t": 15, "v": [0.0, 0.0, 16.0], "ease": "smooth"},
+            {"t": 20, "v": [0.0, 0.0, 0.0], "ease": "smooth"}
+          ]
+        },
+        "horn_l": {
+          "rot": [
+            {"t": 0, "v": [0.0, 0.0, 0.0]},
+            {"t": 8, "v": [0.0, 14.0, 0.0], "ease": "smooth"},
+            {"t": 12, "v": [0.0, 14.0, 0.0]},
+            {"t": 15, "v": [0.0, -8.0, 0.0], "ease": "smooth"},
+            {"t": 20, "v": [0.0, 0.0, 0.0], "ease": "smooth"}
+          ]
+        },
+        "horn_r": {
+          "rot": [
+            {"t": 0, "v": [0.0, 0.0, 0.0]},
+            {"t": 8, "v": [0.0, -14.0, 0.0], "ease": "smooth"},
+            {"t": 12, "v": [0.0, -14.0, 0.0]},
+            {"t": 15, "v": [0.0, 8.0, 0.0], "ease": "smooth"},
+            {"t": 20, "v": [0.0, 0.0, 0.0], "ease": "smooth"}
+          ]
+        },
+        "flap_l": {
+          "rot": [
+            {"t": 0, "v": [0.0, 0.0, 0.0]},
+            {"t": 8, "v": [-20.0, 0.0, 0.0], "ease": "smooth"},
+            {"t": 15, "v": [24.0, 0.0, 0.0], "ease": "smooth"},
+            {"t": 20, "v": [0.0, 0.0, 0.0], "ease": "smooth"}
+          ]
+        },
+        "flap_r": {
+          "rot": [
+            {"t": 0, "v": [0.0, 0.0, 0.0]},
+            {"t": 8, "v": [-20.0, 0.0, 0.0], "ease": "smooth"},
+            {"t": 15, "v": [24.0, 0.0, 0.0], "ease": "smooth"},
+            {"t": 20, "v": [0.0, 0.0, 0.0], "ease": "smooth"}
+          ]
+        },
+        "body": {
+          "pos": [
+            {"t": 0, "v": [0.0, 0.0, 0.0]},
+            {"t": 8, "v": [0.0, 0.0, 2.0], "ease": "smooth"},
+            {"t": 12, "v": [0.0, 0.0, -3.0], "ease": "smooth"},
+            {"t": 20, "v": [0.0, 0.0, 0.0], "ease": "smooth"}
+          ]
+        },
+        "tail_1": {
+          "rot": [
+            {"t": 0, "v": [0.0, 0.0, 0.0]},
+            {"t": 8, "v": [-8.0, 0.0, 0.0], "ease": "smooth"},
+            {"t": 15, "v": [10.0, 0.0, 0.0], "ease": "smooth"},
+            {"t": 20, "v": [0.0, 0.0, 0.0], "ease": "smooth"}
+          ]
+        }
+      }
+    },
+    "hurt": {
+      "length": 6,
+      "loop": false,
+      "key_pose": 2,
+      "note": "banks sharply: the whole disc rolls onto one wing, the low wing tip curls, tail whips the other way",
+      "tracks": {
+        "body": {
+          "rot": [
+            {"t": 0, "v": [0.0, 0.0, 0.0]},
+            {"t": 2, "v": [0.0, 0.0, 32.0], "ease": "smooth"},
+            {"t": 6, "v": [0.0, 0.0, 0.0], "ease": "smooth"}
+          ]
+        },
+        "wing_l2": {
+          "rot": [
+            {"t": 0, "v": [0.0, 0.0, 0.0]},
+            {"t": 2, "v": [0.0, 0.0, -18.0], "ease": "smooth"},
+            {"t": 6, "v": [0.0, 0.0, 0.0], "ease": "smooth"}
+          ]
+        },
+        "wing_r2": {
+          "rot": [
+            {"t": 0, "v": [0.0, 0.0, 0.0]},
+            {"t": 2, "v": [0.0, 0.0, -10.0], "ease": "smooth"},
+            {"t": 6, "v": [0.0, 0.0, 0.0], "ease": "smooth"}
+          ]
+        },
+        "tail_1": {
+          "rot": [
+            {"t": 0, "v": [0.0, 0.0, 0.0]},
+            {"t": 2, "v": [0.0, 20.0, 0.0], "ease": "smooth"},
+            {"t": 6, "v": [0.0, 0.0, 0.0], "ease": "smooth"}
+          ]
+        }
+      }
+    },
+    "rest": {
+      "length": 80,
+      "loop": true,
+      "key_pose": 40,
+      "glow": [
+        {"t": 0, "v": 0.15},
+        {"t": 40, "v": 0.25, "ease": "smooth"},
+        {"t": 80, "v": 0.15, "ease": "smooth"}
+      ],
+      "note": "rest: settles flat on the ground, wings draped down to touch it, horn-fins lowered, tail laid straight; the flaps breathe",
+      "tracks": {
+        "body": {
+          "pos": [
+            {"t": 0, "v": [0.0, 9.0, 0.0]},
+            {"t": 80, "v": [0.0, 9.0, 0.0]}
+          ]
+        },
+        "wing_l1": {
+          "rot": [
+            {"t": 0, "v": [0.0, 0.0, 8.0]},
+            {"t": 80, "v": [0.0, 0.0, 8.0]}
+          ]
+        },
+        "wing_r1": {
+          "rot": [
+            {"t": 0, "v": [0.0, 0.0, -8.0]},
+            {"t": 80, "v": [0.0, 0.0, -8.0]}
+          ]
+        },
+        "wing_l2": {
+          "rot": [
+            {"t": 0, "v": [0.0, 0.0, 6.0]},
+            {"t": 80, "v": [0.0, 0.0, 6.0]}
+          ]
+        },
+        "wing_r2": {
+          "rot": [
+            {"t": 0, "v": [0.0, 0.0, -6.0]},
+            {"t": 80, "v": [0.0, 0.0, -6.0]}
+          ]
+        },
+        "flap_l": {
+          "rot": [
+            {"t": 0, "v": [-0.0, 0.0, 0.0]},
+            {"t": 40, "v": [-0.0, 0.0, 0.0], "ease": "smooth"},
+            {"t": 80, "v": [-0.0, 0.0, 0.0], "ease": "smooth"}
+          ]
+        },
+        "flap_r": {
+          "rot": [
+            {"t": 0, "v": [-0.0, 0.0, 0.0]},
+            {"t": 40, "v": [-0.0, 0.0, 0.0], "ease": "smooth"},
+            {"t": 80, "v": [-0.0, 0.0, 0.0], "ease": "smooth"}
+          ]
+        },
+        "horn_l": {
+          "rot": [
+            {"t": 0, "v": [10.0, 0.0, 0.0]},
+            {"t": 80, "v": [10.0, 0.0, 0.0]}
+          ]
+        },
+        "horn_r": {
+          "rot": [
+            {"t": 0, "v": [10.0, 0.0, 0.0]},
+            {"t": 80, "v": [10.0, 0.0, 0.0]}
+          ]
+        },
+        "tail_1": {
+          "rot": [
+            {"t": 0, "v": [-3.0, 0.0, 0.0]},
+            {"t": 80, "v": [-3.0, 0.0, 0.0]}
+          ]
+        }
+      }
+    }
+  },
+  "uv_fill": 0.394
+}

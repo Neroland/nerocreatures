@@ -20,6 +20,14 @@
     {
       "id": "nerocreatures:slag_carapace",
       "required": false
+    },
+    {
+      "id": "nerocreatures:prism_antler",
+      "required": false
+    },
+    {
+      "id": "nerocreatures:mirror_scale",
+      "required": false
     }
   ]
 }

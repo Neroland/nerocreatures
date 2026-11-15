@@ -201,7 +201,7 @@
       "name": "fin_fl",
       "parent": "hull",
       "pivot": [28, -2, -34],
-      "rotation": [0, 0, -4],
+      "rotation": [0, -22, -4],
       "cubes": [
         {"name": "panel", "origin": [0, -1, -18], "size": [26, 3, 40], "uv": [0, 48]}
       ]
@@ -210,7 +210,7 @@
       "name": "fin_fl_tip",
       "parent": "fin_fl",
       "pivot": [26, 0, 0],
-      "rotation": [0, 0, -6],
+      "rotation": [0, -12, -6],
       "cubes": [
         {"name": "tip", "origin": [0, -1, -12], "size": [20, 2, 28], "uv": [64, 193]}
       ]
@@ -219,7 +219,7 @@
       "name": "fin_fr",
       "parent": "hull",
       "pivot": [-28, -2, -34],
-      "rotation": [0, 0, 4],
+      "rotation": [0, 22, 4],
       "uv_like": "fin_fl",
       "cubes": [
         {"name": "panel", "origin": [-26, -1, -18], "size": [26, 3, 40], "uv": [0, 48], "mirror": true}
@@ -229,7 +229,7 @@
       "name": "fin_fr_tip",
       "parent": "fin_fr",
       "pivot": [-26, 0, 0],
-      "rotation": [0, 0, 6],
+      "rotation": [0, 12, 6],
       "uv_like": "fin_fl_tip",
       "cubes": [
         {"name": "tip", "origin": [-20, -1, -12], "size": [20, 2, 28], "uv": [64, 193], "mirror": true}
@@ -239,7 +239,7 @@
       "name": "fin_rl",
       "parent": "hull",
       "pivot": [28, -2, 34],
-      "rotation": [0, 0, -4],
+      "rotation": [0, -30, -4],
       "cubes": [
         {"name": "panel", "origin": [0, -1, -12], "size": [18, 3, 28], "uv": [124, 162]}
       ]
@@ -248,7 +248,7 @@
       "name": "fin_rl_tip",
       "parent": "fin_rl",
       "pivot": [18, 0, 0],
-      "rotation": [0, 0, -6],
+      "rotation": [0, -12, -6],
       "cubes": [
         {"name": "tip", "origin": [0, -1, -8], "size": [14, 2, 20], "uv": [160, 193]}
       ]
@@ -257,7 +257,7 @@
       "name": "fin_rr",
       "parent": "hull",
       "pivot": [-28, -2, 34],
-      "rotation": [0, 0, 4],
+      "rotation": [0, 30, 4],
       "uv_like": "fin_rl",
       "cubes": [
         {"name": "panel", "origin": [-18, -1, -12], "size": [18, 3, 28], "uv": [124, 162], "mirror": true}
@@ -267,7 +267,7 @@
       "name": "fin_rr_tip",
       "parent": "fin_rr",
       "pivot": [-18, 0, 0],
-      "rotation": [0, 0, 6],
+      "rotation": [0, 12, 6],
       "uv_like": "fin_rl_tip",
       "cubes": [
         {"name": "tip", "origin": [-14, -1, -8], "size": [14, 2, 20], "uv": [160, 193], "mirror": true}

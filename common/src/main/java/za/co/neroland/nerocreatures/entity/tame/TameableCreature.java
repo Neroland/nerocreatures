@@ -7,6 +7,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
@@ -135,7 +136,10 @@ import za.co.neroland.nerocreatures.trait.TraitSet;
 public abstract class TameableCreature extends TamableAnimal implements ProductSource, CreatureVisualsHolder {
 
     /** Entity contract section 3: the root's visuals ids are this class's first {@code defineId}. */
-    private static final CreatureVisuals.Ids VISUALS_IDS = CreatureVisuals.defineIds(TameableCreature.class);
+    // defineId must be called from the owning class itself (NeoForge 26.x rejects helper-allocated ids).
+    private static final CreatureVisuals.Ids VISUALS_IDS = new CreatureVisuals.Ids(
+            SynchedEntityData.defineId(TameableCreature.class, EntityDataSerializers.INT),
+            SynchedEntityData.defineId(TameableCreature.class, EntityDataSerializers.INT));
 
     /** One in this many feeds tames — the vanilla wolf's odds. */
     private static final int TAME_CHANCE_DENOMINATOR = 3;

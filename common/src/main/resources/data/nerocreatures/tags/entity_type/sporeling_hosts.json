@@ -1,0 +1,23 @@
+{
+  "replace": false,
+  "values": [
+    "minecraft:cow",
+    "minecraft:pig",
+    "minecraft:sheep",
+    "minecraft:chicken",
+    "minecraft:rabbit",
+    "minecraft:goat",
+    {
+      "id": "minecraft:camel",
+      "required": false
+    },
+    {
+      "id": "nerocreatures:mossback",
+      "required": false
+    },
+    {
+      "id": "nerocreatures:rime_yak",
+      "required": false
+    }
+  ]
+}

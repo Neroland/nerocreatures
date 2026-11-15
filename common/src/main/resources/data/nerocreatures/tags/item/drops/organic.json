@@ -20,6 +20,34 @@
     {
       "id": "nerocreatures:heat_gland",
       "required": false
+    },
+    {
+      "id": "nerocreatures:rime_wool",
+      "required": false
+    },
+    {
+      "id": "nerocreatures:coolant_milk",
+      "required": false
+    },
+    {
+      "id": "nerocreatures:cryo_fang",
+      "required": false
+    },
+    {
+      "id": "nerocreatures:drifter_spores",
+      "required": false
+    },
+    {
+      "id": "nerocreatures:bloom_heart",
+      "required": false
+    },
+    {
+      "id": "nerocreatures:mossback_hide",
+      "required": false
+    },
+    {
+      "id": "nerocreatures:raw_mossback",
+      "required": false
     }
   ]
 }

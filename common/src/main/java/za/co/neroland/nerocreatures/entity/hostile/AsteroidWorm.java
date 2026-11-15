@@ -68,8 +68,14 @@ public class AsteroidWorm extends NeroCreatureEntity implements Enemy, Burrower 
     /** Reach (blocks) of the surfacing strike. */
     private static final double STRIKE_RANGE = 4.0D;
 
-    /** Ticks of "the ground is moving" warning before the strike lands. */
-    private static final int TELEGRAPH_TICKS = 20;
+    /** Ticks of "the ground is moving" warning before the worm surfaces. */
+    private static final int TELEGRAPH_TICKS = 12;
+
+    /** The bite lands as the petals clap shut ({@code art/models/asteroid_worm.json} ability clip). */
+    private static final int BITE_TICK = 28;
+
+    /** Length of the emerge clip. */
+    private static final int EMERGE_CLIP_TICKS = 40;
 
     /** Navigation speed multiplier while submerged — rock is no obstacle to a worm. */
     private static final double BURROWED_SPEED = 1.25D;
@@ -103,7 +109,8 @@ public class AsteroidWorm extends NeroCreatureEntity implements Enemy, Burrower 
     protected void registerGoals() {
         this.goalSelector.addGoal(0, new FloatGoal(this));
         // Emerge outranks burrow: once the worm is under and in range, surfacing wins.
-        this.goalSelector.addGoal(1, new EmergeAttackGoal<>(this, STRIKE_RANGE, TELEGRAPH_TICKS));
+        this.goalSelector.addGoal(1, new EmergeAttackGoal<>(this, STRIKE_RANGE, TELEGRAPH_TICKS, BITE_TICK,
+                EMERGE_CLIP_TICKS));
         this.goalSelector.addGoal(2, new BurrowGoal<>(this, EMERGE_RANGE, BURROWED_SPEED));
         this.goalSelector.addGoal(3, new MeleeAttackGoal(this, 1.0D, true));
         this.goalSelector.addGoal(7, new RandomStrollGoal(this, 0.7D));

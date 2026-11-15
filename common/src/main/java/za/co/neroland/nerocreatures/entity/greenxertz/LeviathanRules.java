@@ -24,6 +24,11 @@ public final class LeviathanRules {
 
     public static final int MAX_PER_DIMENSION = 2;
 
+    /** Walkable deck (art): 56 px wide, 140 px long, its top 3.0 blocks above the entity origin. */
+    public static final double DECK_WIDTH = 3.5D;
+    public static final double DECK_LENGTH = 8.75D;
+    public static final double DECK_HEIGHT = 3.0D;
+
     /** A collider counts as "above" when its feet are no lower than the deck minus this. */
     public static final double DECK_EPSILON = 0.05D;
     /** How high above the deck a player still counts as standing on it (a jump). */
@@ -54,8 +59,12 @@ public final class LeviathanRules {
     /** Barnacle growth is advanced this many ticks at a time. */
     public static final int GROWTH_STEP = 20;
 
-    /** The "song" pose (mouth opens, body arches). Under 3 s, per the contract. */
-    public static final int SONG_POSE_TICKS = 50;
+    /**
+     * The "song" pose (mouth opens, body arches): the art clip is 6 s, longer than the contract's
+     * 3 s guidance for timed poses; acceptable here because at most two leviathans are loaded per
+     * dimension and it sings at most once every 30 s.
+     */
+    public static final int SONG_POSE_TICKS = 120;
 
     private LeviathanRules() {
     }
@@ -86,6 +95,22 @@ public final class LeviathanRules {
             return low;
         }
         return Math.max(low, Math.min(high, desiredY));
+    }
+
+    /**
+     * Whether a body at {@code yawDegrees} lies along the x axis (vanilla yaw 0 faces +z). The
+     * collision box is the deck's footprint snapped to the nearer axis.
+     */
+    public static boolean alongX(float yawDegrees) {
+        double r = Math.toRadians(yawDegrees);
+        return Math.abs(Math.sin(r)) > Math.abs(Math.cos(r));
+    }
+
+    /** Half extents {@code {x, z}} of the deck footprint for the snapped axis. */
+    public static double[] halfExtents(boolean alongX) {
+        double half = DECK_WIDTH / 2.0D;
+        double halfLong = DECK_LENGTH / 2.0D;
+        return alongX ? new double[] {halfLong, half} : new double[] {half, halfLong};
     }
 
     /** The spawn gate. */

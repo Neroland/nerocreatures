@@ -14,8 +14,8 @@ public final class MossbackRules {
 
     /** 15 s between grazes. */
     public static final int GRAZE_INTERVAL = 300;
-    public static final int GRAZE_POSE_TICKS = 40;
-    public static final int FERTILISE_AT_TICK = 20;
+    public static final int GRAZE_POSE_TICKS = 60;
+    public static final int FERTILISE_AT_TICK = 30;
     /** 60 s between fertilising grazes, per Mossback. */
     public static final int FERTILISE_COOLDOWN = 1200;
 

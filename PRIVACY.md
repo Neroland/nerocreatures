@@ -61,6 +61,12 @@ the creatures themselves and severs the link — see below.
 No names, IP addresses, chat, coordinate history, or any other personal information is stored —
 nothing beyond what Minecraft itself already keeps.
 
+Two items carry game data, never player data: a **Captain's Ledger** holds the position of its pirate
+stash on the item itself (vanilla's lodestone-tracker component), with no record of who killed the
+captain; it goes only to the player the kill is credited to. A tamed **Magnet Crab** reads vanilla's
+own "who threw this" mark on ground items, in memory and only to refuse items its owner did not drop;
+it stores nothing. A **Gravity Leech** tether is a temporary attribute modifier that is never saved.
+
 Two milestone records — "tamed a first pet" and "deployed a first drone" — are kept as player-scope
 progression gates in Neroland Core's store (`nerocreatures:first_tame`, `nerocreatures:first_deploy`),
 covered by Core's privacy statement and erased by the same shared erasure hook described below.

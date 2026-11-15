@@ -2,7 +2,7 @@
 """Software preview: renders model specs and their textures to a contact sheet PNG.
 
     python tools/art/preview.py <id> [<id> ...] [--out sheet.png] [--untextured] [--scale 4]
-                                [--radiant-demo]
+                                [--radiant-demo] [--state stage=2,variant=3,form=1,phase=2,flags=saddled+radiant]
 
 Standard library only. It is an orthographic box rasteriser with a depth buffer that reads the same
 spec, the same packed UVs and the same clip arithmetic (``spec.evaluate``) the game uses, so what the
@@ -11,9 +11,15 @@ sheet shows is what the generated model will show, bar the game's lighting.
 Per entity the sheet has: front, side, three-quarter, rear three-quarter and top views; every
 clip's key pose from the side and at three-quarter; glow-only, dim glow, full glow, alpha, Radiant
 (carriers only; ``--radiant-demo`` shows the rule on any species without writing a file) and
-untextured cells; the 16-block thumbnail in colour, in value only and as a black
-silhouette; the texture sheets; and the ramps used. Lit cells sit on the habitat's ground colour so
-the ground-contrast rule can be judged by eye.
+untextured cells; a "states" row with one cell per visual state the spec reacts to (each
+``visible_when`` value, flag, phase and declared variant, with its tint, glow colour and texture);
+the 16-block thumbnail in colour, in value only and as a black silhouette; the texture sheets; and
+the ramps used. Lit cells sit on the habitat's ground colour so the ground-contrast rule can be
+judged by eye.
+
+Parts are shown or hidden by ``visible_when`` exactly as in game (a hidden part hides its
+children). ``--state`` sets the synced visuals every cell starts from (default: stage, variant,
+form and phase 0, no flags), so a stage-3 or saddled sheet needs no wrapper script.
 
 The default output is ``build/art-preview/contact-<first id>.png``, which is not committed.
 """
@@ -93,12 +99,19 @@ def apply(m: list, t: list, p) -> tuple:
     return tuple(m[i][0] * p[0] + m[i][1] * p[1] + m[i][2] * p[2] + t[i] for i in range(3))
 
 
-def quads(spec: dict, deltas: dict) -> list:
-    """Every cube face in model space: (corner, u edge, v edge, normal, sheet rect, part.cube, face)."""
+def quads(spec: dict, deltas: dict, state: dict = None) -> list:
+    """Every cube face in model space: (corner, u edge, v edge, normal, sheet rect, part.cube, face).
+
+    With a ``state``, parts whose ``visible_when`` fails (and their children) are left out, as the
+    game does; without one every part is drawn.
+    """
     identity = [[1, 0, 0], [0, 1, 0], [0, 0, 1]]
     frames = {}
+    hidden = set()
     out = []
     for part in spec["parts"]:
+        if state is not None and (part.get("parent") in hidden or not specs.visible(part, state)):
+            hidden.add(part["name"])
         pm, pt = frames[part["parent"]] if part.get("parent") else (identity, [0, 0, 0])
         rot_d, pos_d = deltas.get(part["name"], ([0, 0, 0], [0, 0, 0]))
         base = part.get("rotation", [0, 0, 0])
@@ -107,6 +120,8 @@ def quads(spec: dict, deltas: dict) -> list:
         m = mat_mul(pm, local)
         t = list(apply(pm, pt, pivot))
         frames[part["name"]] = (m, t)
+        if part["name"] in hidden:
+            continue
         for cube in specs.resolved_cubes(spec, part):
             if "uv" not in cube:
                 continue
@@ -157,8 +172,12 @@ def bounds(spec: dict) -> tuple:
 
 def render(spec: dict, deltas: dict, size: int, scale: float, yaw: float, pitch: float, centre,
            base: Image = None, glow: Image = None, glow_level: float = 0.0, glow_tint=None,
-           base_mult: float = 1.0, mode: str = "lit", flat=None, background=None, zoom: float = 1.0) -> Image:
-    """One view. ``mode``: lit, glow (glow texels on a dark body), flat (one colour), plain (untextured)."""
+           base_mult: float = 1.0, mode: str = "lit", flat=None, background=None, zoom: float = 1.0,
+           state: dict = None, base_tint=None) -> Image:
+    """One view. ``mode``: lit, glow (glow texels on a dark body), flat (one colour), plain (untextured).
+
+    ``state`` hides parts by ``visible_when`` (None draws every part); ``base_tint`` is an RGB
+    multiplied into the base texture (a variant tint)."""
     image = Image(size, size, background or (0, 0, 0, 0))
     depth = [[-1e9] * size for _ in range(size)]
     view = mat_mul(rotation(pitch, 0, 0), rotation(0, yaw, 0))
@@ -170,7 +189,8 @@ def render(spec: dict, deltas: dict, size: int, scale: float, yaw: float, pitch:
         return apply(view, [0, 0, 0], w)
 
     half = size / 2.0
-    for p0, eu, ev, normal, rect, _, face in quads(spec, deltas):
+    tint = [c / 255.0 for c in base_tint] if base_tint else (1.0, 1.0, 1.0)
+    for p0, eu, ev, normal, rect, _, face in quads(spec, deltas, state):
         n = to_view(normal, False)
         if n[2] <= 1e-6:
             continue
@@ -209,7 +229,7 @@ def render(spec: dict, deltas: dict, size: int, scale: float, yaw: float, pitch:
                     if mode == "glow":
                         colour = (lit[0], lit[1], lit[2], 255) if lit[3] else (30, 30, 36, 255)
                     else:
-                        rgb = [texel[i] * shade * base_mult for i in range(3)]
+                        rgb = [texel[i] * shade * base_mult * tint[i] for i in range(3)]
                         if lit[3] and glow_level > 0:
                             hot = multiply(lit, glow_tint) if glow_tint else lit
                             rgb = [rgb[i] + (hot[i] - rgb[i]) * glow_level for i in range(3)]
@@ -242,44 +262,102 @@ def state_for(spec: dict, clip_name: str) -> dict:
     return {"pose": clip_name, "pose_ticks": tick, "age": tick}
 
 
-def entity_block(spec: dict, palette: Palette, scale: int, untextured: bool, radiant_demo: bool = False) -> Image:
+def state_cells(spec: dict, base_state: dict) -> list:
+    """(label, state) for every visual state the spec reacts to, beyond ``base_state``."""
+    cells = []
+    seen = set()
+
+    def note(label: str, change: dict) -> None:
+        state = dict(base_state, **change)
+        key = repr(sorted(state.items()))
+        if key not in seen and state != base_state:
+            seen.add(key)
+            cells.append((label, state))
+
+    conditions = [part.get("visible_when") or {} for part in spec["parts"]]
+    conditions += [rule.get("when") or {} for rule in spec.get("glow_rules", [])]
+    conditions += [entry.get("when") or {} for entry in spec.get("procedural", {}).get("spin", [])]
+    for key in ("stage", "form", "phase", "variant"):
+        values = sorted({v for cond in conditions for v in cond.get(key, [])})
+        if key == "variant":
+            values = sorted(set(values) | {int(v) for v in spec.get("variants", {})})
+        for value in values:
+            if value != int(base_state.get(key, 0)):
+                note("%s %d" % (key, value), {key: value})
+    flags = sorted({f for cond in conditions
+                    for f in ([cond["flag"]] if isinstance(cond.get("flag"), str) else cond.get("flag", []))})
+    for flag in flags:
+        note(flag, {"flags": sorted(set(base_state.get("flags", [])) | {flag})})
+    return cells
+
+
+def variant_look(spec: dict, state: dict) -> tuple:
+    """(base texture stem, body tint rgb or None, glow tint rgb or None) for the state's variant."""
+    entry = spec.get("variants", {}).get(str(int(state.get("variant", 0))), {})
+    stem = specs.variant_texture(spec, int(state.get("variant", 0)))
+    if not stem or not os.path.exists(os.path.join(ENTITY_TEXTURES, stem + ".png")):
+        stem = spec["id"]
+    return (stem, hex_to_rgb(entry["tint"]) if "tint" in entry else None,
+            hex_to_rgb(entry["glow"]) if "glow" in entry else None)
+
+
+def entity_block(spec: dict, palette: Palette, scale: int, untextured: bool, radiant_demo: bool = False,
+                 base_state: dict = None) -> Image:
+    base_state = dict(base_state or {})
     sid = spec["id"]
     habitat = spec["habitat"]
     ground = palette.ground(habitat) + (255,)
     centre, radius = bounds(spec)
     cell = int(2 * radius * scale * 1.12) + 8
     label_h = 14
-    rest, rest_glow = specs.evaluate(spec, palette, {})
+    rest, rest_glow = specs.evaluate(spec, palette, base_state)
     main = palette.ramp(habitat, spec["materials"][0])
     light = palette.rules["baked_light"]
     plain = {face: main[max(0, min(4, 2 + light[face]))] for face in FACES}
     base = glow = None
+    textures = {}
     if not untextured:
         base = Image.load(os.path.join(ENTITY_TEXTURES, sid + ".png"))
         glow = Image.load(os.path.join(ENTITY_TEXTURES, sid + "_glow.png"))
+        textures[sid] = base
     dim = palette.rules["glow"]["intensity"]["dim"]
 
-    def lit(deltas, yaw, pitch, level=dim, **extra) -> Image:
+    def lit(deltas, yaw, pitch, level=dim, state=None, **extra) -> Image:
+        state = base_state if state is None else state
         if untextured:
-            return render(spec, deltas, cell, scale, yaw, pitch, centre, mode="plain", flat=plain, background=ground)
-        return render(spec, deltas, cell, scale, yaw, pitch, centre, base=extra.pop("base", base), glow=glow,
-                      glow_level=level, background=extra.pop("background", ground), **extra)
+            return render(spec, deltas, cell, scale, yaw, pitch, centre, mode="plain", flat=plain, background=ground,
+                          state=state)
+        stem, body_tint, glow_tint = variant_look(spec, state)
+        if stem not in textures:
+            textures[stem] = Image.load(os.path.join(ENTITY_TEXTURES, stem + ".png"))
+        extra.setdefault("glow_tint", glow_tint)
+        return render(spec, deltas, cell, scale, yaw, pitch, centre, base=extra.pop("base", textures[stem]),
+                      glow=glow, glow_level=level, background=extra.pop("background", ground), state=state,
+                      base_tint=body_tint, **extra)
 
     rows = []
-    rows.append([(name, lit(rest, yaw, pitch)) for name, yaw, pitch in VIEWS])
+    rows.append([(name, lit(rest, yaw, pitch, rest_glow)) for name, yaw, pitch in VIEWS])
     clip_names = [name for name in specs.CLIP_NAMES if name in spec["clips"]]
     for label, yaw, pitch in (("side", 90, 0), ("3/4", 140, 22)):
         row = []
         for name in clip_names:
-            deltas, level = specs.evaluate(spec, palette, state_for(spec, name))
+            state = dict(base_state, **state_for(spec, name))
+            deltas, level = specs.evaluate(spec, palette, state)
             tick = spec["clips"][name].get("key_pose", spec["clips"][name]["length"] // 2)
-            row.append(("%s t=%d %s" % (name, tick, label), lit(deltas, yaw, pitch, level)))
+            row.append(("%s t=%d %s" % (name, tick, label), lit(deltas, yaw, pitch, level, state)))
+        rows.append(row)
+    cells = state_cells(spec, base_state)
+    if cells:
+        row = []
+        for label, state in cells:
+            deltas, level = specs.evaluate(spec, palette, state)
+            row.append((label, lit(deltas, 140, 22, level, state)))
         rows.append(row)
     if not untextured:
         alpha = palette.data["alpha"]
         variants = [
             ("glow only", render(spec, rest, cell, scale, 140, 22, centre, base=base, glow=glow, mode="glow",
-                                 background=(10, 10, 14, 255))),
+                                 background=(10, 10, 14, 255), state=base_state)),
             ("glow dim %d%%" % round(dim * 100), lit(rest, 140, 22, dim, background=(40, 42, 50, 255))),
             ("glow full", lit(rest, 140, 22, 1.0, background=(40, 42, 50, 255))),
             ("alpha (x%.1f in game)" % alpha["scale"], lit(rest, 140, 22, 1.0, glow_tint=hex_to_rgb(alpha["glow_tint"]),
@@ -293,7 +371,7 @@ def entity_block(spec: dict, palette: Palette, scale: int, untextured: bool, rad
             demo = radiant.remap(spec, palette, base, radiant.default_mapping(spec))
             variants.append(("radiant rule demo", lit(rest, 140, 22, 0.6, base=demo, glow_tint=pearl)))
         variants.append(("untextured", render(spec, rest, cell, scale, 140, 22, centre, mode="plain", flat=plain,
-                                              background=ground)))
+                                              background=ground, state=base_state)))
         rows.append(variants)
 
     columns = max(len(row) for row in rows)
@@ -324,8 +402,10 @@ def entity_block(spec: dict, palette: Palette, scale: int, untextured: bool, rad
     # 16-block thumbnails: 2 px per model unit is about what a 1080p screen shows at 16 blocks.
     x = 6
     text(sheet, x + 2, y, "at 16 blocks: colour / value / silhouette")
-    small = (render(spec, rest, thumb, 2, 125, 12, centre, mode="plain", flat=plain, background=ground) if untextured
-             else render(spec, rest, thumb, 2, 125, 12, centre, base=base, glow=glow, glow_level=dim, background=ground))
+    small = (render(spec, rest, thumb, 2, 125, 12, centre, mode="plain", flat=plain, background=ground,
+                    state=base_state) if untextured
+             else render(spec, rest, thumb, 2, 125, 12, centre, base=base, glow=glow, glow_level=dim, background=ground,
+                         state=base_state))
     sheet.blit(small, x, y + label_h)
     value = Image(thumb, thumb)
     for yy in range(thumb):
@@ -334,7 +414,8 @@ def entity_block(spec: dict, palette: Palette, scale: int, untextured: bool, rad
             v = 40 if v < 85 else (128 if v < 150 else 215)
             value.px[yy][xx] = (v, v, v, 255)
     sheet.blit(value, x + thumb + 6, y + label_h)
-    sheet.blit(render(spec, rest, thumb, 2, 125, 12, centre, mode="flat", flat=(12, 12, 16, 255), background=ground),
+    sheet.blit(render(spec, rest, thumb, 2, 125, 12, centre, mode="flat", flat=(12, 12, 16, 255), background=ground,
+                      state=base_state),
                x + 2 * (thumb + 6), y + label_h)
     x += 3 * (thumb + 6) + 10
     if not untextured:
@@ -354,6 +435,20 @@ def entity_block(spec: dict, palette: Palette, scale: int, untextured: bool, rad
     return sheet
 
 
+def parse_state(text: str) -> dict:
+    """``stage=2,variant=3,form=1,phase=2,flags=saddled+radiant`` -> an evaluator state."""
+    state = {}
+    for item in filter(None, text.split(",")):
+        key, _, value = item.partition("=")
+        if key == "flags":
+            state["flags"] = [f for f in value.split("+") if f]
+        elif key in specs.CONDITION_RANGES:
+            state[key] = int(value)
+        else:
+            raise SystemExit("--state: unknown key '%s' (stage, variant, form, phase, flags)" % key)
+    return state
+
+
 def main(argv: list) -> int:
     args = list(argv)
     out = None
@@ -364,13 +459,17 @@ def main(argv: list) -> int:
     if "--scale" in args:
         scale = int(args.pop(args.index("--scale") + 1))
         args.remove("--scale")
+    base_state = {}
+    if "--state" in args:
+        base_state = parse_state(args.pop(args.index("--state") + 1))
+        args.remove("--state")
     untextured = "--untextured" in args
     ids = [a for a in args if not a.startswith("--")]
     if not ids:
         print(__doc__)
         return 2
     palette = Palette()
-    blocks = [entity_block(specs.load(entity_id), palette, scale, untextured, "--radiant-demo" in args)
+    blocks = [entity_block(specs.load(entity_id), palette, scale, untextured, "--radiant-demo" in args, base_state)
               for entity_id in ids]
     sheet = Image(max(b.width for b in blocks), sum(b.height for b in blocks), PAPER)
     y = 0

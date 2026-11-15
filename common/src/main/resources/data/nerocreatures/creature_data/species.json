@@ -7,6 +7,12 @@
     "lode_tortoise": {"birth": "egg", "studied_threshold": 3},
     "dune_loper": {"birth": "live", "studied_threshold": 3},
     "strata_hound": {"birth": "live", "studied_threshold": 3},
-    "slag_beetle": {"birth": "egg", "studied_threshold": 3}
+    "slag_beetle": {"birth": "egg", "studied_threshold": 3},
+    "rime_yak": {"birth": "live", "studied_threshold": 3},
+    "spore_drifter": {"birth": "egg", "studied_threshold": 3},
+    "mossback": {"birth": "live", "studied_threshold": 3},
+    "prism_stag": {"birth": "live", "studied_threshold": 1, "product_interval_ticks": 12000},
+    "magnet_crab": {"birth": "egg", "studied_threshold": 3},
+    "void_manta": {"birth": "egg", "studied_threshold": 3}
   }
 }

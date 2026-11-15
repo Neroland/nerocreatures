@@ -1,0 +1,55 @@
+{
+  "pools": [
+    {
+      "entries": [
+        {
+          "modifier": {
+            "add": false,
+            "count": {
+              "max": 3.0,
+              "min": 1.0,
+              "type": "minecraft:uniform"
+            },
+            "type": "minecraft:set_count"
+          },
+          "name": "minecraft:redstone",
+          "type": "minecraft:item"
+        }
+      ],
+      "rolls": 1
+    },
+    {
+      "entries": [
+        {
+          "modifier": {
+            "add": false,
+            "count": {
+              "max": 2.0,
+              "min": 0.0,
+              "type": "minecraft:uniform"
+            },
+            "type": "minecraft:set_count"
+          },
+          "name": "minecraft:glowstone_dust",
+          "type": "minecraft:item"
+        }
+      ],
+      "rolls": 1
+    },
+    {
+      "condition": {
+        "chance": 0.25,
+        "type": "minecraft:random_chance"
+      },
+      "entries": [
+        {
+          "name": "nerocreatures:plasma_cell",
+          "type": "minecraft:item"
+        }
+      ],
+      "rolls": 1
+    }
+  ],
+  "random_sequence": "nerocreatures:entities/static_swarm",
+  "type": "minecraft:entity"
+}

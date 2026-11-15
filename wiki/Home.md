@@ -25,6 +25,10 @@ drops are deliberately raw materials that other mods spend.
 - [Spawning](Spawning.md) — where creatures appear and why Earth stays quiet: the space biome tags,
   the full weight table, the placement sweep, the population caps, every config key, and the
   `InvasionBudget` seam for event mods.
+- Habitats: [Luna](Luna.md), [Mars](Mars.md), [Cindara](Cindara.md), [Glacira](Glacira.md),
+  [Greenxertz](Greenxertz.md), [Nyxara](Nyxara.md), [Asteroid](Asteroid.md),
+  [Wrecks & Pirates](Wrecks-and-Pirates.md), [Deep Space](Deep-Space.md) — the 0.5.0 creatures of
+  each world.
 - [Drop Map](Drop-Map.md) — every creature drop, its tags, and the mods meant to consume it. The
   canonical cross-mod contract.
 - [Pets & Drones](Pets-and-Drones.md) — taming, commands, the Terraforming Drone, the ownership

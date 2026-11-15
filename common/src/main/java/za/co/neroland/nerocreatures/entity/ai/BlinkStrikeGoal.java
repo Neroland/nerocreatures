@@ -9,6 +9,9 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.ai.goal.Goal;
 
+import za.co.neroland.nerocreatures.entity.visual.CreatureVisualsHolder;
+import za.co.neroland.nerocreatures.entity.visual.VisualPose;
+
 /**
  * Short-range teleport that closes the gap to the current target — the ambusher's signature move.
  *
@@ -29,6 +32,13 @@ import net.minecraft.world.entity.ai.goal.Goal;
  *   <li>Hard cap: one blink per {@code cooldownTicks}. With the default 100 ticks that is at most
  *       5 blinks a minute per mob, which is what keeps a pack of ambushers affordable.</li>
  * </ul>
+ *
+ * <h2>Telegraph</h2>
+ *
+ * <p>The blink is readable and dodgeable: on {@link #start()} the mob crouches into its
+ * {@code ability} clip ({@value #CLIP_TICKS} ticks) with a low charge-up sound, holds still, and blinks
+ * {@value #WINDUP_TICKS} ticks later if the target is still alive (the art's blink frames 10–13).
+ * The origin keeps a short void "afterimage" (reverse-portal particles that linger about a second).
  */
 public class BlinkStrikeGoal extends Goal {
 
@@ -41,8 +51,17 @@ public class BlinkStrikeGoal extends Goal {
     private final double maxDistanceSqr;
     private final int cooldownTicks;
 
+    /** Ticks from the charge-up to the blink. */
+    private static final int WINDUP_TICKS = 10;
+
+    /** Length of the blink-strike clip the wind-up plays ({@code art/models/void_crawler.json}). */
+    private static final int CLIP_TICKS = 22;
+
     /** Ticks remaining before another blink is allowed. */
     private int cooldown;
+
+    /** Ticks left in the wind-up, or -1 when none is running. */
+    private int windup = -1;
 
     /**
      * @param mob            the blinker
@@ -75,17 +94,50 @@ public class BlinkStrikeGoal extends Goal {
         return this.mob.getSensing().hasLineOfSight(target);
     }
 
-    /** A blink is instantaneous: everything happens in {@link #start()} and the goal ends. */
+    /** Runs only through the wind-up; the blink itself is instantaneous and ends the goal. */
     @Override
     public boolean canContinueToUse() {
-        return false;
+        LivingEntity target = this.mob.getTarget();
+        return this.windup >= 0 && target != null && target.isAlive();
+    }
+
+    @Override
+    public boolean requiresUpdateEveryTick() {
+        return true;
     }
 
     @Override
     public void start() {
         this.cooldown = this.cooldownTicks;
+        this.windup = WINDUP_TICKS;
+        this.mob.getNavigation().stop();
+        if (this.mob instanceof CreatureVisualsHolder holder) {
+            holder.visuals().playPose(VisualPose.ABILITY, CLIP_TICKS);
+        }
+        this.mob.playSound(SoundEvents.ENDERMAN_TELEPORT, 0.5F, 0.5F);
+    }
+
+    @Override
+    public void stop() {
+        this.windup = -1;
+    }
+
+    @Override
+    public void tick() {
         LivingEntity target = this.mob.getTarget();
-        if (target == null || !(this.mob.level() instanceof ServerLevel level)) {
+        if (target == null) {
+            return;
+        }
+        this.mob.getLookControl().setLookAt(target, 30.0F, 30.0F);
+        if (this.windup > 0 && --this.windup > 0) {
+            return;
+        }
+        this.windup = -1;
+        this.blink(target);
+    }
+
+    private void blink(LivingEntity target) {
+        if (!(this.mob.level() instanceof ServerLevel level)) {
             return;
         }
         double fromX = this.mob.getX();
@@ -123,6 +175,9 @@ public class BlinkStrikeGoal extends Goal {
     protected void onBlink(ServerLevel level, double fromX, double fromY, double fromZ) {
         level.sendParticles(ParticleTypes.PORTAL, fromX, fromY + 1.0D, fromZ, 12,
                 0.3D, 0.5D, 0.3D, 0.05D);
+        // The afterimage: slow reverse-portal motes in the crawler's outline at the origin.
+        level.sendParticles(ParticleTypes.REVERSE_PORTAL, fromX, fromY + 0.4D, fromZ, 24,
+                0.35D, 0.25D, 0.35D, 0.0D);
         this.mob.playSound(SoundEvents.ENDERMAN_TELEPORT, 0.8F, 1.4F);
     }
 }

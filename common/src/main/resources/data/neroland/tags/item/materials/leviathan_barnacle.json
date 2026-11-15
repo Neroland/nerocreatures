@@ -1,0 +1,9 @@
+{
+  "replace": false,
+  "values": [
+    {
+      "id": "nerocreatures:leviathan_barnacle",
+      "required": false
+    }
+  ]
+}

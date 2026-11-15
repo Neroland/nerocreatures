@@ -4,6 +4,10 @@
     {
       "id": "nerocreatures:contraband",
       "required": false
+    },
+    {
+      "id": "nerocreatures:captains_ledger",
+      "required": false
     }
   ]
 }

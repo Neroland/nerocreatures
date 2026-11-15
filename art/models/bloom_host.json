@@ -4,14 +4,18 @@
   "name": "Bloom Host",
   "habitat": "greenxertz",
   "size_class": "M",
-  "silhouette": "a stooped walker carrying one huge lopsided flower cap for a head. Sporeling: the cap alone on stub legs. Pod: a closed bulb on a stalk",
+  "silhouette": "a stooped walker carrying one huge lopsided flower cap for a head. Sporeling: the cap alone on stub legs. Pod: a rooted, ribbed bulb split open at the crown around a glowing spore core",
   "hitbox_guide": [0.9, 1.8],
   "texture": {"width": 64, "height": 64},
   "render_type": "cutout",
   "renderer": {"scale": 1.0, "shadow": 0.5},
   "materials": ["cream", "rose", "ochre"],
   "accent": "accent",
-  "glow_organs": ["gill throat under the cap (raises the dead)", "cap spots", "pod seam"],
+  "glow_organs": [
+    "gill throat under the cap (raises the dead)",
+    "cap spots",
+    "pod spore core, rib seams and pores"
+  ],
   "radiant": null,
   "budget_exception": {"boxes": 12},
   "parts": [
@@ -127,25 +131,142 @@
       ]
     },
     {
-      "name": "p_stalk",
+      "name": "p_root",
       "parent": null,
       "pivot": [0, 24, 0],
       "rotation": [0, 0, 0],
       "visible_when": {"form": [2]},
       "cubes": [
-        {"name": "stalk", "origin": [-1, -6, -1], "size": [2, 6, 2], "uv": [56, 12]},
-        {"name": "roots", "origin": [-3, -1, -3], "size": [6, 1, 6], "uv": [0, 41]}
+        {"name": "stem", "origin": [-1, -4, -1], "size": [2, 4, 2], "uv": [56, 12]}
+      ]
+    },
+    {
+      "name": "p_runner_a",
+      "parent": "p_root",
+      "pivot": [0, 0, 0],
+      "rotation": [0, 0, 0],
+      "visible_when": {"form": [2]},
+      "cubes": [
+        {"name": "runner", "origin": [-4.5, -1, -1], "size": [9, 1, 2], "uv": [32, 57]}
+      ]
+    },
+    {
+      "name": "p_runner_b",
+      "parent": "p_root",
+      "pivot": [0, 0, 0],
+      "rotation": [0, 90, 0],
+      "uv_like": "p_runner_a",
+      "visible_when": {"form": [2]},
+      "cubes": [
+        {"name": "runner", "origin": [-4.5, -1, -1], "size": [9, 1, 2], "uv": [32, 57], "mirror": true}
       ]
     },
     {
       "name": "p_bulb",
-      "parent": "p_stalk",
-      "pivot": [0, -6, 0],
+      "parent": "p_root",
+      "pivot": [0, -3, 0],
       "rotation": [0, 0, 0],
       "visible_when": {"form": [2]},
       "cubes": [
-        {"name": "bulb", "origin": [-3, -7, -3], "size": [6, 7, 6], "uv": [14, 16]},
-        {"name": "tip", "origin": [-2, -9, -2], "size": [4, 2, 4], "uv": [0, 55]}
+        {"name": "belly", "origin": [-3, -8, -3], "size": [6, 6, 6], "uv": [14, 16]},
+        {"name": "cup", "origin": [-2, -2, -2], "size": [4, 2, 4], "uv": [0, 55]},
+        {"name": "collar", "origin": [-2, -10, -2], "size": [4, 2, 4], "uv": [0, 41]}
+      ]
+    },
+    {
+      "name": "p_lobe_f",
+      "parent": "p_bulb",
+      "pivot": [0, -5, 0],
+      "rotation": [0, 0, 0],
+      "visible_when": {"form": [2]},
+      "cubes": [
+        {"name": "lobe", "origin": [-2, -2, -4], "size": [4, 4, 1], "uv": [16, 41]}
+      ]
+    },
+    {
+      "name": "p_lobe_l",
+      "parent": "p_bulb",
+      "pivot": [0, -5, 0],
+      "rotation": [0, 270, 0],
+      "visible_when": {"form": [2]},
+      "cubes": [
+        {"name": "lobe", "origin": [-2, -2, -4], "size": [4, 4, 1], "uv": [16, 41], "mirror": true}
+      ],
+      "uv_like": "p_lobe_f"
+    },
+    {
+      "name": "p_lobe_b",
+      "parent": "p_bulb",
+      "pivot": [0, -5, 0],
+      "rotation": [0, 180, 0],
+      "visible_when": {"form": [2]},
+      "cubes": [
+        {"name": "lobe", "origin": [-2, -2, -4], "size": [4, 4, 1], "uv": [16, 41], "mirror": true}
+      ],
+      "uv_like": "p_lobe_f"
+    },
+    {
+      "name": "p_lobe_r",
+      "parent": "p_bulb",
+      "pivot": [0, -5, 0],
+      "rotation": [0, 90, 0],
+      "visible_when": {"form": [2]},
+      "cubes": [
+        {"name": "lobe", "origin": [-2, -2, -4], "size": [4, 4, 1], "uv": [16, 41], "mirror": true}
+      ],
+      "uv_like": "p_lobe_f"
+    },
+    {
+      "name": "p_valve_f",
+      "parent": "p_bulb",
+      "pivot": [0, -10, -2.5],
+      "rotation": [24, 0, 0],
+      "visible_when": {"form": [2]},
+      "cubes": [
+        {"name": "valve", "origin": [-2, -2, -0.5], "size": [4, 2, 1], "uv": [54, 57]}
+      ]
+    },
+    {
+      "name": "p_valve_l",
+      "parent": "p_bulb",
+      "pivot": [2.5, -10, 0],
+      "rotation": [24, 270, 0],
+      "visible_when": {"form": [2]},
+      "cubes": [
+        {"name": "valve", "origin": [-2, -2, -0.5], "size": [4, 2, 1], "uv": [54, 57], "mirror": true}
+      ],
+      "uv_like": "p_valve_f"
+    },
+    {
+      "name": "p_valve_b",
+      "parent": "p_bulb",
+      "pivot": [0, -10, 2.5],
+      "rotation": [24, 180, 0],
+      "visible_when": {"form": [2]},
+      "cubes": [
+        {"name": "valve", "origin": [-2, -2, -0.5], "size": [4, 2, 1], "uv": [54, 57], "mirror": true}
+      ],
+      "uv_like": "p_valve_f"
+    },
+    {
+      "name": "p_valve_r",
+      "parent": "p_bulb",
+      "pivot": [-2.5, -10, 0],
+      "rotation": [24, 90, 0],
+      "visible_when": {"form": [2]},
+      "cubes": [
+        {"name": "valve", "origin": [-2, -2, -0.5], "size": [4, 2, 1], "uv": [54, 57], "mirror": true}
+      ],
+      "uv_like": "p_valve_f"
+    },
+    {
+      "name": "p_core",
+      "parent": "p_bulb",
+      "pivot": [0, -10, 0],
+      "rotation": [0, 0, 0],
+      "visible_when": {"form": [2]},
+      "cubes": [
+        {"name": "core", "origin": [-1.5, -0.5, -1.5], "size": [3, 3, 3], "uv": [50, 51]}
       ]
     }
   ],
@@ -160,8 +281,7 @@
     ],
     "wave": [
       {"part": "h_arm_l", "axis": "x", "frequency": 0.05, "phase": 0, "amplitude": 4, "fade_with_walk": true},
-      {"part": "h_arm_r", "axis": "x", "frequency": 0.05, "phase": 120, "amplitude": 4, "fade_with_walk": true},
-      {"part": "p_stalk", "axis": "z", "frequency": 0.04, "phase": 0, "amplitude": 4, "fade_with_walk": false}
+      {"part": "h_arm_r", "axis": "x", "frequency": 0.05, "phase": 120, "amplitude": 4, "fade_with_walk": true}
     ],
     "look": [
       {"part": "h_cap", "yaw": 0.6, "pitch": 0.3, "limit": 30}
@@ -172,7 +292,7 @@
       "length": 80,
       "loop": true,
       "key_pose": 20,
-      "note": "host: cap nods, the big petal breathes. sporeling: rocks on its stubs. pod: slow throb",
+      "note": "host: cap nods, the big petal breathes. sporeling: rocks on its stubs. pod: rooted; the bulb swells and the spore core pushes up through the crown as the glow pulses",
       "tracks": {
         "h_cap": {
           "rot": [
@@ -202,17 +322,29 @@
         "p_bulb": {
           "pos": [
             {"t": 0, "v": [0, 0, 0]},
-            {"t": 40, "v": [0, -1, 0], "ease": "smooth"},
+            {"t": 20, "v": [0, -0.5, 0], "ease": "smooth"},
+            {"t": 40, "v": [0, 0, 0], "ease": "smooth"},
+            {"t": 60, "v": [0, -0.5, 0], "ease": "smooth"},
             {"t": 80, "v": [0, 0, 0], "ease": "smooth"}
-          ],
-          "rot": [
+          ]
+        },
+        "p_core": {
+          "pos": [
             {"t": 0, "v": [0, 0, 0]},
-            {"t": 20, "v": [0, 0, 3], "ease": "smooth"},
-            {"t": 60, "v": [0, 0, -3], "ease": "smooth"},
+            {"t": 20, "v": [0, -1, 0], "ease": "smooth"},
+            {"t": 40, "v": [0, 0, 0], "ease": "smooth"},
+            {"t": 60, "v": [0, -1, 0], "ease": "smooth"},
             {"t": 80, "v": [0, 0, 0], "ease": "smooth"}
           ]
         }
-      }
+      },
+      "glow": [
+        {"t": 0, "v": 0.35},
+        {"t": 20, "v": 0.9, "ease": "smooth"},
+        {"t": 40, "v": 0.35, "ease": "smooth"},
+        {"t": 60, "v": 0.9, "ease": "smooth"},
+        {"t": 80, "v": 0.35, "ease": "smooth"}
+      ]
     },
     "move": {
       "length": 20,
@@ -262,7 +394,7 @@
       "loop": false,
       "key_pose": 26,
       "damaging": false,
-      "note": "raise: a 10-tick dip, then the cap tilts back and the petal swings open, arms lift; sporeling and pod pulse with it",
+      "note": "raise: a 10-tick dip, then the cap tilts back and the petal swings open, arms lift; sporeling pulses with it; pod core stands proud",
       "glow": [
         {"t": 0, "v": 0.35},
         {"t": 10, "v": 1.0},
@@ -332,9 +464,18 @@
         "p_bulb": {
           "pos": [
             {"t": 0, "v": [0, 0, 0]},
-            {"t": 10, "v": [0, 1, 0], "ease": "smooth"},
-            {"t": 18, "v": [0, -2, 0], "ease": "smooth"},
-            {"t": 40, "v": [0, -2, 0]},
+            {"t": 10, "v": [0, 0.5, 0], "ease": "smooth"},
+            {"t": 18, "v": [0, -0.5, 0], "ease": "smooth"},
+            {"t": 40, "v": [0, -0.5, 0]},
+            {"t": 50, "v": [0, 0, 0], "ease": "smooth"}
+          ]
+        },
+        "p_core": {
+          "pos": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 10, "v": [0, 0.5, 0], "ease": "smooth"},
+            {"t": 18, "v": [0, -1.5, 0], "ease": "smooth"},
+            {"t": 40, "v": [0, -1.5, 0]},
             {"t": 50, "v": [0, 0, 0], "ease": "smooth"}
           ]
         }
@@ -344,7 +485,7 @@
       "length": 6,
       "loop": false,
       "key_pose": 2,
-      "note": "cap snaps shut",
+      "note": "cap snaps shut; pod core ducks into the bulb",
       "tracks": {
         "h_cap": {
           "rot": [
@@ -382,12 +523,19 @@
         "p_bulb": {
           "rot": [
             {"t": 0, "v": [0, 0, 0]},
-            {"t": 2, "v": [0, 0, 14]},
+            {"t": 2, "v": [0, 0, 7]},
+            {"t": 6, "v": [0, 0, 0], "ease": "smooth"}
+          ]
+        },
+        "p_core": {
+          "pos": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 2, "v": [0, 1.5, 0]},
             {"t": 6, "v": [0, 0, 0], "ease": "smooth"}
           ]
         }
       }
     }
   },
-  "uv_fill": 0.841
+  "uv_fill": 0.867
 }

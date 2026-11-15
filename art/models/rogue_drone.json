@@ -1,0 +1,203 @@
+{
+  "format": 1,
+  "id": "rogue_drone",
+  "name": "Rogue Drone",
+  "habitat": "wrecks",
+  "size_class": "S",
+  "silhouette": "small square chassis with four stubby rotor booms and one forward lens",
+  "hitbox_guide": [0.7, 0.7],
+  "texture": {"width": 64, "height": 64},
+  "render_type": "cutout",
+  "renderer": {"scale": 1.0, "shadow": 0.35},
+  "materials": ["white", "hazard", "oxide"],
+  "accent": "accent",
+  "glow_organs": ["the forward lens"],
+  "radiant": null,
+  "parts": [
+    {
+      "name": "body",
+      "parent": null,
+      "pivot": [0, 19, 0],
+      "rotation": [0, 0, 0],
+      "cubes": [
+        {"name": "chassis", "origin": [-4, -2, -4], "size": [8, 4, 8], "uv": [0, 0]},
+        {"name": "pod", "origin": [-2, 2, -2], "size": [4, 2, 4], "uv": [0, 12]},
+        {"name": "boom_fl", "origin": [4, -1, -4], "size": [2, 1, 2], "uv": [50, 11]},
+        {"name": "boom_fr", "origin": [-6, -1, -4], "size": [2, 1, 2], "uv": [50, 14]},
+        {"name": "boom_bl", "origin": [4, -1, 2], "size": [2, 1, 2], "uv": [54, 5]},
+        {"name": "boom_br", "origin": [-6, -1, 2], "size": [2, 1, 2], "uv": [54, 8]},
+        {"name": "skid_l", "origin": [3, 2, -4], "size": [1, 3, 8], "uv": [32, 0]},
+        {"name": "skid_r", "origin": [-4, 2, -4], "size": [1, 3, 8], "uv": [32, 11]},
+        {"name": "mast", "origin": [2, -5, 2], "size": [1, 3, 1], "uv": [50, 5]}
+      ]
+    },
+    {
+      "name": "lens",
+      "parent": "body",
+      "pivot": [0, 0, -4],
+      "rotation": [0, 0, 0],
+      "cubes": [
+        {"name": "housing", "origin": [-2, -2, -2], "size": [4, 3, 2], "uv": [50, 0]},
+        {"name": "eye", "origin": [-1, -1, -3], "size": [2, 2, 1], "uv": [58, 11]}
+      ]
+    },
+    {
+      "name": "rotor_fl",
+      "parent": "body",
+      "pivot": [6, -2, -3],
+      "rotation": [0, 0, 0],
+      "cubes": [
+        {"name": "disc", "origin": [-2, -1, -2], "size": [4, 1, 4], "uv": [16, 12]}
+      ]
+    },
+    {
+      "name": "rotor_fr",
+      "parent": "body",
+      "pivot": [-6, -2, -3],
+      "rotation": [0, 0, 0],
+      "uv_like": "rotor_fl",
+      "cubes": [
+        {"name": "disc", "origin": [-2, -1, -2], "size": [4, 1, 4], "uv": [16, 12], "mirror": true}
+      ]
+    },
+    {
+      "name": "rotor_bl",
+      "parent": "body",
+      "pivot": [6, -2, 3],
+      "rotation": [0, 0, 0],
+      "uv_like": "rotor_fl",
+      "cubes": [
+        {"name": "disc", "origin": [-2, -1, -2], "size": [4, 1, 4], "uv": [16, 12], "mirror": true}
+      ]
+    },
+    {
+      "name": "rotor_br",
+      "parent": "body",
+      "pivot": [-6, -2, 3],
+      "rotation": [0, 0, 0],
+      "uv_like": "rotor_fl",
+      "cubes": [
+        {"name": "disc", "origin": [-2, -1, -2], "size": [4, 1, 4], "uv": [16, 12], "mirror": true}
+      ]
+    }
+  ],
+  "procedural": {
+    "wave": [],
+    "look": [
+      {"part": "lens", "yaw": 0.5, "pitch": 0.5, "limit": 30}
+    ],
+    "spin": [
+      {"part": "rotor_fl", "axis": "y", "speed": 40, "phase": 0},
+      {"part": "rotor_fr", "axis": "y", "speed": -40, "phase": 180},
+      {"part": "rotor_bl", "axis": "y", "speed": -40, "phase": 180},
+      {"part": "rotor_br", "axis": "y", "speed": 40, "phase": 0}
+    ]
+  },
+  "clips": {
+    "idle": {
+      "length": 60,
+      "loop": true,
+      "key_pose": 15,
+      "note": "booms spin (rotor waves); the lens scans left and right; the chassis idles on its skids with a small shiver",
+      "tracks": {
+        "lens": {
+          "rot": [
+            {"t": 0, "v": [0.0, 0.0, 0.0]},
+            {"t": 15, "v": [0.0, 28.0, 0.0], "ease": "smooth"},
+            {"t": 45, "v": [0.0, -28.0, 0.0], "ease": "smooth"},
+            {"t": 60, "v": [0.0, 0.0, 0.0], "ease": "smooth"}
+          ]
+        },
+        "body": {
+          "rot": [
+            {"t": 0, "v": [0.0, 0.0, 0.0]},
+            {"t": 30, "v": [0.0, 0.0, 2.0], "ease": "smooth"},
+            {"t": 60, "v": [0.0, 0.0, 0.0], "ease": "smooth"}
+          ]
+        }
+      }
+    },
+    "move": {
+      "length": 20,
+      "loop": true,
+      "key_pose": 12,
+      "note": "hop, then glide: up off the skids with the nose tipped down and the booms tilted into the air",
+      "tracks": {
+        "body": {
+          "pos": [
+            {"t": 0, "v": [0.0, 0.0, 0.0]},
+            {"t": 4, "v": [0.0, 1.0, 0.0], "ease": "smooth"},
+            {"t": 10, "v": [0.0, -5.0, 0.0], "ease": "smooth"},
+            {"t": 16, "v": [0.0, -3.0, 0.0], "ease": "smooth"},
+            {"t": 20, "v": [0.0, 0.0, 0.0], "ease": "smooth"}
+          ],
+          "rot": [
+            {"t": 0, "v": [0.0, 0.0, 0.0]},
+            {"t": 4, "v": [-8.0, 0.0, 0.0], "ease": "smooth"},
+            {"t": 10, "v": [16.0, 0.0, 0.0], "ease": "smooth"},
+            {"t": 16, "v": [10.0, 0.0, 0.0], "ease": "smooth"},
+            {"t": 20, "v": [0.0, 0.0, 0.0], "ease": "smooth"}
+          ]
+        }
+      }
+    },
+    "ability": {
+      "length": 16,
+      "loop": false,
+      "key_pose": 10,
+      "damaging": true,
+      "telegraph": 10,
+      "glow": [
+        {"t": 0, "v": 0.35},
+        {"t": 10, "v": 1.0},
+        {"t": 13, "v": 1.0},
+        {"t": 16, "v": 0.35}
+      ],
+      "note": "leap: 10-tick crouch on the skids, tail up, lens brightening; launch at tick 10",
+      "tracks": {
+        "body": {
+          "pos": [
+            {"t": 0, "v": [0.0, 0.0, 0.0]},
+            {"t": 10, "v": [0.0, 1.0, 1.0], "ease": "smooth"},
+            {"t": 13, "v": [0.0, -6.0, -3.0], "ease": "smooth"},
+            {"t": 16, "v": [0.0, -4.0, -2.0], "ease": "smooth"}
+          ],
+          "rot": [
+            {"t": 0, "v": [0.0, 0.0, 0.0]},
+            {"t": 10, "v": [-16.0, 0.0, 0.0], "ease": "smooth"},
+            {"t": 13, "v": [24.0, 0.0, 0.0], "ease": "smooth"},
+            {"t": 16, "v": [12.0, 0.0, 0.0], "ease": "smooth"}
+          ]
+        },
+        "lens": {
+          "rot": [
+            {"t": 0, "v": [0.0, 0.0, 0.0]},
+            {"t": 10, "v": [10.0, 0.0, 0.0], "ease": "smooth"},
+            {"t": 16, "v": [0.0, 0.0, 0.0], "ease": "smooth"}
+          ]
+        }
+      }
+    },
+    "hurt": {
+      "length": 6,
+      "loop": false,
+      "key_pose": 3,
+      "note": "tumbles a quarter turn and rights itself",
+      "tracks": {
+        "body": {
+          "rot": [
+            {"t": 0, "v": [0.0, 0.0, 0.0]},
+            {"t": 3, "v": [0.0, 0.0, 90.0], "ease": "smooth"},
+            {"t": 6, "v": [0.0, 0.0, 0.0], "ease": "smooth"}
+          ],
+          "pos": [
+            {"t": 0, "v": [0.0, 0.0, 0.0]},
+            {"t": 3, "v": [0.0, -3.0, 0.0], "ease": "smooth"},
+            {"t": 6, "v": [0.0, 0.0, 0.0], "ease": "smooth"}
+          ]
+        }
+      }
+    }
+  },
+  "uv_fill": 0.28
+}

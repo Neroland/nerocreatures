@@ -195,6 +195,16 @@ def shardback(p) -> None:
         p.box(name + ".tip", "opal", 4)
         p.face(name + ".tip", "south").fill("silver", 1)
 
+    # The same fan folded flat over the shoulders (form 1): mirror side up.
+    for i, key in enumerate(("folded.slab_c", "folded.slab_l", "folded.slab_r")):
+        p.box(key, "opal", 4)
+        up = p.top(key)
+        up.fill("opal", 2)
+        for y in range(up.h):
+            up.rect((y + i) // 2, y, 2, 1, "opal", 3)
+        up.rect(0, up.h - 1, up.w, 1, "silver", 2)
+        p.under(key).fill("silver", 1)
+
     slab(p, "leg_fl.leg", "silver", 2)
     p.box("leg_fl.foot", "silver", 1)
     slab(p, "leg_rl.leg", "plum", 2)

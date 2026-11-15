@@ -2,6 +2,8 @@ package za.co.neroland.nerocreatures.client;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.WeakHashMap;
 
 import org.jetbrains.annotations.Nullable;
 
@@ -53,6 +55,22 @@ public abstract class CreatureModel extends net.minecraft.client.model.Hierarchi
             float amplitude, boolean swung, boolean fadeWithWalk) {
     }
 
+    /**
+     * What each creature showed last, so a new pose can blend from it ({@code AnimInput.fromPose}).
+     * Client render thread only; entries go with their entity.
+     */
+    private static final class PoseMemory {
+        int pose = -1;
+        double ticks;
+        double changedAt = Double.NaN;
+        int fromPose;
+        double fromTicks;
+    }
+
+    private static final Map<Entity, PoseMemory> POSE_MEMORY = new WeakHashMap<>();
+    /** A restarted pose shows as its clock running backwards by more than this. */
+    private static final double RESTART_TICKS = 1.5;
+
     private final List<Swing> swings = new ArrayList<>();
     private final List<Wave> waves = new ArrayList<>();
 
@@ -65,6 +83,9 @@ public abstract class CreatureModel extends net.minecraft.client.model.Hierarchi
     //? if <1.21.2 {
     /*private final ModelPart rootPart;
     private final AnimInput input = new AnimInput();
+    // 1.21.1 has no model-tint hook: the renderer sets this before drawing and the body draw (the
+    // first renderToBuffer of the frame, before any layer) consumes it.
+    private int pendingBodyTint = -1;
     *///?}
 
     /** A pre-pipeline model: register motion with {@link #swingLimb} and {@link #idleWave}. */
@@ -96,6 +117,20 @@ public abstract class CreatureModel extends net.minecraft.client.model.Hierarchi
     /*@Override
     public ModelPart root() {
         return this.rootPart;
+    }
+
+    // Sets the ARGB tint for the next body draw only (1.21.1).
+    void setPendingBodyTint(int argb) {
+        this.pendingBodyTint = argb;
+    }
+
+    @Override
+    public void renderToBuffer(com.mojang.blaze3d.vertex.PoseStack poseStack,
+            com.mojang.blaze3d.vertex.VertexConsumer buffer, int packedLight, int packedOverlay, int color) {
+        int tint = this.pendingBodyTint;
+        this.pendingBodyTint = -1;
+        super.renderToBuffer(poseStack, buffer, packedLight, packedOverlay,
+                tint == -1 ? color : CreatureArt.multiplyArgb(color, tint));
     }
     *///?}
 
@@ -179,6 +214,28 @@ public abstract class CreatureModel extends net.minecraft.client.model.Hierarchi
         if (entity instanceof LivingEntity living && living.hurtTime > 0) {
             in.hurtTicks = Math.max(0.0F, living.hurtDuration - living.hurtTime + partialTick);
         }
+        trackPose(in, entity, entity.tickCount + partialTick);
+    }
+
+    /**
+     * Fills the blend source ({@code fromPose}, {@code fromTicks}, {@code since}) from what this
+     * entity showed before its current pose began, and remembers the current one. Idempotent within
+     * a frame, so the several 1.21.1 callers can each call it.
+     */
+    static void trackPose(AnimInput in, Entity entity, double clock) {
+        PoseMemory memory = POSE_MEMORY.computeIfAbsent(entity, e -> new PoseMemory());
+        if (memory.pose < 0) {
+            memory.pose = in.pose;
+        } else if (in.pose != memory.pose || (in.pose != 0 && in.poseTicks < memory.ticks - RESTART_TICKS)) {
+            memory.fromPose = memory.pose;
+            memory.fromTicks = memory.ticks;
+            memory.changedAt = clock;
+            memory.pose = in.pose;
+        }
+        memory.ticks = in.poseTicks;
+        in.fromPose = memory.fromPose;
+        in.fromTicks = memory.fromTicks;
+        in.since = Double.isNaN(memory.changedAt) ? -1.0 : Math.max(0.0, clock - memory.changedAt);
     }
 
     @Override

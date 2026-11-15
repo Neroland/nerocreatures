@@ -8,8 +8,10 @@ package za.co.neroland.nerocreatures.entity.greenxertz;
  * <ul>
  *   <li>Only the {@link #FORM_HOST host} form raises sporelings, and only from a mob it killed
  *       itself.</li>
- *   <li>Never from players, owned (tamed) mobs, named mobs, persistent mobs, bosses or
- *       villager-type mobs; only from {@code #nerocreatures:sporeling_hosts}.</li>
+ *   <li>Never from players, owned (tamed) mobs, named mobs, persistent or leashed mobs, bosses or
+ *       villager-type mobs; only from {@code #nerocreatures:sporeling_hosts}. Bred livestock
+ *       (babies, animals in love or that bred recently) are spared too unless
+ *       {@code bloomHostInfectsLivestock} is on.</li>
  *   <li>Hard caps: {@link #PER_HOST} live sporelings per host, {@link #PER_DIMENSION} per
  *       dimension, {@link #LIFE_TICKS} ticks of life, no drops and no experience. Sporelings are
  *       never saved, so an unload removes them.</li>
@@ -27,30 +29,73 @@ public final class BloomRules {
     /** 30 s. */
     public static final int LIFE_TICKS = 600;
     /** The host's {@code ability} pose ("raise": cap tilts back and opens). */
-    public static final int RAISE_POSE_TICKS = 20;
-    /** {@code minecraft:scale} of a sporeling (the cap alone on stub legs). */
-    public static final double SPORELING_SCALE = 0.5D;
+    public static final int RAISE_POSE_TICKS = 50;
+    /**
+     * {@code minecraft:scale} of a sporeling. 1.0: the art pass authored the sporeling form (the cap
+     * alone on stub legs) already small, so the model is not shrunk twice.
+     */
+    public static final double SPORELING_SCALE = 1.0D;
     /** Particles in the spore strand from corpse to host. */
     public static final int STRAND_POINTS = 8;
 
-    /** What is known about a slain mob, server side. */
+    /** Hitbox of a sporeling (the cap on stub legs, per the art spec), in blocks. */
+    public static final float SPORELING_WIDTH = 0.5F;
+    public static final float SPORELING_HEIGHT = 0.6F;
+    /** Hitbox of a spore pod (a closed bulb on a stalk), in blocks. */
+    public static final float POD_WIDTH = 0.6F;
+    public static final float POD_HEIGHT = 1.0F;
+
+    /**
+     * What is known about a slain mob, server side. {@code bred}: a baby, in love, or on its
+     * breeding cooldown, i.e. most likely someone's livestock.
+     */
     public record Victim(boolean player, boolean owned, boolean named, boolean persistent,
-            boolean boss, boolean villager, boolean tagged) {
+            boolean boss, boolean villager, boolean tagged, boolean bred) {
+
+        /** A victim that is not bred livestock. */
+        public Victim(boolean player, boolean owned, boolean named, boolean persistent,
+                boolean boss, boolean villager, boolean tagged) {
+            this(player, owned, named, persistent, boss, villager, tagged, false);
+        }
     }
 
     private BloomRules() {
     }
 
-    /** Whether the slain mob may rise at all. */
+    /** Whether the slain mob may rise at all, with bred livestock spared (the default). */
     public static boolean eligible(Victim v) {
+        return eligible(v, false);
+    }
+
+    /**
+     * Whether the slain mob may rise at all. Tamed, named, leashed and persistent mobs are always
+     * spared; bred livestock only while {@code infectsLivestock} ({@code bloomHostInfectsLivestock})
+     * is off.
+     */
+    public static boolean eligible(Victim v, boolean infectsLivestock) {
         return v != null && v.tagged() && !v.player() && !v.owned() && !v.named() && !v.persistent()
-                && !v.boss() && !v.villager();
+                && !v.boss() && !v.villager() && (infectsLivestock || !v.bred());
     }
 
     /** Whether a sporeling rises, given the key, the killer's form, the victim and both caps. */
     public static boolean mayRaise(boolean keyOn, int killerForm, Victim victim, int hostLive, int dimensionLive) {
-        return keyOn && killerForm == FORM_HOST && eligible(victim)
+        return mayRaise(keyOn, false, killerForm, victim, hostLive, dimensionLive);
+    }
+
+    /** As {@link #mayRaise(boolean, int, Victim, int, int)}, with the livestock key. */
+    public static boolean mayRaise(boolean keyOn, boolean infectsLivestock, int killerForm, Victim victim,
+            int hostLive, int dimensionLive) {
+        return keyOn && killerForm == FORM_HOST && eligible(victim, infectsLivestock)
                 && hostLive < PER_HOST && dimensionLive < PER_DIMENSION;
+    }
+
+    /** {@code {width, height}} scale factors from the host's registered size to {@code form}'s hitbox. */
+    public static float[] dimensionScale(int form, float hostWidth, float hostHeight) {
+        return switch (form(form)) {
+            case FORM_SPORELING -> new float[] {SPORELING_WIDTH / hostWidth, SPORELING_HEIGHT / hostHeight};
+            case FORM_POD -> new float[] {POD_WIDTH / hostWidth, POD_HEIGHT / hostHeight};
+            default -> new float[] {1.0F, 1.0F};
+        };
     }
 
     /** A sporeling of this age has run out of life. */

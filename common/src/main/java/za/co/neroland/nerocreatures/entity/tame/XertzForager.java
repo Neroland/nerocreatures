@@ -15,6 +15,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.level.Level;
 
 import za.co.neroland.nerocreatures.entity.base.CreatureTier;
+import za.co.neroland.nerocreatures.entity.visual.VisualPose;
 import za.co.neroland.nerocreatures.registry.ModItems;
 
 /**
@@ -49,6 +50,12 @@ public class XertzForager extends TameableCreature {
      */
     private static final int NIGHT_VISION_TICKS = 400;
 
+    /** The dig {@code ability} pose (art clip length). Cosmetic: no block is touched. */
+    private static final int DIG_POSE_TICKS = 40;
+
+    /** One in this many idle ticks starts a dig (about one dig per 30 s of standing about). */
+    private static final int DIG_CHANCE = 600;
+
     public XertzForager(EntityType<? extends XertzForager> type, Level level) {
         super(type, level, CreatureTier.LESSER);
     }
@@ -78,6 +85,29 @@ public class XertzForager extends TameableCreature {
                 true, false, true));
         level.sendParticles(ParticleTypes.GLOW, this.getX(), this.getY() + this.getBbHeight(),
                 this.getZ(), 2, 0.2D, 0.1D, 0.2D, 0.0D);
+    }
+
+    /**
+     * Rooting about: a standing, unhurried forager now and then noses into the ground (the
+     * {@code ability} clip; it changes no block). Sitting is the held {@code rest} pose.
+     */
+    @Override
+    public void tick() {
+        super.tick();
+        if (!(this.level() instanceof ServerLevel)) {
+            return;
+        }
+        if (this.isOrderedToSit()) {
+            this.visuals().holdPose(VisualPose.REST);
+            return;
+        }
+        if (this.visuals().pose() == VisualPose.REST) {
+            this.visuals().holdPose(VisualPose.IDLE);
+        }
+        if (this.visuals().abilityDuration() == 0 && this.onGround() && this.getTarget() == null
+                && this.getNavigation().isDone() && this.random.nextInt(DIG_CHANCE) == 0) {
+            this.visuals().playPose(VisualPose.ABILITY, DIG_POSE_TICKS);
+        }
     }
 
     // Mapped vanilla events: the fox set is the right size and temperament for a small forager.

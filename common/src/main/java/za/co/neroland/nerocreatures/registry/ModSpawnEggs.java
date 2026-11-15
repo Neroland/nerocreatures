@@ -99,6 +99,51 @@ public final class ModSpawnEggs {
     public static final RegistryEntry<Item> MAGMA_WADER_SPAWN_EGG =
             egg("magma_wader_spawn_egg", ModEntities.MAGMA_WADER);
 
+    public static final RegistryEntry<Item> RIME_YAK_SPAWN_EGG =
+            egg("rime_yak_spawn_egg", ModEntities.RIME_YAK);
+
+    public static final RegistryEntry<Item> FROST_LURKER_SPAWN_EGG =
+            egg("frost_lurker_spawn_egg", ModEntities.FROST_LURKER);
+
+    public static final RegistryEntry<Item> SPORE_DRIFTER_SPAWN_EGG =
+            egg("spore_drifter_spawn_egg", ModEntities.SPORE_DRIFTER);
+
+    public static final RegistryEntry<Item> BLOOM_HOST_SPAWN_EGG =
+            egg("bloom_host_spawn_egg", ModEntities.BLOOM_HOST);
+
+    public static final RegistryEntry<Item> MOSSBACK_SPAWN_EGG =
+            egg("mossback_spawn_egg", ModEntities.MOSSBACK);
+
+    public static final RegistryEntry<Item> DRIFT_LEVIATHAN_SPAWN_EGG =
+            egg("drift_leviathan_spawn_egg", ModEntities.DRIFT_LEVIATHAN);
+
+    public static final RegistryEntry<Item> PRISM_STAG_SPAWN_EGG =
+            egg("prism_stag_spawn_egg", ModEntities.PRISM_STAG);
+
+    public static final RegistryEntry<Item> SHARDBACK_SPAWN_EGG =
+            egg("shardback_spawn_egg", ModEntities.SHARDBACK);
+
+    public static final RegistryEntry<Item> MAGNET_CRAB_SPAWN_EGG =
+            egg("magnet_crab_spawn_egg", ModEntities.MAGNET_CRAB);
+
+    public static final RegistryEntry<Item> GRAVITY_LEECH_SPAWN_EGG =
+            egg("gravity_leech_spawn_egg", ModEntities.GRAVITY_LEECH);
+
+    public static final RegistryEntry<Item> CACHE_MIMIC_SPAWN_EGG =
+            egg("cache_mimic_spawn_egg", ModEntities.CACHE_MIMIC);
+
+    public static final RegistryEntry<Item> STATIC_SWARM_SPAWN_EGG =
+            egg("static_swarm_spawn_egg", ModEntities.STATIC_SWARM);
+
+    public static final RegistryEntry<Item> SCRAP_HULK_SPAWN_EGG =
+            egg("scrap_hulk_spawn_egg", ModEntities.SCRAP_HULK);
+
+    public static final RegistryEntry<Item> PIRATE_CAPTAIN_SPAWN_EGG =
+            egg("pirate_captain_spawn_egg", ModEntities.PIRATE_CAPTAIN);
+
+    public static final RegistryEntry<Item> VOID_MANTA_SPAWN_EGG =
+            egg("void_manta_spawn_egg", ModEntities.VOID_MANTA);
+
     /**
      * Every egg, in roster order — used for the creative tab.
      *
@@ -114,7 +159,13 @@ public final class ModSpawnEggs {
             GLACITE_WISP_SPAWN_EGG, XERTZ_FORAGER_SPAWN_EGG, CINDER_TYRANT_SPAWN_EGG,
             LUMEN_MOTH_SPAWN_EGG, ECHO_SHRIKE_SPAWN_EGG, LODE_TORTOISE_SPAWN_EGG,
             DUNE_LOPER_SPAWN_EGG, STRATA_HOUND_SPAWN_EGG, DUST_DEVIL_SPAWN_EGG,
-            SLAG_BEETLE_SPAWN_EGG, MAGMA_WADER_SPAWN_EGG);
+            SLAG_BEETLE_SPAWN_EGG, MAGMA_WADER_SPAWN_EGG,
+            RIME_YAK_SPAWN_EGG, FROST_LURKER_SPAWN_EGG,
+            SPORE_DRIFTER_SPAWN_EGG, BLOOM_HOST_SPAWN_EGG, MOSSBACK_SPAWN_EGG, DRIFT_LEVIATHAN_SPAWN_EGG,
+            PRISM_STAG_SPAWN_EGG, SHARDBACK_SPAWN_EGG,
+            MAGNET_CRAB_SPAWN_EGG, GRAVITY_LEECH_SPAWN_EGG,
+            CACHE_MIMIC_SPAWN_EGG, STATIC_SWARM_SPAWN_EGG, SCRAP_HULK_SPAWN_EGG, PIRATE_CAPTAIN_SPAWN_EGG,
+            VOID_MANTA_SPAWN_EGG);
 
     private ModSpawnEggs() {
     }

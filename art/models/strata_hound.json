@@ -11,8 +11,21 @@
   "renderer": {"scale": 1.0, "shadow": 0.6},
   "materials": ["sand", "umber", "bone"],
   "accent": "accent",
-  "glow_organs": ["eyes", "back-stripe: the three ridge plates (renderer tints by variant = tracked ore family)"],
+  "glow_organs": [
+    "eyes",
+    "back-stripe: the three ridge plates, coloured by variant = tracked ore family (0 = none, static mint)"
+  ],
   "radiant": {"sand": "pearl", "umber": "pearl_deep", "bone": "pearl_light"},
+  "variants": {
+    "0": {"name": "none", "glow": "#3DFFC0"},
+    "1": {"name": "coal", "glow": "#A9AEBC"},
+    "2": {"name": "iron", "glow": "#E8C9A8"},
+    "3": {"name": "copper", "glow": "#F08A4B"},
+    "4": {"name": "gold", "glow": "#FFD84A"},
+    "5": {"name": "redstone", "glow": "#FF3B2E"},
+    "6": {"name": "blue (lapis, diamond)", "glow": "#4F8BFF"},
+    "7": {"name": "green (emerald)", "glow": "#3BE87A"}
+  },
   "parts": [
     {
       "name": "body",

@@ -37,14 +37,17 @@ import net.minecraft.world.level.storage.ValueOutput;
 
 import org.jetbrains.annotations.Nullable;
 
+import za.co.neroland.nerocreatures.config.NeroCreaturesConfig;
 import za.co.neroland.nerocreatures.data.CreatureOwnershipState;
 import za.co.neroland.nerocreatures.data.OwnedCreature;
 import za.co.neroland.nerocreatures.entity.ai.HoldAreaGoal;
 import za.co.neroland.nerocreatures.entity.base.CreatureTier;
 import za.co.neroland.nerocreatures.entity.base.NeroCreatureEntity;
+import za.co.neroland.nerocreatures.entity.visual.VisualPose;
 import za.co.neroland.nerocreatures.link.CreatureLinkEvents;
 import za.co.neroland.nerocreatures.progression.CreatureMilestones;
 import za.co.neroland.nerocreatures.registry.ModItems;
+import za.co.neroland.nerocreatures.world.CreatureGriefing;
 
 /**
  * <b>Terraforming Drone</b> — the mod's one utility mob: an owned, deployed machine that tends the
@@ -112,6 +115,15 @@ public class TerraformingDrone extends NeroCreatureEntity implements OwnableEnti
 
     /** How far the drone may wander from its anchor before it is walked back, in blocks. */
     private static final double LEASH_RADIUS = 10.0D;
+
+    /** Ticks between pose checks and work-area outline draws. */
+    private static final int VISUALS_INTERVAL_TICKS = 20;
+
+    /** The owner must be this close (blocks) to see the work-area outline. */
+    private static final double OUTLINE_VIEW_RANGE = 16.0D;
+
+    /** Blocks between outline particles along each edge. */
+    private static final int OUTLINE_STEP = 2;
 
     /** Where the drone was deployed. The centre of its work area, and its own position — not a player's. */
     @Nullable
@@ -284,6 +296,9 @@ public class TerraformingDrone extends NeroCreatureEntity implements OwnableEnti
         // Server-side only, so the level is always a ServerLevel here.
         ServerLevel level = (ServerLevel) this.level();
     *///?}
+        if (this.tickCount % VISUALS_INTERVAL_TICKS == 0) {
+            this.updateWorkVisuals(level);
+        }
         if (this.workAnchor == null || --this.dutyTicks > 0) {
             return;
         }
@@ -297,6 +312,9 @@ public class TerraformingDrone extends NeroCreatureEntity implements OwnableEnti
      * success, so a drone standing in a field of crops costs the same as one standing on bare rock.
      */
     private void runDutyCycle(ServerLevel level) {
+        if (!Boolean.TRUE.equals(NeroCreaturesConfig.TERRAFORMING_DRONE_WORK.get())) {
+            return;
+        }
         this.runPlantingAssist(level);
         this.runOxygenSupport(level);
     }
@@ -320,11 +338,52 @@ public class TerraformingDrone extends NeroCreatureEntity implements OwnableEnti
             if (level.getBlockState(target).isAir()) {
                 continue;
             }
+            // Decision 006: crop growth is a world change, so it goes through the shared gate (config
+            // key, mobGriefing, loaded/in-border, the loader's place check, the owner's build right).
+            if (!CreatureGriefing.mayAlter(level, this, target, NeroCreaturesConfig.TERRAFORMING_DRONE_WORK,
+                    CreatureGriefing.Change.REPLACE)) {
+                continue;
+            }
             if (BoneMealItem.growCrop(new ItemStack(Items.BONE_MEAL), level, target)) {
                 level.playSound(null, target, SoundEvents.BONE_MEAL_USE, SoundSource.NEUTRAL, 0.4F, 1.2F);
                 return;
             }
         }
+    }
+
+    /**
+     * The work clip ({@code art/models/terraforming_drone.json}): {@code ability} (a 40-tick loop) is
+     * held while the drone is deployed and allowed to work, {@code rest} (powered down, 20 ticks then
+     * held) otherwise. And, for the owner of record only when they sneak nearby holding a drone shell,
+     * a particle outline of the work area. The viewer is the drone's own owner, never a nearest player.
+     */
+    private void updateWorkVisuals(ServerLevel level) {
+        boolean working = this.workAnchor != null
+                && Boolean.TRUE.equals(NeroCreaturesConfig.TERRAFORMING_DRONE_WORK.get());
+        this.visuals().holdPose(working ? VisualPose.ABILITY : VisualPose.REST);
+        BlockPos anchor = this.workAnchor;
+        UUID id = this.ownerId();
+        if (anchor == null || id == null) {
+            return;
+        }
+        Player owner = level.getPlayerByUUID(id);
+        if (!(owner instanceof ServerPlayer viewer) || !viewer.isShiftKeyDown() || viewer.isSpectator()
+                || this.distanceToSqr(viewer) > OUTLINE_VIEW_RANGE * OUTLINE_VIEW_RANGE
+                || !(viewer.getMainHandItem().is(ModItems.DRONE_SHELL.get())
+                        || viewer.getOffhandItem().is(ModItems.DRONE_SHELL.get()))) {
+            return;
+        }
+        double y = anchor.getY() + 1.1D;
+        for (int d = -WORK_RADIUS; d <= WORK_RADIUS; d += OUTLINE_STEP) {
+            this.outlinePoint(level, anchor.getX() + d, y, anchor.getZ() - WORK_RADIUS);
+            this.outlinePoint(level, anchor.getX() + d, y, anchor.getZ() + WORK_RADIUS);
+            this.outlinePoint(level, anchor.getX() - WORK_RADIUS, y, anchor.getZ() + d);
+            this.outlinePoint(level, anchor.getX() + WORK_RADIUS, y, anchor.getZ() + d);
+        }
+    }
+
+    private void outlinePoint(ServerLevel level, double x, double y, double z) {
+        level.sendParticles(ParticleTypes.HAPPY_VILLAGER, x + 0.5D, y, z + 0.5D, 1, 0.0D, 0.0D, 0.0D, 0.0D);
     }
 
     /**

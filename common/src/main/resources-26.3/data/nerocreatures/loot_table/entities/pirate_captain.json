@@ -1,0 +1,42 @@
+{
+  "pools": [
+    {
+      "entries": [
+        {
+          "modifier": {
+            "add": false,
+            "count": {
+              "max": 5.0,
+              "min": 2.0,
+              "type": "minecraft:uniform"
+            },
+            "type": "minecraft:set_count"
+          },
+          "name": "nerocreatures:contraband",
+          "type": "minecraft:item"
+        }
+      ],
+      "rolls": 1
+    },
+    {
+      "entries": [
+        {
+          "modifier": {
+            "add": false,
+            "count": {
+              "max": 3.0,
+              "min": 1.0,
+              "type": "minecraft:uniform"
+            },
+            "type": "minecraft:set_count"
+          },
+          "name": "minecraft:gold_ingot",
+          "type": "minecraft:item"
+        }
+      ],
+      "rolls": 1
+    }
+  ],
+  "random_sequence": "nerocreatures:entities/pirate_captain",
+  "type": "minecraft:entity"
+}

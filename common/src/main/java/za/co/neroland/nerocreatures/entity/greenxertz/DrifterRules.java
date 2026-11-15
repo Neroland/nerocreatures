@@ -34,7 +34,7 @@ public final class DrifterRules {
     /** Refill time after bottling: 5 minutes. */
     public static final int BOTTLE_COOLDOWN_TICKS = 6000;
     /** The {@code ability} pose for a growth tick (tendrils reach down). */
-    public static final int GROWTH_POSE_TICKS = 20;
+    public static final int GROWTH_POSE_TICKS = 40;
 
     /** What one growth pulse does. */
     public enum Growth {

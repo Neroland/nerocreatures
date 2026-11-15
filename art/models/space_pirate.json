@@ -1,0 +1,269 @@
+{
+  "format": 1,
+  "id": "space_pirate",
+  "name": "Space Pirate",
+  "habitat": "wrecks",
+  "size_class": "M",
+  "silhouette": "human proportions, a backpack rig with one tall canister, a rebreather snout, one big pauldron on the left shoulder",
+  "hitbox_guide": [0.6, 1.95],
+  "texture": {"width": 64, "height": 64},
+  "render_type": "cutout",
+  "renderer": {"scale": 1.0, "shadow": 0.5},
+  "materials": ["white", "hazard", "oxide"],
+  "accent": "accent",
+  "glow_organs": ["goggle band", "rebreather status light"],
+  "radiant": null,
+  "parts": [
+    {
+      "name": "body",
+      "parent": null,
+      "pivot": [0, 12, 0],
+      "rotation": [0, 0, 0],
+      "cubes": [
+        {"name": "torso", "origin": [-4, -12, -2], "size": [8, 12, 4], "uv": [32, 0]},
+        {"name": "pack", "origin": [-3, -11, 2], "size": [6, 9, 3], "uv": [32, 16]},
+        {"name": "canister", "origin": [-5, -21, 2], "size": [2, 14, 2], "uv": [56, 0]},
+        {"name": "pouch", "origin": [-3, -6, -3], "size": [6, 3, 1], "uv": [50, 22]}
+      ]
+    },
+    {
+      "name": "head",
+      "parent": "body",
+      "pivot": [0, -12, 0],
+      "rotation": [0, 0, 0],
+      "cubes": [
+        {"name": "head", "origin": [-4, -8, -4], "size": [8, 8, 8], "uv": [0, 0]},
+        {"name": "mask", "origin": [-2, -4, -6], "size": [4, 4, 2], "uv": [50, 16]}
+      ]
+    },
+    {
+      "name": "arm_l",
+      "parent": "body",
+      "pivot": [6, -10, 0],
+      "rotation": [0, 0, 0],
+      "cubes": [
+        {"name": "arm", "origin": [-2, -2, -2], "size": [4, 12, 4], "uv": [0, 16]}
+      ]
+    },
+    {
+      "name": "pauldron",
+      "parent": "arm_l",
+      "pivot": [0, -2, 0],
+      "rotation": [0, 0, 0],
+      "cubes": [
+        {"name": "pauldron", "origin": [-2, -2, -3], "size": [5, 4, 6], "uv": [32, 28]}
+      ]
+    },
+    {
+      "name": "arm_r",
+      "parent": "body",
+      "pivot": [-6, -10, 0],
+      "rotation": [0, 0, 0],
+      "uv_like": "arm_l",
+      "cubes": [
+        {"name": "arm", "origin": [-2, -2, -2], "size": [4, 12, 4], "uv": [0, 16], "mirror": true}
+      ]
+    },
+    {
+      "name": "leg_l",
+      "parent": null,
+      "pivot": [2, 12, 0],
+      "rotation": [0, 0, 0],
+      "cubes": [
+        {"name": "leg", "origin": [-2, 0, -2], "size": [4, 12, 4], "uv": [16, 16]}
+      ]
+    },
+    {
+      "name": "leg_r",
+      "parent": null,
+      "pivot": [-2, 12, 0],
+      "rotation": [0, 0, 0],
+      "uv_like": "leg_l",
+      "cubes": [
+        {"name": "leg", "origin": [-2, 0, -2], "size": [4, 12, 4], "uv": [16, 16], "mirror": true}
+      ]
+    }
+  ],
+  "procedural": {
+    "swing": [
+      {"part": "leg_l", "phase": 0, "amplitude": 38},
+      {"part": "leg_r", "phase": 180, "amplitude": 38},
+      {"part": "arm_l", "phase": 180, "amplitude": 10},
+      {"part": "arm_r", "phase": 0, "amplitude": 10}
+    ],
+    "look": [
+      {"part": "head", "yaw": 0.8, "pitch": 0.8, "limit": 50}
+    ]
+  },
+  "clips": {
+    "idle": {
+      "length": 80,
+      "loop": true,
+      "key_pose": 20,
+      "note": "weight shifts from hip to hip; the head looks about",
+      "tracks": {
+        "body": {
+          "rot": [
+            {"t": 0, "v": [0.0, 0.0, -2.0]},
+            {"t": 40, "v": [0.0, 0.0, 2.0], "ease": "smooth"},
+            {"t": 80, "v": [0.0, 0.0, -2.0], "ease": "smooth"}
+          ]
+        },
+        "head": {
+          "rot": [
+            {"t": 0, "v": [0.0, 0.0, 0.0]},
+            {"t": 14, "v": [0.0, 26.0, 0.0], "ease": "smooth"},
+            {"t": 34, "v": [0.0, 26.0, 0.0], "ease": "smooth"},
+            {"t": 52, "v": [4.0, -22.0, 0.0], "ease": "smooth"},
+            {"t": 70, "v": [4.0, -22.0, 0.0], "ease": "smooth"},
+            {"t": 80, "v": [0.0, 0.0, 0.0], "ease": "smooth"}
+          ]
+        },
+        "arm_l": {
+          "rot": [
+            {"t": 0, "v": [0.0, 0.0, -4.0]},
+            {"t": 40, "v": [0.0, 0.0, -2.0], "ease": "smooth"},
+            {"t": 80, "v": [0.0, 0.0, -4.0], "ease": "smooth"}
+          ]
+        }
+      }
+    },
+    "move": {
+      "length": 20,
+      "loop": true,
+      "key_pose": 5,
+      "note": "human walk with both arms carried forward, weapon ready",
+      "tracks": {
+        "arm_l": {
+          "rot": [
+            {"t": 0, "v": [-38.0, 0.0, 0.0]},
+            {"t": 10, "v": [-30.0, 0.0, 0.0], "ease": "smooth"},
+            {"t": 20, "v": [-38.0, 0.0, 0.0], "ease": "smooth"}
+          ]
+        },
+        "arm_r": {
+          "rot": [
+            {"t": 0, "v": [-46.0, 0.0, 0.0]},
+            {"t": 10, "v": [-54.0, 0.0, 0.0], "ease": "smooth"},
+            {"t": 20, "v": [-46.0, 0.0, 0.0], "ease": "smooth"}
+          ]
+        },
+        "body": {
+          "rot": [
+            {"t": 0, "v": [5.0, 0.0, 0.0]},
+            {"t": 20, "v": [5.0, 0.0, 0.0]}
+          ],
+          "pos": [
+            {"t": 0, "v": [0.0, 0.0, 0.0]},
+            {"t": 5, "v": [0.0, -0.5, 0.0], "ease": "smooth"},
+            {"t": 10, "v": [0.0, 0.0, 0.0], "ease": "smooth"},
+            {"t": 15, "v": [0.0, -0.5, 0.0], "ease": "smooth"},
+            {"t": 20, "v": [0.0, 0.0, 0.0], "ease": "smooth"}
+          ]
+        }
+      }
+    },
+    "ability": {
+      "length": 20,
+      "loop": false,
+      "key_pose": 10,
+      "damaging": true,
+      "telegraph": 10,
+      "glow": [
+        {"t": 0, "v": 0.35},
+        {"t": 10, "v": 1.0},
+        {"t": 12, "v": 1.0},
+        {"t": 20, "v": 0.35}
+      ],
+      "note": "aim and volley: braces side-on with the firing arm levelled for 10 ticks, fires at tick 10, rides the recoil",
+      "tracks": {
+        "body": {
+          "rot": [
+            {"t": 0, "v": [0.0, 0.0, 0.0]},
+            {"t": 10, "v": [4.0, 24.0, 0.0], "ease": "smooth"},
+            {"t": 12, "v": [-5.0, 24.0, 0.0], "ease": "smooth"},
+            {"t": 20, "v": [0.0, 0.0, 0.0], "ease": "smooth"}
+          ]
+        },
+        "arm_r": {
+          "rot": [
+            {"t": 0, "v": [0.0, 0.0, 0.0]},
+            {"t": 10, "v": [-88.0, -20.0, 0.0], "ease": "smooth"},
+            {"t": 12, "v": [-100.0, -20.0, 0.0], "ease": "smooth"},
+            {"t": 16, "v": [-88.0, -20.0, 0.0], "ease": "smooth"},
+            {"t": 20, "v": [0.0, 0.0, 0.0], "ease": "smooth"}
+          ]
+        },
+        "arm_l": {
+          "rot": [
+            {"t": 0, "v": [0.0, 0.0, 0.0]},
+            {"t": 10, "v": [-50.0, 30.0, 0.0], "ease": "smooth"},
+            {"t": 16, "v": [-50.0, 30.0, 0.0], "ease": "smooth"},
+            {"t": 20, "v": [0.0, 0.0, 0.0], "ease": "smooth"}
+          ]
+        },
+        "head": {
+          "rot": [
+            {"t": 0, "v": [0.0, 0.0, 0.0]},
+            {"t": 10, "v": [0.0, -22.0, 0.0], "ease": "smooth"},
+            {"t": 16, "v": [0.0, -22.0, 0.0], "ease": "smooth"},
+            {"t": 20, "v": [0.0, 0.0, 0.0], "ease": "smooth"}
+          ]
+        },
+        "leg_l": {
+          "rot": [
+            {"t": 0, "v": [0.0, 0.0, 0.0]},
+            {"t": 10, "v": [-16.0, 0.0, 0.0], "ease": "smooth"},
+            {"t": 16, "v": [-16.0, 0.0, 0.0], "ease": "smooth"},
+            {"t": 20, "v": [0.0, 0.0, 0.0], "ease": "smooth"}
+          ]
+        },
+        "leg_r": {
+          "rot": [
+            {"t": 0, "v": [0.0, 0.0, 0.0]},
+            {"t": 10, "v": [16.0, 0.0, 0.0], "ease": "smooth"},
+            {"t": 16, "v": [16.0, 0.0, 0.0], "ease": "smooth"},
+            {"t": 20, "v": [0.0, 0.0, 0.0], "ease": "smooth"}
+          ]
+        }
+      }
+    },
+    "hurt": {
+      "length": 6,
+      "loop": false,
+      "key_pose": 2,
+      "note": "flinches back from the hit",
+      "tracks": {
+        "body": {
+          "rot": [
+            {"t": 0, "v": [0.0, 0.0, 0.0]},
+            {"t": 2, "v": [-14.0, 0.0, 0.0], "ease": "smooth"},
+            {"t": 6, "v": [0.0, 0.0, 0.0], "ease": "smooth"}
+          ]
+        },
+        "head": {
+          "rot": [
+            {"t": 0, "v": [0.0, 0.0, 0.0]},
+            {"t": 2, "v": [-10.0, 0.0, 0.0], "ease": "smooth"},
+            {"t": 6, "v": [0.0, 0.0, 0.0], "ease": "smooth"}
+          ]
+        },
+        "arm_l": {
+          "rot": [
+            {"t": 0, "v": [0.0, 0.0, 0.0]},
+            {"t": 2, "v": [-20.0, 0.0, -14.0], "ease": "smooth"},
+            {"t": 6, "v": [0.0, 0.0, 0.0], "ease": "smooth"}
+          ]
+        },
+        "arm_r": {
+          "rot": [
+            {"t": 0, "v": [0.0, 0.0, 0.0]},
+            {"t": 2, "v": [-20.0, 0.0, 14.0], "ease": "smooth"},
+            {"t": 6, "v": [0.0, 0.0, 0.0], "ease": "smooth"}
+          ]
+        }
+      }
+    }
+  },
+  "uv_fill": 0.513
+}

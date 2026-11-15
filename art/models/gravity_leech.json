@@ -1,0 +1,369 @@
+{
+  "format": 1,
+  "id": "gravity_leech",
+  "name": "Gravity Leech",
+  "habitat": "asteroid",
+  "size_class": "S",
+  "silhouette": "a round sucker disc trailing a long tapering ribbon tail; floats, never walks",
+  "hitbox_guide": [0.6, 0.6],
+  "texture": {"width": 64, "height": 64},
+  "render_type": "cutout",
+  "renderer": {"scale": 1.0, "shadow": 0.3},
+  "materials": ["gunmetal", "rust"],
+  "accent": "accent",
+  "glow_organs": ["sucker core (the tether)", "tail fluke node"],
+  "radiant": null,
+  "parts": [
+    {
+      "name": "disc",
+      "parent": null,
+      "pivot": [0, 12, -1],
+      "rotation": [0, 0, 0],
+      "cubes": [
+        {"name": "plate", "origin": [-4, -4, -2], "size": [8, 8, 2], "uv": [0, 21]},
+        {"name": "bulb", "origin": [-3, -3, 0], "size": [6, 6, 5], "uv": [28, 0]}
+      ]
+    },
+    {
+      "name": "lip_t",
+      "parent": "disc",
+      "pivot": [0, -4, -1],
+      "rotation": [22, 0, 0],
+      "cubes": [
+        {"name": "lip", "origin": [-3, -1, -1], "size": [6, 1, 2], "uv": [48, 12]}
+      ]
+    },
+    {
+      "name": "lip_b",
+      "parent": "disc",
+      "pivot": [0, 4, -1],
+      "rotation": [-22, 0, 0],
+      "uv_like": "lip_t",
+      "cubes": [
+        {"name": "lip", "origin": [-3, 0, -1], "size": [6, 1, 2], "uv": [48, 12], "mirror": true}
+      ]
+    },
+    {
+      "name": "lip_l",
+      "parent": "disc",
+      "pivot": [4, 0, -1],
+      "rotation": [0, 22, 0],
+      "cubes": [
+        {"name": "lip", "origin": [0, -3, -1], "size": [1, 6, 2], "uv": [50, 0]}
+      ]
+    },
+    {
+      "name": "lip_r",
+      "parent": "disc",
+      "pivot": [-4, 0, -1],
+      "rotation": [0, -22, 0],
+      "uv_like": "lip_l",
+      "cubes": [
+        {"name": "lip", "origin": [-1, -3, -1], "size": [1, 6, 2], "uv": [50, 0], "mirror": true}
+      ]
+    },
+    {
+      "name": "tail_1",
+      "parent": null,
+      "pivot": [0, 12, 3],
+      "rotation": [0, 0, 0],
+      "cubes": [
+        {"name": "seg", "origin": [-2.5, -1, -1], "size": [5, 2, 9], "uv": [0, 0]}
+      ]
+    },
+    {
+      "name": "tail_2",
+      "parent": "tail_1",
+      "pivot": [0, 0, 7],
+      "rotation": [0, 0, 0],
+      "cubes": [
+        {"name": "seg", "origin": [-2, -0.5, -1], "size": [4, 1, 9], "uv": [0, 11]}
+      ]
+    },
+    {
+      "name": "tail_3",
+      "parent": "tail_2",
+      "pivot": [0, 0, 7],
+      "rotation": [0, 0, 0],
+      "cubes": [
+        {"name": "tip", "origin": [-1, -0.5, -1], "size": [2, 1, 9], "uv": [26, 11]},
+        {"name": "fluke", "origin": [-2, -0.5, 8], "size": [4, 1, 3], "uv": [50, 8]}
+      ]
+    }
+  ],
+  "procedural": {
+    "wave": [
+      {"part": "tail_1", "axis": "x", "frequency": 0.12, "phase": 0, "amplitude": 7, "fade_with_walk": true},
+      {"part": "tail_2", "axis": "x", "frequency": 0.12, "phase": -70, "amplitude": 12, "fade_with_walk": true},
+      {"part": "tail_3", "axis": "x", "frequency": 0.12, "phase": -140, "amplitude": 16, "fade_with_walk": true}
+    ]
+  },
+  "clips": {
+    "idle": {
+      "length": 60,
+      "loop": true,
+      "key_pose": 30,
+      "note": "tail undulates (procedural wave down the ribbon); the sucker lips breathe open and shut",
+      "tracks": {
+        "lip_t": {
+          "rot": [
+            {"t": 0, "v": [0.0, 0.0, 0.0]},
+            {"t": 30, "v": [-12.0, 0.0, 0.0], "ease": "smooth"},
+            {"t": 60, "v": [0.0, 0.0, 0.0], "ease": "smooth"}
+          ]
+        },
+        "lip_b": {
+          "rot": [
+            {"t": 0, "v": [0.0, 0.0, 0.0]},
+            {"t": 30, "v": [12.0, 0.0, 0.0], "ease": "smooth"},
+            {"t": 60, "v": [0.0, 0.0, 0.0], "ease": "smooth"}
+          ]
+        },
+        "lip_l": {
+          "rot": [
+            {"t": 0, "v": [0.0, 0.0, 0.0]},
+            {"t": 30, "v": [0.0, -12.0, 0.0], "ease": "smooth"},
+            {"t": 60, "v": [0.0, 0.0, 0.0], "ease": "smooth"}
+          ]
+        },
+        "lip_r": {
+          "rot": [
+            {"t": 0, "v": [0.0, 0.0, 0.0]},
+            {"t": 30, "v": [0.0, 12.0, 0.0], "ease": "smooth"},
+            {"t": 60, "v": [0.0, 0.0, 0.0], "ease": "smooth"}
+          ]
+        },
+        "disc": {
+          "pos": [
+            {"t": 0, "v": [0.0, 0.0, 0.0]},
+            {"t": 30, "v": [0.0, -1.0, 0.0], "ease": "smooth"},
+            {"t": 60, "v": [0.0, 0.0, 0.0], "ease": "smooth"}
+          ]
+        }
+      }
+    },
+    "move": {
+      "length": 16,
+      "loop": true,
+      "key_pose": 4,
+      "note": "swims by tail waves: a strong travelling wave runs disc to fluke, the disc nods against it",
+      "tracks": {
+        "disc": {
+          "rot": [
+            {"t": 0, "v": [-0.0, -0.0, -0.0]},
+            {"t": 4, "v": [-5.0, -0.0, -0.0], "ease": "smooth"},
+            {"t": 8, "v": [0.0, 0.0, 0.0], "ease": "smooth"},
+            {"t": 12, "v": [5.0, 0.0, 0.0], "ease": "smooth"},
+            {"t": 16, "v": [-0.0, -0.0, -0.0], "ease": "smooth"}
+          ]
+        },
+        "tail_1": {
+          "rot": [
+            {"t": 0, "v": [0.0, 0.0, 0.0]},
+            {"t": 4, "v": [14.0, 0.0, 0.0], "ease": "smooth"},
+            {"t": 8, "v": [0.0, 0.0, 0.0], "ease": "smooth"},
+            {"t": 12, "v": [-14.0, -0.0, -0.0], "ease": "smooth"},
+            {"t": 16, "v": [0.0, 0.0, 0.0], "ease": "smooth"}
+          ]
+        },
+        "tail_2": {
+          "rot": [
+            {"t": 0, "v": [-21.67, -0.0, -0.0]},
+            {"t": 4, "v": [3.82, 0.0, 0.0], "ease": "smooth"},
+            {"t": 8, "v": [21.67, 0.0, 0.0], "ease": "smooth"},
+            {"t": 12, "v": [-3.82, -0.0, -0.0], "ease": "smooth"},
+            {"t": 16, "v": [-21.67, -0.0, -0.0], "ease": "smooth"}
+          ]
+        },
+        "tail_3": {
+          "rot": [
+            {"t": 0, "v": [-9.58, -0.0, -0.0]},
+            {"t": 4, "v": [-26.31, -0.0, -0.0], "ease": "smooth"},
+            {"t": 8, "v": [9.58, 0.0, 0.0], "ease": "smooth"},
+            {"t": 12, "v": [26.31, 0.0, 0.0], "ease": "smooth"},
+            {"t": 16, "v": [-9.58, -0.0, -0.0], "ease": "smooth"}
+          ]
+        }
+      }
+    },
+    "ability": {
+      "length": 16,
+      "loop": false,
+      "key_pose": 14,
+      "telegraph": 10,
+      "damaging": true,
+      "glow": [
+        {"t": 0, "v": 0.35},
+        {"t": 10, "v": 1.0},
+        {"t": 16, "v": 1.0}
+      ],
+      "note": "latch (ends in its held pose): lips clench through the 10-tick telegraph, the disc darts forward and flares flat and wide at tick 13, the ribbon pulls out straight and long along the tether; holds there while tethered",
+      "tracks": {
+        "disc": {
+          "pos": [
+            {"t": 0, "v": [0.0, 0.0, 0.0]},
+            {"t": 10, "v": [0.0, 0.0, 1.5], "ease": "smooth"},
+            {"t": 13, "v": [0.0, 0.0, -3.0], "ease": "smooth"},
+            {"t": 16, "v": [0.0, 0.0, -3.0]}
+          ]
+        },
+        "lip_t": {
+          "rot": [
+            {"t": 0, "v": [0.0, 0.0, 0.0]},
+            {"t": 10, "v": [34.0, 0.0, 0.0], "ease": "smooth"},
+            {"t": 13, "v": [-22.0, 0.0, 0.0], "ease": "smooth"},
+            {"t": 16, "v": [-22.0, 0.0, 0.0]}
+          ],
+          "pos": [
+            {"t": 0, "v": [0.0, 0.0, 0.0]},
+            {"t": 10, "v": [0.0, 0.0, 0.0]},
+            {"t": 13, "v": [0.0, -1.0, 0.0], "ease": "smooth"},
+            {"t": 16, "v": [0.0, -1.0, 0.0]}
+          ]
+        },
+        "lip_b": {
+          "rot": [
+            {"t": 0, "v": [0.0, 0.0, 0.0]},
+            {"t": 10, "v": [-34.0, 0.0, 0.0], "ease": "smooth"},
+            {"t": 13, "v": [22.0, 0.0, 0.0], "ease": "smooth"},
+            {"t": 16, "v": [22.0, 0.0, 0.0]}
+          ],
+          "pos": [
+            {"t": 0, "v": [0.0, 0.0, 0.0]},
+            {"t": 10, "v": [0.0, 0.0, 0.0]},
+            {"t": 13, "v": [0.0, 1.0, 0.0], "ease": "smooth"},
+            {"t": 16, "v": [0.0, 1.0, 0.0]}
+          ]
+        },
+        "lip_l": {
+          "rot": [
+            {"t": 0, "v": [0.0, 0.0, 0.0]},
+            {"t": 10, "v": [0.0, 34.0, 0.0], "ease": "smooth"},
+            {"t": 13, "v": [0.0, -22.0, 0.0], "ease": "smooth"},
+            {"t": 16, "v": [0.0, -22.0, 0.0]}
+          ],
+          "pos": [
+            {"t": 0, "v": [0.0, 0.0, 0.0]},
+            {"t": 10, "v": [0.0, 0.0, 0.0]},
+            {"t": 13, "v": [1.0, 0.0, 0.0], "ease": "smooth"},
+            {"t": 16, "v": [1.0, 0.0, 0.0]}
+          ]
+        },
+        "lip_r": {
+          "rot": [
+            {"t": 0, "v": [0.0, 0.0, 0.0]},
+            {"t": 10, "v": [0.0, -34.0, 0.0], "ease": "smooth"},
+            {"t": 13, "v": [0.0, 22.0, 0.0], "ease": "smooth"},
+            {"t": 16, "v": [0.0, 22.0, 0.0]}
+          ],
+          "pos": [
+            {"t": 0, "v": [0.0, 0.0, 0.0]},
+            {"t": 10, "v": [0.0, 0.0, 0.0]},
+            {"t": 13, "v": [-1.0, 0.0, 0.0], "ease": "smooth"},
+            {"t": 16, "v": [-1.0, 0.0, 0.0]}
+          ]
+        },
+        "tail_1": {
+          "pos": [
+            {"t": 0, "v": [0.0, 0.0, 0.0]},
+            {"t": 10, "v": [0.0, 0.0, -0.5], "ease": "smooth"},
+            {"t": 13, "v": [0.0, 0.0, 0.5], "ease": "smooth"},
+            {"t": 16, "v": [0.0, 0.0, 0.5]}
+          ],
+          "rot": [
+            {"t": 0, "v": [0.0, 0.0, 0.0]},
+            {"t": 10, "v": [-12.0, 0.0, 0.0], "ease": "smooth"},
+            {"t": 13, "v": [0.0, 0.0, 0.0], "ease": "smooth"},
+            {"t": 16, "v": [0.0, 0.0, 0.0]}
+          ]
+        },
+        "tail_2": {
+          "pos": [
+            {"t": 0, "v": [0.0, 0.0, 0.0]},
+            {"t": 10, "v": [0.0, 0.0, -0.5], "ease": "smooth"},
+            {"t": 13, "v": [0.0, 0.0, 1.5], "ease": "smooth"},
+            {"t": 16, "v": [0.0, 0.0, 1.5]}
+          ],
+          "rot": [
+            {"t": 0, "v": [0.0, 0.0, 0.0]},
+            {"t": 10, "v": [16.0, 0.0, 0.0], "ease": "smooth"},
+            {"t": 13, "v": [0.0, 0.0, 0.0], "ease": "smooth"},
+            {"t": 16, "v": [0.0, 0.0, 0.0]}
+          ]
+        },
+        "tail_3": {
+          "pos": [
+            {"t": 0, "v": [0.0, 0.0, 0.0]},
+            {"t": 10, "v": [0.0, 0.0, -0.5], "ease": "smooth"},
+            {"t": 13, "v": [0.0, 0.0, 1.5], "ease": "smooth"},
+            {"t": 16, "v": [0.0, 0.0, 1.5]}
+          ],
+          "rot": [
+            {"t": 0, "v": [0.0, 0.0, 0.0]},
+            {"t": 10, "v": [-18.0, 0.0, 0.0], "ease": "smooth"},
+            {"t": 13, "v": [0.0, 0.0, 0.0], "ease": "smooth"},
+            {"t": 16, "v": [0.0, 0.0, 0.0]}
+          ]
+        }
+      }
+    },
+    "hurt": {
+      "length": 6,
+      "loop": false,
+      "key_pose": 2,
+      "note": "disc clenches: all four lips fold over the core, the ribbon kinks",
+      "tracks": {
+        "lip_t": {
+          "rot": [
+            {"t": 0, "v": [0.0, 0.0, 0.0]},
+            {"t": 2, "v": [48.0, 0.0, 0.0], "ease": "smooth"},
+            {"t": 6, "v": [0.0, 0.0, 0.0], "ease": "smooth"}
+          ]
+        },
+        "lip_b": {
+          "rot": [
+            {"t": 0, "v": [0.0, 0.0, 0.0]},
+            {"t": 2, "v": [-48.0, 0.0, 0.0], "ease": "smooth"},
+            {"t": 6, "v": [0.0, 0.0, 0.0], "ease": "smooth"}
+          ]
+        },
+        "lip_l": {
+          "rot": [
+            {"t": 0, "v": [0.0, 0.0, 0.0]},
+            {"t": 2, "v": [0.0, 48.0, 0.0], "ease": "smooth"},
+            {"t": 6, "v": [0.0, 0.0, 0.0], "ease": "smooth"}
+          ]
+        },
+        "lip_r": {
+          "rot": [
+            {"t": 0, "v": [0.0, 0.0, 0.0]},
+            {"t": 2, "v": [0.0, -48.0, 0.0], "ease": "smooth"},
+            {"t": 6, "v": [0.0, 0.0, 0.0], "ease": "smooth"}
+          ]
+        },
+        "disc": {
+          "pos": [
+            {"t": 0, "v": [0.0, 0.0, 0.0]},
+            {"t": 2, "v": [0.0, 0.0, 1.5], "ease": "smooth"},
+            {"t": 6, "v": [0.0, 0.0, 0.0], "ease": "smooth"}
+          ]
+        },
+        "tail_2": {
+          "rot": [
+            {"t": 0, "v": [0.0, 0.0, 0.0]},
+            {"t": 2, "v": [-25.0, 0.0, 0.0], "ease": "smooth"},
+            {"t": 6, "v": [0.0, 0.0, 0.0], "ease": "smooth"}
+          ]
+        },
+        "tail_3": {
+          "rot": [
+            {"t": 0, "v": [0.0, 0.0, 0.0]},
+            {"t": 2, "v": [35.0, 0.0, 0.0], "ease": "smooth"},
+            {"t": 6, "v": [0.0, 0.0, 0.0], "ease": "smooth"}
+          ]
+        }
+      }
+    }
+  },
+  "uv_fill": 0.337
+}

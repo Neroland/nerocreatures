@@ -5,6 +5,7 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.Entity;
 //? if >=1.21.11 {
 import net.minecraft.world.entity.EntityReference;
 //?}
@@ -30,6 +31,7 @@ import org.jetbrains.annotations.Nullable;
 import za.co.neroland.nerocreatures.config.NeroCreaturesConfig;
 import za.co.neroland.nerocreatures.entity.base.CreatureTier;
 import za.co.neroland.nerocreatures.entity.base.NeroCreatureEntity;
+import za.co.neroland.nerocreatures.entity.visual.VisualPose;
 import za.co.neroland.nerocreatures.registry.ModItems;
 
 /**
@@ -73,6 +75,22 @@ public class CrystalGolem extends NeroCreatureEntity implements NeutralMob {
 
     /** Exclusive upper bound of the pickaxe bonus roll. */
     private static final int PICKAXE_BONUS_MAX_EXCLUSIVE = 3;
+
+    /** The smash: the {@code ability} pose runs this long (art clip length). */
+    static final int SMASH_POSE_TICKS = 30;
+
+    /** The smash lands this many ticks into the pose (the clip's telegraph). */
+    static final int SMASH_HIT_TICK = 12;
+
+    /** Extra reach (blocks) around the golem's box within which the smash still lands. */
+    private static final double SMASH_REACH = 1.5D;
+
+    /** Ticks into the current smash, or -1 when none is running. Not saved. */
+    private int smashTick = -1;
+
+    /** Who the running smash is aimed at. Never saved. */
+    @Nullable
+    private Entity smashTarget;
 
     //? if >=1.21.11 {
     /** Game time (ticks) at which anger lapses. Not saved — see the class docs. */
@@ -202,6 +220,45 @@ public class CrystalGolem extends NeroCreatureEntity implements NeutralMob {
         ServerLevel level = (ServerLevel) this.level();
     *///?}
         this.updatePersistentAnger(level, true);
+        this.tickSmash(level);
+    }
+
+    // --- Smash (telegraphed melee) -------------------------------------------
+
+    /**
+     * The melee goal's attack starts a smash instead of hitting at once: the {@code ability} pose plays
+     * for {@value #SMASH_POSE_TICKS} ticks and the blow lands at tick {@value #SMASH_HIT_TICK}, only if
+     * the target is still in reach. A swing asked for while a smash runs does nothing.
+     */
+    //? if >=1.21.2 {
+    @Override
+    public boolean doHurtTarget(ServerLevel level, Entity target) {
+    //?} else {
+    /*@Override
+    public boolean doHurtTarget(Entity target) {
+    *///?}
+        if (this.smashTick < 0) {
+            this.smashTick = 0;
+            this.smashTarget = target;
+            this.visuals().playPose(VisualPose.ABILITY, SMASH_POSE_TICKS);
+        }
+        return false;
+    }
+
+    private void tickSmash(ServerLevel level) {
+        if (this.smashTick < 0) {
+            return;
+        }
+        this.smashTick++;
+        Entity target = this.smashTarget;
+        if (this.smashTick == SMASH_HIT_TICK && target != null && target.isAlive()
+                && this.getBoundingBox().inflate(SMASH_REACH).intersects(target.getBoundingBox())) {
+            super.doHurtTarget(level, target);
+        }
+        if (this.smashTick >= SMASH_POSE_TICKS || !this.isAlive()) {
+            this.smashTick = -1;
+            this.smashTarget = null;
+        }
     }
 
     // --- Loot ---------------------------------------------------------------

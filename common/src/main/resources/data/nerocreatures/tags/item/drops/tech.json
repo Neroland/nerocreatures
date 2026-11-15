@@ -8,6 +8,10 @@
     {
       "id": "nerocreatures:android_core",
       "required": false
+    },
+    {
+      "id": "nerocreatures:static_jar",
+      "required": false
     }
   ]
 }

@@ -25,6 +25,7 @@ import net.minecraft.world.level.storage.ValueOutput;
 import za.co.neroland.nerocreatures.config.NeroCreaturesConfig;
 import za.co.neroland.nerocreatures.entity.base.CreatureTier;
 import za.co.neroland.nerocreatures.entity.base.NeroCreatureEntity;
+import za.co.neroland.nerocreatures.entity.visual.VisualPose;
 import za.co.neroland.nerocreatures.registry.ModItems;
 
 /**
@@ -163,6 +164,16 @@ public class RogueAndroid extends AbstractAndroid {
     private void absorbHit(ServerLevel level) {
         level.sendParticles(ParticleTypes.ELECTRIC_SPARK, this.getX(),
                 this.getY() + this.getBbHeight() * 0.6D, this.getZ(), 6, 0.3D, 0.3D, 0.3D, 0.02D);
+        // The counter, made legible: one bright pip per charge still left, in a row across the chest.
+        double yaw = Math.toRadians(this.getYRot());
+        double sideX = Math.cos(yaw);
+        double sideZ = Math.sin(yaw);
+        double y = this.getY() + this.getBbHeight() * 0.75D;
+        for (int i = 0; i < this.shieldCharges; i++) {
+            double offset = (i - (this.shieldCharges - 1) * 0.5D) * 0.3D;
+            level.sendParticles(ParticleTypes.END_ROD, this.getX() + sideX * offset, y,
+                    this.getZ() + sideZ * offset, 1, 0.0D, 0.0D, 0.0D, 0.0D);
+        }
         this.playSound(SoundEvents.ANVIL_LAND, 0.4F, 1.6F);
     }
 
@@ -193,12 +204,29 @@ public class RogueAndroid extends AbstractAndroid {
         ServerLevel level = (ServerLevel) this.level();
     *///?}
         if (this.staggerTicks <= 0) {
+            this.updateShieldPose();
             return;
         }
+        this.updateShieldPose();
         this.setDeltaMovement(this.getDeltaMovement().multiply(STAGGER_DRAG, 1.0D, STAGGER_DRAG));
         if (--this.staggerTicks == 0) {
             this.shieldCharges = SHIELD_CHARGES;
             this.playSound(MechanicalSounds.spin(), 0.6F, 1.2F);
+        }
+    }
+
+    /**
+     * The shield clip ({@code art/models/rogue_android.json}): 12 ticks raising the plates, then the
+     * pose is held while the shield is up and the android is fighting. Held, not timed, so it costs
+     * one synced write when it changes and nothing while it holds.
+     */
+    private void updateShieldPose() {
+        boolean guarding = this.shieldCharges > 0 && this.staggerTicks <= 0 && this.getTarget() != null;
+        VisualPose pose = this.visuals().pose();
+        if (guarding && pose != VisualPose.ABILITY) {
+            this.visuals().holdPose(VisualPose.ABILITY);
+        } else if (!guarding && pose == VisualPose.ABILITY) {
+            this.visuals().holdPose(VisualPose.IDLE);
         }
     }
 

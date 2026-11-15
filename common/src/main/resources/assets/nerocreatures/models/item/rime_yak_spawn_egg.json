@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "nerocreatures:item/rime_yak_spawn_egg"
+  }
+}

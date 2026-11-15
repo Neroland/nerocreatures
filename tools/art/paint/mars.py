@@ -16,7 +16,7 @@ import sys
 sys.dont_write_bytecode = True
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from pixelkit import run_painters  # noqa: E402
+from pixelkit import FACES, face_rect, run_painters  # noqa: E402
 
 SIDES = ("north", "south", "east", "west")
 
@@ -205,6 +205,7 @@ def strata_hound(p) -> None:
         side.row(0, "umber", 3)
         side.rect(0, 1, 4, 1, "umber", 1)
         side.glow(1, 2, 2, 1)
+        pale_glow(p, side, 1, 2, 2, 1)
         side.row(-1, "sand", 1)
     p.box("head.shovel", "bone", 2)
     blade = p.top("head.shovel")
@@ -223,12 +224,13 @@ def strata_hound(p) -> None:
     for side in p.flanks("ear_l.ear"):
         side.rect(0, 4, 3, 2, "umber", 3)
 
-    # Ridge: three dark plates, each with a lit stripe along its crown and flanks.
+    # Ridge: three dark plates, each with a pale stripe along its crown and flanks. The stripe glows
+    # near-white on the glow sheet so the spec's variants colour it by tracked ore family (mint for none).
     for key in ("ridge_a.plate", "ridge_b.plate", "ridge_c.plate"):
         p.box(key, "umber", 1)
-        p.top(key).glow(0, 1, 2, 3, step=4, under=2)
+        p.top(key).glow(0, 1, 2, 3, step=4, under=3, accent="bone")
         for side in p.flanks(key):
-            side.glow(1, 1, 3, 1)
+            side.glow(1, 1, 3, 1, step=4, under=2, accent="bone")
             side.row(-1, "umber", 2)
 
     p.box("tail.stub", "umber", 2)
@@ -251,6 +253,19 @@ def strata_hound(p) -> None:
         face.row(0, "umber", 4)
         face.row(3, "sand", 0)
         face.row(-1, "sand", 1)
+
+
+def pale_glow(p, face, x: int, y: int, w: int = 1, h: int = 1) -> None:
+    """Lifts glow texels already marked on ``face`` to the palest bone on the glow sheet only, so a
+    variant glow colour is not crushed by the mint; the base keeps its dim accent."""
+    pale = p.ramp("bone")[4] + (255,)
+    for yy in range(y, y + h):
+        for xx in range(x, x + w):
+            sx, sy = face._at(xx, yy)
+            p.glow.set(sx, sy, pale)
+
+
+RING_ALPHA = 200
 
 
 def dust_devil(p) -> None:
@@ -299,6 +314,18 @@ def dust_devil(p) -> None:
         streaks(p.face("funnel.wisp", name), (("sand", 1), ("sand", 0)), -1, gap=1, period=4)
         streaks(p.face("funnel.wisp_tip", name), (("umber", 4), ("umber", 3)), 1, gap=1, period=3)
     p.face("funnel.wisp", "up").fill("sand", 0)
+
+    # The sand of the rings and the foot is semi-transparent (the core shows through the whirl); the
+    # core, the arc cage and the spin-up column, which must hide the core, stay opaque.
+    for key in ("ring_top.ring", "ring_mid.ring", "ring_low.ring", "funnel.wisp", "funnel.wisp_tip"):
+        _, cube = p._cubes[key]
+        for name in FACES:
+            x0, y0, w, h = face_rect(cube["uv"], cube["size"], name)
+            for y in range(y0, y0 + h):
+                for x in range(x0, x0 + w):
+                    r, g, b, a = p.base.px[y][x]
+                    if a:
+                        p.base.px[y][x] = (r, g, b, RING_ALPHA)
 
     # Core: a dark shell split by a lit cross, on a charged spindle.
     p.box("core.core", "umber", 1)

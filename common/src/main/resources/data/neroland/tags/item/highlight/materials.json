@@ -68,6 +68,46 @@
     {
       "id": "nerocreatures:heat_gland",
       "required": false
+    },
+    {
+      "id": "nerocreatures:rime_wool",
+      "required": false
+    },
+    {
+      "id": "nerocreatures:coolant_milk",
+      "required": false
+    },
+    {
+      "id": "nerocreatures:cryo_fang",
+      "required": false
+    },
+    {
+      "id": "nerocreatures:drifter_spores",
+      "required": false
+    },
+    {
+      "id": "nerocreatures:bloom_heart",
+      "required": false
+    },
+    {
+      "id": "nerocreatures:mossback_hide",
+      "required": false
+    },
+    {
+      "id": "nerocreatures:leviathan_barnacle",
+      "required": false
+    },
+    {
+      "id": "nerocreatures:prism_antler",
+      "required": false
+    },
+    {
+      "id": "nerocreatures:mirror_scale",
+      "required": false
+    },
+    {
+      "id": "nerocreatures:graviton_node",
+      "required": false
     }
   ]
 }

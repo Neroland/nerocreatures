@@ -1,0 +1,358 @@
+{
+  "format": 1,
+  "id": "glacite_wisp",
+  "name": "Glacite Wisp",
+  "habitat": "glacira",
+  "size_class": "S",
+  "silhouette": "a knot of ice shards around a bright core, with a three-segment trailing tail and a ring of orbiting shards",
+  "hitbox_guide": [0.6, 0.7],
+  "texture": {"width": 64, "height": 64},
+  "render_type": "translucent",
+  "renderer": {"scale": 1.0, "shadow": 0.25},
+  "materials": ["indigo"],
+  "accent": "accent",
+  "glow_organs": ["core", "shard facets and tips", "orbiting shards", "tail end (glow-cap exempt by design)"],
+  "radiant": {"indigo": "pearl_deep"},
+  "parts": [
+    {
+      "name": "body",
+      "parent": null,
+      "pivot": [0, 16, 0],
+      "rotation": [0, 0, 0],
+      "cubes": [
+        {"name": "core", "origin": [-2, -2, -2], "size": [4, 4, 4], "uv": [24, 0]}
+      ]
+    },
+    {
+      "name": "shard_a",
+      "parent": "body",
+      "pivot": [0, 0, 0],
+      "rotation": [18, 0, 28],
+      "cubes": [
+        {"name": "shard", "origin": [-1, -7, -1], "size": [2, 13, 2], "uv": [0, 0]},
+        {"name": "chip", "origin": [1, -4, -0.5], "size": [1, 3, 1], "uv": [24, 8]}
+      ]
+    },
+    {
+      "name": "shard_b",
+      "parent": "body",
+      "pivot": [0, 0, 0],
+      "rotation": [-24, 60, -30],
+      "cubes": [
+        {"name": "shard", "origin": [-1, -5, -1], "size": [2, 11, 2], "uv": [8, 0]},
+        {"name": "chip", "origin": [-2, 1, -0.5], "size": [1, 3, 1], "uv": [28, 8]}
+      ]
+    },
+    {
+      "name": "shard_c",
+      "parent": "body",
+      "pivot": [0, 0, 0],
+      "rotation": [30, -60, 24],
+      "cubes": [
+        {"name": "shard", "origin": [-1, -6, -1], "size": [2, 10, 2], "uv": [16, 0]}
+      ]
+    },
+    {
+      "name": "ring",
+      "parent": "body",
+      "pivot": [0, 1, 0],
+      "rotation": [10, 0, 6],
+      "cubes": [
+        {"name": "orb_n", "origin": [-0.5, -1.5, -7], "size": [1, 3, 1], "uv": [54, 5]},
+        {"name": "orb_s", "origin": [-0.5, -1, 6], "size": [1, 2, 1], "uv": [36, 8]},
+        {"name": "orb_e", "origin": [6, -1, -0.5], "size": [1, 2, 1], "uv": [32, 8]},
+        {"name": "orb_w", "origin": [-7, -1.5, -0.5], "size": [1, 3, 1], "uv": [58, 5]}
+      ]
+    },
+    {
+      "name": "tail_1",
+      "parent": "body",
+      "pivot": [0, 2, 1.5],
+      "rotation": [-38, 0, 0],
+      "cubes": [
+        {"name": "seg_1", "origin": [-1.5, -1.5, 0], "size": [3, 3, 4], "uv": [40, 0]}
+      ]
+    },
+    {
+      "name": "tail_2",
+      "parent": "tail_1",
+      "pivot": [0, 0, 4],
+      "rotation": [-16, 0, 0],
+      "cubes": [
+        {"name": "seg_2", "origin": [-1, -1, 0], "size": [2, 2, 4], "uv": [40, 7]},
+        {"name": "seg_3", "origin": [-0.5, -0.5, 4], "size": [1, 1, 4], "uv": [54, 0]}
+      ]
+    }
+  ],
+  "procedural": {
+    "swing": [],
+    "wave": [
+      {"part": "shard_a", "axis": "x", "frequency": 0.06, "phase": 0, "amplitude": 16, "fade_with_walk": false},
+      {"part": "shard_b", "axis": "z", "frequency": 0.06, "phase": 90, "amplitude": 16, "fade_with_walk": false},
+      {"part": "shard_c", "axis": "x", "frequency": 0.06, "phase": 180, "amplitude": 16, "fade_with_walk": false},
+      {"part": "tail_1", "axis": "y", "frequency": 0.08, "phase": 0, "amplitude": 10, "fade_with_walk": true},
+      {"part": "tail_2", "axis": "y", "frequency": 0.08, "phase": -60, "amplitude": 14, "fade_with_walk": true}
+    ],
+    "look": [],
+    "spin": [
+      {"part": "ring", "axis": "y", "speed": 4.5, "phase": 0}
+    ]
+  },
+  "clips": {
+    "idle": {
+      "length": 60,
+      "loop": true,
+      "key_pose": 15,
+      "note": "hover bob; the shard tumble and the ring's orbit are the waves",
+      "tracks": {
+        "body": {
+          "pos": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 15, "v": [0, -1, 0], "ease": "smooth"},
+            {"t": 30, "v": [0, 0, 0], "ease": "smooth"},
+            {"t": 45, "v": [0, 1, 0], "ease": "smooth"},
+            {"t": 60, "v": [0, 0, 0], "ease": "smooth"}
+          ]
+        }
+      }
+    },
+    "move": {
+      "length": 20,
+      "loop": true,
+      "key_pose": 5,
+      "note": "leans into the drift and the tail streams out level behind it",
+      "tracks": {
+        "body": {
+          "rot": [
+            {"t": 0, "v": [14, 0, 0]},
+            {"t": 10, "v": [18, 0, 0], "ease": "smooth"},
+            {"t": 20, "v": [14, 0, 0], "ease": "smooth"}
+          ]
+        },
+        "tail_1": {
+          "rot": [
+            {"t": 0, "v": [26, 0, 0]},
+            {"t": 10, "v": [32, 0, 0], "ease": "smooth"},
+            {"t": 20, "v": [26, 0, 0], "ease": "smooth"}
+          ]
+        },
+        "tail_2": {
+          "rot": [
+            {"t": 0, "v": [18, 0, 0]},
+            {"t": 5, "v": [10, 0, 0], "ease": "smooth"},
+            {"t": 15, "v": [22, 0, 0], "ease": "smooth"},
+            {"t": 20, "v": [18, 0, 0], "ease": "smooth"}
+          ]
+        }
+      }
+    },
+    "ability": {
+      "length": 16,
+      "loop": false,
+      "key_pose": 16,
+      "damaging": false,
+      "note": "frost cushion: the three shards swing down flat and the ring drops level with them, a bright disc under the falling owner; core at full glow",
+      "glow": [
+        {"t": 0, "v": 0.35},
+        {"t": 6, "v": 1.0},
+        {"t": 16, "v": 1.0}
+      ],
+      "tracks": {
+        "body": {
+          "pos": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 4, "v": [0, -1, 0], "ease": "smooth"},
+            {"t": 10, "v": [0, 2, 0], "ease": "smooth"}
+          ]
+        },
+        "shard_a": {
+          "rot": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 8, "v": [72, 0, -28], "ease": "smooth"}
+          ],
+          "pos": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 8, "v": [0, 4, 0], "ease": "smooth"}
+          ]
+        },
+        "shard_b": {
+          "rot": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 9, "v": [114, 0, 30], "ease": "smooth"}
+          ],
+          "pos": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 9, "v": [0, 4, 0], "ease": "smooth"}
+          ]
+        },
+        "shard_c": {
+          "rot": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 10, "v": [60, 0, -24], "ease": "smooth"}
+          ],
+          "pos": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 10, "v": [0, 4, 0], "ease": "smooth"}
+          ]
+        },
+        "ring": {
+          "rot": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 8, "v": [-10, 0, -6], "ease": "smooth"}
+          ],
+          "pos": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 8, "v": [0, 3.5, 0], "ease": "smooth"}
+          ]
+        },
+        "tail_1": {
+          "rot": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 8, "v": [34, 0, 0], "ease": "smooth"}
+          ]
+        },
+        "tail_2": {
+          "rot": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 8, "v": [14, 0, 0], "ease": "smooth"}
+          ]
+        }
+      }
+    },
+    "hurt": {
+      "length": 6,
+      "loop": false,
+      "key_pose": 2,
+      "note": "shards scatter outward off the core and snap back",
+      "tracks": {
+        "body": {
+          "pos": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 2, "v": [0, -1, 1], "ease": "smooth"},
+            {"t": 6, "v": [0, 0, 0], "ease": "smooth"}
+          ]
+        },
+        "shard_a": {
+          "pos": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 2, "v": [3, -2, 0], "ease": "smooth"},
+            {"t": 6, "v": [0, 0, 0], "ease": "smooth"}
+          ],
+          "rot": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 2, "v": [0, 0, 30], "ease": "smooth"},
+            {"t": 6, "v": [0, 0, 0], "ease": "smooth"}
+          ]
+        },
+        "shard_b": {
+          "pos": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 2, "v": [-3, 0, -2], "ease": "smooth"},
+            {"t": 6, "v": [0, 0, 0], "ease": "smooth"}
+          ],
+          "rot": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 2, "v": [0, 0, -30], "ease": "smooth"},
+            {"t": 6, "v": [0, 0, 0], "ease": "smooth"}
+          ]
+        },
+        "shard_c": {
+          "pos": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 2, "v": [0, 2, 3], "ease": "smooth"},
+            {"t": 6, "v": [0, 0, 0], "ease": "smooth"}
+          ],
+          "rot": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 2, "v": [30, 0, 0], "ease": "smooth"},
+            {"t": 6, "v": [0, 0, 0], "ease": "smooth"}
+          ]
+        },
+        "ring": {
+          "pos": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 2, "v": [0, -3, 0], "ease": "smooth"},
+            {"t": 6, "v": [0, 0, 0], "ease": "smooth"}
+          ],
+          "rot": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 2, "v": [-20, 0, 14], "ease": "smooth"},
+            {"t": 6, "v": [0, 0, 0], "ease": "smooth"}
+          ]
+        },
+        "tail_1": {
+          "rot": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 2, "v": [0, 30, 0], "ease": "smooth"},
+            {"t": 6, "v": [0, 0, 0], "ease": "smooth"}
+          ]
+        }
+      }
+    },
+    "rest": {
+      "length": 14,
+      "loop": false,
+      "key_pose": 14,
+      "note": "perch: shards stand up and close round the core like a bud, the ring settles level below, the tail curls under",
+      "glow": [
+        {"t": 0, "v": 0.35},
+        {"t": 14, "v": 0.2}
+      ],
+      "tracks": {
+        "shard_a": {
+          "rot": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 12, "v": [-18, 0, -22], "ease": "smooth"}
+          ],
+          "pos": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 12, "v": [1, 1, 0], "ease": "smooth"}
+          ]
+        },
+        "shard_b": {
+          "rot": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 12, "v": [24, 0, 24], "ease": "smooth"}
+          ],
+          "pos": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 12, "v": [-1, 0, -1], "ease": "smooth"}
+          ]
+        },
+        "shard_c": {
+          "rot": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 12, "v": [-25, 0, -24], "ease": "smooth"}
+          ],
+          "pos": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 12, "v": [0, 1, 1], "ease": "smooth"}
+          ]
+        },
+        "ring": {
+          "rot": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 12, "v": [-10, 0, -6], "ease": "smooth"}
+          ],
+          "pos": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 12, "v": [0, 3, 0], "ease": "smooth"}
+          ]
+        },
+        "tail_1": {
+          "rot": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 12, "v": [-40, 0, 0], "ease": "smooth"}
+          ]
+        },
+        "tail_2": {
+          "rot": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 12, "v": [-50, 0, 0], "ease": "smooth"}
+          ]
+        }
+      }
+    }
+  },
+  "uv_fill": 0.185
+}

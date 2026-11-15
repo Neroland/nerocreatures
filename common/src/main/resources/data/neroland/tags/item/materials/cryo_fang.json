@@ -1,0 +1,9 @@
+{
+  "replace": false,
+  "values": [
+    {
+      "id": "nerocreatures:cryo_fang",
+      "required": false
+    }
+  ]
+}

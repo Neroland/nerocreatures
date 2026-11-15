@@ -1,0 +1,9 @@
+{
+  "replace": false,
+  "values": [
+    {
+      "id": "nerocreatures:captains_ledger",
+      "required": false
+    }
+  ]
+}

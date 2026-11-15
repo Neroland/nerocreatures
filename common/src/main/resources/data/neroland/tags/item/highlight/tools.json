@@ -20,7 +20,24 @@
     "nerocreatures:dust_devil_spawn_egg",
     "nerocreatures:slag_beetle_spawn_egg",
     "nerocreatures:magma_wader_spawn_egg",
+    "nerocreatures:rime_yak_spawn_egg",
+    "nerocreatures:frost_lurker_spawn_egg",
+    "nerocreatures:spore_drifter_spawn_egg",
+    "nerocreatures:bloom_host_spawn_egg",
+    "nerocreatures:mossback_spawn_egg",
+    "nerocreatures:drift_leviathan_spawn_egg",
+    "nerocreatures:prism_stag_spawn_egg",
+    "nerocreatures:shardback_spawn_egg",
     "nerocreatures:drone_shell",
-    "nerocreatures:creature_saddle"
+    "nerocreatures:creature_saddle",
+    "nerocreatures:magnet_crab_spawn_egg",
+    "nerocreatures:gravity_leech_spawn_egg",
+    "nerocreatures:cache_mimic_spawn_egg",
+    "nerocreatures:static_swarm_spawn_egg",
+    "nerocreatures:scrap_hulk_spawn_egg",
+    "nerocreatures:pirate_captain_spawn_egg",
+    "nerocreatures:void_manta_spawn_egg",
+    "nerocreatures:static_jar",
+    "nerocreatures:captains_ledger"
   ]
 }

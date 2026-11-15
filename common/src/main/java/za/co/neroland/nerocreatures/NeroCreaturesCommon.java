@@ -10,9 +10,11 @@ import za.co.neroland.nerocreatures.compat.CompanionBridge;
 import za.co.neroland.nerocreatures.config.NeroCreaturesConfig;
 import za.co.neroland.nerocreatures.data.CreatureData;
 import za.co.neroland.nerocreatures.entity.alpha.AlphaSystem;
+import za.co.neroland.nerocreatures.entity.glacira.RimeYak;
 import za.co.neroland.nerocreatures.entity.luna.LodeTortoise;
 import za.co.neroland.nerocreatures.entity.mount.MountCreature;
 import za.co.neroland.nerocreatures.entity.mount.MountHooks;
+import za.co.neroland.nerocreatures.entity.nyxara.PrismStag;
 import za.co.neroland.nerocreatures.link.CreatureLinkModule;
 import za.co.neroland.nerocreatures.network.CreatureNetwork;
 import za.co.neroland.nerocreatures.registry.ModBlocks;
@@ -86,6 +88,9 @@ public final class NeroCreaturesCommon {
         // 8d. Species tuning read live from the config (new tortoises pick up a changed value).
         LodeTortoise.configure(() -> NeroCreaturesConfig.LODE_TORTOISE_NODULE_TICKS.get(),
                 () -> NeroCreaturesConfig.MAX_NODULES_PER_HARVEST.get());
+        RimeYak.configure(() -> NeroCreaturesConfig.RIME_YAK_WOOL_REGROW_TICKS.get(),
+                () -> NeroCreaturesConfig.RIME_YAK_MILK_COOLDOWN_TICKS.get());
+        PrismStag.configure(() -> NeroCreaturesConfig.PRISM_STAG_HERD_AURA.get());
         // 9. Spawn rules last of the content steps — they reference entity types, which on Fabric
         //    must already have been registered by the step above, and Core's entity seam applies
         //    Fabric registrations eagerly too.

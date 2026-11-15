@@ -1,0 +1,423 @@
+{
+  "format": 1,
+  "id": "pirate_captain",
+  "name": "Pirate Captain",
+  "habitat": "wrecks",
+  "size_class": "M",
+  "silhouette": "a taller pirate: wide-brimmed hat, twin jet nacelles standing above the shoulders, long split coat to the calves",
+  "hitbox_guide": [0.7, 2.3],
+  "texture": {"width": 64, "height": 64},
+  "render_type": "cutout",
+  "renderer": {"scale": 1.0, "shadow": 0.55},
+  "materials": ["white", "hazard", "oxide"],
+  "accent": "accent",
+  "glow_organs": ["the two nacelle nozzles and intake rings", "goggle band"],
+  "radiant": null,
+  "parts": [
+    {
+      "name": "body",
+      "parent": null,
+      "pivot": [0, 10, 0],
+      "rotation": [0, 0, 0],
+      "cubes": [
+        {"name": "torso", "origin": [-4, -13, -2], "size": [8, 13, 4], "uv": [32, 0]},
+        {"name": "frame", "origin": [-7, -12, 2], "size": [14, 2, 2], "uv": [32, 48]}
+      ]
+    },
+    {
+      "name": "head",
+      "parent": "body",
+      "pivot": [0, -13, 0],
+      "rotation": [0, 0, 0],
+      "cubes": [
+        {"name": "head", "origin": [-4, -8, -4], "size": [8, 8, 8], "uv": [0, 19]},
+        {"name": "mask", "origin": [-2, -4, -6], "size": [4, 4, 2], "uv": [48, 29]},
+        {"name": "brim", "origin": [-6, -9, -6], "size": [12, 1, 12], "uv": [0, 35]},
+        {"name": "crown", "origin": [-4, -12, -4], "size": [8, 3, 8], "uv": [0, 48]}
+      ]
+    },
+    {
+      "name": "arm_l",
+      "parent": "body",
+      "pivot": [6, -11, 0],
+      "rotation": [0, 0, 0],
+      "cubes": [
+        {"name": "arm", "origin": [-2, -2, -2], "size": [4, 13, 4], "uv": [32, 17]}
+      ]
+    },
+    {
+      "name": "arm_r",
+      "parent": "body",
+      "pivot": [-6, -11, 0],
+      "rotation": [0, 0, 0],
+      "uv_like": "arm_l",
+      "cubes": [
+        {"name": "arm", "origin": [-2, -2, -2], "size": [4, 13, 4], "uv": [32, 17], "mirror": true}
+      ]
+    },
+    {
+      "name": "nacelle_l",
+      "parent": "body",
+      "pivot": [8, -11, 5],
+      "rotation": [0, 0, 0],
+      "cubes": [
+        {"name": "pod", "origin": [-2, -16, -2], "size": [4, 15, 4], "uv": [0, 0]},
+        {"name": "nozzle", "origin": [-1, -1, -1], "size": [2, 2, 2], "uv": [56, 0]}
+      ]
+    },
+    {
+      "name": "nacelle_r",
+      "parent": "body",
+      "pivot": [-8, -11, 5],
+      "rotation": [0, 0, 0],
+      "uv_like": "nacelle_l",
+      "cubes": [
+        {"name": "pod", "origin": [-2, -16, -2], "size": [4, 15, 4], "uv": [0, 0], "mirror": true},
+        {"name": "nozzle", "origin": [-1, -1, -1], "size": [2, 2, 2], "uv": [56, 0], "mirror": true}
+      ]
+    },
+    {
+      "name": "coat_l",
+      "parent": "body",
+      "pivot": [3, -1, 2],
+      "rotation": [8, 0, -9],
+      "cubes": [
+        {"name": "back", "origin": [-3, 0, 0], "size": [6, 11, 1], "uv": [48, 17]}
+      ]
+    },
+    {
+      "name": "coat_r",
+      "parent": "body",
+      "pivot": [-3, -1, 2],
+      "rotation": [8, 0, 9],
+      "uv_like": "coat_l",
+      "cubes": [
+        {"name": "back", "origin": [-3, 0, 0], "size": [6, 11, 1], "uv": [48, 17], "mirror": true}
+      ]
+    },
+    {
+      "name": "leg_l",
+      "parent": null,
+      "pivot": [2, 10, 0],
+      "rotation": [0, 0, 0],
+      "cubes": [
+        {"name": "leg", "origin": [-2, 0, -2], "size": [4, 14, 4], "uv": [16, 0]}
+      ]
+    },
+    {
+      "name": "leg_r",
+      "parent": null,
+      "pivot": [-2, 10, 0],
+      "rotation": [0, 0, 0],
+      "uv_like": "leg_l",
+      "cubes": [
+        {"name": "leg", "origin": [-2, 0, -2], "size": [4, 14, 4], "uv": [16, 0], "mirror": true}
+      ]
+    }
+  ],
+  "procedural": {
+    "swing": [
+      {"part": "leg_l", "phase": 0, "amplitude": 34},
+      {"part": "leg_r", "phase": 180, "amplitude": 34},
+      {"part": "arm_l", "phase": 180, "amplitude": 22}
+    ],
+    "wave": [
+      {"part": "coat_l", "axis": "x", "frequency": 0.07, "phase": 0, "amplitude": 5, "fade_with_walk": true},
+      {"part": "coat_r", "axis": "x", "frequency": 0.07, "phase": 70, "amplitude": 5, "fade_with_walk": true}
+    ],
+    "look": [
+      {"part": "head", "yaw": 0.8, "pitch": 0.7, "limit": 50}
+    ]
+  },
+  "clips": {
+    "idle": {
+      "length": 60,
+      "loop": true,
+      "key_pose": 15,
+      "note": "coat tails sway on their waves; right hand rests on the belt, chin up",
+      "tracks": {
+        "arm_r": {
+          "rot": [
+            {"t": 0, "v": [-22.0, 0.0, -15.0]},
+            {"t": 30, "v": [-19.0, 0.0, -15.0], "ease": "smooth"},
+            {"t": 60, "v": [-22.0, 0.0, -15.0], "ease": "smooth"}
+          ]
+        },
+        "body": {
+          "rot": [
+            {"t": 0, "v": [-3.0, 0.0, 0.0]},
+            {"t": 30, "v": [-1.0, 0.0, 0.0], "ease": "smooth"},
+            {"t": 60, "v": [-3.0, 0.0, 0.0], "ease": "smooth"}
+          ]
+        },
+        "head": {
+          "rot": [
+            {"t": 0, "v": [-4.0, 0.0, 0.0]},
+            {"t": 30, "v": [-2.0, 8.0, 0.0], "ease": "smooth"},
+            {"t": 60, "v": [-4.0, 0.0, 0.0], "ease": "smooth"}
+          ]
+        }
+      }
+    },
+    "move": {
+      "length": 20,
+      "loop": true,
+      "key_pose": 5,
+      "note": "long stride; the coat tails stream back and swing against each step; right hand stays at the belt",
+      "tracks": {
+        "coat_l": {
+          "rot": [
+            {"t": 0, "v": [26.0, 0.0, 0.0]},
+            {"t": 10, "v": [14.0, 0.0, 0.0], "ease": "smooth"},
+            {"t": 20, "v": [26.0, 0.0, 0.0], "ease": "smooth"}
+          ]
+        },
+        "coat_r": {
+          "rot": [
+            {"t": 0, "v": [14.0, 0.0, 0.0]},
+            {"t": 10, "v": [26.0, 0.0, 0.0], "ease": "smooth"},
+            {"t": 20, "v": [14.0, 0.0, 0.0], "ease": "smooth"}
+          ]
+        },
+        "arm_r": {
+          "rot": [
+            {"t": 0, "v": [-22.0, 0.0, -15.0]},
+            {"t": 20, "v": [-22.0, 0.0, -15.0]}
+          ]
+        },
+        "body": {
+          "rot": [
+            {"t": 0, "v": [4.0, 0.0, 0.0]},
+            {"t": 20, "v": [4.0, 0.0, 0.0]}
+          ]
+        }
+      }
+    },
+    "ability": {
+      "length": 20,
+      "loop": false,
+      "key_pose": 16,
+      "damaging": true,
+      "telegraph": 12,
+      "glow": [
+        {"t": 0, "v": 0.35},
+        {"t": 4, "v": 0.6},
+        {"t": 12, "v": 1.0},
+        {"t": 20, "v": 1.0}
+      ],
+      "note": "jet-dash: nacelles tip back and flare for 12 ticks while he crouches; at tick 12 he launches with the body level, legs and coat streaming behind",
+      "tracks": {
+        "body": {
+          "rot": [
+            {"t": 0, "v": [0.0, 0.0, 0.0]},
+            {"t": 12, "v": [18.0, 0.0, 0.0], "ease": "smooth"},
+            {"t": 15, "v": [74.0, 0.0, 0.0], "ease": "smooth"},
+            {"t": 20, "v": [74.0, 0.0, 0.0], "ease": "smooth"}
+          ],
+          "pos": [
+            {"t": 0, "v": [0.0, 0.0, 0.0]},
+            {"t": 12, "v": [0.0, 2.0, 0.0], "ease": "smooth"},
+            {"t": 15, "v": [0.0, -1.0, 0.0], "ease": "smooth"},
+            {"t": 20, "v": [0.0, -1.0, 0.0], "ease": "smooth"}
+          ]
+        },
+        "head": {
+          "rot": [
+            {"t": 0, "v": [0.0, 0.0, 0.0]},
+            {"t": 12, "v": [-10.0, 0.0, 0.0], "ease": "smooth"},
+            {"t": 15, "v": [-60.0, 0.0, 0.0], "ease": "smooth"},
+            {"t": 20, "v": [-60.0, 0.0, 0.0], "ease": "smooth"}
+          ]
+        },
+        "leg_l": {
+          "rot": [
+            {"t": 0, "v": [0.0, 0.0, 0.0]},
+            {"t": 12, "v": [-24.0, 0.0, 0.0], "ease": "smooth"},
+            {"t": 15, "v": [66.0, 0.0, 0.0], "ease": "smooth"},
+            {"t": 20, "v": [70.0, 0.0, 0.0], "ease": "smooth"}
+          ],
+          "pos": [
+            {"t": 0, "v": [0.0, 0.0, 0.0]},
+            {"t": 12, "v": [0.0, 2.0, 0.0], "ease": "smooth"},
+            {"t": 15, "v": [0.0, -1.0, 0.0], "ease": "smooth"},
+            {"t": 20, "v": [0.0, -1.0, 0.0], "ease": "smooth"}
+          ]
+        },
+        "leg_r": {
+          "rot": [
+            {"t": 0, "v": [0.0, 0.0, 0.0]},
+            {"t": 12, "v": [20.0, 0.0, 0.0], "ease": "smooth"},
+            {"t": 15, "v": [76.0, 0.0, 0.0], "ease": "smooth"},
+            {"t": 20, "v": [72.0, 0.0, 0.0], "ease": "smooth"}
+          ],
+          "pos": [
+            {"t": 0, "v": [0.0, 0.0, 0.0]},
+            {"t": 12, "v": [0.0, 2.0, 0.0], "ease": "smooth"},
+            {"t": 15, "v": [0.0, -1.0, 0.0], "ease": "smooth"},
+            {"t": 20, "v": [0.0, -1.0, 0.0], "ease": "smooth"}
+          ]
+        },
+        "arm_l": {
+          "rot": [
+            {"t": 0, "v": [0.0, 0.0, 0.0]},
+            {"t": 12, "v": [20.0, 0.0, -10.0], "ease": "smooth"},
+            {"t": 15, "v": [-150.0, 0.0, 0.0], "ease": "smooth"},
+            {"t": 20, "v": [-150.0, 0.0, 0.0], "ease": "smooth"}
+          ]
+        },
+        "arm_r": {
+          "rot": [
+            {"t": 0, "v": [0.0, 0.0, 0.0]},
+            {"t": 12, "v": [20.0, 0.0, 10.0], "ease": "smooth"},
+            {"t": 15, "v": [30.0, 0.0, 14.0], "ease": "smooth"},
+            {"t": 20, "v": [30.0, 0.0, 14.0], "ease": "smooth"}
+          ]
+        },
+        "nacelle_l": {
+          "rot": [
+            {"t": 0, "v": [0.0, 0.0, 0.0]},
+            {"t": 12, "v": [-22.0, 0.0, -8.0], "ease": "smooth"},
+            {"t": 15, "v": [0.0, 0.0, -4.0], "ease": "smooth"},
+            {"t": 20, "v": [0.0, 0.0, -4.0], "ease": "smooth"}
+          ]
+        },
+        "nacelle_r": {
+          "rot": [
+            {"t": 0, "v": [0.0, 0.0, 0.0]},
+            {"t": 12, "v": [-22.0, 0.0, 8.0], "ease": "smooth"},
+            {"t": 15, "v": [0.0, 0.0, 4.0], "ease": "smooth"},
+            {"t": 20, "v": [0.0, 0.0, 4.0], "ease": "smooth"}
+          ]
+        },
+        "coat_l": {
+          "rot": [
+            {"t": 0, "v": [0.0, 0.0, 0.0]},
+            {"t": 12, "v": [-6.0, 0.0, 0.0], "ease": "smooth"},
+            {"t": 15, "v": [-58.0, 0.0, -8.0], "ease": "smooth"},
+            {"t": 20, "v": [-64.0, 0.0, -8.0], "ease": "smooth"}
+          ]
+        },
+        "coat_r": {
+          "rot": [
+            {"t": 0, "v": [0.0, 0.0, 0.0]},
+            {"t": 12, "v": [-6.0, 0.0, 0.0], "ease": "smooth"},
+            {"t": 15, "v": [-64.0, 0.0, 8.0], "ease": "smooth"},
+            {"t": 20, "v": [-58.0, 0.0, 8.0], "ease": "smooth"}
+          ]
+        }
+      }
+    },
+    "ability_2": {
+      "length": 20,
+      "loop": false,
+      "key_pose": 8,
+      "damaging": false,
+      "glow": [
+        {"t": 0, "v": 0.35},
+        {"t": 6, "v": 1.0},
+        {"t": 9, "v": 0.5},
+        {"t": 13, "v": 1.0},
+        {"t": 16, "v": 0.5},
+        {"t": 20, "v": 0.35}
+      ],
+      "note": "rally: left arm thrown straight up, head back, and pumped twice",
+      "tracks": {
+        "arm_l": {
+          "rot": [
+            {"t": 0, "v": [0.0, 0.0, 0.0]},
+            {"t": 6, "v": [-172.0, 0.0, -8.0], "ease": "smooth"},
+            {"t": 10, "v": [-150.0, 0.0, -8.0], "ease": "smooth"},
+            {"t": 13, "v": [-172.0, 0.0, -8.0], "ease": "smooth"},
+            {"t": 16, "v": [-155.0, 0.0, -8.0], "ease": "smooth"},
+            {"t": 20, "v": [0.0, 0.0, 0.0], "ease": "smooth"}
+          ]
+        },
+        "arm_r": {
+          "rot": [
+            {"t": 0, "v": [0.0, 0.0, 0.0]},
+            {"t": 6, "v": [-22.0, 0.0, -15.0], "ease": "smooth"},
+            {"t": 16, "v": [-22.0, 0.0, -15.0], "ease": "smooth"},
+            {"t": 20, "v": [0.0, 0.0, 0.0], "ease": "smooth"}
+          ]
+        },
+        "head": {
+          "rot": [
+            {"t": 0, "v": [0.0, 0.0, 0.0]},
+            {"t": 6, "v": [-18.0, 0.0, 0.0], "ease": "smooth"},
+            {"t": 16, "v": [-18.0, 0.0, 0.0], "ease": "smooth"},
+            {"t": 20, "v": [0.0, 0.0, 0.0], "ease": "smooth"}
+          ]
+        },
+        "body": {
+          "rot": [
+            {"t": 0, "v": [0.0, 0.0, 0.0]},
+            {"t": 6, "v": [-8.0, 0.0, 0.0], "ease": "smooth"},
+            {"t": 16, "v": [-8.0, 0.0, 0.0], "ease": "smooth"},
+            {"t": 20, "v": [0.0, 0.0, 0.0], "ease": "smooth"}
+          ]
+        },
+        "nacelle_l": {
+          "rot": [
+            {"t": 0, "v": [0.0, 0.0, 0.0]},
+            {"t": 6, "v": [0.0, 0.0, -10.0], "ease": "smooth"},
+            {"t": 16, "v": [0.0, 0.0, -10.0], "ease": "smooth"},
+            {"t": 20, "v": [0.0, 0.0, 0.0], "ease": "smooth"}
+          ]
+        },
+        "nacelle_r": {
+          "rot": [
+            {"t": 0, "v": [0.0, 0.0, 0.0]},
+            {"t": 6, "v": [0.0, 0.0, 10.0], "ease": "smooth"},
+            {"t": 16, "v": [0.0, 0.0, 10.0], "ease": "smooth"},
+            {"t": 20, "v": [0.0, 0.0, 0.0], "ease": "smooth"}
+          ]
+        }
+      }
+    },
+    "hurt": {
+      "length": 6,
+      "loop": false,
+      "key_pose": 2,
+      "glow": [
+        {"t": 0, "v": 1.0},
+        {"t": 1, "v": 0.05},
+        {"t": 2, "v": 0.9},
+        {"t": 3, "v": 0.05},
+        {"t": 4, "v": 0.7},
+        {"t": 6, "v": 0.35}
+      ],
+      "note": "staggers back a half step; the nacelles sputter",
+      "tracks": {
+        "body": {
+          "rot": [
+            {"t": 0, "v": [0.0, 0.0, 0.0]},
+            {"t": 2, "v": [-12.0, 0.0, 6.0], "ease": "smooth"},
+            {"t": 6, "v": [0.0, 0.0, 0.0], "ease": "smooth"}
+          ]
+        },
+        "head": {
+          "rot": [
+            {"t": 0, "v": [0.0, 0.0, 0.0]},
+            {"t": 2, "v": [8.0, 0.0, -6.0], "ease": "smooth"},
+            {"t": 6, "v": [0.0, 0.0, 0.0], "ease": "smooth"}
+          ]
+        },
+        "nacelle_l": {
+          "rot": [
+            {"t": 0, "v": [0.0, 0.0, 0.0]},
+            {"t": 2, "v": [0.0, 0.0, -12.0], "ease": "smooth"},
+            {"t": 6, "v": [0.0, 0.0, 0.0], "ease": "smooth"}
+          ]
+        },
+        "nacelle_r": {
+          "rot": [
+            {"t": 0, "v": [0.0, 0.0, 0.0]},
+            {"t": 3, "v": [0.0, 0.0, 12.0], "ease": "smooth"},
+            {"t": 6, "v": [0.0, 0.0, 0.0], "ease": "smooth"}
+          ]
+        }
+      }
+    }
+  },
+  "uv_fill": 0.771
+}

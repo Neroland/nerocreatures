@@ -1,0 +1,274 @@
+{
+  "format": 1,
+  "id": "rogue_android",
+  "name": "Rogue Android",
+  "habitat": "wrecks",
+  "size_class": "L",
+  "silhouette": "tall boxy chassis, sensor head sunk between two tall shield shoulder plates, piston legs",
+  "hitbox_guide": [1.2, 2.4],
+  "texture": {"width": 128, "height": 128},
+  "render_type": "cutout",
+  "renderer": {"scale": 1.0, "shadow": 0.6},
+  "materials": ["white", "hazard", "oxide"],
+  "accent": "accent",
+  "glow_organs": ["chest sensor eye", "head visor bar"],
+  "radiant": null,
+  "parts": [
+    {
+      "name": "body",
+      "parent": null,
+      "pivot": [0, 10, 0],
+      "rotation": [0, 0, 0],
+      "cubes": [
+        {"name": "chassis", "origin": [-6, -18, -4], "size": [12, 18, 8], "uv": [0, 0]},
+        {"name": "pelvis", "origin": [-5, 0, -3], "size": [10, 3, 6], "uv": [66, 26]},
+        {"name": "pack", "origin": [-4, -16, 4], "size": [8, 10, 3], "uv": [84, 13]},
+        {"name": "housing", "origin": [-3, -14, -5], "size": [6, 6, 1], "uv": [68, 17]}
+      ]
+    },
+    {
+      "name": "sensor",
+      "parent": "body",
+      "pivot": [0, -11, -5],
+      "rotation": [0, 0, 0],
+      "cubes": [
+        {"name": "eye", "origin": [-1, -1, -1], "size": [2, 2, 1], "uv": [116, 6]}
+      ]
+    },
+    {
+      "name": "head",
+      "parent": "body",
+      "pivot": [0, -18, 0],
+      "rotation": [0, 0, 0],
+      "cubes": [
+        {"name": "head", "origin": [-4, -3, -4], "size": [8, 5, 8], "uv": [84, 0]},
+        {"name": "visor", "origin": [-3, -2, -5], "size": [6, 2, 1], "uv": [106, 22]}
+      ]
+    },
+    {
+      "name": "plate_l",
+      "parent": "body",
+      "pivot": [8, -13, 0],
+      "rotation": [0, 0, 0],
+      "cubes": [
+        {"name": "plate", "origin": [-2, -9, -5], "size": [4, 15, 10], "uv": [40, 0]}
+      ]
+    },
+    {
+      "name": "plate_r",
+      "parent": "body",
+      "pivot": [-8, -13, 0],
+      "rotation": [0, 0, 0],
+      "uv_like": "plate_l",
+      "cubes": [
+        {"name": "plate", "origin": [-2, -9, -5], "size": [4, 15, 10], "uv": [40, 0], "mirror": true}
+      ]
+    },
+    {
+      "name": "arm_l",
+      "parent": "body",
+      "pivot": [8, -4, 0],
+      "rotation": [0, 0, 0],
+      "cubes": [
+        {"name": "arm", "origin": [-2, -4, -2], "size": [4, 13, 4], "uv": [68, 0]},
+        {"name": "fist", "origin": [-3, 9, -3], "size": [6, 4, 6], "uv": [0, 26]}
+      ]
+    },
+    {
+      "name": "arm_r",
+      "parent": "body",
+      "pivot": [-8, -4, 0],
+      "rotation": [0, 0, 0],
+      "uv_like": "arm_l",
+      "cubes": [
+        {"name": "arm", "origin": [-2, -4, -2], "size": [4, 13, 4], "uv": [68, 0], "mirror": true},
+        {"name": "fist", "origin": [-3, 9, -3], "size": [6, 4, 6], "uv": [0, 26], "mirror": true}
+      ]
+    },
+    {
+      "name": "leg_l",
+      "parent": null,
+      "pivot": [3, 12, 0],
+      "rotation": [0, 0, 0],
+      "cubes": [
+        {"name": "thigh", "origin": [-2, 0, -2], "size": [4, 5, 4], "uv": [106, 13]},
+        {"name": "piston", "origin": [-1, 5, -1], "size": [2, 4, 2], "uv": [116, 0]},
+        {"name": "foot", "origin": [-3, 9, -4], "size": [6, 3, 7], "uv": [40, 25]}
+      ]
+    },
+    {
+      "name": "leg_r",
+      "parent": null,
+      "pivot": [-3, 12, 0],
+      "rotation": [0, 0, 0],
+      "uv_like": "leg_l",
+      "cubes": [
+        {"name": "thigh", "origin": [-2, 0, -2], "size": [4, 5, 4], "uv": [106, 13], "mirror": true},
+        {"name": "piston", "origin": [-1, 5, -1], "size": [2, 4, 2], "uv": [116, 0], "mirror": true},
+        {"name": "foot", "origin": [-3, 9, -4], "size": [6, 3, 7], "uv": [40, 25], "mirror": true}
+      ]
+    }
+  ],
+  "procedural": {
+    "swing": [
+      {"part": "leg_l", "phase": 0, "amplitude": 28},
+      {"part": "leg_r", "phase": 180, "amplitude": 28},
+      {"part": "arm_l", "phase": 180, "amplitude": 18},
+      {"part": "arm_r", "phase": 0, "amplitude": 18}
+    ],
+    "look": [
+      {"part": "head", "yaw": 0.5, "pitch": 0.3, "limit": 30}
+    ]
+  },
+  "clips": {
+    "idle": {
+      "length": 60,
+      "loop": true,
+      "key_pose": 15,
+      "note": "chest sensor sweeps across its housing; the chassis hums",
+      "tracks": {
+        "sensor": {
+          "pos": [
+            {"t": 0, "v": [0.0, 0.0, 0.0]},
+            {"t": 15, "v": [2.0, 0.0, 0.0], "ease": "smooth"},
+            {"t": 45, "v": [-2.0, 0.0, 0.0], "ease": "smooth"},
+            {"t": 60, "v": [0.0, 0.0, 0.0], "ease": "smooth"}
+          ]
+        },
+        "body": {
+          "pos": [
+            {"t": 0, "v": [0.0, 0.0, 0.0]},
+            {"t": 30, "v": [0.0, 0.5, 0.0], "ease": "smooth"},
+            {"t": 60, "v": [0.0, 0.0, 0.0], "ease": "smooth"}
+          ]
+        }
+      }
+    },
+    "move": {
+      "length": 20,
+      "loop": true,
+      "key_pose": 5,
+      "note": "piston stride: the chassis drops on each footfall and the plates clank",
+      "tracks": {
+        "body": {
+          "pos": [
+            {"t": 0, "v": [0.0, 1.0, 0.0]},
+            {"t": 5, "v": [0.0, -0.5, 0.0], "ease": "smooth"},
+            {"t": 10, "v": [0.0, 1.0, 0.0], "ease": "smooth"},
+            {"t": 15, "v": [0.0, -0.5, 0.0], "ease": "smooth"},
+            {"t": 20, "v": [0.0, 1.0, 0.0], "ease": "smooth"}
+          ],
+          "rot": [
+            {"t": 0, "v": [3.0, 0.0, -2.0]},
+            {"t": 10, "v": [3.0, 0.0, 2.0], "ease": "smooth"},
+            {"t": 20, "v": [3.0, 0.0, -2.0], "ease": "smooth"}
+          ]
+        },
+        "plate_l": {
+          "rot": [
+            {"t": 0, "v": [0.0, 0.0, 0.0]},
+            {"t": 5, "v": [0.0, 0.0, -3.0], "ease": "smooth"},
+            {"t": 10, "v": [0.0, 0.0, 0.0], "ease": "smooth"},
+            {"t": 20, "v": [0.0, 0.0, 0.0], "ease": "smooth"}
+          ]
+        },
+        "plate_r": {
+          "rot": [
+            {"t": 0, "v": [0.0, 0.0, 0.0]},
+            {"t": 10, "v": [0.0, 0.0, 0.0], "ease": "smooth"},
+            {"t": 15, "v": [0.0, 0.0, 3.0], "ease": "smooth"},
+            {"t": 20, "v": [0.0, 0.0, 0.0], "ease": "smooth"}
+          ]
+        }
+      }
+    },
+    "ability": {
+      "length": 12,
+      "loop": false,
+      "key_pose": 12,
+      "damaging": false,
+      "telegraph": 12,
+      "glow": [
+        {"t": 0, "v": 0.35},
+        {"t": 12, "v": 1.0}
+      ],
+      "note": "shield: both plates swing forward and lock edge to edge in front of the chassis; hold the pose while the shield is up",
+      "tracks": {
+        "plate_l": {
+          "rot": [
+            {"t": 0, "v": [0.0, 0.0, 0.0]},
+            {"t": 8, "v": [0.0, 98.0, 0.0], "ease": "smooth"},
+            {"t": 12, "v": [0.0, 90.0, 0.0], "ease": "smooth"}
+          ],
+          "pos": [
+            {"t": 0, "v": [0.0, 0.0, 0.0]},
+            {"t": 8, "v": [-3.0, 2.0, -7.0], "ease": "smooth"},
+            {"t": 12, "v": [-3.0, 2.0, -6.0], "ease": "smooth"}
+          ]
+        },
+        "plate_r": {
+          "rot": [
+            {"t": 0, "v": [0.0, 0.0, 0.0]},
+            {"t": 8, "v": [0.0, -98.0, 0.0], "ease": "smooth"},
+            {"t": 12, "v": [0.0, -90.0, 0.0], "ease": "smooth"}
+          ],
+          "pos": [
+            {"t": 0, "v": [0.0, 0.0, 0.0]},
+            {"t": 8, "v": [3.0, 2.0, -7.0], "ease": "smooth"},
+            {"t": 12, "v": [3.0, 2.0, -6.0], "ease": "smooth"}
+          ]
+        },
+        "body": {
+          "rot": [
+            {"t": 0, "v": [0.0, 0.0, 0.0]},
+            {"t": 8, "v": [8.0, 0.0, 0.0], "ease": "smooth"},
+            {"t": 12, "v": [6.0, 0.0, 0.0], "ease": "smooth"}
+          ]
+        },
+        "arm_l": {
+          "rot": [
+            {"t": 0, "v": [0.0, 0.0, 0.0]},
+            {"t": 12, "v": [-30.0, 0.0, 0.0], "ease": "smooth"}
+          ]
+        },
+        "arm_r": {
+          "rot": [
+            {"t": 0, "v": [0.0, 0.0, 0.0]},
+            {"t": 12, "v": [-30.0, 0.0, 0.0], "ease": "smooth"}
+          ]
+        }
+      }
+    },
+    "hurt": {
+      "length": 6,
+      "loop": false,
+      "key_pose": 2,
+      "note": "a plate takes the hit and shudders",
+      "tracks": {
+        "plate_l": {
+          "rot": [
+            {"t": 0, "v": [0.0, 0.0, 0.0]},
+            {"t": 1, "v": [0.0, 0.0, -9.0], "ease": "smooth"},
+            {"t": 3, "v": [0.0, 0.0, 5.0], "ease": "smooth"},
+            {"t": 6, "v": [0.0, 0.0, 0.0], "ease": "smooth"}
+          ]
+        },
+        "plate_r": {
+          "rot": [
+            {"t": 0, "v": [0.0, 0.0, 0.0]},
+            {"t": 2, "v": [0.0, 0.0, 5.0], "ease": "smooth"},
+            {"t": 6, "v": [0.0, 0.0, 0.0], "ease": "smooth"}
+          ]
+        },
+        "body": {
+          "rot": [
+            {"t": 0, "v": [0.0, 0.0, 0.0]},
+            {"t": 2, "v": [-4.0, 0.0, 0.0], "ease": "smooth"},
+            {"t": 6, "v": [0.0, 0.0, 0.0], "ease": "smooth"}
+          ]
+        }
+      }
+    }
+  },
+  "uv_fill": 0.235
+}

@@ -6,7 +6,8 @@ package za.co.neroland.nerocreatures.client;
  * from the entity (1.21.1) or into the render state (1.21.2+).
  *
  * <p>Field names follow the {@code state} keys of the reference evaluator, {@code tools/art/spec.py}
- * {@code evaluate()}.
+ * {@code evaluate()} ({@code fromPose}, {@code fromTicks} and {@code since} are {@code from_pose},
+ * {@code from_ticks} and {@code since}).
  */
 public final class AnimInput {
 
@@ -37,6 +38,14 @@ public final class AnimInput {
     public int form;
     /** {@code FLAG_*} bits. */
     public int flags;
+    /**
+     * The blend source: the pose that was showing when the current one began (0 idle), and its
+     * clock at that moment. Tracked client-side per entity ({@link CreatureModel#fillVisuals}).
+     */
+    public int fromPose;
+    public double fromTicks;
+    /** Ticks since the current pose began, by the client clock, or negative when unknown. */
+    public double since = -1.0;
 
     /** Back to the defaults (idle, no walk, not hurt). */
     public AnimInput reset() {
@@ -53,6 +62,9 @@ public final class AnimInput {
         variant = 0;
         form = 0;
         flags = 0;
+        fromPose = 0;
+        fromTicks = 0.0;
+        since = -1.0;
         return this;
     }
 

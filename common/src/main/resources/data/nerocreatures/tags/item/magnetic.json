@@ -1,0 +1,31 @@
+{
+  "replace": false,
+  "values": [
+    "minecraft:iron_ingot",
+    "minecraft:iron_nugget",
+    "minecraft:raw_iron",
+    "minecraft:gold_ingot",
+    "minecraft:gold_nugget",
+    "minecraft:raw_gold",
+    "minecraft:copper_ingot",
+    "minecraft:raw_copper",
+    "minecraft:netherite_scrap",
+    "minecraft:netherite_ingot",
+    {
+      "id": "minecraft:copper_nugget",
+      "required": false
+    },
+    {
+      "id": "#c:ingots",
+      "required": false
+    },
+    {
+      "id": "#c:nuggets",
+      "required": false
+    },
+    {
+      "id": "#c:raw_materials",
+      "required": false
+    }
+  ]
+}

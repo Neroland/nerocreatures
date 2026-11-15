@@ -34,6 +34,7 @@ import za.co.neroland.nerocreatures.entity.ai.shared.SoundHearing;
 import za.co.neroland.nerocreatures.entity.alpha.AlphaSystem;
 import za.co.neroland.nerocreatures.entity.visual.CreatureVisuals;
 import za.co.neroland.nerocreatures.entity.visual.CreatureVisualsHolder;
+import za.co.neroland.nerocreatures.entity.wrecks.ScrapHulkAssembly;
 import za.co.neroland.nerocreatures.spawn.CreatureCensus;
 
 /**
@@ -67,7 +68,11 @@ import za.co.neroland.nerocreatures.spawn.CreatureCensus;
 public abstract class NeroCreatureEntity extends PathfinderMob implements CreatureVisualsHolder {
 
     /** Entity contract section 3: the root's visuals ids are this class's first {@code defineId}. */
-    private static final CreatureVisuals.Ids VISUALS_IDS = CreatureVisuals.defineIds(NeroCreatureEntity.class);
+    // defineId must be called from the owning class itself: NeoForge 26.x rejects ids allocated
+    // through a helper ("synced data to a foreign entity").  Keep these two direct calls.
+    private static final CreatureVisuals.Ids VISUALS_IDS = new CreatureVisuals.Ids(
+            SynchedEntityData.defineId(NeroCreatureEntity.class, EntityDataSerializers.INT),
+            SynchedEntityData.defineId(NeroCreatureEntity.class, EntityDataSerializers.INT));
 
     /**
      * Synced alpha flag (decision 007): the renderer reads it for the crimson accent and darker
@@ -289,6 +294,21 @@ public abstract class NeroCreatureEntity extends PathfinderMob implements Creatu
         super.dropCustomDeathLoot(level, source, killedByPlayer);
         if (killedByPlayer && this.isAlpha()) {
             AlphaSystem.dropReward(this, level);
+        }
+    }
+
+    /**
+     * Scrap Hulk assembly hook: a mechanical creature's death is offered to
+     * {@link ScrapHulkAssembly}, which keeps a short per-dimension buffer of machine deaths and builds
+     * a hulk from a cluster of them. Cheap for everything else (one tag test; it returns at once for
+     * anything outside {@code #nerocreatures:mechanical}, for hulks, and with {@code scrapHulkAssembly}
+     * off). Species that override this call {@code super.die}.
+     */
+    @Override
+    public void die(DamageSource source) {
+        super.die(source);
+        if (this.level() instanceof ServerLevel serverLevel) {
+            ScrapHulkAssembly.onCreatureDeath(serverLevel, this);
         }
     }
 

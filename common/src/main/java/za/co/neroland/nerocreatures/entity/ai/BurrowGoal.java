@@ -38,6 +38,9 @@ public class BurrowGoal<T extends PathfinderMob & Burrower> extends Goal {
     /** Ticks between navigation updates while submerged. */
     private static final int REPATH_INTERVAL_TICKS = 10;
 
+    /** Ticks between surface dust puffs while burrowed. */
+    private static final int TRAIL_INTERVAL_TICKS = 4;
+
     protected final T mob;
 
     private final double emergeRangeSqr;
@@ -120,6 +123,12 @@ public class BurrowGoal<T extends PathfinderMob & Burrower> extends Goal {
     @Override
     public void tick() {
         this.burrowedTicks++;
+        // A dust trail on the surface above the burrower, so a player can track it (one small packet
+        // every few ticks while it is under).
+        if (this.burrowedTicks % TRAIL_INTERVAL_TICKS == 0 && this.mob.level() instanceof ServerLevel level) {
+            level.sendParticles(ParticleTypes.POOF, this.mob.getX(), this.mob.getY() + 0.1D, this.mob.getZ(),
+                    2, 0.3D, 0.0D, 0.3D, 0.01D);
+        }
         LivingEntity target = this.mob.getTarget();
         if (target == null) {
             return;

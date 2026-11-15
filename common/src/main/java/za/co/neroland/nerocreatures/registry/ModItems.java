@@ -4,14 +4,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.minecraft.core.registries.Registries;
+import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.ItemLike;
 
 import za.co.neroland.nerolandcore.registry.RegistrationProvider;
 import za.co.neroland.nerolandcore.registry.RegistrationProvider.RegistryEntry;
 
 import za.co.neroland.nerocreatures.NeroCreaturesCommon;
+import za.co.neroland.nerocreatures.item.CaptainsLedgerItem;
+import za.co.neroland.nerocreatures.item.DrifterSporesItem;
 import za.co.neroland.nerocreatures.item.DroneShellItem;
+import za.co.neroland.nerocreatures.item.StaticJarItem;
 
 /**
  * NeroCreatures' item registrations — the creature drops.
@@ -101,6 +106,73 @@ public final class ModItems {
     public static final RegistryEntry<Item> HEAT_GLAND = ITEMS.register("heat_gland",
             key -> new Item(new Item.Properties().setId(key)));
 
+    /** Rime Yak product (shearing) — insulating wool; cold-world suit and cryo-line lagging input. */
+    public static final RegistryEntry<Item> RIME_WOOL = ITEMS.register("rime_wool",
+            key -> new Item(new Item.Properties().setId(key)));
+
+    /**
+     * Rime Yak product (a bucket on an adult) — a cooling reagent; machine coolant input. The bucket
+     * comes back when it is used in a crafting recipe.
+     */
+    public static final RegistryEntry<Item> COOLANT_MILK = ITEMS.register("coolant_milk",
+            key -> new Item(new Item.Properties().stacksTo(16).craftRemainder(Items.BUCKET).setId(key)));
+
+    /** Frost Lurker drop — a cryogenic fang; freezer and cryo-storage reagent. */
+    public static final RegistryEntry<Item> CRYO_FANG = ITEMS.register("cryo_fang",
+            key -> new Item(new Item.Properties().setId(key)));
+
+    /** Spore Drifter product — a bottle of spores: two bone-meal growths, the bottle comes back. */
+    public static final RegistryEntry<Item> DRIFTER_SPORES = ITEMS.register("drifter_spores",
+            key -> new DrifterSporesItem(new Item.Properties().stacksTo(16).setId(key)));
+
+    /** Bloom Host drop — the flower's living core; organic regen catalyst. */
+    public static final RegistryEntry<Item> BLOOM_HEART = ITEMS.register("bloom_heart",
+            key -> new Item(new Item.Properties().setId(key)));
+
+    /** Mossback drop — a leather-class hide ({@code c:leathers}). */
+    public static final RegistryEntry<Item> MOSSBACK_HIDE = ITEMS.register("mossback_hide",
+            key -> new Item(new Item.Properties().setId(key)));
+
+    /** Mossback drop — livestock meat, raw ({@code c:foods/raw_meat}). */
+    public static final RegistryEntry<Item> RAW_MOSSBACK = ITEMS.register("raw_mossback",
+            key -> new Item(new Item.Properties()
+                    .food(new FoodProperties.Builder().nutrition(3).saturationModifier(0.3F).build()).setId(key)));
+
+    /** Cooked Mossback ({@code c:foods/cooked_meat}). */
+    public static final RegistryEntry<Item> COOKED_MOSSBACK = ITEMS.register("cooked_mossback",
+            key -> new Item(new Item.Properties()
+                    .food(new FoodProperties.Builder().nutrition(8).saturationModifier(0.8F).build()).setId(key)));
+
+    /** Drift Leviathan product (shearing) — a rare renewable barnacle; hull sealant / organic polymer. */
+    public static final RegistryEntry<Item> LEVIATHAN_BARNACLE = ITEMS.register("leviathan_barnacle",
+            key -> new Item(new Item.Properties().setId(key)));
+
+    /** Prism Stag product (shed antlers) — renewable optical crystal; cuts into Refined Crystal. */
+    public static final RegistryEntry<Item> PRISM_ANTLER = ITEMS.register("prism_antler",
+            key -> new Item(new Item.Properties().setId(key)));
+
+    /** Shardback drop — a reflective scale; reflector plating input. */
+    public static final RegistryEntry<Item> MIRROR_SCALE = ITEMS.register("mirror_scale",
+            key -> new Item(new Item.Properties().setId(key)));
+
+    /** Gravity Leech drop — a gravity reagent; Graviton Boots (Stage 4) and anti-grav parts elsewhere. */
+    public static final RegistryEntry<Item> GRAVITON_NODE = ITEMS.register("graviton_node",
+            key -> new Item(new Item.Properties().setId(key)));
+
+    /**
+     * Pirate Captain's log: marks one pirate stash for the captain's killer ({@code item/CaptainsLedgerItem}).
+     * Given straight to the credited killer, never dropped on the ground.
+     */
+    public static final RegistryEntry<Item> CAPTAINS_LEDGER = ITEMS.register("captains_ledger",
+            key -> new CaptainsLedgerItem(new Item.Properties().stacksTo(1).setId(key)));
+
+    /**
+     * Static Swarm, bottled (a glass bottle on a weakened swarm): thrown, it briefly disables
+     * mechanical creatures ({@code entity/wrecks/StaticJarBurst}). Tagged as a tool.
+     */
+    public static final RegistryEntry<Item> STATIC_JAR = ITEMS.register("static_jar",
+            key -> new StaticJarItem(new Item.Properties().stacksTo(16).setId(key)));
+
     /**
      * Planet-boss drop — the proof you killed one, and the ecosystem's top-tier reagent.
      *
@@ -136,10 +208,14 @@ public final class ModItems {
             VOID_ESSENCE, STALKER_HIDE, STALKER_SINEW, REFINED_CRYSTAL, WORM_CHITIN,
             ORE_SLURRY, PLASMA_CELL, CONTRABAND, SALVAGED_CIRCUITRY, ANDROID_CORE,
             LUMEN_DUST, RESONANT_MEMBRANE, LODE_SCUTE, CHARGED_SAND, SLAG_CARAPACE, HEAT_GLAND,
+            RIME_WOOL, COOLANT_MILK, CRYO_FANG,
+            DRIFTER_SPORES, BLOOM_HEART, MOSSBACK_HIDE, RAW_MOSSBACK, COOKED_MOSSBACK, LEVIATHAN_BARNACLE,
+            PRISM_ANTLER, MIRROR_SCALE,
+            GRAVITON_NODE, CAPTAINS_LEDGER,
             APEX_TROPHY);
 
     /** Crafted deployables — shown in the creative tab after the drops. */
-    private static final List<RegistryEntry<Item>> DEPLOYABLES = List.of(DRONE_SHELL, CREATURE_SADDLE);
+    private static final List<RegistryEntry<Item>> DEPLOYABLES = List.of(DRONE_SHELL, CREATURE_SADDLE, STATIC_JAR);
 
     private ModItems() {
     }

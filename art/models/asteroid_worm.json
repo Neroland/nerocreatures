@@ -1,0 +1,589 @@
+{
+  "format": 1,
+  "id": "asteroid_worm",
+  "name": "Asteroid Worm",
+  "habitat": "asteroid",
+  "size_class": "L",
+  "silhouette": "a segmented arc with the front third reared up and a four-petal ring maw",
+  "hitbox_guide": [2.0, 1.1],
+  "texture": {"width": 128, "height": 128},
+  "render_type": "cutout",
+  "renderer": {"scale": 1.0, "shadow": 1.0},
+  "materials": ["rust", "gunmetal"],
+  "accent": "accent",
+  "glow_organs": ["maw throat ring (the emerge bite)"],
+  "radiant": null,
+  "parts": [
+    {
+      "name": "head",
+      "parent": null,
+      "pivot": [0, 8.4, -13.9],
+      "rotation": [-30, 0, 0],
+      "cubes": [
+        {"name": "skull", "origin": [-5, -5, -3.5], "size": [10, 10, 7], "uv": [0, 0]},
+        {"name": "brow", "origin": [-3, -6, -1], "size": [6, 1, 4], "uv": [14, 17]}
+      ]
+    },
+    {
+      "name": "petal_t",
+      "parent": "head",
+      "pivot": [0, -5, -3.5],
+      "rotation": [-28, 0, 0],
+      "cubes": [
+        {"name": "blade", "origin": [-3, 0, -6], "size": [6, 1, 6], "uv": [62, 29]},
+        {"name": "fang", "origin": [-1, 0, -8], "size": [2, 1, 2], "uv": [88, 25]}
+      ]
+    },
+    {
+      "name": "petal_b",
+      "parent": "head",
+      "pivot": [0, 5, -3.5],
+      "rotation": [28, 0, 0],
+      "uv_like": "petal_t",
+      "cubes": [
+        {"name": "blade", "origin": [-3, -1, -6], "size": [6, 1, 6], "uv": [62, 29], "mirror": true},
+        {"name": "fang", "origin": [-1, -1, -8], "size": [2, 1, 2], "uv": [88, 25], "mirror": true}
+      ]
+    },
+    {
+      "name": "petal_l",
+      "parent": "head",
+      "pivot": [5, 0, -3.5],
+      "rotation": [0, -28, 0],
+      "cubes": [
+        {"name": "blade", "origin": [-1, -3, -6], "size": [1, 6, 6], "uv": [0, 17]},
+        {"name": "fang", "origin": [-1, -1, -8], "size": [1, 2, 2], "uv": [88, 21]}
+      ]
+    },
+    {
+      "name": "petal_r",
+      "parent": "head",
+      "pivot": [-5, 0, -3.5],
+      "rotation": [0, 28, 0],
+      "uv_like": "petal_l",
+      "cubes": [
+        {"name": "blade", "origin": [0, -3, -6], "size": [1, 6, 6], "uv": [0, 17], "mirror": true},
+        {"name": "fang", "origin": [0, -1, -8], "size": [1, 2, 2], "uv": [88, 21], "mirror": true}
+      ]
+    },
+    {
+      "name": "seg_1",
+      "parent": null,
+      "pivot": [0, 12.7, -9.3],
+      "rotation": [-58, 0, 0],
+      "cubes": [
+        {"name": "ring", "origin": [-4.5, -4.5, -3.5], "size": [9, 9, 7], "uv": [34, 0]},
+        {"name": "ridge", "origin": [-1.5, -5.5, -2], "size": [3, 1, 4], "uv": [14, 22]}
+      ]
+    },
+    {
+      "name": "seg_2",
+      "parent": null,
+      "pivot": [0, 17.0, -5.3],
+      "rotation": [-36, 0, 0],
+      "cubes": [
+        {"name": "ring", "origin": [-4.5, -4.5, -3.5], "size": [9, 9, 7], "uv": [66, 0]},
+        {"name": "ridge", "origin": [-1.5, -5.5, -2], "size": [3, 1, 4], "uv": [22, 30]}
+      ]
+    },
+    {
+      "name": "seg_3",
+      "parent": null,
+      "pivot": [0, 19.4, 0.1],
+      "rotation": [-12, 0, 0],
+      "cubes": [
+        {"name": "ring", "origin": [-4.0, -4.0, -3.5], "size": [8, 8, 7], "uv": [98, 0]},
+        {"name": "ridge", "origin": [-1.5, -5.0, -2], "size": [3, 1, 4], "uv": [36, 30]}
+      ]
+    },
+    {
+      "name": "seg_4",
+      "parent": null,
+      "pivot": [0, 20.0, 6.0],
+      "rotation": [0, 0, 0],
+      "cubes": [
+        {"name": "ring", "origin": [-4.0, -4.0, -3.5], "size": [8, 8, 7], "uv": [98, 15]},
+        {"name": "ridge", "origin": [-1.5, -5.0, -2], "size": [3, 1, 4], "uv": [86, 30]}
+      ]
+    },
+    {
+      "name": "seg_5",
+      "parent": null,
+      "pivot": [0, 20.5, 12.0],
+      "rotation": [0, 0, 0],
+      "cubes": [
+        {"name": "ring", "origin": [-3.5, -3.5, -3.5], "size": [7, 7, 7], "uv": [34, 16]},
+        {"name": "ridge", "origin": [-1.5, -4.5, -2], "size": [3, 1, 4], "uv": [100, 30]}
+      ]
+    },
+    {
+      "name": "seg_6",
+      "parent": null,
+      "pivot": [0, 21.0, 18.0],
+      "rotation": [0, 0, 0],
+      "cubes": [
+        {"name": "ring", "origin": [-3.0, -3.0, -3.5], "size": [6, 6, 7], "uv": [62, 16]},
+        {"name": "ridge", "origin": [-1.5, -4.0, -2], "size": [3, 1, 4], "uv": [114, 30]}
+      ]
+    },
+    {
+      "name": "seg_7",
+      "parent": null,
+      "pivot": [0, 22.0, 24.0],
+      "rotation": [0, 0, 0],
+      "cubes": [
+        {"name": "ring", "origin": [-2.0, -2.0, -3.5], "size": [4, 4, 7], "uv": [0, 29]},
+        {"name": "ridge", "origin": [-1.5, -3.0, -2], "size": [3, 1, 4], "uv": [22, 35]},
+        {"name": "spike", "origin": [-1, -1, 3.5], "size": [2, 2, 3], "uv": [88, 16]}
+      ]
+    }
+  ],
+  "procedural": {
+    "wave": [
+      {"part": "seg_1", "axis": "y", "frequency": 0.07, "phase": 0, "amplitude": 4, "fade_with_walk": true},
+      {"part": "seg_2", "axis": "y", "frequency": 0.07, "phase": -45, "amplitude": 4, "fade_with_walk": true},
+      {"part": "seg_3", "axis": "y", "frequency": 0.07, "phase": -90, "amplitude": 4, "fade_with_walk": true},
+      {"part": "seg_4", "axis": "y", "frequency": 0.07, "phase": -135, "amplitude": 4, "fade_with_walk": true},
+      {"part": "seg_5", "axis": "y", "frequency": 0.07, "phase": -180, "amplitude": 4, "fade_with_walk": true},
+      {"part": "seg_6", "axis": "y", "frequency": 0.07, "phase": -225, "amplitude": 4, "fade_with_walk": true},
+      {"part": "seg_7", "axis": "y", "frequency": 0.07, "phase": -270, "amplitude": 4, "fade_with_walk": true}
+    ],
+    "look": [
+      {"part": "head", "yaw": 0.5, "pitch": 0.4, "limit": 30}
+    ]
+  },
+  "clips": {
+    "idle": {
+      "length": 50,
+      "loop": true,
+      "key_pose": 12,
+      "note": "maw petals flex open and shut in a slow ring, one after the other; the reared neck sways",
+      "tracks": {
+        "petal_t": {
+          "rot": [
+            {"t": 0, "v": [-0.0, 0.0, 0.0]},
+            {"t": 12, "v": [-14.0, 0.0, 0.0], "ease": "smooth"},
+            {"t": 25, "v": [-0.0, 0.0, 0.0], "ease": "smooth"},
+            {"t": 37, "v": [14.0, -0.0, -0.0], "ease": "smooth"},
+            {"t": 50, "v": [-0.0, 0.0, 0.0], "ease": "smooth"}
+          ]
+        },
+        "petal_l": {
+          "rot": [
+            {"t": 0, "v": [-0.0, 14.0, -0.0]},
+            {"t": 12, "v": [0.0, -0.0, 0.0], "ease": "smooth"},
+            {"t": 25, "v": [0.0, -14.0, 0.0], "ease": "smooth"},
+            {"t": 37, "v": [0.0, -0.0, 0.0], "ease": "smooth"},
+            {"t": 50, "v": [-0.0, 14.0, -0.0], "ease": "smooth"}
+          ]
+        },
+        "petal_b": {
+          "rot": [
+            {"t": 0, "v": [-0.0, -0.0, -0.0]},
+            {"t": 12, "v": [-14.0, -0.0, -0.0], "ease": "smooth"},
+            {"t": 25, "v": [0.0, 0.0, 0.0], "ease": "smooth"},
+            {"t": 37, "v": [14.0, 0.0, 0.0], "ease": "smooth"},
+            {"t": 50, "v": [-0.0, -0.0, -0.0], "ease": "smooth"}
+          ]
+        },
+        "petal_r": {
+          "rot": [
+            {"t": 0, "v": [0.0, 14.0, 0.0]},
+            {"t": 12, "v": [-0.0, -0.0, -0.0], "ease": "smooth"},
+            {"t": 25, "v": [-0.0, -14.0, -0.0], "ease": "smooth"},
+            {"t": 37, "v": [0.0, 0.0, 0.0], "ease": "smooth"},
+            {"t": 50, "v": [0.0, 14.0, 0.0], "ease": "smooth"}
+          ]
+        },
+        "head": {
+          "rot": [
+            {"t": 0, "v": [-2.83, -0.0, -0.0]},
+            {"t": 12, "v": [2.83, 0.0, 0.0], "ease": "smooth"},
+            {"t": 25, "v": [2.83, 0.0, 0.0], "ease": "smooth"},
+            {"t": 37, "v": [-2.83, -0.0, -0.0], "ease": "smooth"},
+            {"t": 50, "v": [-2.83, -0.0, -0.0], "ease": "smooth"}
+          ]
+        }
+      }
+    },
+    "move": {
+      "length": 20,
+      "loop": true,
+      "key_pose": 5,
+      "note": "travelling body wave: a hump and a sideways kink run from head to tail; dust trail is a particle, not a clip",
+      "tracks": {
+        "head": {
+          "pos": [
+            {"t": 0, "v": [0.0, -0.0, 0.0]},
+            {"t": 5, "v": [0.0, -1.5, 0.0], "ease": "smooth"},
+            {"t": 10, "v": [0.0, -0.0, 0.0], "ease": "smooth"},
+            {"t": 15, "v": [-0.0, 1.5, -0.0], "ease": "smooth"},
+            {"t": 20, "v": [0.0, -0.0, 0.0], "ease": "smooth"}
+          ],
+          "rot": [
+            {"t": 0, "v": [-0.0, -7.0, -0.0]},
+            {"t": 5, "v": [0.0, 0.0, 0.0], "ease": "smooth"},
+            {"t": 10, "v": [0.0, 7.0, 0.0], "ease": "smooth"},
+            {"t": 15, "v": [0.0, 0.0, 0.0], "ease": "smooth"},
+            {"t": 20, "v": [-0.0, -7.0, -0.0], "ease": "smooth"}
+          ]
+        },
+        "seg_1": {
+          "pos": [
+            {"t": 0, "v": [-0.0, 1.06, -0.0]},
+            {"t": 5, "v": [0.0, -1.06, 0.0], "ease": "smooth"},
+            {"t": 10, "v": [0.0, -1.06, 0.0], "ease": "smooth"},
+            {"t": 15, "v": [-0.0, 1.06, -0.0], "ease": "smooth"},
+            {"t": 20, "v": [-0.0, 1.06, -0.0], "ease": "smooth"}
+          ],
+          "rot": [
+            {"t": 0, "v": [-0.0, -4.95, -0.0]},
+            {"t": 5, "v": [-0.0, -4.95, -0.0], "ease": "smooth"},
+            {"t": 10, "v": [0.0, 4.95, 0.0], "ease": "smooth"},
+            {"t": 15, "v": [0.0, 4.95, 0.0], "ease": "smooth"},
+            {"t": 20, "v": [-0.0, -4.95, -0.0], "ease": "smooth"}
+          ]
+        },
+        "seg_2": {
+          "pos": [
+            {"t": 0, "v": [-0.0, 1.5, -0.0]},
+            {"t": 5, "v": [0.0, -0.0, 0.0], "ease": "smooth"},
+            {"t": 10, "v": [0.0, -1.5, 0.0], "ease": "smooth"},
+            {"t": 15, "v": [0.0, -0.0, 0.0], "ease": "smooth"},
+            {"t": 20, "v": [-0.0, 1.5, -0.0], "ease": "smooth"}
+          ],
+          "rot": [
+            {"t": 0, "v": [-0.0, -0.0, -0.0]},
+            {"t": 5, "v": [-0.0, -7.0, -0.0], "ease": "smooth"},
+            {"t": 10, "v": [0.0, 0.0, 0.0], "ease": "smooth"},
+            {"t": 15, "v": [0.0, 7.0, 0.0], "ease": "smooth"},
+            {"t": 20, "v": [-0.0, -0.0, -0.0], "ease": "smooth"}
+          ]
+        },
+        "seg_3": {
+          "pos": [
+            {"t": 0, "v": [-0.0, 1.06, -0.0]},
+            {"t": 5, "v": [-0.0, 1.06, -0.0], "ease": "smooth"},
+            {"t": 10, "v": [0.0, -1.06, 0.0], "ease": "smooth"},
+            {"t": 15, "v": [0.0, -1.06, 0.0], "ease": "smooth"},
+            {"t": 20, "v": [-0.0, 1.06, -0.0], "ease": "smooth"}
+          ],
+          "rot": [
+            {"t": 0, "v": [0.0, 4.95, 0.0]},
+            {"t": 5, "v": [-0.0, -4.95, -0.0], "ease": "smooth"},
+            {"t": 10, "v": [-0.0, -4.95, -0.0], "ease": "smooth"},
+            {"t": 15, "v": [0.0, 4.95, 0.0], "ease": "smooth"},
+            {"t": 20, "v": [0.0, 4.95, 0.0], "ease": "smooth"}
+          ]
+        },
+        "seg_4": {
+          "pos": [
+            {"t": 0, "v": [-0.0, 0.0, -0.0]},
+            {"t": 5, "v": [-0.0, 1.5, -0.0], "ease": "smooth"},
+            {"t": 10, "v": [0.0, -0.0, 0.0], "ease": "smooth"},
+            {"t": 15, "v": [0.0, -1.5, 0.0], "ease": "smooth"},
+            {"t": 20, "v": [-0.0, 0.0, -0.0], "ease": "smooth"}
+          ],
+          "rot": [
+            {"t": 0, "v": [0.0, 7.0, 0.0]},
+            {"t": 5, "v": [-0.0, -0.0, -0.0], "ease": "smooth"},
+            {"t": 10, "v": [-0.0, -7.0, -0.0], "ease": "smooth"},
+            {"t": 15, "v": [0.0, 0.0, 0.0], "ease": "smooth"},
+            {"t": 20, "v": [0.0, 7.0, 0.0], "ease": "smooth"}
+          ]
+        },
+        "seg_5": {
+          "pos": [
+            {"t": 0, "v": [0.0, -1.06, 0.0]},
+            {"t": 5, "v": [-0.0, 1.06, -0.0], "ease": "smooth"},
+            {"t": 10, "v": [-0.0, 1.06, -0.0], "ease": "smooth"},
+            {"t": 15, "v": [0.0, -1.06, 0.0], "ease": "smooth"},
+            {"t": 20, "v": [0.0, -1.06, 0.0], "ease": "smooth"}
+          ],
+          "rot": [
+            {"t": 0, "v": [0.0, 4.95, 0.0]},
+            {"t": 5, "v": [0.0, 4.95, 0.0], "ease": "smooth"},
+            {"t": 10, "v": [-0.0, -4.95, -0.0], "ease": "smooth"},
+            {"t": 15, "v": [-0.0, -4.95, -0.0], "ease": "smooth"},
+            {"t": 20, "v": [0.0, 4.95, 0.0], "ease": "smooth"}
+          ]
+        },
+        "seg_6": {
+          "pos": [
+            {"t": 0, "v": [0.0, -1.5, 0.0]},
+            {"t": 5, "v": [-0.0, 0.0, -0.0], "ease": "smooth"},
+            {"t": 10, "v": [-0.0, 1.5, -0.0], "ease": "smooth"},
+            {"t": 15, "v": [0.0, -0.0, 0.0], "ease": "smooth"},
+            {"t": 20, "v": [0.0, -1.5, 0.0], "ease": "smooth"}
+          ],
+          "rot": [
+            {"t": 0, "v": [0.0, 0.0, 0.0]},
+            {"t": 5, "v": [0.0, 7.0, 0.0], "ease": "smooth"},
+            {"t": 10, "v": [-0.0, -0.0, -0.0], "ease": "smooth"},
+            {"t": 15, "v": [-0.0, -7.0, -0.0], "ease": "smooth"},
+            {"t": 20, "v": [0.0, 0.0, 0.0], "ease": "smooth"}
+          ]
+        },
+        "seg_7": {
+          "pos": [
+            {"t": 0, "v": [0.0, -1.06, 0.0]},
+            {"t": 5, "v": [0.0, -1.06, 0.0], "ease": "smooth"},
+            {"t": 10, "v": [-0.0, 1.06, -0.0], "ease": "smooth"},
+            {"t": 15, "v": [-0.0, 1.06, -0.0], "ease": "smooth"},
+            {"t": 20, "v": [0.0, -1.06, 0.0], "ease": "smooth"}
+          ],
+          "rot": [
+            {"t": 0, "v": [-0.0, -4.95, -0.0]},
+            {"t": 5, "v": [0.0, 4.95, 0.0], "ease": "smooth"},
+            {"t": 10, "v": [0.0, 4.95, 0.0], "ease": "smooth"},
+            {"t": 15, "v": [-0.0, -4.95, -0.0], "ease": "smooth"},
+            {"t": 20, "v": [-0.0, -4.95, -0.0], "ease": "smooth"}
+          ]
+        }
+      }
+    },
+    "ability": {
+      "length": 40,
+      "loop": false,
+      "key_pose": 20,
+      "telegraph": 12,
+      "damaging": true,
+      "glow": [
+        {"t": 0, "v": 0.35},
+        {"t": 12, "v": 1.0},
+        {"t": 28, "v": 1.0},
+        {"t": 40, "v": 0.35}
+      ],
+      "note": "emerge (timed, 40 ticks): neck coils low and the maw shuts through the 12-tick telegraph, then the front half rears to full height with all four petals wide; bite lands as they clap shut at tick 28",
+      "tracks": {
+        "seg_5": {
+          "pos": [
+            {"t": 0, "v": [0.0, 0.0, 0.0]},
+            {"t": 12, "v": [0.0, 0.0, 0.0], "ease": "smooth"},
+            {"t": 17, "v": [0.0, -0.02, 0.05], "ease": "smooth"},
+            {"t": 30, "v": [0.0, -0.02, 0.05]},
+            {"t": 40, "v": [0.0, 0.0, 0.0], "ease": "smooth"}
+          ],
+          "rot": [
+            {"t": 0, "v": [0.0, 0.0, 0.0]},
+            {"t": 12, "v": [0.0, 0.0, 0.0], "ease": "smooth"},
+            {"t": 17, "v": [-10.0, 0.0, 0.0], "ease": "smooth"},
+            {"t": 30, "v": [-10.0, 0.0, 0.0]},
+            {"t": 40, "v": [0.0, 0.0, 0.0], "ease": "smooth"}
+          ]
+        },
+        "seg_4": {
+          "pos": [
+            {"t": 0, "v": [0.0, 0.0, 0.0]},
+            {"t": 12, "v": [0.0, 0.0, 0.0], "ease": "smooth"},
+            {"t": 17, "v": [0.0, -1.72, 0.6], "ease": "smooth"},
+            {"t": 30, "v": [0.0, -1.72, 0.6]},
+            {"t": 40, "v": [0.0, 0.0, 0.0], "ease": "smooth"}
+          ],
+          "rot": [
+            {"t": 0, "v": [0.0, 0.0, 0.0]},
+            {"t": 12, "v": [0.0, 0.0, 0.0], "ease": "smooth"},
+            {"t": 17, "v": [-34.0, 0.0, 0.0], "ease": "smooth"},
+            {"t": 30, "v": [-34.0, 0.0, 0.0]},
+            {"t": 40, "v": [0.0, 0.0, 0.0], "ease": "smooth"}
+          ]
+        },
+        "seg_3": {
+          "pos": [
+            {"t": 0, "v": [0.0, 0.0, 0.0]},
+            {"t": 12, "v": [0.0, 0.41, -0.06], "ease": "smooth"},
+            {"t": 17, "v": [0.0, -5.42, 2.64], "ease": "smooth"},
+            {"t": 30, "v": [0.0, -5.42, 2.64]},
+            {"t": 40, "v": [0.0, 0.0, 0.0], "ease": "smooth"}
+          ],
+          "rot": [
+            {"t": 0, "v": [0.0, 0.0, 0.0]},
+            {"t": 12, "v": [8.0, 0.0, 0.0], "ease": "smooth"},
+            {"t": 17, "v": [-50.0, 0.0, 0.0], "ease": "smooth"},
+            {"t": 30, "v": [-50.0, 0.0, 0.0]},
+            {"t": 40, "v": [0.0, 0.0, 0.0], "ease": "smooth"}
+          ]
+        },
+        "seg_2": {
+          "pos": [
+            {"t": 0, "v": [0.0, 0.0, 0.0]},
+            {"t": 12, "v": [0.0, 1.87, -0.6], "ease": "smooth"},
+            {"t": 17, "v": [0.0, -8.65, 6.18], "ease": "smooth"},
+            {"t": 30, "v": [0.0, -8.65, 6.18]},
+            {"t": 40, "v": [0.0, 0.0, 0.0], "ease": "smooth"}
+          ],
+          "rot": [
+            {"t": 0, "v": [0.0, 0.0, 0.0]},
+            {"t": 12, "v": [22.0, 0.0, 0.0], "ease": "smooth"},
+            {"t": 17, "v": [-46.0, 0.0, 0.0], "ease": "smooth"},
+            {"t": 30, "v": [-46.0, 0.0, 0.0]},
+            {"t": 40, "v": [0.0, 0.0, 0.0], "ease": "smooth"}
+          ]
+        },
+        "seg_1": {
+          "pos": [
+            {"t": 0, "v": [0.0, 0.0, 0.0]},
+            {"t": 12, "v": [0.0, 4.23, -2.24], "ease": "smooth"},
+            {"t": 17, "v": [0.0, -10.32, 9.67], "ease": "smooth"},
+            {"t": 30, "v": [0.0, -10.32, 9.67]},
+            {"t": 40, "v": [0.0, 0.0, 0.0], "ease": "smooth"}
+          ],
+          "rot": [
+            {"t": 0, "v": [0.0, 0.0, 0.0]},
+            {"t": 12, "v": [34.0, 0.0, 0.0], "ease": "smooth"},
+            {"t": 17, "v": [-30.0, 0.0, 0.0], "ease": "smooth"},
+            {"t": 30, "v": [-30.0, 0.0, 0.0]},
+            {"t": 40, "v": [0.0, 0.0, 0.0], "ease": "smooth"}
+          ]
+        },
+        "head": {
+          "pos": [
+            {"t": 0, "v": [0.0, 0.0, 0.0]},
+            {"t": 12, "v": [0.0, 6.94, -3.84], "ease": "smooth"},
+            {"t": 17, "v": [0.0, -11.78, 12.03], "ease": "smooth"},
+            {"t": 30, "v": [0.0, -11.78, 12.03]},
+            {"t": 40, "v": [0.0, 0.0, 0.0], "ease": "smooth"}
+          ],
+          "rot": [
+            {"t": 0, "v": [0.0, 0.0, 0.0]},
+            {"t": 12, "v": [24.0, 0.0, 0.0], "ease": "smooth"},
+            {"t": 17, "v": [-22.0, 0.0, 0.0], "ease": "smooth"},
+            {"t": 30, "v": [-22.0, 0.0, 0.0]},
+            {"t": 40, "v": [0.0, 0.0, 0.0], "ease": "smooth"}
+          ]
+        },
+        "petal_t": {
+          "rot": [
+            {"t": 0, "v": [0.0, 0.0, 0.0]},
+            {"t": 12, "v": [27.6, -0.0, -0.0], "ease": "smooth"},
+            {"t": 17, "v": [-46.0, 0.0, 0.0], "ease": "smooth"},
+            {"t": 24, "v": [-46.0, 0.0, 0.0]},
+            {"t": 28, "v": [32.2, -0.0, -0.0], "ease": "smooth"},
+            {"t": 40, "v": [0.0, 0.0, 0.0], "ease": "smooth"}
+          ]
+        },
+        "petal_b": {
+          "rot": [
+            {"t": 0, "v": [0.0, 0.0, 0.0]},
+            {"t": 12, "v": [-27.6, -0.0, -0.0], "ease": "smooth"},
+            {"t": 17, "v": [46.0, 0.0, 0.0], "ease": "smooth"},
+            {"t": 24, "v": [46.0, 0.0, 0.0]},
+            {"t": 28, "v": [-32.2, -0.0, -0.0], "ease": "smooth"},
+            {"t": 40, "v": [0.0, 0.0, 0.0], "ease": "smooth"}
+          ]
+        },
+        "petal_l": {
+          "rot": [
+            {"t": 0, "v": [0.0, 0.0, 0.0]},
+            {"t": 12, "v": [-0.0, 27.6, -0.0], "ease": "smooth"},
+            {"t": 17, "v": [0.0, -46.0, 0.0], "ease": "smooth"},
+            {"t": 24, "v": [0.0, -46.0, 0.0]},
+            {"t": 28, "v": [-0.0, 32.2, -0.0], "ease": "smooth"},
+            {"t": 40, "v": [0.0, 0.0, 0.0], "ease": "smooth"}
+          ]
+        },
+        "petal_r": {
+          "rot": [
+            {"t": 0, "v": [0.0, 0.0, 0.0]},
+            {"t": 12, "v": [-0.0, -27.6, -0.0], "ease": "smooth"},
+            {"t": 17, "v": [0.0, 46.0, 0.0], "ease": "smooth"},
+            {"t": 24, "v": [0.0, 46.0, 0.0]},
+            {"t": 28, "v": [-0.0, -32.2, -0.0], "ease": "smooth"},
+            {"t": 40, "v": [0.0, 0.0, 0.0], "ease": "smooth"}
+          ]
+        }
+      }
+    },
+    "hurt": {
+      "length": 6,
+      "loop": false,
+      "key_pose": 2,
+      "note": "segments compress toward the middle, head snaps back, petals clamp shut",
+      "tracks": {
+        "head": {
+          "pos": [
+            {"t": 0, "v": [0.0, 0.0, 0.0]},
+            {"t": 2, "v": [0.0, 1.0, 3.0], "ease": "smooth"},
+            {"t": 6, "v": [0.0, 0.0, 0.0], "ease": "smooth"}
+          ],
+          "rot": [
+            {"t": 0, "v": [0.0, 0.0, 0.0]},
+            {"t": 2, "v": [-14.0, 0.0, 0.0], "ease": "smooth"},
+            {"t": 6, "v": [0.0, 0.0, 0.0], "ease": "smooth"}
+          ]
+        },
+        "seg_1": {
+          "pos": [
+            {"t": 0, "v": [0.0, 0.0, 0.0]},
+            {"t": 2, "v": [0.0, 1.0, 2.5], "ease": "smooth"},
+            {"t": 6, "v": [0.0, 0.0, 0.0], "ease": "smooth"}
+          ]
+        },
+        "seg_2": {
+          "pos": [
+            {"t": 0, "v": [0.0, 0.0, 0.0]},
+            {"t": 2, "v": [0.0, 0.5, 2.0], "ease": "smooth"},
+            {"t": 6, "v": [0.0, 0.0, 0.0], "ease": "smooth"}
+          ]
+        },
+        "seg_3": {
+          "pos": [
+            {"t": 0, "v": [0.0, 0.0, 0.0]},
+            {"t": 2, "v": [0.0, 0.0, 1.0], "ease": "smooth"},
+            {"t": 6, "v": [0.0, 0.0, 0.0], "ease": "smooth"}
+          ]
+        },
+        "seg_5": {
+          "pos": [
+            {"t": 0, "v": [0.0, 0.0, 0.0]},
+            {"t": 2, "v": [0.0, 0.0, -1.0], "ease": "smooth"},
+            {"t": 6, "v": [0.0, 0.0, 0.0], "ease": "smooth"}
+          ]
+        },
+        "seg_6": {
+          "pos": [
+            {"t": 0, "v": [0.0, 0.0, 0.0]},
+            {"t": 2, "v": [0.0, 0.0, -2.0], "ease": "smooth"},
+            {"t": 6, "v": [0.0, 0.0, 0.0], "ease": "smooth"}
+          ]
+        },
+        "seg_7": {
+          "pos": [
+            {"t": 0, "v": [0.0, 0.0, 0.0]},
+            {"t": 2, "v": [0.0, 0.0, -3.0], "ease": "smooth"},
+            {"t": 6, "v": [0.0, 0.0, 0.0], "ease": "smooth"}
+          ]
+        },
+        "petal_t": {
+          "rot": [
+            {"t": 0, "v": [0.0, 0.0, 0.0]},
+            {"t": 2, "v": [28.0, 0.0, 0.0], "ease": "smooth"},
+            {"t": 6, "v": [0.0, 0.0, 0.0], "ease": "smooth"}
+          ]
+        },
+        "petal_b": {
+          "rot": [
+            {"t": 0, "v": [0.0, 0.0, 0.0]},
+            {"t": 2, "v": [-28.0, 0.0, 0.0], "ease": "smooth"},
+            {"t": 6, "v": [0.0, 0.0, 0.0], "ease": "smooth"}
+          ]
+        },
+        "petal_l": {
+          "rot": [
+            {"t": 0, "v": [0.0, 0.0, 0.0]},
+            {"t": 2, "v": [0.0, 28.0, 0.0], "ease": "smooth"},
+            {"t": 6, "v": [0.0, 0.0, 0.0], "ease": "smooth"}
+          ]
+        },
+        "petal_r": {
+          "rot": [
+            {"t": 0, "v": [0.0, 0.0, 0.0]},
+            {"t": 2, "v": [0.0, -28.0, 0.0], "ease": "smooth"},
+            {"t": 6, "v": [0.0, 0.0, 0.0], "ease": "smooth"}
+          ]
+        }
+      }
+    }
+  },
+  "uv_fill": 0.275
+}

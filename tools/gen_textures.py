@@ -322,6 +322,28 @@ PALETTES = {
     # 0.5.0 Cindara: basalt shell with a furnace glow, and an ash-grey wader with ember legs.
     "slag_beetle": ((60, 50, 48, 255), (250, 150, 50, 255), (26, 20, 18, 255)),
     "magma_wader": ((96, 82, 78, 255), (255, 96, 32, 255), (40, 30, 28, 255)),
+    # 0.5.0 Glacira: frost-white wool over slate horns, and a snow-pale lurker with ice-blue spines.
+    "rime_yak": ((214, 226, 234, 255), (120, 180, 220, 255), (70, 78, 92, 255)),
+    "frost_lurker": ((196, 214, 226, 255), (110, 200, 240, 255), (60, 80, 100, 255)),
+    # 0.5.0 Greenxertz: spore-violet drifter, flower-capped host, moss herd, sky-grey leviathan.
+    "spore_drifter": ((150, 112, 176, 255), (214, 240, 150, 255), (64, 44, 80, 255)),
+    "bloom_host": ((92, 120, 64, 255), (236, 110, 150, 255), (40, 54, 30, 255)),
+    "mossback": ((86, 116, 62, 255), (150, 190, 96, 255), (52, 44, 34, 255)),
+    "drift_leviathan": ((120, 140, 156, 255), (200, 230, 220, 255), (54, 64, 76, 255)),
+    # 0.5.0 Nyxara: twilight-violet stag with prism antlers, a dark charger with a mirror fan.
+    "prism_stag": ((92, 80, 124, 255), (190, 240, 250, 255), (40, 34, 58, 255)),
+    "shardback": ((58, 60, 76, 255), (220, 230, 245, 255), (24, 24, 34, 255)),
+    # 0.5.0 Asteroid: rust-iron crab with magnet-red claws, a violet leech disc.
+    "magnet_crab": ((120, 96, 84, 255), (220, 60, 50, 255), (50, 40, 36, 255)),
+    "gravity_leech": ((70, 60, 96, 255), (180, 140, 255, 255), (30, 26, 44, 255)),
+    # 0.5.0 Wrecks and Pirates: salvage-crate grey with hazard yellow, a crackling cyan swarm, a
+    # rust-and-scrap hulk, the captain's long coat with brass trim.
+    "cache_mimic": ((118, 122, 128, 255), (240, 200, 40, 255), (52, 54, 58, 255)),
+    "static_swarm": ((40, 60, 90, 255), (140, 230, 255, 255), (18, 24, 40, 255)),
+    "scrap_hulk": ((104, 90, 78, 255), (255, 74, 46, 255), (44, 38, 34, 255)),
+    "pirate_captain": ((60, 44, 50, 255), (220, 170, 70, 255), (26, 20, 24, 255)),
+    # 0.5.0 Deep space: a midnight manta with starlight speckle.
+    "void_manta": ((30, 26, 54, 255), (200, 190, 255, 255), (12, 10, 24, 255)),
 }
 
 
@@ -367,6 +389,101 @@ def heat_gland(c: Canvas, rng: random.Random) -> None:
     c.rect(7, 2, 8, 3, (110, 30, 20, 255))
 
 
+def rime_wool(c: Canvas, rng: random.Random) -> None:
+    c.disc(7.5, 8.5, 5.4, (176, 196, 210, 255))
+    c.disc(7.0, 8.0, 4.2, (226, 236, 244, 255))
+    c.speckle(rng, 10, (150, 200, 230, 255), (3, 4, 12, 13))
+
+
+def coolant_milk(c: Canvas, rng: random.Random) -> None:
+    c.rect(4, 6, 11, 13, (120, 124, 132, 255))
+    c.rect(5, 7, 10, 12, (206, 236, 250, 255))
+    c.rect(5, 7, 10, 8, (150, 214, 245, 255))
+    c.rect(3, 5, 12, 5, (90, 94, 102, 255))
+
+
+def cryo_fang(c: Canvas, rng: random.Random) -> None:
+    for i in range(8):
+        c.rect(6 + i // 3, 3 + i, 9 - i // 3, 3 + i, (196, 232, 250, 255))
+    c.rect(7, 3, 8, 9, (240, 252, 255, 255))
+    c.rect(6, 11, 9, 12, (110, 170, 210, 255))
+
+
+def drifter_spores(c: Canvas, rng: random.Random) -> None:
+    c.rect(5, 6, 10, 13, (170, 190, 200, 255))
+    c.rect(6, 7, 9, 12, (190, 150, 214, 255))
+    c.rect(6, 3, 9, 5, (150, 110, 80, 255))
+    c.speckle(rng, 6, (230, 250, 170, 255), (6, 7, 9, 12))
+
+
+def bloom_heart(c: Canvas, rng: random.Random) -> None:
+    c.disc(7.5, 8.5, 5.0, (180, 60, 110, 255))
+    c.disc(7.0, 8.0, 3.4, (240, 120, 160, 255))
+    c.disc(6.5, 7.0, 1.4, (255, 220, 120, 255))
+    c.rect(7, 2, 8, 3, (70, 110, 50, 255))
+
+
+def mossback_hide(c: Canvas, rng: random.Random) -> None:
+    c.rect(3, 4, 12, 12, (110, 80, 54, 255))
+    c.rect(4, 3, 11, 13, (110, 80, 54, 255))
+    c.speckle(rng, 16, (110, 150, 70, 255), (3, 3, 12, 13))
+
+
+def raw_mossback(c: Canvas, rng: random.Random) -> None:
+    c.disc(7.5, 8.5, 5.0, (196, 70, 70, 255))
+    c.disc(7.5, 8.5, 3.0, (230, 120, 110, 255))
+    c.rect(11, 5, 13, 6, (232, 226, 214, 255))
+
+
+def cooked_mossback(c: Canvas, rng: random.Random) -> None:
+    c.disc(7.5, 8.5, 5.0, (130, 70, 40, 255))
+    c.disc(7.5, 8.5, 3.0, (176, 110, 60, 255))
+    c.rect(11, 5, 13, 6, (232, 226, 214, 255))
+
+
+def leviathan_barnacle(c: Canvas, rng: random.Random) -> None:
+    c.disc(7.5, 9.0, 5.2, (110, 120, 128, 255))
+    c.disc(7.5, 8.0, 3.6, (170, 182, 186, 255))
+    c.disc(7.5, 7.5, 1.6, (50, 60, 70, 255))
+    c.speckle(rng, 6, (200, 230, 220, 255), (3, 4, 12, 13))
+
+
+def prism_antler(c: Canvas, rng: random.Random) -> None:
+    for x, y in ((4, 13), (5, 12), (6, 11), (7, 10), (8, 9), (9, 8), (10, 7), (11, 6), (12, 5),
+                 (8, 8), (8, 7), (8, 6), (7, 5), (11, 4), (12, 3), (6, 4)):
+        c.set(x, y, (190, 240, 250, 255))
+    for x, y in ((5, 13), (6, 12), (7, 11), (9, 9), (10, 8), (12, 6)):
+        c.set(x, y, (140, 120, 200, 255))
+
+
+def mirror_scale(c: Canvas, rng: random.Random) -> None:
+    c.diamond(7, 8, 6, (110, 116, 136, 255))
+    c.diamond(7, 8, 4, (220, 230, 245, 255))
+    c.rect(5, 6, 6, 7, (255, 255, 255, 255))
+
+
+def graviton_node(c: Canvas, rng: random.Random) -> None:
+    c.disc(7.5, 8.0, 5.0, (70, 56, 110, 255))
+    c.disc(7.5, 8.0, 3.2, (150, 120, 230, 255))
+    c.disc(7.5, 8.0, 1.4, (235, 225, 255, 255))
+    c.speckle(rng, 6, (190, 170, 255, 255), (2, 2, 13, 13))
+
+
+def static_jar(c: Canvas, rng: random.Random) -> None:
+    c.rect(5, 5, 10, 13, (170, 200, 214, 255))
+    c.rect(6, 6, 9, 12, (40, 70, 110, 255))
+    c.rect(6, 3, 9, 4, (120, 90, 60, 255))
+    c.speckle(rng, 7, (150, 240, 255, 255), (6, 6, 9, 12))
+
+
+def captains_ledger(c: Canvas, rng: random.Random) -> None:
+    c.rect(3, 3, 12, 13, (96, 52, 40, 255))
+    c.rect(4, 4, 11, 12, (130, 74, 52, 255))
+    c.rect(4, 4, 4, 12, (70, 36, 28, 255))
+    c.rect(6, 7, 10, 8, (220, 170, 70, 255))
+    c.set(8, 10, (220, 60, 50, 255))
+
+
 MOTIFS = {
     "void_essence": void_essence,
     "stalker_hide": stalker_hide,
@@ -387,6 +504,20 @@ MOTIFS = {
     "charged_sand": charged_sand,
     "slag_carapace": slag_carapace,
     "heat_gland": heat_gland,
+    "rime_wool": rime_wool,
+    "coolant_milk": coolant_milk,
+    "cryo_fang": cryo_fang,
+    "drifter_spores": drifter_spores,
+    "bloom_heart": bloom_heart,
+    "mossback_hide": mossback_hide,
+    "raw_mossback": raw_mossback,
+    "cooked_mossback": cooked_mossback,
+    "leviathan_barnacle": leviathan_barnacle,
+    "prism_antler": prism_antler,
+    "mirror_scale": mirror_scale,
+    "graviton_node": graviton_node,
+    "static_jar": static_jar,
+    "captains_ledger": captains_ledger,
 }
 
 # Creatures that have a palette (and therefore an entity sheet) but deliberately no spawn egg. The

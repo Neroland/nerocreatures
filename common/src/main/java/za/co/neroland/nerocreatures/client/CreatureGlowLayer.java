@@ -23,9 +23,10 @@ import net.minecraft.resources.Identifier;
 
 /**
  * The emissive glow layer: draws {@code <id>_glow.png} full-bright with the eyes render type
- * (additive), its colour multiplied by the clip-driven intensity (0.35 dim, 1.0 full) and a tint:
- * white normally, white-gold {@code #FFF6D6} for Radiant, crimson {@code #FF2E4D} pulsing at about
- * 1 Hz for alphas. Added only for creatures that have a glow texture.
+ * (additive), its colour multiplied by the clip-driven intensity (0.35 dim, 1.0 full, after the
+ * spec's glow rules) and a tint, first match wins: crimson {@code #FF2E4D} pulsing at about 1 Hz for
+ * alphas; the spec's glow colour for the synced variant (ore families); white-gold {@code #FFF6D6}
+ * for Radiant; white. Added only for creatures that have a glow texture.
  */
 //? if >=1.21.2 {
 public class CreatureGlowLayer extends RenderLayer<CreatureRenderState, CreatureModel> {
@@ -39,21 +40,29 @@ public class CreatureGlowLayer extends RenderLayer<CreatureRenderState, Creature
     private static final int FULL_BRIGHT = 0xF000F0;
 
     private final Identifier texture;
+    private final CreatureArt.Variants variants;
 
     //? if >=1.21.2 {
-    public CreatureGlowLayer(RenderLayerParent<CreatureRenderState, CreatureModel> parent, Identifier texture) {
+    public CreatureGlowLayer(RenderLayerParent<CreatureRenderState, CreatureModel> parent, CreatureArt art) {
     //?} else {
     /*private final AnimInput input = new AnimInput();
 
-    public CreatureGlowLayer(RenderLayerParent<Mob, CreatureModel> parent, Identifier texture) {
+    public CreatureGlowLayer(RenderLayerParent<Mob, CreatureModel> parent, CreatureArt art) {
     *///?}
         super(parent);
-        this.texture = texture;
+        this.texture = art.glowTexture();
+        this.variants = art.variants();
     }
 
     /** Opaque ARGB for the layer: tint times intensity (the eyes blend is additive). */
     static int color(double intensity, boolean radiant, boolean alpha, double age) {
-        int tint = alpha ? TINT_ALPHA : radiant ? TINT_RADIANT : TINT_NORMAL;
+        return color(intensity, radiant, alpha, age, -1);
+    }
+
+    /** As above, with the variant's glow colour ({@code -1} for none). */
+    static int color(double intensity, boolean radiant, boolean alpha, double age, int variantTint) {
+        int tint = alpha ? TINT_ALPHA : variantTint != -1 ? variantTint & 0xFFFFFF : radiant ? TINT_RADIANT
+                : TINT_NORMAL;
         double k = intensity;
         if (alpha) {
             k *= 0.6 + 0.4 * (0.5 + 0.5 * Math.sin(age * Math.PI / 10.0));
@@ -65,9 +74,10 @@ public class CreatureGlowLayer extends RenderLayer<CreatureRenderState, Creature
         return 0xFF000000 | (r << 16) | (g << 8) | b;
     }
 
-    private static int color(CreatureRenderState state) {
+    private int color(CreatureRenderState state) {
         AnimInput in = state.anim;
-        return color(state.glow, in.flag(AnimInput.FLAG_RADIANT), in.flag(AnimInput.FLAG_ALPHA), in.age);
+        return color(state.glow, in.flag(AnimInput.FLAG_RADIANT), in.flag(AnimInput.FLAG_ALPHA), in.age,
+                this.variants.glowTint(in.variant));
     }
 
     //? if >=26.3 {
@@ -127,7 +137,8 @@ public class CreatureGlowLayer extends RenderLayer<CreatureRenderState, Creature
         double glow = rig == null ? CreatureRig.GLOW_DIM : rig.evaluate(in, null, null);
         VertexConsumer consumer = buffers.getBuffer(RenderType.eyes(this.texture));
         this.getParentModel().renderToBuffer(poseStack, consumer, FULL_BRIGHT, OverlayTexture.NO_OVERLAY,
-                color(glow, in.flag(AnimInput.FLAG_RADIANT), in.flag(AnimInput.FLAG_ALPHA), ageInTicks));
+                color(glow, in.flag(AnimInput.FLAG_RADIANT), in.flag(AnimInput.FLAG_ALPHA), ageInTicks,
+                        this.variants.glowTint(in.variant)));
     }
     *///?}
 }

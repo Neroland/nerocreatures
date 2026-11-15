@@ -34,7 +34,9 @@ including on Earth and in creative.
 | **Drops** | [Void Essence](Drop-Map.md) ×0–2 |
 
 The crawler does not chase you. It **blinks**: once every five seconds it can teleport straight onto
-a target between 5 and 20 blocks away, then immediately resumes normal melee. Everything else about
+a target between 5 and 20 blocks away, then immediately resumes normal melee. Since 0.5.0 the blink
+is telegraphed: the crawler crouches with a low charge-up sound for half a second first, and leaves a
+lingering void afterimage where it stood. Everything else about
 it is unremarkable on purpose — it is fast, it is fragile, and the whole fight is decided by whether
 you saw it before it closed.
 
@@ -97,9 +99,12 @@ An armoured elite that spends most of the fight underground:
 1. **Burrow.** With a target more than 6 blocks away the worm submerges. While burrowed it takes
    **no damage**, cannot be targeted, and is not drawn at all.
 2. **Approach.** It tracks the target from below, re-pathing a few times a second.
-3. **Telegraph.** Within strike range it holds position for one second while dust erupts from the
-   ground above it. That second is your warning and your chance to move.
-4. **Strike.** It surfaces and swings once, then fights normally until it decides to dive again.
+3. **Telegraph.** Within strike range it holds position for 12 ticks while dust erupts from the
+   ground above it. That is your warning and your chance to move. While it travels under the rock it
+   leaves a dust trail on the surface, so you can track it.
+4. **Strike.** It surfaces with a ring of dust drawn at its strike range (4 blocks), rears, and bites
+   at tick 28 if you are still inside the ring; then it fights normally until it decides to dive
+   again.
 
 It can never stay under indefinitely: an unreachable target (someone on a pillar) forces it back up
 after at most 20 seconds.
@@ -128,7 +133,8 @@ Two mechanics:
 
 - **Energy aura.** Every two seconds a slime burns everything living within 2.5 blocks for 1 damage.
   Other mobs are excluded, so slimes do not melt each other — it is pressure on *you*, not a damage
-  race.
+  race. The slime gathers itself just before each pulse, and a ring of sparks marks the pulse's
+  reach. Water shorts it out: no pulse while the slime stands in water or rain.
 - **Splitting.** A slime has a size from 3 (full) down to 1. Killing a size-2 or size-3 slime leaves
   two smaller ones; size 1 is terminal. Smaller slimes are weaker and quicker, and their size drives
   health, damage, speed and their physical size together.
@@ -199,7 +205,8 @@ species. Every pirate rolls one of four loadouts when it spawns:
 Naturally spawned bands are always **recruits**; raider kits exist for deliberate encounters (a
 future NeroEvents raid, an operator summon). About 40% of any band carries a crossbow and will keep
 its distance, shooting a bolt every two seconds from up to 15 blocks — the melee half is what closes
-while you deal with the shooters.
+while you deal with the shooters. A shooter braces and aims for half a second before each bolt
+leaves, so you can see it coming.
 
 The kit is real equipment, so the weapon's damage is added to the pirate's own, and each worn piece
 can drop. Worn gear is usable: a looted iron chestplate is an ordinary iron chestplate.
@@ -230,6 +237,9 @@ from a data pack. Pirates attack players either way.
 A machine, and it behaves like one: **immune to poison, wither and hunger**, and entirely unbothered
 by the dark. It is not a flyer — it pounces and then *glides*, because it carries about 45% of normal
 gravity and a 12-block safe-fall distance. In practice it hops off ledges and floats down onto you.
+Its pounce is telegraphed: it crouches on its skids for half a second, lens brightening, then
+launches. When it dies it shorts out in a burst of sparks that nudges anything right next to it (a
+small push, never damage).
 
 Fragile enough that it is chaff on its own; the point is that it arrives while you are still dealing
 with something heavier.
@@ -252,7 +262,8 @@ The heavy frame. Same machine immunities as the drone, and a shield that turns t
 loop:
 
 1. **Shielded.** Every hit is absorbed whole — no damage, no knockback — but each one burns a
-   charge. There are four. You will hear each one land.
+   charge. There are four. You will hear each one land, and see the charges left as a row of pips
+   across its chest. While it fights with the shield up, both plates are locked in front of it.
 2. **Break.** The fourth hit shatters the shield with a loud break and a burst of sparks.
 3. **Stagger.** For three seconds the frame moves at half speed and takes **1.5× damage**. This is
    the fight; everything else is the wind-up.
@@ -332,7 +343,10 @@ to them in the same action.
 It has no target selector at all — it will not attack anything, ever — and it is a machine, so
 poison, wither and hunger do not apply to it. Every five seconds it applies one bone-meal-equivalent
 growth tick somewhere in the eight-block area around where it was put down, consuming nothing. It
-stays in that area, and it is persistent, so it is still there when you come back.
+stays in that area, and it is persistent, so it is still there when you come back. Since 0.5.0 the
+growth is a gated world change (`terraformingDroneWork`, `mobGriefing`, the loader's place check and
+your own right to build there), so it pauses while you are offline; with the key off it powers down
+and rests. Sneak near it holding a Drone Shell to see its work area outlined.
 
 Sneak-interact it with an empty hand to get the shell back. Everything about deploying, recalling,
 the work cycle and the caps is on [Pets & Drones](Pets-and-Drones.md).

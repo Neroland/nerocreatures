@@ -47,12 +47,64 @@ Every line is declared in code, not in a datapack, and the whole table is public
 | Rogue Android | `dark_biomes` | 3 | 1 |
 | Cinder Tyrant | `dark_biomes` | 1 | 1 (**gated** — see [Bosses](Bosses.md)) |
 | Terraforming Drone | — | — | never spawns; it is [deployed](Pets-and-Drones.md) |
+| Lumen Moth | `nerocreatures:habitat/luna` | 10 | 1–3 |
+| Echo Shrike | `nerocreatures:habitat/luna` | 14 | 1–2 |
+| Lode Tortoise | `nerocreatures:habitat/luna` | 6 | 1–2 |
+| Dune Loper | `nerocreatures:habitat/mars` | 8 | 1–2 |
+| Strata Hound | `nerocreatures:habitat/mars` | 10 | 1–2 |
+| Dust Devil | `nerocreatures:habitat/mars` | 12 | 1 |
+| Slag Beetle | `nerocreatures:habitat/cindara` | 10 | 1–3 |
+| Magma Wader | `nerocreatures:habitat/cindara` | 12 | 1–2 |
+| Rime Yak | `nerocreatures:habitat/glacira` | 10 | 2–4 |
+| Frost Lurker | `nerocreatures:habitat/glacira` | 8 | 1 |
+| Spore Drifter | `nerocreatures:habitat/greenxertz` | 10 | 1–3 (in the air) |
+| Bloom Host | `nerocreatures:habitat/greenxertz` | 10 | 1–2 |
+| Mossback | `nerocreatures:habitat/greenxertz` | 12 | 2–4 |
+| Drift Leviathan | `nerocreatures:habitat/greenxertz` | 1 | 1 (**gated**: at most 2 loaded per dimension) |
+| Drift Leviathan | `nerocreatures:habitat/gas_giant` | 2 | 1 (same gate) |
+| Prism Stag | `nerocreatures:habitat/nyxara` | 8 | 3–4 |
+| Shardback | `nerocreatures:habitat/nyxara` | 12 | 1–2 |
+| Magnet Crab | `nerocreatures:habitat/asteroid` | 10 | 1–3 |
+| Gravity Leech | `nerocreatures:habitat/asteroid` | 12 | 1–2 |
+| Cache Mimic | `nerocreatures:habitat/wrecks` | 4 | 1 (**gated**: space levels, `cacheMimicSpawns`) |
+| Static Swarm | `nerocreatures:habitat/wrecks` | 8 | 1 (in the air; **gated**: space levels, at most 2 per 32 blocks) |
+| Pirate Captain | `planet_biomes` | 2 | 1 (brings 2 crew) |
+| Scrap Hulk | — | — | never spawns; it [assembles](Wrecks-and-Pirates.md) where machines die |
+| Void Manta | `nerocreatures:habitat/deep_space` | 4 | 1–2 (off-Earth dimension types only) |
+| Lumen Moth | `nerocreatures:habitat/overworld_dark_forest` | 6 | 1–3 (overworld, see below) |
+| Lode Tortoise | `nerocreatures:habitat/overworld` | 3 | 1 (overworld caves, see below) |
+| Static Swarm | `nerocreatures:habitat/overworld` | 4 | 1 (overworld thunderstorms, see below) |
+
+**Habitat tags.** The 0.5.0 creatures use NeroCreatures' own one-world tags,
+`nerocreatures:habitat/<world>` (`luna`, `mars`, `cindara`, `glacira`, `greenxertz`, `nyxara`,
+`asteroid`, `wrecks`, `deep_space`, `gas_giant`), because Core's umbrella tags mix worlds. Every
+planet-mod entry is optional, so each tag is empty without that mod, and a pack may add biomes to any
+of them.
+
+## Overworld spawns
+
+Three creatures also live on Earth, so a server without a planet mod is not empty:
+
+- **Lumen Moth:** dark forests (and pale gardens), only when it is dark outside, in the air 1–4
+  blocks above the ground, at block light 7 or less. 15% of attempts that get that far succeed.
+- **Lode Tortoise:** deep caves, on a cave floor at Y 0 or below with no sky above and stone or
+  deepslate underfoot. 5% of attempts succeed.
+- **Static Swarm:** only during a thunderstorm, under open sky, at block light under 10, and never
+  where 2 swarms already drift within 32 blocks. 10% of attempts succeed. An overworld swarm leaves
+  when the storm ends or it drifts into light.
+
+All three count toward **`overworldSpawnCap`** (default 12, the most of these species alive in the
+overworld at once, counted inside the same cached census as the other caps) and both switch off with
+**`overworldSpawns`**. The per-chunk and per-dimension caps still apply. Wild overworld moths leave at
+daybreak when no player is within 32 blocks.
 
 **Weights are local, not global.** A candidate position only ever picks between the rules that
 apply *there*, so the Asteroid Worm's weight of 6 competes with nothing at all in an asteroid field
 — it is the only line in that tag. Compare weights within a column, never across the table.
 
-**No dimension guard.** Every line is biome-tagged only. A dimension guard would silently exclude
+**No dimension guard** (one exception). Every line but the Void Manta's is biome-tagged only; the
+manta's habitat tag holds `minecraft:the_void`, so its rule also requires an off-Earth dimension type
+(a void superflat or skyblock overworld never gets one). A dimension guard would silently exclude
 any planet that reuses a vanilla dimension type — Nerospace's Greenxertz reuses
 `minecraft:overworld`, which cannot be tagged without dragging the real Overworld in with it — and
 no vanilla Earth biome is a member of any `neroland:space/*` tag, so the guard would cost a planet

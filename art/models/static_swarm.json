@@ -1,0 +1,330 @@
+{
+  "format": 1,
+  "id": "static_swarm",
+  "name": "Static Swarm",
+  "habitat": "wrecks",
+  "size_class": "M",
+  "silhouette": "no body: fourteen bright motes on three tilted rings around one denser bright core",
+  "hitbox_guide": [0.9, 0.9],
+  "texture": {"width": 64, "height": 64},
+  "render_type": "translucent",
+  "renderer": {"scale": 1.0, "shadow": 0.0},
+  "materials": ["white"],
+  "accent": "accent",
+  "glow_organs": ["everything: the core, its haze and all fourteen motes (exempt from the glow cap)"],
+  "radiant": null,
+  "parts": [
+    {
+      "name": "core",
+      "parent": null,
+      "pivot": [0, 10, 0],
+      "rotation": [0, 45, 0],
+      "cubes": [
+        {"name": "core", "origin": [-2, -2, -2], "size": [4, 4, 4], "uv": [24, 0]},
+        {"name": "haze", "origin": [-3, -3, -3], "size": [6, 6, 6], "inflate": 0.5, "uv": [0, 0]},
+        {"name": "spark_a", "origin": [2, -5, -1], "size": [2, 2, 2], "uv": [32, 16]},
+        {"name": "spark_b", "origin": [-5, 2, 0], "size": [2, 2, 2], "uv": [40, 16]}
+      ]
+    },
+    {"name": "ring_a", "parent": null, "pivot": [0, 10, 0], "rotation": [0, 0, 0], "cubes": []},
+    {
+      "name": "arc_a1",
+      "parent": "ring_a",
+      "pivot": [0, 0, 0],
+      "rotation": [0, 0, 0],
+      "cubes": [
+        {"name": "mote_a", "origin": [5.0, -1.0, -10.0], "size": [2, 2, 2], "uv": [0, 12]},
+        {"name": "mote_b", "origin": [9.5, -1.5, -1.5], "size": [3, 3, 3], "uv": [40, 0]},
+        {"name": "mote_c", "origin": [5.0, -1.0, 8.0], "size": [2, 2, 2], "uv": [8, 12]}
+      ]
+    },
+    {
+      "name": "arc_a2",
+      "parent": "ring_a",
+      "pivot": [0, 0, 0],
+      "rotation": [0, 0, 0],
+      "cubes": [
+        {"name": "mote_a", "origin": [-9.5, -1.5, 5.5], "size": [3, 3, 3], "uv": [52, 0]},
+        {"name": "mote_b", "origin": [-10.0, -1.0, -7.0], "size": [2, 2, 2], "uv": [16, 12]}
+      ]
+    },
+    {"name": "ring_b", "parent": null, "pivot": [0, 10, 0], "rotation": [62, 0, 28], "cubes": []},
+    {
+      "name": "arc_b1",
+      "parent": "ring_b",
+      "pivot": [0, 0, 0],
+      "rotation": [0, 0, 0],
+      "cubes": [
+        {"name": "mote_a", "origin": [4.0, -1.0, -7.0], "size": [2, 2, 2], "uv": [36, 12]},
+        {"name": "mote_b", "origin": [7.0, -1.0, 0.0], "size": [2, 2, 2], "uv": [44, 12]},
+        {"name": "mote_c", "origin": [2.5, -1.5, 5.5], "size": [3, 3, 3], "uv": [40, 6]}
+      ]
+    },
+    {
+      "name": "arc_b2",
+      "parent": "ring_b",
+      "pivot": [0, 0, 0],
+      "rotation": [0, 0, 0],
+      "cubes": [
+        {"name": "mote_a", "origin": [-8.0, -1.0, 3.0], "size": [2, 2, 2], "uv": [52, 12]},
+        {"name": "mote_b", "origin": [-7.5, -1.5, -7.5], "size": [3, 3, 3], "uv": [52, 6]}
+      ]
+    },
+    {"name": "ring_c", "parent": null, "pivot": [0, 10, 0], "rotation": [-58, 20, -34], "cubes": []},
+    {
+      "name": "arc_c1",
+      "parent": "ring_c",
+      "pivot": [0, 0, 0],
+      "rotation": [0, 0, 0],
+      "cubes": [
+        {"name": "mote_a", "origin": [7.5, -1.5, -6.5], "size": [3, 3, 3], "uv": [24, 8]},
+        {"name": "mote_b", "origin": [7.0, -1.0, 5.0], "size": [2, 2, 2], "uv": [24, 14]}
+      ]
+    },
+    {
+      "name": "arc_c2",
+      "parent": "ring_c",
+      "pivot": [0, 0, 0],
+      "rotation": [0, 0, 0],
+      "cubes": [
+        {"name": "mote_a", "origin": [-8.0, -1.0, 6.0], "size": [2, 2, 2], "uv": [0, 16]},
+        {"name": "mote_b", "origin": [-11.0, -1.0, -3.0], "size": [2, 2, 2], "uv": [8, 16]},
+        {"name": "mote_c", "origin": [-5.0, -1.0, -10.0], "size": [2, 2, 2], "uv": [16, 16]}
+      ]
+    }
+  ],
+  "procedural": {
+    "wave": [
+      {"part": "ring_a", "axis": "x", "frequency": 0.11, "phase": 0, "amplitude": 12, "fade_with_walk": false},
+      {"part": "ring_b", "axis": "z", "frequency": 0.13, "phase": 0, "amplitude": 16, "fade_with_walk": false},
+      {"part": "ring_c", "axis": "x", "frequency": 0.09, "phase": 90, "amplitude": 18, "fade_with_walk": false}
+    ],
+    "spin": [
+      {"part": "ring_a", "axis": "y", "speed": 5, "phase": 0},
+      {"part": "ring_b", "axis": "y", "speed": -6.5, "phase": 120},
+      {"part": "ring_c", "axis": "y", "speed": 5.5, "phase": 240},
+      {"part": "core", "axis": "y", "speed": 9, "phase": 0}
+    ]
+  },
+  "clips": {
+    "idle": {
+      "length": 40,
+      "loop": true,
+      "key_pose": 10,
+      "note": "rings tumble on three axes (the waves); arcs breathe in and out and the core bobs",
+      "tracks": {
+        "arc_a1": {
+          "pos": [
+            {"t": 0, "v": [0.0, 0.0, 0.0]},
+            {"t": 20, "v": [1.0, 0.0, 0.0], "ease": "smooth"},
+            {"t": 40, "v": [0.0, 0.0, 0.0], "ease": "smooth"}
+          ]
+        },
+        "arc_a2": {
+          "pos": [
+            {"t": 0, "v": [0.0, 0.0, 0.0]},
+            {"t": 20, "v": [-1.0, 0.0, 0.0], "ease": "smooth"},
+            {"t": 40, "v": [0.0, 0.0, 0.0], "ease": "smooth"}
+          ]
+        },
+        "arc_b1": {
+          "pos": [
+            {"t": 0, "v": [0.0, 0.0, 0.0]},
+            {"t": 20, "v": [1.0, 0.0, 0.0], "ease": "smooth"},
+            {"t": 40, "v": [0.0, 0.0, 0.0], "ease": "smooth"}
+          ]
+        },
+        "arc_b2": {
+          "pos": [
+            {"t": 0, "v": [0.0, 0.0, 0.0]},
+            {"t": 20, "v": [-1.0, 0.0, 0.0], "ease": "smooth"},
+            {"t": 40, "v": [0.0, 0.0, 0.0], "ease": "smooth"}
+          ]
+        },
+        "arc_c1": {
+          "pos": [
+            {"t": 0, "v": [0.0, 0.0, 0.0]},
+            {"t": 20, "v": [1.0, 0.0, 0.0], "ease": "smooth"},
+            {"t": 40, "v": [0.0, 0.0, 0.0], "ease": "smooth"}
+          ]
+        },
+        "arc_c2": {
+          "pos": [
+            {"t": 0, "v": [0.0, 0.0, 0.0]},
+            {"t": 20, "v": [-1.0, 0.0, 0.0], "ease": "smooth"},
+            {"t": 40, "v": [0.0, 0.0, 0.0], "ease": "smooth"}
+          ]
+        },
+        "core": {
+          "pos": [
+            {"t": 0, "v": [0.0, 0.0, 0.0]},
+            {"t": 10, "v": [0.0, -1.0, 0.0], "ease": "smooth"},
+            {"t": 30, "v": [0.0, 1.0, 0.0], "ease": "smooth"},
+            {"t": 40, "v": [0.0, 0.0, 0.0], "ease": "smooth"}
+          ]
+        }
+      }
+    },
+    "move": {
+      "length": 20,
+      "loop": true,
+      "key_pose": 5,
+      "note": "cloud leans into travel, the rings lag behind the core",
+      "tracks": {
+        "ring_a": {
+          "pos": [
+            {"t": 0, "v": [0.0, 0.0, 3.0]},
+            {"t": 20, "v": [0.0, 0.0, 3.0]}
+          ],
+          "rot": [
+            {"t": 0, "v": [14.0, 0.0, 0.0]},
+            {"t": 20, "v": [14.0, 0.0, 0.0]}
+          ]
+        },
+        "ring_b": {
+          "pos": [
+            {"t": 0, "v": [0.0, 1.0, 5.0]},
+            {"t": 10, "v": [0.0, 0.0, 4.0], "ease": "smooth"},
+            {"t": 20, "v": [0.0, 1.0, 5.0], "ease": "smooth"}
+          ]
+        },
+        "ring_c": {
+          "pos": [
+            {"t": 0, "v": [0.0, -1.0, 2.0]},
+            {"t": 10, "v": [0.0, 0.0, 3.0], "ease": "smooth"},
+            {"t": 20, "v": [0.0, -1.0, 2.0], "ease": "smooth"}
+          ]
+        },
+        "core": {
+          "pos": [
+            {"t": 0, "v": [0.0, 0.0, -1.0]},
+            {"t": 20, "v": [0.0, 0.0, -1.0]}
+          ]
+        }
+      }
+    },
+    "ability": {
+      "length": 20,
+      "loop": false,
+      "key_pose": 10,
+      "damaging": false,
+      "telegraph": 10,
+      "glow": [
+        {"t": 0, "v": 0.35},
+        {"t": 10, "v": 1.0},
+        {"t": 14, "v": 1.0},
+        {"t": 20, "v": 0.35}
+      ],
+      "note": "drain pulse: every mote contracts onto the core over 10 ticks, then bursts outward and drifts back",
+      "tracks": {
+        "arc_a1": {
+          "pos": [
+            {"t": 0, "v": [0.0, 0.0, 0.0]},
+            {"t": 10, "v": [-6.0, 0.0, 0.0], "ease": "smooth"},
+            {"t": 14, "v": [5.0, 0.0, 0.0], "ease": "smooth"},
+            {"t": 20, "v": [0.0, 0.0, 0.0], "ease": "smooth"}
+          ]
+        },
+        "arc_a2": {
+          "pos": [
+            {"t": 0, "v": [0.0, 0.0, 0.0]},
+            {"t": 10, "v": [6.0, 0.0, 0.0], "ease": "smooth"},
+            {"t": 14, "v": [-5.0, 0.0, 0.0], "ease": "smooth"},
+            {"t": 20, "v": [0.0, 0.0, 0.0], "ease": "smooth"}
+          ]
+        },
+        "arc_b1": {
+          "pos": [
+            {"t": 0, "v": [0.0, 0.0, 0.0]},
+            {"t": 10, "v": [-6.0, 0.0, 0.0], "ease": "smooth"},
+            {"t": 14, "v": [5.0, 0.0, 0.0], "ease": "smooth"},
+            {"t": 20, "v": [0.0, 0.0, 0.0], "ease": "smooth"}
+          ]
+        },
+        "arc_b2": {
+          "pos": [
+            {"t": 0, "v": [0.0, 0.0, 0.0]},
+            {"t": 10, "v": [6.0, 0.0, 0.0], "ease": "smooth"},
+            {"t": 14, "v": [-5.0, 0.0, 0.0], "ease": "smooth"},
+            {"t": 20, "v": [0.0, 0.0, 0.0], "ease": "smooth"}
+          ]
+        },
+        "arc_c1": {
+          "pos": [
+            {"t": 0, "v": [0.0, 0.0, 0.0]},
+            {"t": 10, "v": [-6.0, 0.0, 0.0], "ease": "smooth"},
+            {"t": 14, "v": [5.0, 0.0, 0.0], "ease": "smooth"},
+            {"t": 20, "v": [0.0, 0.0, 0.0], "ease": "smooth"}
+          ]
+        },
+        "arc_c2": {
+          "pos": [
+            {"t": 0, "v": [0.0, 0.0, 0.0]},
+            {"t": 10, "v": [6.0, 0.0, 0.0], "ease": "smooth"},
+            {"t": 14, "v": [-5.0, 0.0, 0.0], "ease": "smooth"},
+            {"t": 20, "v": [0.0, 0.0, 0.0], "ease": "smooth"}
+          ]
+        },
+        "core": {
+          "pos": [
+            {"t": 0, "v": [0.0, 0.0, 0.0]},
+            {"t": 10, "v": [0.0, 1.0, 0.0], "ease": "smooth"},
+            {"t": 13, "v": [0.0, -2.0, 0.0], "ease": "smooth"},
+            {"t": 20, "v": [0.0, 0.0, 0.0], "ease": "smooth"}
+          ]
+        }
+      }
+    },
+    "hurt": {
+      "length": 6,
+      "loop": false,
+      "key_pose": 2,
+      "note": "motes scatter wide and return",
+      "tracks": {
+        "arc_a1": {
+          "pos": [
+            {"t": 0, "v": [0.0, 0.0, 0.0]},
+            {"t": 2, "v": [6.0, 0.0, 0.0], "ease": "smooth"},
+            {"t": 6, "v": [0.0, 0.0, 0.0], "ease": "smooth"}
+          ]
+        },
+        "arc_a2": {
+          "pos": [
+            {"t": 0, "v": [0.0, 0.0, 0.0]},
+            {"t": 2, "v": [-6.0, 0.0, 0.0], "ease": "smooth"},
+            {"t": 6, "v": [0.0, 0.0, 0.0], "ease": "smooth"}
+          ]
+        },
+        "arc_b1": {
+          "pos": [
+            {"t": 0, "v": [0.0, 0.0, 0.0]},
+            {"t": 2, "v": [6.0, 0.0, 0.0], "ease": "smooth"},
+            {"t": 6, "v": [0.0, 0.0, 0.0], "ease": "smooth"}
+          ]
+        },
+        "arc_b2": {
+          "pos": [
+            {"t": 0, "v": [0.0, 0.0, 0.0]},
+            {"t": 2, "v": [-6.0, 0.0, 0.0], "ease": "smooth"},
+            {"t": 6, "v": [0.0, 0.0, 0.0], "ease": "smooth"}
+          ]
+        },
+        "arc_c1": {
+          "pos": [
+            {"t": 0, "v": [0.0, 0.0, 0.0]},
+            {"t": 2, "v": [6.0, 0.0, 0.0], "ease": "smooth"},
+            {"t": 6, "v": [0.0, 0.0, 0.0], "ease": "smooth"}
+          ]
+        },
+        "arc_c2": {
+          "pos": [
+            {"t": 0, "v": [0.0, 0.0, 0.0]},
+            {"t": 2, "v": [-6.0, 0.0, 0.0], "ease": "smooth"},
+            {"t": 6, "v": [0.0, 0.0, 0.0], "ease": "smooth"}
+          ]
+        }
+      }
+    }
+  },
+  "uv_fill": 0.283
+}

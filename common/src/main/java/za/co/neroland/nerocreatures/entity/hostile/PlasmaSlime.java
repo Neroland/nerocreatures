@@ -76,6 +76,12 @@ public class PlasmaSlime extends NeroCreatureEntity implements Enemy {
     /** Ticks between aura pulses. 40 = once every two seconds. */
     private static final int AURA_INTERVAL_TICKS = 40;
 
+    /** The pulse clip ({@code art/models/plasma_slime.json}): 24 ticks, the pulse at tick 13. */
+    private static final int AURA_CLIP_TICKS = 24;
+
+    /** Clip tick on which the pulse lands. */
+    private static final int AURA_PULSE_FRAME = 13;
+
     /**
      * Size, kept in a plain field rather than synched data: everything it feeds (health, damage,
      * scale) is either server-only or already synced by vanilla, so a second sync would be dead
@@ -102,7 +108,8 @@ public class PlasmaSlime extends NeroCreatureEntity implements Enemy {
     @Override
     protected void registerGoals() {
         this.goalSelector.addGoal(0, new FloatGoal(this));
-        this.goalSelector.addGoal(1, new EnergyAuraGoal(this, AURA_RADIUS, AURA_DAMAGE, AURA_INTERVAL_TICKS));
+        this.goalSelector.addGoal(1, new EnergyAuraGoal(this, AURA_RADIUS, AURA_DAMAGE, AURA_INTERVAL_TICKS,
+                AURA_CLIP_TICKS, AURA_PULSE_FRAME));
         this.goalSelector.addGoal(2, new MeleeAttackGoal(this, 1.0D, true));
         this.goalSelector.addGoal(7, new WaterAvoidingRandomStrollGoal(this, 0.8D));
         this.goalSelector.addGoal(8, new LookAtPlayerGoal(this, Player.class, 8.0F));

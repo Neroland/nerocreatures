@@ -128,6 +128,19 @@ public final class NeroCreaturesConfig {
             "rimeYakFreezesWater", true, true,
             "Rime Yaks turn still surface water into frosted ice that melts back. false = the aura only slows and cools.");
 
+    public static final ConfigValue<Integer> RIME_YAK_WOOL_REGROW_TICKS = SCHEMA.intRange(
+            "rimeYakWoolRegrowTicks", 6000, 1200, 72000, true,
+            "Ticks for a shorn Rime Yak to regrow full wool.");
+
+    public static final ConfigValue<Integer> RIME_YAK_MILK_COOLDOWN_TICKS = SCHEMA.intRange(
+            "rimeYakMilkCooldownTicks", 2400, 200, 72000, true,
+            "Ticks between milkings of one Rime Yak.");
+
+    public static final ConfigValue<Boolean> PRISM_STAG_HERD_AURA = SCHEMA.bool(
+            "prismStagHerdAura", true, true,
+            "Prism Stag herds (3+ adults) give nearby players a short Regeneration I at night. false: no aura; "
+                    + "antlers still grow and shed.");
+
     public static final ConfigValue<Boolean> MOSSBACK_FERTILISES = SCHEMA.bool(
             "mossbackFertilises", true, true,
             "Mossbacks bone-meal the grass they graze. false = they graze with no effect.");
@@ -140,13 +153,18 @@ public final class NeroCreaturesConfig {
             "bloomHostSporelings", true, true,
             "Bloom Hosts raise sporelings from mobs they kill (hard caps always apply). false = no sporelings.");
 
+    public static final ConfigValue<Boolean> BLOOM_HOST_INFECTS_LIVESTOCK = SCHEMA.bool(
+            "bloomHostInfectsLivestock", false, true,
+            "Bloom Hosts may also hunt and raise sporelings from bred livestock (babies, animals in love or "
+                    + "that bred recently). Tamed, leashed and named animals are always spared. false = spared too.");
+
     public static final ConfigValue<Boolean> MAGNET_CRAB_STEALS = SCHEMA.bool(
             "magnetCrabSteals", true, true,
             "Wild Magnet Crabs pick up metal items and return them on death. false = they ignore items.");
 
     public static final ConfigValue<Boolean> MAGNET_CRAB_COLLECTS = SCHEMA.bool(
             "magnetCrabCollects", true, true,
-            "Tamed Magnet Crabs pull items their owner dropped back to the owner. false = off.");
+            "Tamed Magnet Crabs move nearby ground items (unthrown, or thrown by their owner) to the owner. false = off.");
 
     public static final ConfigValue<Boolean> SLAG_BEETLE_SMELTING = SCHEMA.bool(
             "slagBeetleSmelting", true, true,
@@ -166,11 +184,11 @@ public final class NeroCreaturesConfig {
 
     public static final ConfigValue<Boolean> CACHE_MIMIC_SPAWNS = SCHEMA.bool(
             "cacheMimicSpawns", true, true,
-            "Cache Mimics appear in wrecks.");
+            "Cache Mimics spawn in wrecks. false = no natural Cache Mimics.");
 
     public static final ConfigValue<Boolean> STATIC_SWARM_DRAIN = SCHEMA.bool(
             "staticSwarmDrain", true, true,
-            "Static Swarms drain energy from items and entities.");
+            "Static Swarms drain chargeable items (plasma cells, or items a mod registers) and thrown Static Jars disable machines. false = swarms only shock; jars do nothing.");
 
     public static final ConfigValue<Integer> STRATA_HOUND_RANGE = SCHEMA.intRange(
             "strataHoundRange", 24, 4, 48, true,

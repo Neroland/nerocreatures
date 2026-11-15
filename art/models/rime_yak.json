@@ -37,7 +37,7 @@
       "parent": "body",
       "pivot": [0, 0, 0],
       "rotation": [90, 0, 0],
-      "visible_when": {"stage": [0, 2]},
+      "visible_when": {"stage": [1, 2, 3]},
       "cubes": [
         {"name": "mantle", "origin": [-6, -9, 4], "size": [12, 17, 2], "uv": [36, 0]}
       ]
@@ -98,7 +98,7 @@
       "parent": "body",
       "pivot": [5.5, -4, 0],
       "rotation": [15, 90, 0],
-      "visible_when": {"stage": [0]},
+      "visible_when": {"stage": [2, 3]},
       "cubes": [
         {"name": "panel", "origin": [-8, 0, -0.5], "size": [16, 16, 1], "uv": [0, 23]}
       ]
@@ -109,7 +109,7 @@
       "pivot": [-5.5, -4, 0],
       "rotation": [15, -90, 0],
       "uv_like": "skirt_l",
-      "visible_when": {"stage": [0]},
+      "visible_when": {"stage": [2, 3]},
       "cubes": [
         {"name": "panel", "origin": [-8, 0, -0.5], "size": [16, 16, 1], "uv": [0, 23], "mirror": true}
       ]
@@ -120,7 +120,7 @@
       "pivot": [0, -4, -8.5],
       "rotation": [15, 180, 0],
       "uv_like": "skirt_l",
-      "visible_when": {"stage": [0]},
+      "visible_when": {"stage": [3]},
       "cubes": [
         {"name": "panel", "origin": [-8, 0, -0.5], "size": [16, 16, 1], "uv": [0, 23], "mirror": true}
       ]
@@ -131,7 +131,7 @@
       "pivot": [0, -4, 7.5],
       "rotation": [15, 0, 0],
       "uv_like": "skirt_l",
-      "visible_when": {"stage": [0]},
+      "visible_when": {"stage": [3]},
       "cubes": [
         {"name": "panel", "origin": [-8, 0, -0.5], "size": [16, 16, 1], "uv": [0, 23], "mirror": true}
       ]
@@ -305,7 +305,81 @@
       "length": 6,
       "loop": false,
       "key_pose": 2,
-      "note": "shiver: a ripple runs through the wool (curtain flares, then slaps back), back hunches, head ducks. Also the shear and milk reaction",
+      "note": "shiver: a ripple runs through the wool (curtain flares, then slaps back), back hunches, head ducks",
+      "tracks": {
+        "body": {
+          "pos": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 2, "v": [0, -1, 0.5], "ease": "smooth"},
+            {"t": 6, "v": [0, 0, 0], "ease": "smooth"}
+          ],
+          "rot": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 1, "v": [0, 0, 4], "ease": "smooth"},
+            {"t": 3, "v": [0, 0, -4], "ease": "smooth"},
+            {"t": 5, "v": [0, 0, 2], "ease": "smooth"},
+            {"t": 6, "v": [0, 0, 0], "ease": "smooth"}
+          ]
+        },
+        "head": {
+          "rot": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 2, "v": [14, 0, -6], "ease": "smooth"},
+            {"t": 6, "v": [0, 0, 0], "ease": "smooth"}
+          ]
+        },
+        "ears": {
+          "rot": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 2, "v": [-30, 0, 0], "ease": "smooth"},
+            {"t": 6, "v": [0, 0, 0], "ease": "smooth"}
+          ]
+        },
+        "skirt_l": {
+          "rot": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 2, "v": [14, 0, 0], "ease": "smooth"},
+            {"t": 4, "v": [-4, 0, 0], "ease": "smooth"},
+            {"t": 6, "v": [0, 0, 0], "ease": "smooth"}
+          ]
+        },
+        "skirt_r": {
+          "rot": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 3, "v": [14, 0, 0], "ease": "smooth"},
+            {"t": 5, "v": [-4, 0, 0], "ease": "smooth"},
+            {"t": 6, "v": [0, 0, 0], "ease": "smooth"}
+          ]
+        },
+        "skirt_f": {
+          "rot": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 2, "v": [10, 0, 0], "ease": "smooth"},
+            {"t": 6, "v": [0, 0, 0], "ease": "smooth"}
+          ]
+        },
+        "skirt_b": {
+          "rot": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 3, "v": [12, 0, 0], "ease": "smooth"},
+            {"t": 6, "v": [0, 0, 0], "ease": "smooth"}
+          ]
+        },
+        "tail": {
+          "rot": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 2, "v": [30, 0, 0], "ease": "smooth"},
+            {"t": 6, "v": [0, 0, 0], "ease": "smooth"}
+          ]
+        }
+      }
+    },
+    "ability": {
+      "length": 6,
+      "loop": false,
+      "key_pose": 2,
+      "damaging": false,
+      "note": "shear and milk shiver, 6 ticks: the same ripple as hurt, played as the timed ability pose",
       "tracks": {
         "body": {
           "pos": [

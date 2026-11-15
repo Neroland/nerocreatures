@@ -249,7 +249,8 @@ def echo_shrike(p) -> None:
 
 def lode_tortoise(p) -> None:
     """Mid mass: the umber shell, lighter toward the crown, with dark scute seams. Dark mass: slate
-    skin on head, legs and tail, and the slate nodules. Accent: ore glints in the nodules, and eyes."""
+    skin on head, legs and tail, and the slate nodules. Accent: ore glints in the nodules (the spec's
+    variants colour them by ore family), and eyes."""
 
     def scutes(key: str, step: int, seams) -> None:
         p.box(key, "umber", step)
@@ -317,10 +318,11 @@ def lode_tortoise(p) -> None:
     for key in ("nodules_1.nod_a", "nodules_1.nod_b", "nodules_1.nod_c", "nodules_2.nod_d",
                 "nodules_3.nod_e"):
         nodule(key, 1)
+        # Glints are the palest accent step so the renderer's ore-family glow colour reads true.
         for face in p.each_face(key, ("east", "north")):
-            face.glow(0, 1, 2, 1)
+            face.glow(0, 1, 2, 1, step=4, under=2)
         for face in p.each_face(key, ("west", "south")):
-            face.glow(1, 0, 2, 1)
+            face.glow(1, 0, 2, 1, step=4, under=2)
     for key in ("nodules_2.cap_a", "nodules_2.cap_b", "nodules_3.cap_c", "nodules_3.cap_d"):
         nodule(key, 2)
         p.top(key).glow(0, 0, 2, 2, step=4, under=2)

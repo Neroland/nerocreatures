@@ -11,6 +11,9 @@ import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.phys.AABB;
 
+import za.co.neroland.nerocreatures.entity.visual.CreatureVisualsHolder;
+import za.co.neroland.nerocreatures.entity.visual.VisualPose;
+
 /**
  * A slow, low-damage energy field around the creature — pressure that makes standing next to a
  * plasma-bodied mob a bad idea, without turning it into a damage-per-tick blender.
@@ -34,11 +37,16 @@ public class EnergyAuraGoal extends Goal {
     /** Never damage more than this many entities in a single pulse. */
     private static final int MAX_VICTIMS_PER_PULSE = 8;
 
+    /** Spark particles in the pulse ring (one packet each, only when a pulse hit somebody). */
+    private static final int PULSE_RING_POINTS = 16;
+
     protected final Mob mob;
 
     private final double radius;
     private final float damage;
     private final int intervalTicks;
+    private final int clipTicks;
+    private final int pulseFrame;
 
     private int ticksToPulse;
 
@@ -49,7 +57,18 @@ public class EnergyAuraGoal extends Goal {
      * @param intervalTicks ticks between pulses (20 = once a second)
      */
     public EnergyAuraGoal(Mob mob, double radius, float damage, int intervalTicks) {
+        this(mob, radius, damage, intervalTicks, 0, 0);
+    }
+
+    /**
+     * As {@link #EnergyAuraGoal(Mob, double, float, int)}, plus a telegraphed clip: when somebody is
+     * in range {@code pulseFrame} ticks before a pulse, the mob starts its {@code ability} pose
+     * ({@code clipTicks} long) so the pulse lands on the clip's key frame.
+     */
+    public EnergyAuraGoal(Mob mob, double radius, float damage, int intervalTicks, int clipTicks, int pulseFrame) {
         this.mob = mob;
+        this.clipTicks = Math.max(0, clipTicks);
+        this.pulseFrame = Math.max(0, Math.min(pulseFrame, intervalTicks - 1));
         this.radius = radius;
         this.damage = damage;
         this.intervalTicks = Math.max(1, intervalTicks);
@@ -80,10 +99,17 @@ public class EnergyAuraGoal extends Goal {
     @Override
     public void tick() {
         if (--this.ticksToPulse > 0) {
+            if (this.clipTicks > 0 && this.ticksToPulse == this.pulseFrame && !this.paused()
+                    && this.mob instanceof CreatureVisualsHolder holder
+                    && this.mob.level() instanceof ServerLevel level
+                    && !level.getEntitiesOfClass(LivingEntity.class,
+                            this.mob.getBoundingBox().inflate(this.radius), this::isVictim).isEmpty()) {
+                holder.visuals().playPose(VisualPose.ABILITY, this.clipTicks);
+            }
             return;
         }
         this.ticksToPulse = this.intervalTicks;
-        if (!(this.mob.level() instanceof ServerLevel level)) {
+        if (!(this.mob.level() instanceof ServerLevel level) || this.paused()) {
             return;
         }
         AABB box = this.mob.getBoundingBox().inflate(this.radius);
@@ -125,5 +151,22 @@ public class EnergyAuraGoal extends Goal {
         level.sendParticles(ParticleTypes.ENCHANTED_HIT, this.mob.getX(),
                 this.mob.getY() + this.mob.getBbHeight() * 0.5D, this.mob.getZ(),
                 10, this.radius * 0.4D, 0.3D, this.radius * 0.4D, 0.0D);
+        // The visible edge of the aura: a ring of sparks at the pulse radius, drifting outward.
+        double y = this.mob.getY() + 0.2D;
+        for (int i = 0; i < PULSE_RING_POINTS; i++) {
+            double angle = (Math.PI * 2.0D * i) / PULSE_RING_POINTS;
+            double dx = Math.cos(angle);
+            double dz = Math.sin(angle);
+            level.sendParticles(ParticleTypes.ELECTRIC_SPARK, this.mob.getX() + dx * this.radius, y,
+                    this.mob.getZ() + dz * this.radius, 0, dx, 0.0D, dz, 0.15D);
+        }
+    }
+
+    /**
+     * Water shorts the aura out: no pulse (and no telegraph) while the mob stands in water or in
+     * rain. Override to change.
+     */
+    protected boolean paused() {
+        return this.mob.isInWater() || this.mob.level().isRainingAt(this.mob.blockPosition());
     }
 }

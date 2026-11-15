@@ -168,7 +168,7 @@ public record SpawnRule(
     }
 
     /** This rule, counted toward and held back by {@code overworldSpawnCap} (decision 005). */
-    public SpawnRule overworldCapped() {
+    public SpawnRule capOverworld() {
         return new SpawnRule(this.creatureId, this.type, this.biomeTag, this.dimensionTag, this.weight,
                 this.minGroupSize, this.maxGroupSize, this.gate, this.positionGate, this.candidate, true);
     }

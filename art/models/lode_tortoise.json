@@ -11,8 +11,18 @@
   "renderer": {"scale": 1.0, "shadow": 0.7},
   "materials": ["umber", "slate"],
   "accent": "accent",
-  "glow_organs": ["ore glints in the shell nodules (stage 1-3 growth)", "eyes"],
+  "glow_organs": ["ore glints in the shell nodules (stage 1-3 growth), coloured by variant = ore family", "eyes"],
   "radiant": {"umber": "pearl", "slate": "pearl_deep"},
+  "variants": {
+    "0": {"name": "coal", "tint": "#E4E4EA", "glow": "#A9AEBC"},
+    "1": {"name": "copper", "tint": "#FFEDE0", "glow": "#F08A4B"},
+    "2": {"name": "iron", "tint": "#FBF1E6", "glow": "#E8C9A8"},
+    "3": {"name": "gold", "tint": "#FFF6D8", "glow": "#FFD84A"},
+    "4": {"name": "redstone", "tint": "#FFE4E0", "glow": "#FF3B2E"},
+    "5": {"name": "lapis", "tint": "#E2E8FF", "glow": "#5A86FF"},
+    "6": {"name": "diamond", "tint": "#E0FAF8", "glow": "#5FE8E0"},
+    "7": {"name": "emerald", "tint": "#E0F8E8", "glow": "#3BE87A"}
+  },
   "parts": [
     {
       "name": "shell",

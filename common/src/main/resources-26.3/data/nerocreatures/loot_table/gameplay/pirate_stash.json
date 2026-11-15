@@ -1,0 +1,122 @@
+{
+  "pools": [
+    {
+      "entries": [
+        {
+          "modifier": {
+            "add": false,
+            "count": {
+              "max": 8.0,
+              "min": 4.0,
+              "type": "minecraft:uniform"
+            },
+            "type": "minecraft:set_count"
+          },
+          "name": "nerocreatures:contraband",
+          "type": "minecraft:item"
+        }
+      ],
+      "rolls": 1
+    },
+    {
+      "entries": [
+        {
+          "modifier": {
+            "add": false,
+            "count": {
+              "max": 7.0,
+              "min": 3.0,
+              "type": "minecraft:uniform"
+            },
+            "type": "minecraft:set_count"
+          },
+          "name": "minecraft:gold_ingot",
+          "type": "minecraft:item"
+        }
+      ],
+      "rolls": 1
+    },
+    {
+      "entries": [
+        {
+          "modifier": {
+            "add": false,
+            "count": {
+              "max": 3.0,
+              "min": 1.0,
+              "type": "minecraft:uniform"
+            },
+            "type": "minecraft:set_count"
+          },
+          "name": "nerocreatures:plasma_cell",
+          "type": "minecraft:item"
+        }
+      ],
+      "rolls": 1
+    },
+    {
+      "entries": [
+        {
+          "modifier": {
+            "add": false,
+            "count": {
+              "max": 5.0,
+              "min": 2.0,
+              "type": "minecraft:uniform"
+            },
+            "type": "minecraft:set_count"
+          },
+          "name": "nerocreatures:salvaged_circuitry",
+          "type": "minecraft:item"
+        }
+      ],
+      "rolls": 1
+    },
+    {
+      "entries": [
+        {
+          "modifier": {
+            "add": false,
+            "count": {
+              "max": 4.0,
+              "min": 1.0,
+              "type": "minecraft:uniform"
+            },
+            "type": "minecraft:set_count"
+          },
+          "name": "minecraft:emerald",
+          "type": "minecraft:item"
+        }
+      ],
+      "rolls": 1
+    },
+    {
+      "condition": {
+        "chance": 0.25,
+        "type": "minecraft:random_chance"
+      },
+      "entries": [
+        {
+          "name": "nerocreatures:android_core",
+          "type": "minecraft:item"
+        }
+      ],
+      "rolls": 1
+    },
+    {
+      "condition": {
+        "chance": 0.3,
+        "type": "minecraft:random_chance"
+      },
+      "entries": [
+        {
+          "name": "minecraft:diamond",
+          "type": "minecraft:item"
+        }
+      ],
+      "rolls": 1
+    }
+  ],
+  "random_sequence": "nerocreatures:gameplay/pirate_stash",
+  "type": "minecraft:chest"
+}

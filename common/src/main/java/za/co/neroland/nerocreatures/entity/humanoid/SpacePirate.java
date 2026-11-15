@@ -37,6 +37,7 @@ import za.co.neroland.nerocreatures.NeroCreaturesCommon;
 import za.co.neroland.nerocreatures.config.NeroCreaturesConfig;
 import za.co.neroland.nerocreatures.entity.base.CreatureTier;
 import za.co.neroland.nerocreatures.entity.base.NeroCreatureEntity;
+import za.co.neroland.nerocreatures.entity.visual.VisualPose;
 
 /**
  * <b>Space Pirate</b> — the humanoid raider of the shipping lanes.
@@ -97,6 +98,18 @@ public class SpacePirate extends NeroCreatureEntity implements Enemy, RangedAtta
 
     /** The kit this pirate is carrying. Null only in the instant between construction and spawn. */
     private PirateLoadout loadout = PirateLoadout.RECRUIT_BLADE;
+
+    /** The volley clip ({@code art/models/space_pirate.json}): 20 ticks, aiming for 10, fires at 10. */
+    private static final int VOLLEY_CLIP_TICKS = 20;
+
+    /** Aim time before the bolt leaves: the readable tell. */
+    private static final int VOLLEY_AIM_TICKS = 10;
+
+    /** Ticks until the aimed bolt fires; 0 = not aiming. Not saved (a reload simply drops the shot). */
+    private int aimTicks;
+
+    /** What the aimed bolt is for. Not saved. */
+    private LivingEntity aimTarget;
 
     public SpacePirate(EntityType<? extends SpacePirate> type, Level level) {
         super(type, level, CreatureTier.COMMON);
@@ -161,9 +174,46 @@ public class SpacePirate extends NeroCreatureEntity implements Enemy, RangedAtta
         return result;
     }
 
-    /** Fires one bolt at {@code target}. Called by the ranged goal, server-side only. */
+    /**
+     * Called by the ranged goal, server-side only. A plain pirate aims first: it plays its volley
+     * clip and the bolt leaves {@value #VOLLEY_AIM_TICKS} ticks later (see {@link #tick()}), so the
+     * shot can be read and side-stepped. Subclasses whose {@code ability} clip means something else
+     * (the Pirate Captain's jet-dash) fire at once.
+     */
     @Override
     public void performRangedAttack(LivingEntity target, float velocityScale) {
+        if (!this.aimsVolley()) {
+            this.fireBolt(target);
+            return;
+        }
+        if (this.aimTicks > 0) {
+            return;
+        }
+        this.aimTicks = VOLLEY_AIM_TICKS;
+        this.aimTarget = target;
+        this.visuals().playPose(VisualPose.ABILITY, VOLLEY_CLIP_TICKS);
+    }
+
+    /** Whether this pirate plays the aim-and-volley clip before a shot. */
+    protected boolean aimsVolley() {
+        return this.getClass() == SpacePirate.class;
+    }
+
+    @Override
+    public void tick() {
+        super.tick();
+        if (this.aimTicks > 0 && !this.level().isClientSide() && --this.aimTicks == 0) {
+            LivingEntity target = this.aimTarget;
+            this.aimTarget = null;
+            if (target != null && target.isAlive() && target.level() == this.level() && this.isAlive()
+                    && this.distanceToSqr(target) <= SHOT_RANGE * SHOT_RANGE * 2.0D) {
+                this.fireBolt(target);
+            }
+        }
+    }
+
+    /** Fires one bolt at {@code target}. Server-side only. */
+    private void fireBolt(LivingEntity target) {
         ItemStack weapon = this.getMainHandItem();
         Arrow bolt = new Arrow(this.level(), this, new ItemStack(Items.ARROW), weapon);
         double deltaX = target.getX() - this.getX();

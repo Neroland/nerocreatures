@@ -12,6 +12,14 @@
     {
       "id": "nerocreatures:lumen_dust",
       "required": false
+    },
+    {
+      "id": "nerocreatures:leviathan_barnacle",
+      "required": false
+    },
+    {
+      "id": "nerocreatures:graviton_node",
+      "required": false
     }
   ]
 }

@@ -91,7 +91,10 @@ public class PreyFleeGoal extends Goal {
         AABB box = this.mob.getBoundingBox().inflate(this.detectRadius, 4.0D, this.detectRadius);
         List<LivingEntity> found = new ArrayList<>(1);
         level.getEntities(EntityTypeTest.forClass(LivingEntity.class), box,
-                e -> e != this.mob && e.isAlive() && e.getType().builtInRegistryHolder().is(this.predatorTag), found, 1);
+                // canBeSeenAsEnemy: a hidden predator (a buried Frost Lurker, a burrowed worm) is not
+                // noticed, so prey can walk into the trap.
+                e -> e != this.mob && e.isAlive() && e.canBeSeenAsEnemy()
+                        && e.getType().builtInRegistryHolder().is(this.predatorTag), found, 1);
         return found.isEmpty() ? null : found.get(0);
     }
 

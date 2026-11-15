@@ -25,7 +25,11 @@ import za.co.neroland.nerolandcore.worldgen.SpaceTags;
 import za.co.neroland.nerocreatures.boss.BossFights;
 import za.co.neroland.nerocreatures.boss.BossSpawns;
 import za.co.neroland.nerocreatures.config.NeroCreaturesConfig;
+import za.co.neroland.nerocreatures.entity.asteroid.GravityTether;
+import za.co.neroland.nerocreatures.entity.greenxertz.DriftLeviathan;
 import za.co.neroland.nerocreatures.entity.luna.LunaSpawnGates;
+import za.co.neroland.nerocreatures.entity.wrecks.ScrapHulkAssembly;
+import za.co.neroland.nerocreatures.entity.wrecks.WrecksSpawnGates;
 import za.co.neroland.nerocreatures.registry.ModEntities;
 
 /**
@@ -210,16 +214,66 @@ public final class CreatureSpawns {
         register(SpawnRule.anyDimension("slag_beetle", ModEntities.SLAG_BEETLE, HabitatTags.CINDARA, 10, 1, 3));
         register(SpawnRule.anyDimension("magma_wader", ModEntities.MAGMA_WADER, HabitatTags.CINDARA, 12, 1, 2));
 
+        // Glacira. Yak herds so a breeding pair is findable and the herd goals matter; lurkers are
+        // single traps on the flat ground (they need snow or ice underfoot to bury themselves).
+        register(SpawnRule.anyDimension("rime_yak", ModEntities.RIME_YAK, HabitatTags.GLACIRA, 10, 2, 4));
+        register(SpawnRule.anyDimension("frost_lurker", ModEntities.FROST_LURKER, HabitatTags.GLACIRA, 8, 1, 1));
+
+        // Greenxertz. Drifters in small groups in the air over the marsh; hosts alone or a pair on dark
+        // ground; Mossback herds; a Drift Leviathan is a rare spectacle, always alone and capped at two
+        // loaded per dimension by its gate (the gas-giant tag is empty until a planet mod fills it).
+        register(SpawnRule.anyDimension("spore_drifter", ModEntities.SPORE_DRIFTER, HabitatTags.GREENXERTZ, 10, 1, 3)
+                .airMode());
+        register(SpawnRule.anyDimension("bloom_host", ModEntities.BLOOM_HOST, HabitatTags.GREENXERTZ, 10, 1, 2));
+        register(SpawnRule.anyDimension("mossback", ModEntities.MOSSBACK, HabitatTags.GREENXERTZ, 12, 2, 4));
+        register(SpawnRule.gated("drift_leviathan", ModEntities.DRIFT_LEVIATHAN, HabitatTags.GREENXERTZ, 1, 1, 1,
+                DriftLeviathan::maySpawnNaturally));
+        register(SpawnRule.gated("drift_leviathan", ModEntities.DRIFT_LEVIATHAN, HabitatTags.GAS_GIANT, 2, 1, 1,
+                DriftLeviathan::maySpawnNaturally));
+
+        // Nyxara. Stag herds of three to four so the night aura (three adults) is reachable from one
+        // spawn; Shardbacks alone or a pair (two from different sides is the intended hard case).
+        register(SpawnRule.anyDimension("prism_stag", ModEntities.PRISM_STAG, HabitatTags.NYXARA, 8, 3, 4));
+        register(SpawnRule.anyDimension("shardback", ModEntities.SHARDBACK, HabitatTags.NYXARA, 12, 1, 2));
+
+        // Asteroid. Crabs in small groups on the rock, so a breeding pair is easy to find; leeches are
+        // the field's hazard, alone or a pair. Any light.
+        register(SpawnRule.anyDimension("magnet_crab", ModEntities.MAGNET_CRAB, HabitatTags.ASTEROID, 10, 1, 3));
+        register(SpawnRule.anyDimension("gravity_leech", ModEntities.GRAVITY_LEECH, HabitatTags.ASTEROID, 12, 1, 2));
+
+        // Wrecks (decision 001: habitat/wrecks is the void biome, space levels only, which the level
+        // gates enforce). Mimics are single crates; a swarm is one cloud, placed in the air, with a
+        // hard cap of two per 32 blocks inside its position gate. The Scrap Hulk has no rule: it is
+        // assembled from machine wreckage (entity/wrecks/ScrapHulkAssembly, via NeroCreatureEntity.die).
+        register(SpawnRule.gated("cache_mimic", ModEntities.CACHE_MIMIC, HabitatTags.WRECKS,
+                4, 1, 1, WrecksSpawnGates::mimicLevel));
+        register(SpawnRule.gated("static_swarm", ModEntities.STATIC_SWARM, HabitatTags.WRECKS,
+                8, 1, 1, WrecksSpawnGates::wrecksLevel, WrecksSpawnGates::swarmRoom).airMode());
+
+        // Pirates: a rare captain on any planet surface; it brings two crew itself.
+        register(SpawnRule.anyDimension("pirate_captain", ModEntities.PIRATE_CAPTAIN, SpaceTags.PLANET_BIOMES,
+                2, 1, 1));
+
+        // Deep space. inSpace, not anyDimension: minecraft:the_void in the habitat tag must never match
+        // a void superflat or skyblock overworld (decision 001), so the off-Earth dimension guard is
+        // the point here. Mantas drift alone or as a breeding pair, any light.
+        register(SpawnRule.inSpace("void_manta", ModEntities.VOID_MANTA, HabitatTags.DEEP_SPACE, 4, 1, 2));
+
         // --- Overworld (decision 005): a Core-only server is not empty, and rare stays rare ------
         // Each rule: overworld only, behind overworldSpawns, a position gate that ends in a chance
         // roll (moth 15%, tortoise 5%), and overworldSpawnCap counted by the census.
         register(SpawnRule.gated("lumen_moth", ModEntities.LUMEN_MOTH, HabitatTags.OVERWORLD_DARK_FOREST,
                 6, 1, 3, CreatureSpawns::overworldEnabled, LunaSpawnGates::mothOverworld)
-                .airMode().overworldCapped());
+                .airMode().capOverworld());
         register(SpawnRule.gated("lode_tortoise", ModEntities.LODE_TORTOISE, HabitatTags.OVERWORLD,
                 3, 1, 1, CreatureSpawns::overworldEnabled, LunaSpawnGates::tortoiseCave)
-                .caveMode().overworldCapped());
-        // Static Swarm (thunderstorms, decision 005) joins here when its work package lands.
+                .caveMode().capOverworld());
+        // Static Swarm in thunderstorms: the position gate (WrecksSpawnGates.swarmStorm) needs a
+        // thundering sky over the candidate, low light and room under the swarm area cap, then rolls
+        // the 10% chance.
+        register(SpawnRule.gated("static_swarm", ModEntities.STATIC_SWARM, HabitatTags.OVERWORLD,
+                4, 1, 1, CreatureSpawns::overworldEnabled, WrecksSpawnGates::swarmStorm)
+                .capOverworld());
     }
 
     /** The cheap per-level half of every overworld rule: the overworld, with overworldSpawns on. */
@@ -248,6 +302,9 @@ public final class CreatureSpawns {
             reset();
             currentServer = new WeakReference<>(server);
         }
+        // Gravity Leech tethers expire on their own lease even when no leech is ticking (a frozen
+        // chunk, a leech killed in another dimension). Self-throttled; nothing to do with no tethers.
+        GravityTether.sweepIfDue(server);
         if (RULES.isEmpty() || !NeroCreaturesConfig.SPAWNS_ENABLED.get()) {
             return;
         }
@@ -277,6 +334,7 @@ public final class CreatureSpawns {
         CreatureCensus.reset();
         BossSpawns.reset();
         BossFights.reset();
+        ScrapHulkAssembly.reset();
     }
 
     private static void sweep(ServerLevel level) {
