@@ -48,6 +48,7 @@ import za.co.neroland.nerocreatures.entity.base.NeroCreatureEntity;
 import za.co.neroland.nerocreatures.entity.hostile.PlasmaSlime;
 import za.co.neroland.nerocreatures.entity.visual.VisualPose;
 import za.co.neroland.nerocreatures.registry.ModEntities;
+import za.co.neroland.nerolandcore.event.ThresholdEvents;
 
 /**
  * <b>Cinder Tyrant</b> — the apex of the ember worlds, and the mod's first planet boss.
@@ -162,6 +163,25 @@ public class CinderTyrant extends NeroBossEntity {
         return new BossController(this, this, bossId(),
                 Component.translatable("entity.nerocreatures.cinder_tyrant"),
                 BossEvent.BossBarColor.RED, ARENA_RADIUS, this.phases());
+    }
+
+    /**
+     * Core threshold channel published once when a Cinder Tyrant (and only a Tyrant) is defeated:
+     * scope = the dimension id, value 0, threshold 1, rising false. {@code boss_pressure} is fired by
+     * every boss, so a consumer that means "the Tyrant fell" (the {@code cindara_quiet} quest) listens
+     * here. No player data, like every crossing.
+     */
+    public static final Identifier DEFEAT_CHANNEL =
+            Identifier.fromNamespaceAndPath(NeroCreaturesCommon.MOD_ID, "cinder_tyrant_defeated");
+
+    @Override
+    public void die(DamageSource cause) {
+        boolean wasDefeated = this.controller.isDefeated();
+        super.die(cause);
+        if (!wasDefeated && this.controller.isDefeated() && this.level() instanceof ServerLevel level) {
+            ThresholdEvents.fire(NeroCreaturesCommon.MOD_ID, new ThresholdEvents.ThresholdCrossing(
+                    DEFEAT_CHANNEL, level.dimension().identifier().toString(), 0L, 1L, false));
+        }
     }
 
     /** The Tyrant's id, as used by {@code boss/BossSummons} and the operator command. */

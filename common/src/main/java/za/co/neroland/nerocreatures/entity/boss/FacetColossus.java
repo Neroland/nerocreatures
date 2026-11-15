@@ -24,6 +24,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.FloatGoal;
@@ -33,6 +34,7 @@ import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
 import net.minecraft.world.entity.ai.goal.WaterAvoidingRandomStrollGoal;
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
+import net.minecraft.world.entity.monster.Enemy;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -55,6 +57,7 @@ import za.co.neroland.nerocreatures.entity.visual.CreatureVisuals;
 import za.co.neroland.nerocreatures.entity.visual.VisualPose;
 import za.co.neroland.nerocreatures.registry.ModEntities;
 import za.co.neroland.nerocreatures.world.CreatureGriefing;
+import za.co.neroland.nerocreatures.world.CreatureOwners;
 
 /**
  * <b>Facet Colossus</b> — Nyxara's boss: a standing monolith inside a ring of six facet plates.
@@ -67,6 +70,8 @@ import za.co.neroland.nerocreatures.world.CreatureGriefing;
  *       ({@link FacetRules}). The lit facet rotates to a different plate on a phase-scaled timer.</li>
  *   <li><b>Beam.</b> A 50-tick {@code ability}: the ring stops and the lit facet turns to the front,
  *       the aim locks at tick 10 and is drawn, the beam fires from tick 20 and hits at 20, 30 and 40.
+ *       It hurts players inside the arena and wild hostile mobs only, never pets, mounts, livestock,
+ *       villagers or a player outside the arena ({@link ArenaCrystalRules#beamMayHit}).
  *       Standing in front is the only way to hit the facet while it fires.</li>
  *   <li><b>Crystals.</b> Prism pillars ({@code ephemeral_crust[variant=prism]}) grow around the arena
  *       through {@code CreatureGriefing} ({@code bossArenaBlocks}); the beam refracts through them.
@@ -423,8 +428,16 @@ public class FacetColossus extends NeroBossEntity {
     }
 
     private boolean beamVictim(LivingEntity candidate) {
-        return candidate != this && candidate.isAlive() && !candidate.isSpectator()
-                && !(candidate instanceof NeroBossEntity);
+        if (candidate == this || !candidate.isAlive() || candidate.isSpectator()
+                || candidate instanceof NeroBossEntity) {
+            return false;
+        }
+        BlockPos anchor = this.arenaAnchor();
+        boolean inArena = anchor != null && candidate.distanceToSqr(anchor.getX() + 0.5D, anchor.getY(),
+                anchor.getZ() + 0.5D) <= ARENA_RADIUS * ARENA_RADIUS;
+        boolean owned = candidate instanceof Mob mob ? CreatureOwners.controllerUuid(mob) != null
+                : CreatureOwners.ownerUuid(candidate) != null;
+        return ArenaCrystalRules.beamMayHit(candidate instanceof Player, inArena, candidate instanceof Enemy, owned);
     }
 
     private static double distanceToSegment(Vec3 p, Segment s) {
@@ -462,7 +475,8 @@ public class FacetColossus extends NeroBossEntity {
         BlockState prism = crust.stateFor(EphemeralCrustBlock.Variant.PRISM, EphemeralCrustBlock.Restore.AIR);
         int placed = 0;
         boolean denied = false;
-        for (int attempt = 0; attempt < ArenaCrystalRules.PLACE_ATTEMPTS_PER_WAVE && placed < want; attempt++) {
+        for (int attempt = 0; attempt < ArenaCrystalRules.PLACE_ATTEMPTS_PER_WAVE && placed < want
+                && ArenaCrystalRules.roomForPillar(this.crystals.size()); attempt++) {
             double angle = this.random.nextDouble() * Math.PI * 2.0D;
             int radius = ArenaCrystalRules.MIN_RING
                     + this.random.nextInt(ArenaCrystalRules.MAX_RING - ArenaCrystalRules.MIN_RING + 1);
@@ -484,11 +498,13 @@ public class FacetColossus extends NeroBossEntity {
                 continue;
             }
             long expires = now + ArenaCrystalRules.DECAY_TICKS;
-            if (crust.place(level, base, prism, ArenaCrystalRules.DECAY_TICKS)) {
-                this.crystals.add(base.asLong(), expires);
+            if (crust.place(level, base, prism, ArenaCrystalRules.DECAY_TICKS)
+                    && !this.crystals.add(base.asLong(), expires)) {
+                level.setBlock(base, Blocks.AIR.defaultBlockState(), Block.UPDATE_ALL);
             }
-            if (crust.place(level, top, prism, ArenaCrystalRules.DECAY_TICKS)) {
-                this.crystals.add(top.asLong(), expires);
+            if (crust.place(level, top, prism, ArenaCrystalRules.DECAY_TICKS)
+                    && !this.crystals.add(top.asLong(), expires)) {
+                level.setBlock(top, Blocks.AIR.defaultBlockState(), Block.UPDATE_ALL);
             }
             placed++;
         }
@@ -510,6 +526,40 @@ public class FacetColossus extends NeroBossEntity {
             }
         }
         return null;
+    }
+
+    @Override
+    protected void onFirstServerTick(ServerLevel level) {
+        super.onFirstServerTick(level);
+        this.adoptCrystals(level);
+    }
+
+    /**
+     * After a load the ledger is empty: adopt the prism crystals still standing in the arena ring (up to
+     * the cap) so the fight's end removes them too; any beyond the cap are removed now. Runs once.
+     */
+    private void adoptCrystals(ServerLevel level) {
+        BlockPos anchor = this.arenaAnchor();
+        EphemeralCrustBlock crust = EphemeralCrustBlock.registered();
+        if (anchor == null || crust == null || this.controller.isDefeated()) {
+            return;
+        }
+        long expires = level.getGameTime() + ArenaCrystalRules.DECAY_TICKS;
+        int r = ArenaCrystalRules.MAX_RING + 1;
+        BlockPos.MutableBlockPos at = new BlockPos.MutableBlockPos();
+        for (int dx = -r; dx <= r; dx++) {
+            for (int dz = -r; dz <= r; dz++) {
+                for (int dy = -4; dy <= 5; dy++) {
+                    at.set(anchor.getX() + dx, anchor.getY() + dy, anchor.getZ() + dz);
+                    if (!level.isLoaded(at) || !isPrism(crust, level.getBlockState(at))) {
+                        continue;
+                    }
+                    if (!this.crystals.contains(at.asLong()) && !this.crystals.add(at.asLong(), expires)) {
+                        level.setBlock(at.immutable(), Blocks.AIR.defaultBlockState(), Block.UPDATE_ALL);
+                    }
+                }
+            }
+        }
     }
 
     /** Reverts every crystal this boss still owns. Called when the fight ends. */

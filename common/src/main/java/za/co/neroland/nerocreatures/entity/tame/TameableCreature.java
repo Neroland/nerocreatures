@@ -168,6 +168,12 @@ public abstract class TameableCreature extends TamableAnimal implements ProductS
     /** One-shot first-server-tick work (trait roll, ownership check) has run. Not saved. */
     private boolean firstTickDone;
 
+    /**
+     * On its owner's shoulder (companion SPI {@code onPetPerched}). Not saved: the companion mod pins
+     * and re-perches it; a reloaded pet starts on the ground.
+     */
+    private boolean perched;
+
     /** Resolved once: tempt goals ask every tick. */
     @Nullable
     private TagKey<Item> cachedFoodTag;
@@ -314,6 +320,34 @@ public abstract class TameableCreature extends TamableAnimal implements ProductS
         return this.hatchling;
     }
 
+    // --- companion SPI: perch ---------------------------------------------------
+
+    /** Whether a companion mod has this pet perched on its owner's shoulder. */
+    public boolean isPerched() {
+        return this.perched;
+    }
+
+    /**
+     * Perched or not (companion SPI). While perched NeroCreatures' own goals treat the pet as sitting:
+     * no following, guarding, strolling or targeting; its species perk still runs.
+     */
+    public void setPerched(boolean perched) {
+        if (this.perched == perched) {
+            return;
+        }
+        this.perched = perched;
+        if (perched) {
+            this.getNavigation().stop();
+            this.setTarget(null);
+        }
+        this.setInSittingPose(perched || this.command == PetCommand.SIT);
+    }
+
+    /** Sitting by order or perched: the held {@code rest} pose. */
+    public boolean isResting() {
+        return this.isOrderedToSit() || this.perched;
+    }
+
     // --- product timer hook (ticked by the shared product-timer goal) -----------
 
     @Override
@@ -347,7 +381,7 @@ public abstract class TameableCreature extends TamableAnimal implements ProductS
         }
         this.goalSelector.addGoal(5, new CommandedFollowOwnerGoal(this, 1.1D, 9.0F, 3.0F));
         this.goalSelector.addGoal(6, new HoldAreaGoal(this, () -> this.guardAnchor, GUARD_RADIUS, 1.0D,
-                () -> this.command == PetCommand.GUARD));
+                () -> this.command == PetCommand.GUARD && !this.perched));
         this.goalSelector.addGoal(7, new WaterAvoidingRandomStrollGoal(this, 0.8D));
         this.goalSelector.addGoal(8, new LookAtPlayerGoal(this, Player.class, 8.0F));
         this.goalSelector.addGoal(8, new RandomLookAroundGoal(this));
@@ -411,6 +445,7 @@ public abstract class TameableCreature extends TamableAnimal implements ProductS
      */
     protected void releaseToWild(boolean notifyOwner) {
         UUID formerOwner = notifyOwner ? this.ownerId() : null;
+        this.setPerched(false);
         this.setCommand(PetCommand.FOLLOW);
         this.setTame(false, false);
         //? if >=1.21.5 {
@@ -418,7 +453,7 @@ public abstract class TameableCreature extends TamableAnimal implements ProductS
         //?} else {
         /*this.setOwnerUUID(null);
         *///?}
-        CompanionBridge.hooks().onPetReleased(this);
+        CompanionBridge.petReleased(this);
         if (formerOwner != null && this.level() instanceof ServerLevel level) {
             CreatureLinkEvents.petStateChanged(level, formerOwner, this, this.ownershipKind(),
                     CreatureLinkEvents.STATE_RELEASED);
@@ -509,7 +544,7 @@ public abstract class TameableCreature extends TamableAnimal implements ProductS
         this.level().broadcastEntityEvent(this, (byte) 7); // vanilla "taming succeeded" hearts
         notifyOwner(player, Component.translatable("message.nerocreatures.pet_tamed",
                 this.getType().getDescription()));
-        CompanionBridge.hooks().onPetTamed(this, player);
+        CompanionBridge.petTamed(this, player);
         CreatureLinkEvents.petStateChanged(level, owner, this, kind,
                 CreatureLinkEvents.STATE_TAMED);
         return InteractionResult.SUCCESS_SERVER;
@@ -519,7 +554,7 @@ public abstract class TameableCreature extends TamableAnimal implements ProductS
         this.setCommand(this.command.next());
         notifyOwner(player, Component.translatable(
                 "message.nerocreatures.pet_command." + this.command.key()));
-        CompanionBridge.hooks().onPetCommandChanged(this, this.command.key());
+        CompanionBridge.petCommandChanged(this, this.command.key());
     }
 
     /** Action-bar feedback, server-side, to one player only. Never chat, never broadcast. */
@@ -555,6 +590,14 @@ public abstract class TameableCreature extends TamableAnimal implements ProductS
                 this.setTraits(Inheritance.fresh(TraitPool.get(), this.random));
             }
             this.verifyOwnership(level);
+            if (this.isTameable()) {
+                // Companion SPI: goals once per loaded instance (band-checked), then "pet loaded".
+                CompanionBridge.addCompanionGoals(this, this.goalSelector);
+                UUID owner = this.isTame() ? this.ownerId() : null;
+                if (owner != null) {
+                    CompanionBridge.petLoaded(this, owner);
+                }
+            }
         }
         CreatureBudget.end(this, budgetStart);
     }
@@ -597,11 +640,22 @@ public abstract class TameableCreature extends TamableAnimal implements ProductS
         // Server-side only, so the level is always a ServerLevel here.
         ServerLevel level = (ServerLevel) this.level();
     *///?}
+        if (this.perched) {
+            // Treated as sitting: the companion mod pins the position; nothing walks or fights.
+            if (!this.isTame()) {
+                this.setPerched(false);
+            } else {
+                this.getNavigation().stop();
+                if (this.getTarget() != null) {
+                    this.setTarget(null);
+                }
+            }
+        }
         if (!this.isTame() || --this.perkCooldown > 0) {
             return;
         }
         this.perkCooldown = PERK_INTERVAL_TICKS;
-        if (CompanionBridge.hooks().overridesIdleBehaviour(this)) {
+        if (CompanionBridge.overridesIdleBehaviour(this)) {
             return;
         }
         if (this.getOwner() instanceof Player owner && owner.level() == this.level()
@@ -618,10 +672,15 @@ public abstract class TameableCreature extends TamableAnimal implements ProductS
             if (owner != null) {
                 CreatureOwnershipState.get(level.getServer()).remove(owner, this.getUUID());
             }
-            CompanionBridge.hooks().onPetReleased(this);
+            // Asked before the release callback: the companion mod may drop its state on release.
+            boolean companionRecovers = CompanionBridge.allowsRecovery(this);
+            CompanionBridge.petReleased(this);
             // The owner's companion app is told what died and nothing else — never what killed it,
-            // and never anybody else's pet (POPIA/GDPR).
-            CreatureLinkEvents.petDied(level, owner, this, this.ownershipKind());
+            // and never anybody else's pet (POPIA/GDPR). A companion mod keeping a recovery record
+            // raises its own alert, so the owner gets one push, not two.
+            if (!companionRecovers) {
+                CreatureLinkEvents.petDied(level, owner, this, this.ownershipKind());
+            }
         }
         super.die(source);
     }
@@ -783,12 +842,12 @@ public abstract class TameableCreature extends TamableAnimal implements ProductS
 
         @Override
         public boolean canUse() {
-            return this.pet.command() == PetCommand.FOLLOW && super.canUse();
+            return this.pet.command() == PetCommand.FOLLOW && !this.pet.isPerched() && super.canUse();
         }
 
         @Override
         public boolean canContinueToUse() {
-            return this.pet.command() == PetCommand.FOLLOW && super.canContinueToUse();
+            return this.pet.command() == PetCommand.FOLLOW && !this.pet.isPerched() && super.canContinueToUse();
         }
     }
 }

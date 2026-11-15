@@ -10,6 +10,10 @@ package za.co.neroland.nerocreatures.entity.boss;
  *   <li><b>Infect</b> ({@code ability}, {@value #INFECT_CLIP_TICKS} ticks, the hit at tick
  *       {@value #INFECT_HIT_TICK}): a vine lash that poisons the target and raises a sporeling (her
  *       add) at the target's feet, under her own cap and the shared sporeling dimension cap.</li>
+ *   <li><b>Bark</b>: she only takes damage from an attacker her vine can answer, one within
+ *       {@value #BARK_REACH} blocks that she can see. Shots from beyond the vine's reach, or blows
+ *       struck from under an overhang where she has no line of sight, glance off her bark. So the
+ *       fight is always fought in the open, inside her reach.</li>
  *   <li><b>Heal</b> ({@code ability_2}, {@value #HEAL_CLIP_TICKS} ticks): pods pulse and she heals by
  *       how many pods are alive when the clip ends. Kill the pods mid-channel and the heal is lost.</li>
  * </ul>
@@ -50,6 +54,20 @@ public final class SovereignRules {
             case 2 -> 6.0F;
             default -> 8.0F;
         };
+    }
+
+    /** Farthest attacker whose damage lands: the lash's own hit reach. */
+    public static final double BARK_REACH = INFECT_RANGE + 2.0D;
+
+    /** Ticks between two "glanced off the bark" cues, so a volley of arrows plays one sound. */
+    public static final int BARK_CUE_TICKS = 10;
+
+    /**
+     * Whether damage from an attacker lands on her: only from an attacker she can answer with the lash,
+     * one within {@link #BARK_REACH} that she can see.
+     */
+    public static boolean barkLetsThrough(double attackerDistance, boolean lineOfSight) {
+        return lineOfSight && attackerDistance <= BARK_REACH;
     }
 
     // --- adds -------------------------------------------------------------------------------

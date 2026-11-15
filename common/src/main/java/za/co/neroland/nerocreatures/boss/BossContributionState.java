@@ -6,6 +6,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.function.LongSupplier;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -85,6 +86,9 @@ public final class BossContributionState extends SavedData {
     /** Upper bound on live fights. Far above any plausible number of simultaneous summons. */
     private static final int MAX_FIGHTS = 64;
 
+    /** Wall clock for row ages; replaceable by tests in this package only. */
+    static LongSupplier clock = System::currentTimeMillis;
+
     /** Upper bound on contributors to one fight. */
     private static final int MAX_CONTRIBUTORS_PER_FIGHT = 64;
 
@@ -161,12 +165,16 @@ public final class BossContributionState extends SavedData {
         Fight row = this.fights.get(fight);
         if (row == null) {
             if (this.fights.size() >= MAX_FIGHTS) {
+                // Abandoned fights (bosses that never despawn) would otherwise hold the cap until a restart.
+                this.pruneStaleFights();
+            }
+            if (this.fights.size() >= MAX_FIGHTS) {
                 NeroCreaturesCommon.LOGGER.warn(
                         "[NeroCreatures] Boss contribution fight limit reached; this fight's rewards "
                                 + "will fall back to the plain loot table.");
                 return;
             }
-            row = new Fight(boss.toString(), System.currentTimeMillis());
+            row = new Fight(boss.toString(), clock.getAsLong());
             this.fights.put(fight, row);
         }
         Float existing = row.damage.get(player);
@@ -174,7 +182,7 @@ public final class BossContributionState extends SavedData {
             return;
         }
         row.damage.put(player, (existing == null ? 0.0F : existing) + damage);
-        row.updatedAt = System.currentTimeMillis();
+        row.updatedAt = clock.getAsLong();
         this.lastUpdated.put(player, row.updatedAt);
         this.setDirty();
     }
@@ -287,7 +295,7 @@ public final class BossContributionState extends SavedData {
         if (days <= 0) {
             return List.of();
         }
-        long threshold = System.currentTimeMillis() - days * MILLIS_PER_DAY;
+        long threshold = clock.getAsLong() - days * MILLIS_PER_DAY;
         List<UUID> stale = new ArrayList<>();
         for (Map.Entry<UUID, Long> entry : this.lastUpdated.entrySet()) {
             Long stamp = entry.getValue();
@@ -306,7 +314,7 @@ public final class BossContributionState extends SavedData {
      * @return how many fights were pruned
      */
     public int pruneStaleFights() {
-        long threshold = System.currentTimeMillis() - FIGHT_MAX_AGE_HOURS * MILLIS_PER_HOUR;
+        long threshold = clock.getAsLong() - FIGHT_MAX_AGE_HOURS * MILLIS_PER_HOUR;
         int before = this.fights.size();
         this.fights.values().removeIf(row -> row.updatedAt < threshold);
         int pruned = before - this.fights.size();

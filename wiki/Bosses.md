@@ -13,7 +13,12 @@ also turn up on its own; the other three come only from the **[Apex Altar](#the-
 | Facet Colossus | Nyxara | 380 | 28 blocks | Turning Facets, False Light, Shattered Ring | Colossus Facet |
 
 Health is before `bossHpMultiplier`. Every boss changes phase at 66% and 33% health; a phase change is
-a 30-tick pause in which the boss starts no attack. Every boss drops one **Apex Trophy**, its
+a 30-tick pause in which the boss starts no attack.
+
+**Every boss has to be fought.** A boss takes damage only from a player or from something a player
+owns (a pet, a mount, a drone): lava, fire, suffocation in a wall, falling, cacti, dispensers and
+other mobs do nothing to it. `/kill` and the void still work. A boss never goes through a portal and
+never rides a minecart or boat, so it cannot be carried out of its arena. Every boss drops one **Apex Trophy**, its
 signature drop and Refined Crystal (see each boss and the [Drop Map](Drop-Map.md)).
 
 ## The Cinder Tyrant
@@ -103,6 +108,9 @@ every boss below, at its own arena radius.
 - **Infecting lash** (reach 14, needs line of sight): poison, then a sporeling at the target's feet
   while she has fewer than 2 / 4 / 6 adds and the world's sporeling cap allows. With
   `bloomHostSporelings=false` the lash still poisons but raises nothing.
+- **Bark**: she only takes damage from an attacker within **16 blocks that she can see**, the reach of
+  her lash. Arrows from further away, or blows struck from under an overhang where she has no line of
+  sight, glance off her bark with a puff of spores. Her pods are not protected. Fight her in the open.
 - When she dies or leaves, her pods and sporelings go with her.
 
 ## The Facet Colossus
@@ -120,7 +128,9 @@ every boss below, at its own arena radius.
   160 / 120 / 100 ticks, never to the same plate twice.
 - **Refracting beam**: aim locks after half a second, then three pulses (6 / 8 / 10 damage by phase)
   that bounce off its arena crystals (temporary prism pillars, at most 12 blocks, gone after 45 s).
-  With arena blocks off it fires two extra split beams instead of growing crystals.
+  With arena blocks off it fires two extra split beams instead of growing crystals. The beam hurts
+  only players inside the arena and wild hostile mobs; pets, mounts, livestock, villagers and players
+  outside the arena are never hit.
 - **Phase 2, False Light**: two **decoy** plates glow too. Hitting a decoy does nothing to it and
   sparks 3 damage back at you (at most once every half second).
 - **Phase 3, Shattered Ring**: after every turn of the ring its core is exposed for 1.5 seconds and
@@ -146,14 +156,18 @@ tag `nerocreatures:sigils`.
 1. the fight this altar started is still going → refused;
 2. the altar is still **recharging** → refused, with the seconds left;
 3. the boss is known → otherwise refused;
-4. there are **four clear blocks** above the altar → otherwise refused;
-5. the dimension and chunk population caps have room → otherwise "the area is too crowded".
+4. the world is not on **Peaceful** (where a boss could never fight back) → otherwise refused;
+5. there is room for the **boss's whole body** above the altar, plus half a block on every side and
+   above → otherwise refused. The largest boss (the Bloom Sovereign, 3 × 4.5 blocks) needs about a
+   5 × 5 × 5 open space; the smallest (the Rime Matriarch) about 3 × 3 × 5;
+6. the dimension and chunk population caps have room → otherwise "the area is too crowded".
 
 On success the boss appears on top of the altar as a **summoned, contribution-tracked fight** (below),
 you are recorded as a zero-damage participant, and the sigil is used up (not in creative). A refused
 attempt uses nothing. The altar then **locks**: its top glows, it cannot be mined in survival, and it
 refuses sigils until the fight is over **and** the cooldown has run (`apexAltarCooldownTicks`,
-default 12000 ticks = 10 minutes). A fight older than one in-game hour never keeps an altar locked.
+default 12000 ticks = 10 minutes). A fight older than one in-game hour never keeps an altar locked, and an altar brought in from
+another world never stays locked longer than the longest possible cooldown.
 
 The cooldown belongs to the **altar**, never to a player. The altar stores no items (the sigil goes
 straight from your hand into the summon) and has no screen; it is immune to withers and dragons.
@@ -266,8 +280,15 @@ goes on the bus. If you are building a consumer, treat the scope as a dimension 
 
 Crossings are fired with `nerocreatures` as the **source mod id** (Core 1.15.0's sourced bus), so a
 consumer listening with `ThresholdEvents.onSourcedCrossing` can tell this mod's channel from a datapack's.
-The shipped quest pack's `cindara_quiet` world-log quest is one such consumer
-([NeroQuests integration](NeroQuests-Integration.md)).
+Since the Apex Altar, every boss publishes on this channel, in any dimension an altar stands in, and
+a boss that is removed without dying publishes no falling crossing.
+
+### `nerocreatures:cinder_tyrant_defeated`
+
+A second channel, published once when a **Cinder Tyrant** (and no other boss) is defeated: scope =
+the dimension id, `value` `0`, `threshold` `1`, `rising` `false`. Same rules: a place, never a
+person. The shipped quest pack's `cindara_quiet` world-log quest listens here, so it completes only on
+a Tyrant's defeat on Cindara ([NeroQuests integration](NeroQuests-Integration.md)).
 
 ## Configuration
 

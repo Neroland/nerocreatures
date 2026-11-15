@@ -129,6 +129,10 @@ public final class BossSummons {
         boss.bossController().trackContribution(fight);
         boss.finalizeSpawn(level, level.getCurrentDifficultyAt(pos), EntitySpawnReason.EVENT, null);
         if (!level.addFreshEntity(boss)) {
+            // Another mod cancelled the join: drop the fight finalizeSpawn already bound, so no phantom
+            // fight stays in the live index, and let the natural-spawn presence cache see it is gone.
+            boss.bossController().onRemoved(false);
+            BossSpawns.noteBossGone(level);
             return Optional.empty();
         }
         if (initiator != null) {

@@ -306,7 +306,8 @@ def crystal_golem(p) -> None:
 def facet_colossus(p) -> None:
     """Mid mass: the silver column. Dark mass: plum plinth, feet and the inner faces of the plates.
     Light: the opal crown and the mirror plates. Glow: the core seam, magenta at the plinth to cyan
-    at the cap, and the lit facet panel (shown only on the facet the fight has lit)."""
+    at the cap, and the lit facet panel (shown only on the facet the fight has lit). Decoy facets carry
+    a hollow, upside-down, dimmer copy of that panel."""
 
     p.box("core.plinth", "plum", 2)
     for face in p.each_face("core.plinth", SIDES):
@@ -377,6 +378,29 @@ def facet_colossus(p) -> None:
             edge.glow(0, y, 1, 1, step=step, under=2, accent=ramp)
     p.face("lit_0.panel", "up").glow(0, 0, 8, 1, step=3, under=2)
     p.face("lit_0.panel", "down").glow(0, 0, 8, 1, step=3, under=2, accent="accent_b")
+
+    # Decoy facets (phase 2+, shown by form / stage): a lure. Same panel, but hollow (a frame round a
+    # dark plum centre with one short bar), the gradient upside down (cyan top, magenta bottom) and
+    # two steps dimmer, so it passes at a glance and fails a careful look.
+    p.box("decoy_a_0.panel", "plum", 1)
+    lure = p.face("decoy_a_0.panel", "north")
+    lure.fill("plum", 2)
+    for y in range(lure.h):
+        ramp, step = prism(1.0 - y / (lure.h - 1.0))
+        if y in (0, lure.h - 1):
+            lure.glow(0, y, lure.w, 1, step=step - 2, under=1, accent=ramp)
+        else:
+            lure.glow(0, y, 1, 1, step=step - 2, under=1, accent=ramp)
+            lure.glow(lure.w - 1, y, 1, 1, step=step - 2, under=1, accent=ramp)
+            if 4 <= y <= 7:
+                lure.glow(3, y, 2, 1, step=step - 2, under=1, accent=ramp)
+    for name in ("east", "west"):
+        edge = p.face("decoy_a_0.panel", name)
+        for y in range(edge.h):
+            ramp, step = prism(1.0 - y / (edge.h - 1.0))
+            edge.glow(0, y, 1, 1, step=step - 2, under=1, accent=ramp)
+    p.face("decoy_a_0.panel", "up").glow(0, 0, 8, 1, step=1, under=1, accent="accent_b")
+    p.face("decoy_a_0.panel", "down").glow(0, 0, 8, 1, step=1, under=1)
 
 
 PAINTERS = {

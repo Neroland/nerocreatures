@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "lit=false": {
+      "model": "nerocreatures:block/sonic_ward"
+    },
+    "lit=true": {
+      "model": "nerocreatures:block/sonic_ward_lit"
+    }
+  }
+}

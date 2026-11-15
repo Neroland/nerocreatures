@@ -14,9 +14,11 @@
   "accent_2": "accent_b",
   "glow_organs": [
     "the lit facet panel (beam emitter and the vulnerable facet; one gradient, magenta top to cyan bottom)",
-    "core seams and cap"
+    "core seams and cap",
+    "decoy facet panels (phase 2+: hollow frames, the gradient upside down - cyan top to magenta bottom - and a step dimmer than the lit facet)"
   ],
   "radiant": null,
+  "budget_exception": {"boxes": 2},
   "parts": [
     {
       "name": "core",
@@ -99,6 +101,49 @@
       ]
     },
     {
+      "name": "decoy_a_0",
+      "parent": "plate_0",
+      "pivot": [0, 0, -21],
+      "rotation": [0, 0, 0],
+      "visible_when": {"form": [1]},
+      "cubes": [
+        {"name": "panel", "origin": [-4, -6, -1], "size": [8, 12, 1], "uv": [104, 48]}
+      ]
+    },
+    {
+      "name": "decoy_b0_0",
+      "parent": "plate_0",
+      "pivot": [0, 0, -21],
+      "rotation": [0, 0, 0],
+      "visible_when": {"form": [6], "stage": [0]},
+      "uv_like": "decoy_a_0",
+      "cubes": [
+        {"name": "panel", "origin": [-4, -6, -1], "size": [8, 12, 1], "uv": [104, 48], "mirror": true}
+      ]
+    },
+    {
+      "name": "decoy_b1_0",
+      "parent": "plate_0",
+      "pivot": [0, 0, -21],
+      "rotation": [0, 0, 0],
+      "visible_when": {"form": [5], "stage": [1]},
+      "uv_like": "decoy_a_0",
+      "cubes": [
+        {"name": "panel", "origin": [-4, -6, -1], "size": [8, 12, 1], "uv": [104, 48], "mirror": true}
+      ]
+    },
+    {
+      "name": "decoy_b2_0",
+      "parent": "plate_0",
+      "pivot": [0, 0, -21],
+      "rotation": [0, 0, 0],
+      "visible_when": {"form": [4], "stage": [2]},
+      "uv_like": "decoy_a_0",
+      "cubes": [
+        {"name": "panel", "origin": [-4, -6, -1], "size": [8, 12, 1], "uv": [104, 48], "mirror": true}
+      ]
+    },
+    {
       "name": "plate_1",
       "parent": "ring",
       "pivot": [0, 0, 0],
@@ -121,6 +166,50 @@
       "visible_when": {"variant": [1]},
       "cubes": [
         {"name": "panel", "origin": [-4, -6, -1], "size": [8, 12, 1], "uv": [24, 34], "mirror": true}
+      ]
+    },
+    {
+      "name": "decoy_a_1",
+      "parent": "plate_1",
+      "pivot": [0, 0, -21],
+      "rotation": [0, 0, 0],
+      "visible_when": {"form": [2]},
+      "uv_like": "decoy_a_0",
+      "cubes": [
+        {"name": "panel", "origin": [-4, -6, -1], "size": [8, 12, 1], "uv": [104, 48], "mirror": true}
+      ]
+    },
+    {
+      "name": "decoy_b0_1",
+      "parent": "plate_1",
+      "pivot": [0, 0, -21],
+      "rotation": [0, 0, 0],
+      "visible_when": {"form": [1], "stage": [0]},
+      "uv_like": "decoy_a_0",
+      "cubes": [
+        {"name": "panel", "origin": [-4, -6, -1], "size": [8, 12, 1], "uv": [104, 48], "mirror": true}
+      ]
+    },
+    {
+      "name": "decoy_b1_1",
+      "parent": "plate_1",
+      "pivot": [0, 0, -21],
+      "rotation": [0, 0, 0],
+      "visible_when": {"form": [6], "stage": [1]},
+      "uv_like": "decoy_a_0",
+      "cubes": [
+        {"name": "panel", "origin": [-4, -6, -1], "size": [8, 12, 1], "uv": [104, 48], "mirror": true}
+      ]
+    },
+    {
+      "name": "decoy_b2_1",
+      "parent": "plate_1",
+      "pivot": [0, 0, -21],
+      "rotation": [0, 0, 0],
+      "visible_when": {"form": [5], "stage": [2]},
+      "uv_like": "decoy_a_0",
+      "cubes": [
+        {"name": "panel", "origin": [-4, -6, -1], "size": [8, 12, 1], "uv": [104, 48], "mirror": true}
       ]
     },
     {
@@ -149,6 +238,50 @@
       ]
     },
     {
+      "name": "decoy_a_2",
+      "parent": "plate_2",
+      "pivot": [0, 0, -21],
+      "rotation": [0, 0, 0],
+      "visible_when": {"form": [3]},
+      "uv_like": "decoy_a_0",
+      "cubes": [
+        {"name": "panel", "origin": [-4, -6, -1], "size": [8, 12, 1], "uv": [104, 48], "mirror": true}
+      ]
+    },
+    {
+      "name": "decoy_b0_2",
+      "parent": "plate_2",
+      "pivot": [0, 0, -21],
+      "rotation": [0, 0, 0],
+      "visible_when": {"form": [2], "stage": [0]},
+      "uv_like": "decoy_a_0",
+      "cubes": [
+        {"name": "panel", "origin": [-4, -6, -1], "size": [8, 12, 1], "uv": [104, 48], "mirror": true}
+      ]
+    },
+    {
+      "name": "decoy_b1_2",
+      "parent": "plate_2",
+      "pivot": [0, 0, -21],
+      "rotation": [0, 0, 0],
+      "visible_when": {"form": [1], "stage": [1]},
+      "uv_like": "decoy_a_0",
+      "cubes": [
+        {"name": "panel", "origin": [-4, -6, -1], "size": [8, 12, 1], "uv": [104, 48], "mirror": true}
+      ]
+    },
+    {
+      "name": "decoy_b2_2",
+      "parent": "plate_2",
+      "pivot": [0, 0, -21],
+      "rotation": [0, 0, 0],
+      "visible_when": {"form": [6], "stage": [2]},
+      "uv_like": "decoy_a_0",
+      "cubes": [
+        {"name": "panel", "origin": [-4, -6, -1], "size": [8, 12, 1], "uv": [104, 48], "mirror": true}
+      ]
+    },
+    {
       "name": "plate_3",
       "parent": "ring",
       "pivot": [0, 0, 0],
@@ -171,6 +304,50 @@
       "visible_when": {"variant": [3]},
       "cubes": [
         {"name": "panel", "origin": [-4, -6, -1], "size": [8, 12, 1], "uv": [24, 34], "mirror": true}
+      ]
+    },
+    {
+      "name": "decoy_a_3",
+      "parent": "plate_3",
+      "pivot": [0, 0, -21],
+      "rotation": [0, 0, 0],
+      "visible_when": {"form": [4]},
+      "uv_like": "decoy_a_0",
+      "cubes": [
+        {"name": "panel", "origin": [-4, -6, -1], "size": [8, 12, 1], "uv": [104, 48], "mirror": true}
+      ]
+    },
+    {
+      "name": "decoy_b0_3",
+      "parent": "plate_3",
+      "pivot": [0, 0, -21],
+      "rotation": [0, 0, 0],
+      "visible_when": {"form": [3], "stage": [0]},
+      "uv_like": "decoy_a_0",
+      "cubes": [
+        {"name": "panel", "origin": [-4, -6, -1], "size": [8, 12, 1], "uv": [104, 48], "mirror": true}
+      ]
+    },
+    {
+      "name": "decoy_b1_3",
+      "parent": "plate_3",
+      "pivot": [0, 0, -21],
+      "rotation": [0, 0, 0],
+      "visible_when": {"form": [2], "stage": [1]},
+      "uv_like": "decoy_a_0",
+      "cubes": [
+        {"name": "panel", "origin": [-4, -6, -1], "size": [8, 12, 1], "uv": [104, 48], "mirror": true}
+      ]
+    },
+    {
+      "name": "decoy_b2_3",
+      "parent": "plate_3",
+      "pivot": [0, 0, -21],
+      "rotation": [0, 0, 0],
+      "visible_when": {"form": [1], "stage": [2]},
+      "uv_like": "decoy_a_0",
+      "cubes": [
+        {"name": "panel", "origin": [-4, -6, -1], "size": [8, 12, 1], "uv": [104, 48], "mirror": true}
       ]
     },
     {
@@ -199,6 +376,50 @@
       ]
     },
     {
+      "name": "decoy_a_4",
+      "parent": "plate_4",
+      "pivot": [0, 0, -21],
+      "rotation": [0, 0, 0],
+      "visible_when": {"form": [5]},
+      "uv_like": "decoy_a_0",
+      "cubes": [
+        {"name": "panel", "origin": [-4, -6, -1], "size": [8, 12, 1], "uv": [104, 48], "mirror": true}
+      ]
+    },
+    {
+      "name": "decoy_b0_4",
+      "parent": "plate_4",
+      "pivot": [0, 0, -21],
+      "rotation": [0, 0, 0],
+      "visible_when": {"form": [4], "stage": [0]},
+      "uv_like": "decoy_a_0",
+      "cubes": [
+        {"name": "panel", "origin": [-4, -6, -1], "size": [8, 12, 1], "uv": [104, 48], "mirror": true}
+      ]
+    },
+    {
+      "name": "decoy_b1_4",
+      "parent": "plate_4",
+      "pivot": [0, 0, -21],
+      "rotation": [0, 0, 0],
+      "visible_when": {"form": [3], "stage": [1]},
+      "uv_like": "decoy_a_0",
+      "cubes": [
+        {"name": "panel", "origin": [-4, -6, -1], "size": [8, 12, 1], "uv": [104, 48], "mirror": true}
+      ]
+    },
+    {
+      "name": "decoy_b2_4",
+      "parent": "plate_4",
+      "pivot": [0, 0, -21],
+      "rotation": [0, 0, 0],
+      "visible_when": {"form": [2], "stage": [2]},
+      "uv_like": "decoy_a_0",
+      "cubes": [
+        {"name": "panel", "origin": [-4, -6, -1], "size": [8, 12, 1], "uv": [104, 48], "mirror": true}
+      ]
+    },
+    {
       "name": "plate_5",
       "parent": "ring",
       "pivot": [0, 0, 0],
@@ -221,6 +442,50 @@
       "visible_when": {"variant": [5]},
       "cubes": [
         {"name": "panel", "origin": [-4, -6, -1], "size": [8, 12, 1], "uv": [24, 34], "mirror": true}
+      ]
+    },
+    {
+      "name": "decoy_a_5",
+      "parent": "plate_5",
+      "pivot": [0, 0, -21],
+      "rotation": [0, 0, 0],
+      "visible_when": {"form": [6]},
+      "uv_like": "decoy_a_0",
+      "cubes": [
+        {"name": "panel", "origin": [-4, -6, -1], "size": [8, 12, 1], "uv": [104, 48], "mirror": true}
+      ]
+    },
+    {
+      "name": "decoy_b0_5",
+      "parent": "plate_5",
+      "pivot": [0, 0, -21],
+      "rotation": [0, 0, 0],
+      "visible_when": {"form": [5], "stage": [0]},
+      "uv_like": "decoy_a_0",
+      "cubes": [
+        {"name": "panel", "origin": [-4, -6, -1], "size": [8, 12, 1], "uv": [104, 48], "mirror": true}
+      ]
+    },
+    {
+      "name": "decoy_b1_5",
+      "parent": "plate_5",
+      "pivot": [0, 0, -21],
+      "rotation": [0, 0, 0],
+      "visible_when": {"form": [4], "stage": [1]},
+      "uv_like": "decoy_a_0",
+      "cubes": [
+        {"name": "panel", "origin": [-4, -6, -1], "size": [8, 12, 1], "uv": [104, 48], "mirror": true}
+      ]
+    },
+    {
+      "name": "decoy_b2_5",
+      "parent": "plate_5",
+      "pivot": [0, 0, -21],
+      "rotation": [0, 0, 0],
+      "visible_when": {"form": [3], "stage": [2]},
+      "uv_like": "decoy_a_0",
+      "cubes": [
+        {"name": "panel", "origin": [-4, -6, -1], "size": [8, 12, 1], "uv": [104, 48], "mirror": true}
       ]
     }
   ],
@@ -473,7 +738,7 @@
       "length": 120,
       "loop": true,
       "key_pose": 15,
-      "note": "ring tilted hard and spinning at twice the rate; the lit facet is the vulnerable one",
+      "note": "ring tilted hard and spinning at twice the rate; the lit facet is the vulnerable one, and two decoy facets (form/stage) carry hollow, upside-down, dimmer panels",
       "glow": [
         {"t": 0, "v": 0.6},
         {"t": 60, "v": 0.85, "ease": "smooth"},
@@ -609,5 +874,5 @@
       }
     }
   },
-  "uv_fill": 0.41
+  "uv_fill": 0.425
 }

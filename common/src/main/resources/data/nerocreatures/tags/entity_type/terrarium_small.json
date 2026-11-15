@@ -1,0 +1,29 @@
+{
+  "replace": false,
+  "values": [
+    {
+      "id": "nerocreatures:lumen_moth",
+      "required": false
+    },
+    {
+      "id": "nerocreatures:spore_drifter",
+      "required": false
+    },
+    {
+      "id": "nerocreatures:magnet_crab",
+      "required": false
+    },
+    {
+      "id": "nerocreatures:slag_beetle",
+      "required": false
+    },
+    {
+      "id": "nerocreatures:glacite_wisp",
+      "required": false
+    },
+    {
+      "id": "nerocreatures:xertz_forager",
+      "required": false
+    }
+  ]
+}

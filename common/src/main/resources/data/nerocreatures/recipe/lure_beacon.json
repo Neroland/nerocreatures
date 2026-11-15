@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "L": "minecraft:lantern",
+    "G": "minecraft:gold_ingot",
+    "D": "nerocreatures:lumen_dust",
+    "I": "minecraft:iron_ingot"
+  },
+  "pattern": [
+    " L ",
+    "GDG",
+    "III"
+  ],
+  "result": {
+    "count": 1,
+    "id": "nerocreatures:lure_beacon"
+  }
+}

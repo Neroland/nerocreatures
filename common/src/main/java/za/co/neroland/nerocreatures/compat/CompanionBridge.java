@@ -1,7 +1,15 @@
 package za.co.neroland.nerocreatures.compat;
 
+import java.util.Optional;
 import java.util.ServiceConfigurationError;
 import java.util.ServiceLoader;
+import java.util.UUID;
+
+import net.minecraft.world.entity.TamableAnimal;
+import net.minecraft.world.entity.ai.goal.Goal;
+import net.minecraft.world.entity.ai.goal.GoalSelector;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 
 import za.co.neroland.nerolandcore.platform.Services;
 
@@ -85,11 +93,104 @@ public final class CompanionBridge {
                                 + "deep pet behaviour deferred to it.");
             }
             return found;
-        } catch (RuntimeException | ServiceConfigurationError e) {
+        } catch (RuntimeException | ServiceConfigurationError | LinkageError e) {
             NeroCreaturesCommon.LOGGER.warn(
                     "[NeroCreatures] A companion pet-hook implementation could not be loaded; "
                             + "continuing with NeroCreatures' own behaviour.", e);
             return NO_OP;
+        }
+    }
+
+    // --- guarded call sites ---------------------------------------------------------------------
+    // A third-party implementation built against an older or newer interface can throw anything,
+    // including a LinkageError. Every NeroCreatures call goes through one of these, so a broken
+    // companion mod degrades to "no companion" instead of breaking taming, death or loading.
+
+    private static volatile boolean warned;
+
+    private static void failed(Throwable e) {
+        if (!warned) {
+            warned = true;
+            NeroCreaturesCommon.LOGGER.warn("[NeroCreatures] A companion pet hook failed ({}); ignoring it.",
+                    e.getClass().getSimpleName());
+        }
+    }
+
+    public static void petTamed(TamableAnimal pet, Player owner) {
+        try {
+            hooks().onPetTamed(pet, owner);
+        } catch (RuntimeException | LinkageError e) {
+            failed(e);
+        }
+    }
+
+    public static void petCommandChanged(TamableAnimal pet, String command) {
+        try {
+            hooks().onPetCommandChanged(pet, command);
+        } catch (RuntimeException | LinkageError e) {
+            failed(e);
+        }
+    }
+
+    public static void petReleased(TamableAnimal pet) {
+        try {
+            hooks().onPetReleased(pet);
+        } catch (RuntimeException | LinkageError e) {
+            failed(e);
+        }
+    }
+
+    public static boolean overridesIdleBehaviour(TamableAnimal pet) {
+        try {
+            return hooks().overridesIdleBehaviour(pet);
+        } catch (RuntimeException | LinkageError e) {
+            failed(e);
+            return false;
+        }
+    }
+
+    /** Lets the companion mod add goals, inside the allowed priority band only. */
+    public static void addCompanionGoals(TamableAnimal pet, GoalSelector selector) {
+        CompanionPetHooks hooks = hooks();
+        if (!companionPresent() || hooks == NO_OP) {
+            return;
+        }
+        try {
+            hooks.addCompanionGoals(pet, (Integer priority, Goal goal) -> {
+                if (priority != null && goal != null && CompanionSupport.allowedPriority(priority)) {
+                    selector.addGoal(priority, goal);
+                }
+            });
+        } catch (RuntimeException | LinkageError e) {
+            failed(e);
+        }
+    }
+
+    public static boolean allowsRecovery(TamableAnimal pet) {
+        try {
+            return hooks().allowsRecovery(pet);
+        } catch (RuntimeException | LinkageError e) {
+            failed(e);
+            return false;
+        }
+    }
+
+    /** Client: the companion mod's hat for this pet (for a head-anchor render layer). */
+    public static Optional<ItemStack> hatFor(TamableAnimal pet) {
+        try {
+            Optional<ItemStack> hat = hooks().hatFor(pet);
+            return hat == null ? Optional.empty() : hat.filter(stack -> !stack.isEmpty());
+        } catch (RuntimeException | LinkageError e) {
+            failed(e);
+            return Optional.empty();
+        }
+    }
+
+    public static void petLoaded(TamableAnimal pet, UUID owner) {
+        try {
+            hooks().onPetLoaded(pet, owner);
+        } catch (RuntimeException | LinkageError e) {
+            failed(e);
         }
     }
 

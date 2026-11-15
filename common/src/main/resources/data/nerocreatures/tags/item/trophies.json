@@ -1,0 +1,93 @@
+{
+  "replace": false,
+  "values": [
+    {
+      "id": "nerocreatures:apex_trophy",
+      "required": false
+    },
+    {
+      "id": "nerocreatures:tyrant_ember",
+      "required": false
+    },
+    {
+      "id": "nerocreatures:matriarch_frostcore",
+      "required": false
+    },
+    {
+      "id": "nerocreatures:sovereign_seed",
+      "required": false
+    },
+    {
+      "id": "nerocreatures:colossus_facet",
+      "required": false
+    },
+    {
+      "id": "nerocreatures:lumen_dust",
+      "required": false
+    },
+    {
+      "id": "nerocreatures:resonant_membrane",
+      "required": false
+    },
+    {
+      "id": "nerocreatures:lode_scute",
+      "required": false
+    },
+    {
+      "id": "nerocreatures:charged_sand",
+      "required": false
+    },
+    {
+      "id": "nerocreatures:slag_carapace",
+      "required": false
+    },
+    {
+      "id": "nerocreatures:heat_gland",
+      "required": false
+    },
+    {
+      "id": "nerocreatures:rime_wool",
+      "required": false
+    },
+    {
+      "id": "nerocreatures:coolant_milk",
+      "required": false
+    },
+    {
+      "id": "nerocreatures:cryo_fang",
+      "required": false
+    },
+    {
+      "id": "nerocreatures:drifter_spores",
+      "required": false
+    },
+    {
+      "id": "nerocreatures:bloom_heart",
+      "required": false
+    },
+    {
+      "id": "nerocreatures:mossback_hide",
+      "required": false
+    },
+    {
+      "id": "nerocreatures:prism_antler",
+      "required": false
+    },
+    {
+      "id": "nerocreatures:mirror_scale",
+      "required": false
+    },
+    {
+      "id": "nerocreatures:graviton_node",
+      "required": false
+    },
+    {
+      "id": "nerocreatures:captains_ledger",
+      "required": false
+    },
+    {
+      "id": "nerocreatures:leviathan_barnacle",
+      "required": false
+    }
+  ]
+}

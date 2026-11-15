@@ -194,6 +194,10 @@ public class BloomHost extends NeroCreatureEntity implements Enemy {
             this.sizedForm = form;
             this.refreshDimensions();
         }
+        if (this.xpReward != 0 && !BloomRules.dropsLoot(form)) {
+            // xpReward is not saved: a reloaded pod or sporeling would otherwise give the host's experience.
+            this.xpReward = 0;
+        }
         if (this.level() instanceof ServerLevel level && this.isSporeling() && this.isAlive()) {
             if (BloomRules.expired(++this.life)) {
                 level.sendParticles(ParticleTypes.SPORE_BLOSSOM_AIR, this.getX(), this.getY() + 0.3D, this.getZ(),

@@ -38,16 +38,40 @@ public class FacetColossusModel extends CreatureModel {
             .part("ring", null)
             .part("plate_0", "ring")
             .part("lit_0", "plate_0")
+            .part("decoy_a_0", "plate_0")
+            .part("decoy_b0_0", "plate_0")
+            .part("decoy_b1_0", "plate_0")
+            .part("decoy_b2_0", "plate_0")
             .part("plate_1", "ring")
             .part("lit_1", "plate_1")
+            .part("decoy_a_1", "plate_1")
+            .part("decoy_b0_1", "plate_1")
+            .part("decoy_b1_1", "plate_1")
+            .part("decoy_b2_1", "plate_1")
             .part("plate_2", "ring")
             .part("lit_2", "plate_2")
+            .part("decoy_a_2", "plate_2")
+            .part("decoy_b0_2", "plate_2")
+            .part("decoy_b1_2", "plate_2")
+            .part("decoy_b2_2", "plate_2")
             .part("plate_3", "ring")
             .part("lit_3", "plate_3")
+            .part("decoy_a_3", "plate_3")
+            .part("decoy_b0_3", "plate_3")
+            .part("decoy_b1_3", "plate_3")
+            .part("decoy_b2_3", "plate_3")
             .part("plate_4", "ring")
             .part("lit_4", "plate_4")
+            .part("decoy_a_4", "plate_4")
+            .part("decoy_b0_4", "plate_4")
+            .part("decoy_b1_4", "plate_4")
+            .part("decoy_b2_4", "plate_4")
             .part("plate_5", "ring")
             .part("lit_5", "plate_5")
+            .part("decoy_a_5", "plate_5")
+            .part("decoy_b0_5", "plate_5")
+            .part("decoy_b1_5", "plate_5")
+            .part("decoy_b2_5", "plate_5")
             .spin("ring", 'y', 1.5, 0, CreatureRig.when(0, 0, 0, 0, 3, 1), true)
             .spin("ring", 'y', 3, 0, CreatureRig.when(0, 0, 0, 0, 4, 1), true)
             .spin("ring", 'y', 0.75, 0, CreatureRig.when(0, 0, 0, 0, 8, 1), true)
@@ -99,11 +123,35 @@ public class FacetColossusModel extends CreatureModel {
                 .rot("plate_5", 0, 16, -6, 0, 0,  80, 9.6, -6, 0, 1,  160, 16, -6, 0, 1)
                 .pos("plate_5", 0, 0, 6, 0, 0,  80, 0, 9, 0, 1,  160, 0, 6, 0, 1)
             .visibleWhen("lit_0", 0, 1, 0, 0)
+            .visibleWhen("decoy_a_0", 0, 0, 2, 0)
+            .visibleWhen("decoy_b0_0", 1, 0, 64, 0)
+            .visibleWhen("decoy_b1_0", 2, 0, 32, 0)
+            .visibleWhen("decoy_b2_0", 4, 0, 16, 0)
             .visibleWhen("lit_1", 0, 2, 0, 0)
+            .visibleWhen("decoy_a_1", 0, 0, 4, 0)
+            .visibleWhen("decoy_b0_1", 1, 0, 2, 0)
+            .visibleWhen("decoy_b1_1", 2, 0, 64, 0)
+            .visibleWhen("decoy_b2_1", 4, 0, 32, 0)
             .visibleWhen("lit_2", 0, 4, 0, 0)
+            .visibleWhen("decoy_a_2", 0, 0, 8, 0)
+            .visibleWhen("decoy_b0_2", 1, 0, 4, 0)
+            .visibleWhen("decoy_b1_2", 2, 0, 2, 0)
+            .visibleWhen("decoy_b2_2", 4, 0, 64, 0)
             .visibleWhen("lit_3", 0, 8, 0, 0)
+            .visibleWhen("decoy_a_3", 0, 0, 16, 0)
+            .visibleWhen("decoy_b0_3", 1, 0, 8, 0)
+            .visibleWhen("decoy_b1_3", 2, 0, 4, 0)
+            .visibleWhen("decoy_b2_3", 4, 0, 2, 0)
             .visibleWhen("lit_4", 0, 16, 0, 0)
+            .visibleWhen("decoy_a_4", 0, 0, 32, 0)
+            .visibleWhen("decoy_b0_4", 1, 0, 16, 0)
+            .visibleWhen("decoy_b1_4", 2, 0, 8, 0)
+            .visibleWhen("decoy_b2_4", 4, 0, 4, 0)
             .visibleWhen("lit_5", 0, 32, 0, 0)
+            .visibleWhen("decoy_a_5", 0, 0, 64, 0)
+            .visibleWhen("decoy_b0_5", 1, 0, 32, 0)
+            .visibleWhen("decoy_b1_5", 2, 0, 16, 0)
+            .visibleWhen("decoy_b2_5", 4, 0, 8, 0)
             .build();
 
     /** The geometry; UVs are the packed ones in the spec. */
@@ -146,6 +194,18 @@ public class FacetColossusModel extends CreatureModel {
         plate0Part.addOrReplaceChild("lit_0", CubeListBuilder.create()
                 .texOffs(24, 34).addBox("panel", -4.0F, -6.0F, -1.0F, 8.0F, 12.0F, 1.0F, CubeDeformation.NONE),
                 PartPose.offset(0.0F, 0.0F, -21.0F));
+        plate0Part.addOrReplaceChild("decoy_a_0", CubeListBuilder.create()
+                .texOffs(104, 48).addBox("panel", -4.0F, -6.0F, -1.0F, 8.0F, 12.0F, 1.0F, CubeDeformation.NONE),
+                PartPose.offset(0.0F, 0.0F, -21.0F));
+        plate0Part.addOrReplaceChild("decoy_b0_0", CubeListBuilder.create()
+                .mirror(true).texOffs(104, 48).addBox("panel", -4.0F, -6.0F, -1.0F, 8.0F, 12.0F, 1.0F, CubeDeformation.NONE),
+                PartPose.offset(0.0F, 0.0F, -21.0F));
+        plate0Part.addOrReplaceChild("decoy_b1_0", CubeListBuilder.create()
+                .mirror(true).texOffs(104, 48).addBox("panel", -4.0F, -6.0F, -1.0F, 8.0F, 12.0F, 1.0F, CubeDeformation.NONE),
+                PartPose.offset(0.0F, 0.0F, -21.0F));
+        plate0Part.addOrReplaceChild("decoy_b2_0", CubeListBuilder.create()
+                .mirror(true).texOffs(104, 48).addBox("panel", -4.0F, -6.0F, -1.0F, 8.0F, 12.0F, 1.0F, CubeDeformation.NONE),
+                PartPose.offset(0.0F, 0.0F, -21.0F));
         PartDefinition plate1Part = ringPart.addOrReplaceChild("plate_1", CubeListBuilder.create()
                 .mirror(true).texOffs(88, 0).addBox("main", -6.0F, -8.0F, -21.0F, 12.0F, 16.0F, 2.0F, CubeDeformation.NONE)
                 .texOffs(104, 41).addBox("top", -4.0F, -13.0F, -21.0F, 8.0F, 5.0F, 2.0F, CubeDeformation.NONE)
@@ -155,6 +215,18 @@ public class FacetColossusModel extends CreatureModel {
                 PartPose.offsetAndRotation(0.0F, 0.0F, 0.0F, 0.0F, (float) Math.toRadians(60.0), 0.0F));
         plate1Part.addOrReplaceChild("lit_1", CubeListBuilder.create()
                 .mirror(true).texOffs(24, 34).addBox("panel", -4.0F, -6.0F, -1.0F, 8.0F, 12.0F, 1.0F, CubeDeformation.NONE),
+                PartPose.offset(0.0F, 0.0F, -21.0F));
+        plate1Part.addOrReplaceChild("decoy_a_1", CubeListBuilder.create()
+                .mirror(true).texOffs(104, 48).addBox("panel", -4.0F, -6.0F, -1.0F, 8.0F, 12.0F, 1.0F, CubeDeformation.NONE),
+                PartPose.offset(0.0F, 0.0F, -21.0F));
+        plate1Part.addOrReplaceChild("decoy_b0_1", CubeListBuilder.create()
+                .mirror(true).texOffs(104, 48).addBox("panel", -4.0F, -6.0F, -1.0F, 8.0F, 12.0F, 1.0F, CubeDeformation.NONE),
+                PartPose.offset(0.0F, 0.0F, -21.0F));
+        plate1Part.addOrReplaceChild("decoy_b1_1", CubeListBuilder.create()
+                .mirror(true).texOffs(104, 48).addBox("panel", -4.0F, -6.0F, -1.0F, 8.0F, 12.0F, 1.0F, CubeDeformation.NONE),
+                PartPose.offset(0.0F, 0.0F, -21.0F));
+        plate1Part.addOrReplaceChild("decoy_b2_1", CubeListBuilder.create()
+                .mirror(true).texOffs(104, 48).addBox("panel", -4.0F, -6.0F, -1.0F, 8.0F, 12.0F, 1.0F, CubeDeformation.NONE),
                 PartPose.offset(0.0F, 0.0F, -21.0F));
         PartDefinition plate2Part = ringPart.addOrReplaceChild("plate_2", CubeListBuilder.create()
                 .mirror(true).texOffs(88, 0).addBox("main", -6.0F, -8.0F, -21.0F, 12.0F, 16.0F, 2.0F, CubeDeformation.NONE)
@@ -166,6 +238,18 @@ public class FacetColossusModel extends CreatureModel {
         plate2Part.addOrReplaceChild("lit_2", CubeListBuilder.create()
                 .mirror(true).texOffs(24, 34).addBox("panel", -4.0F, -6.0F, -1.0F, 8.0F, 12.0F, 1.0F, CubeDeformation.NONE),
                 PartPose.offset(0.0F, 0.0F, -21.0F));
+        plate2Part.addOrReplaceChild("decoy_a_2", CubeListBuilder.create()
+                .mirror(true).texOffs(104, 48).addBox("panel", -4.0F, -6.0F, -1.0F, 8.0F, 12.0F, 1.0F, CubeDeformation.NONE),
+                PartPose.offset(0.0F, 0.0F, -21.0F));
+        plate2Part.addOrReplaceChild("decoy_b0_2", CubeListBuilder.create()
+                .mirror(true).texOffs(104, 48).addBox("panel", -4.0F, -6.0F, -1.0F, 8.0F, 12.0F, 1.0F, CubeDeformation.NONE),
+                PartPose.offset(0.0F, 0.0F, -21.0F));
+        plate2Part.addOrReplaceChild("decoy_b1_2", CubeListBuilder.create()
+                .mirror(true).texOffs(104, 48).addBox("panel", -4.0F, -6.0F, -1.0F, 8.0F, 12.0F, 1.0F, CubeDeformation.NONE),
+                PartPose.offset(0.0F, 0.0F, -21.0F));
+        plate2Part.addOrReplaceChild("decoy_b2_2", CubeListBuilder.create()
+                .mirror(true).texOffs(104, 48).addBox("panel", -4.0F, -6.0F, -1.0F, 8.0F, 12.0F, 1.0F, CubeDeformation.NONE),
+                PartPose.offset(0.0F, 0.0F, -21.0F));
         PartDefinition plate3Part = ringPart.addOrReplaceChild("plate_3", CubeListBuilder.create()
                 .mirror(true).texOffs(88, 0).addBox("main", -6.0F, -8.0F, -21.0F, 12.0F, 16.0F, 2.0F, CubeDeformation.NONE)
                 .texOffs(104, 41).addBox("top", -4.0F, -13.0F, -21.0F, 8.0F, 5.0F, 2.0F, CubeDeformation.NONE)
@@ -175,6 +259,18 @@ public class FacetColossusModel extends CreatureModel {
                 PartPose.offsetAndRotation(0.0F, 0.0F, 0.0F, 0.0F, (float) Math.toRadians(180.0), 0.0F));
         plate3Part.addOrReplaceChild("lit_3", CubeListBuilder.create()
                 .mirror(true).texOffs(24, 34).addBox("panel", -4.0F, -6.0F, -1.0F, 8.0F, 12.0F, 1.0F, CubeDeformation.NONE),
+                PartPose.offset(0.0F, 0.0F, -21.0F));
+        plate3Part.addOrReplaceChild("decoy_a_3", CubeListBuilder.create()
+                .mirror(true).texOffs(104, 48).addBox("panel", -4.0F, -6.0F, -1.0F, 8.0F, 12.0F, 1.0F, CubeDeformation.NONE),
+                PartPose.offset(0.0F, 0.0F, -21.0F));
+        plate3Part.addOrReplaceChild("decoy_b0_3", CubeListBuilder.create()
+                .mirror(true).texOffs(104, 48).addBox("panel", -4.0F, -6.0F, -1.0F, 8.0F, 12.0F, 1.0F, CubeDeformation.NONE),
+                PartPose.offset(0.0F, 0.0F, -21.0F));
+        plate3Part.addOrReplaceChild("decoy_b1_3", CubeListBuilder.create()
+                .mirror(true).texOffs(104, 48).addBox("panel", -4.0F, -6.0F, -1.0F, 8.0F, 12.0F, 1.0F, CubeDeformation.NONE),
+                PartPose.offset(0.0F, 0.0F, -21.0F));
+        plate3Part.addOrReplaceChild("decoy_b2_3", CubeListBuilder.create()
+                .mirror(true).texOffs(104, 48).addBox("panel", -4.0F, -6.0F, -1.0F, 8.0F, 12.0F, 1.0F, CubeDeformation.NONE),
                 PartPose.offset(0.0F, 0.0F, -21.0F));
         PartDefinition plate4Part = ringPart.addOrReplaceChild("plate_4", CubeListBuilder.create()
                 .mirror(true).texOffs(88, 0).addBox("main", -6.0F, -8.0F, -21.0F, 12.0F, 16.0F, 2.0F, CubeDeformation.NONE)
@@ -186,6 +282,18 @@ public class FacetColossusModel extends CreatureModel {
         plate4Part.addOrReplaceChild("lit_4", CubeListBuilder.create()
                 .mirror(true).texOffs(24, 34).addBox("panel", -4.0F, -6.0F, -1.0F, 8.0F, 12.0F, 1.0F, CubeDeformation.NONE),
                 PartPose.offset(0.0F, 0.0F, -21.0F));
+        plate4Part.addOrReplaceChild("decoy_a_4", CubeListBuilder.create()
+                .mirror(true).texOffs(104, 48).addBox("panel", -4.0F, -6.0F, -1.0F, 8.0F, 12.0F, 1.0F, CubeDeformation.NONE),
+                PartPose.offset(0.0F, 0.0F, -21.0F));
+        plate4Part.addOrReplaceChild("decoy_b0_4", CubeListBuilder.create()
+                .mirror(true).texOffs(104, 48).addBox("panel", -4.0F, -6.0F, -1.0F, 8.0F, 12.0F, 1.0F, CubeDeformation.NONE),
+                PartPose.offset(0.0F, 0.0F, -21.0F));
+        plate4Part.addOrReplaceChild("decoy_b1_4", CubeListBuilder.create()
+                .mirror(true).texOffs(104, 48).addBox("panel", -4.0F, -6.0F, -1.0F, 8.0F, 12.0F, 1.0F, CubeDeformation.NONE),
+                PartPose.offset(0.0F, 0.0F, -21.0F));
+        plate4Part.addOrReplaceChild("decoy_b2_4", CubeListBuilder.create()
+                .mirror(true).texOffs(104, 48).addBox("panel", -4.0F, -6.0F, -1.0F, 8.0F, 12.0F, 1.0F, CubeDeformation.NONE),
+                PartPose.offset(0.0F, 0.0F, -21.0F));
         PartDefinition plate5Part = ringPart.addOrReplaceChild("plate_5", CubeListBuilder.create()
                 .mirror(true).texOffs(88, 0).addBox("main", -6.0F, -8.0F, -21.0F, 12.0F, 16.0F, 2.0F, CubeDeformation.NONE)
                 .texOffs(104, 41).addBox("top", -4.0F, -13.0F, -21.0F, 8.0F, 5.0F, 2.0F, CubeDeformation.NONE)
@@ -195,6 +303,18 @@ public class FacetColossusModel extends CreatureModel {
                 PartPose.offsetAndRotation(0.0F, 0.0F, 0.0F, 0.0F, (float) Math.toRadians(300.0), 0.0F));
         plate5Part.addOrReplaceChild("lit_5", CubeListBuilder.create()
                 .mirror(true).texOffs(24, 34).addBox("panel", -4.0F, -6.0F, -1.0F, 8.0F, 12.0F, 1.0F, CubeDeformation.NONE),
+                PartPose.offset(0.0F, 0.0F, -21.0F));
+        plate5Part.addOrReplaceChild("decoy_a_5", CubeListBuilder.create()
+                .mirror(true).texOffs(104, 48).addBox("panel", -4.0F, -6.0F, -1.0F, 8.0F, 12.0F, 1.0F, CubeDeformation.NONE),
+                PartPose.offset(0.0F, 0.0F, -21.0F));
+        plate5Part.addOrReplaceChild("decoy_b0_5", CubeListBuilder.create()
+                .mirror(true).texOffs(104, 48).addBox("panel", -4.0F, -6.0F, -1.0F, 8.0F, 12.0F, 1.0F, CubeDeformation.NONE),
+                PartPose.offset(0.0F, 0.0F, -21.0F));
+        plate5Part.addOrReplaceChild("decoy_b1_5", CubeListBuilder.create()
+                .mirror(true).texOffs(104, 48).addBox("panel", -4.0F, -6.0F, -1.0F, 8.0F, 12.0F, 1.0F, CubeDeformation.NONE),
+                PartPose.offset(0.0F, 0.0F, -21.0F));
+        plate5Part.addOrReplaceChild("decoy_b2_5", CubeListBuilder.create()
+                .mirror(true).texOffs(104, 48).addBox("panel", -4.0F, -6.0F, -1.0F, 8.0F, 12.0F, 1.0F, CubeDeformation.NONE),
                 PartPose.offset(0.0F, 0.0F, -21.0F));
         return LayerDefinition.create(mesh, 128, 128);
     }

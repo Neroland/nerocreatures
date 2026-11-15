@@ -223,6 +223,7 @@
   "message.nerocreatures.apex_altar.cooling": "The altar is still recharging (%s s).",
   "message.nerocreatures.apex_altar.fight_live": "This altar's fight is still under way.",
   "message.nerocreatures.apex_altar.unknown_boss": "This sigil's boss cannot be summoned here.",
-  "message.nerocreatures.apex_altar.no_room": "The boss needs four clear blocks above the altar.",
+  "message.nerocreatures.apex_altar.peaceful": "Nothing answers the sigil on Peaceful. The sigil is kept.",
+  "message.nerocreatures.apex_altar.no_room": "The boss needs a clear space about five blocks wide and five tall above the altar. The sigil is kept.",
   "message.nerocreatures.apex_altar.failed": "The summon failed: the area is too crowded."
 }

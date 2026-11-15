@@ -198,9 +198,11 @@ public final class FacetRules {
     /** The damage multiplier for a classified hit. */
     public static float damageFactor(Hit hit) {
         return switch (hit) {
-            case VULNERABLE, UNSOURCED -> 1.0F;
+            case VULNERABLE -> 1.0F;
             case CORE -> CORE_DAMAGE_FACTOR;
-            case DECOY, ARMOURED -> 0.0F;
+            // A hit with no position cannot have struck the lit facet: lava, fire and the like skip the
+            // facet mechanic, so they do nothing (damage that bypasses invulnerability never gets here).
+            case DECOY, ARMOURED, UNSOURCED -> 0.0F;
         };
     }
 

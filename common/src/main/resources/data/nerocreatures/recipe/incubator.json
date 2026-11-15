@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "G": "minecraft:glass",
+    "C": "minecraft:copper_ingot",
+    "L": "nerocreatures:lumen_dust",
+    "H": "minecraft:hay_block"
+  },
+  "pattern": [
+    "GGG",
+    "CLC",
+    "CHC"
+  ],
+  "result": {
+    "count": 1,
+    "id": "nerocreatures:incubator"
+  }
+}

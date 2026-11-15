@@ -96,6 +96,31 @@ public final class ArenaCrystalRules {
         return yaw + (left ? -REFRACT_DEGREES : REFRACT_DEGREES);
     }
 
+    /**
+     * Who the beam may hurt: players standing in the arena (the fight), and wild hostile mobs. Never a
+     * pet, a mount, livestock, a villager or any other creature, and never a player outside the arena
+     * (say, in the claim next door).
+     *
+     * @param player  the candidate is a player
+     * @param inArena the candidate is inside the boss's arena radius
+     * @param hostile the candidate is a hostile mob ({@code Enemy})
+     * @param owned   the candidate has an owner or is held on a lead by a player
+     */
+    public static boolean beamMayHit(boolean player, boolean inArena, boolean hostile, boolean owned) {
+        if (player) {
+            return inArena;
+        }
+        return hostile && !owned;
+    }
+
+    /**
+     * Whether a wave may place one more two-block pillar: both blocks must fit in the ledger, so a
+     * pillar is never half-recorded.
+     */
+    public static boolean roomForPillar(int ledgerSize) {
+        return HARD_CAP_BLOCKS - Math.max(0, ledgerSize) >= PILLAR_HEIGHT;
+    }
+
     /** Whether the beam deals damage on this tick of the pose. */
     public static boolean pulseNow(int tickIntoPose) {
         return tickIntoPose >= BEAM_TELEGRAPH_TICKS && tickIntoPose < BEAM_POSE_TICKS
@@ -144,6 +169,16 @@ public final class ArenaCrystalRules {
             }
             this.entries.addLast(new Entry(pos, expiresAt));
             return true;
+        }
+
+        /** Whether a position is already recorded. */
+        public boolean contains(long pos) {
+            for (Entry e : this.entries) {
+                if (e.pos() == pos) {
+                    return true;
+                }
+            }
+            return false;
         }
 
         /** Forgets entries whose decay has passed. */

@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "nerocreatures:block/trophy_plaque"
+    },
+    "facing=east": {
+      "model": "nerocreatures:block/trophy_plaque",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "nerocreatures:block/trophy_plaque",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "nerocreatures:block/trophy_plaque",
+      "y": 270
+    }
+  }
+}

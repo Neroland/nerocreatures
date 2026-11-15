@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "S": "minecraft:stick",
+    "N": "minecraft:gold_nugget",
+    "P": "#minecraft:planks"
+  },
+  "pattern": [
+    "SNS",
+    "PPP"
+  ],
+  "result": {
+    "count": 1,
+    "id": "nerocreatures:trophy_plaque"
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "M": "nerocreatures:resonant_membrane",
+    "A": "minecraft:amethyst_shard",
+    "N": "minecraft:note_block",
+    "I": "minecraft:iron_ingot"
+  },
+  "pattern": [
+    " M ",
+    "ANA",
+    "III"
+  ],
+  "result": {
+    "count": 1,
+    "id": "nerocreatures:sonic_ward"
+  }
+}

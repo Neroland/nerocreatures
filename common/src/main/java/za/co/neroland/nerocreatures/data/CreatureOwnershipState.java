@@ -24,6 +24,8 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.level.saveddata.SavedData;
 import net.minecraft.world.level.saveddata.SavedDataType;
 
+import org.jetbrains.annotations.Nullable;
+
 import za.co.neroland.nerolandcore.data.SavedDataCompat;
 import za.co.neroland.nerolandcore.data.SavedDataRecovery;
 
@@ -303,6 +305,60 @@ public final class CreatureOwnershipState extends SavedData {
         return true;
     }
 
+    /**
+     * Drops one row by its id alone, whoever it belongs to: an Incubator's egg row when the egg hatches,
+     * is taken back out or its incubator breaks. The block entity only knows the random incubation id,
+     * never the player (decision 004), so it cannot call {@link #remove(UUID, UUID)}. One pass over the
+     * index; eggs are rare events.
+     *
+     * @return {@code true} if a row was actually removed
+     */
+    public boolean removeRow(UUID entity) {
+        for (UUID player : List.copyOf(this.byPlayer.keySet())) {
+            if (this.remove(player, entity)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Marks one indexed creature parked (a companion mod took it out of the world into storage) or
+     * unparked (it was re-created; {@code dimension} is where). Only an existing row changes: a row
+     * that erasure or retention removed is never re-added here, so the load-time check still releases
+     * a pet that was erased while parked. Does not touch the erasure markers.
+     *
+     * @return {@code true} if the row exists (whether or not it changed)
+     */
+    public boolean setParked(UUID player, UUID entity, boolean parked, @Nullable Identifier dimension) {
+        List<OwnedCreature> rows = this.byPlayer.get(player);
+        if (rows == null) {
+            return false;
+        }
+        for (int i = 0; i < rows.size(); i++) {
+            OwnedCreature row = rows.get(i);
+            if (row.entity().equals(entity)) {
+                OwnedCreature updated = row.withParked(parked, dimension);
+                if (!updated.equals(row)) {
+                    rows.set(i, updated);
+                    this.touch(player);
+                }
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /** Whether this player's row for this creature is marked parked. */
+    public boolean isParked(UUID player, UUID entity) {
+        for (OwnedCreature row : this.byPlayer.getOrDefault(player, List.of())) {
+            if (row.entity().equals(entity)) {
+                return row.parked();
+            }
+        }
+        return false;
+    }
+
     // --- privacy: erasure, retention, export --------------------------------
 
     /**
@@ -375,6 +431,9 @@ public final class CreatureOwnershipState extends SavedData {
             entry.addProperty("dimension", row.dimension().toString());
             if (row.kind() == OwnedCreature.Kind.EGG) {
                 entry.addProperty("hatch_at", row.hatchAt());
+            }
+            if (row.parked()) {
+                entry.addProperty("parked", true);
             }
             owned.add(entry);
         }

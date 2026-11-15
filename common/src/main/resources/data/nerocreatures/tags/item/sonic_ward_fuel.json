@@ -1,0 +1,10 @@
+{
+  "replace": false,
+  "values": [
+    "minecraft:amethyst_shard",
+    {
+      "id": "nerocreatures:resonant_membrane",
+      "required": false
+    }
+  ]
+}

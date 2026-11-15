@@ -26,8 +26,9 @@ chapter stays hidden until Neroland Core's `nerolandcore:reached_orbit` gate is 
 | Cindara Falls Quiet | *server-wide*: the first Tyrant defeat on `nerospace:cindara` | — |
 | Field Guide | complete Crystal Clarity, Second Hands, Boarding Party and Ember Crown | all four |
 
-"Cindara Falls Quiet" is a world-log quest: it listens to the `nerocreatures:boss_pressure` channel
-([Bosses](Bosses.md)) for a falling crossing on the Cindara dimension and completes once for the whole
+"Cindara Falls Quiet" is a world-log quest: it listens to the `nerocreatures:cinder_tyrant_defeated`
+channel ([Bosses](Bosses.md)) for a Cinder Tyrant's defeat on the Cindara dimension (other bosses
+fought on Cindara do not count) and completes once for the whole
 server. A crossing never names a player, which is why personal milestones use gates instead.
 
 The Asteroid Worm has no quest yet: it has no natural spawn, so a quest naming it could never be

@@ -12,6 +12,9 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.Difficulty;
+import net.minecraft.world.entity.EntityDimensions;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -19,6 +22,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
+import net.minecraft.world.phys.AABB;
 
 import org.jetbrains.annotations.Nullable;
 
@@ -43,9 +47,6 @@ public class ApexAltarBlockEntity extends BlockEntity {
 
     /** The registry id the integration pass registers the block-entity type under. */
     public static final Identifier ID = ApexAltarBlock.ID;
-
-    /** Headroom the summoned boss needs above the altar, in blocks. */
-    private static final int HEADROOM = 4;
 
     private static IntSupplier cooldownTicks = () -> ApexAltarRules.DEFAULT_COOLDOWN_TICKS;
 
@@ -91,7 +92,8 @@ public class ApexAltarBlockEntity extends BlockEntity {
         long now = level.getGameTime();
         Identifier bossId = kind.bossId();
         ApexAltarRules.State.Outcome outcome = this.state.attempt(now, !stack.isEmpty(),
-                BossSummons.isKnown(bossId), hasHeadroom(level, pos), this.fightProbe(level),
+                BossSummons.isKnown(bossId), level.getDifficulty() == Difficulty.PEACEFUL,
+                hasHeadroom(level, pos, bossId), this.fightProbe(level),
                 cooldownTicks.getAsInt(), kind.name(), () -> {
                     Optional<NeroBossEntity> boss = kind.summoner().summon(level, pos.above(), player.getUUID());
                     return boss.map(b -> b.bossController().fightId()).orElse(null);
@@ -112,20 +114,34 @@ public class ApexAltarBlockEntity extends BlockEntity {
                     ApexAltarRules.secondsLeft(now, readyAt));
             case FIGHT_LIVE -> Component.translatable("message.nerocreatures.apex_altar.fight_live");
             case UNKNOWN_BOSS -> Component.translatable("message.nerocreatures.apex_altar.unknown_boss");
+            case PEACEFUL -> Component.translatable("message.nerocreatures.apex_altar.peaceful");
             case NO_ROOM -> Component.translatable("message.nerocreatures.apex_altar.no_room");
             default -> Component.translatable("message.nerocreatures.apex_altar.failed");
         };
     }
 
-    /** The boss stands on the altar: the cells above must be free of collision. */
-    private static boolean hasHeadroom(ServerLevel level, BlockPos pos) {
-        for (int dy = 1; dy <= HEADROOM; dy++) {
-            BlockPos cell = pos.above(dy);
-            if (!level.isLoaded(cell) || !level.getBlockState(cell).getCollisionShape(level, cell).isEmpty()) {
-                return false;
-            }
+    /**
+     * The boss stands on the altar: its whole body, plus a margin, must fit without touching a block
+     * ({@link ApexAltarRules#summonBox}). Built from the boss type's real size, so a 3-block-wide boss
+     * is never summoned into a 1-block shaft. An unknown type has no room.
+     */
+    private static boolean hasHeadroom(ServerLevel level, BlockPos pos, Identifier bossId) {
+        if (!BuiltInRegistries.ENTITY_TYPE.containsKey(bossId)) {
+            return false;
         }
-        return true;
+        EntityType<?> bossType = BuiltInRegistries.ENTITY_TYPE.getValue(bossId);
+        EntityDimensions size = bossType.getDimensions();
+        BlockPos feet = pos.above();
+        double[] b = ApexAltarRules.summonBox(feet.getX() + 0.5D, feet.getY(), feet.getZ() + 0.5D,
+                size.width(), size.height());
+        AABB box = new AABB(b[0], b[1], b[2], b[3], b[4], b[5]);
+        BlockPos min = BlockPos.containing(b[0], b[1], b[2]);
+        BlockPos max = BlockPos.containing(b[3], b[4], b[5]);
+        if (!level.isLoaded(min) || !level.isLoaded(max) || !level.isLoaded(new BlockPos(min.getX(), min.getY(), max.getZ()))
+                || !level.isLoaded(new BlockPos(max.getX(), min.getY(), min.getZ()))) {
+            return false;
+        }
+        return level.noCollision(box);
     }
 
     /** Whether the world still holds this altar's fight: loaded and alive, or a contribution row. */
@@ -151,6 +167,9 @@ public class ApexAltarBlockEntity extends BlockEntity {
         }
         this.refresh = 0;
         long now = level.getGameTime();
+        if (this.state.clampToNow(now)) {
+            this.setChanged();
+        }
         boolean probe = this.fightProbe(level);
         UUID before = this.state.fight();
         this.state.clearFightIfOver(now, probe);

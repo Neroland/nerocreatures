@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "P": "#minecraft:planks",
+    "W": "minecraft:wheat"
+  },
+  "pattern": [
+    "PWP",
+    "PPP"
+  ],
+  "result": {
+    "count": 1,
+    "id": "nerocreatures:feeding_trough"
+  }
+}

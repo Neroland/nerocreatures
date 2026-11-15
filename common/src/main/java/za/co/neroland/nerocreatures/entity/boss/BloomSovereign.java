@@ -16,6 +16,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.world.BossEvent;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -61,6 +62,10 @@ import za.co.neroland.nerocreatures.entity.visual.VisualPose;
  *       destroyed.</li>
  *   <li><b>Heal</b> ({@code ability_2}, 60 ticks): pods pulse; at the end of the channel she heals per
  *       pod still alive. No pods, no heal.</li>
+ *   <li><b>Bark</b> — she takes damage only from an attacker within
+ *       {@value SovereignRules#BARK_REACH} blocks that she can see (the lash's reach), so a bow from
+ *       beyond her vine or a blow from under an overhang glances off. Pods and sporelings are not
+ *       shielded.</li>
  *   <li><b>Infect</b> ({@code ability}, 30 ticks, hit at 14): a vine lash at her target that
  *       poisons it and raises a sporeling at its feet — her adds — capped per phase (hard cap
  *       {@value SovereignRules#MAX_SPORELINGS}) and inside the shared sporeling dimension cap.
@@ -79,6 +84,7 @@ public class BloomSovereign extends NeroBossEntity {
     private final List<Integer> sporelings = new ArrayList<>();
 
     private int podTick;
+    private long barkCueAt;
 
     public BloomSovereign(EntityType<? extends BloomSovereign> type, Level level) {
         super(type, level, CreatureTier.APEX);
@@ -321,6 +327,37 @@ public class BloomSovereign extends NeroBossEntity {
             this.clearBrood(level);
         }
         super.remove(reason);
+    }
+
+    // --- bark -------------------------------------------------------------------------------
+
+    /**
+     * Her bark: damage from an attacker she cannot answer (beyond the lash's reach, or out of her
+     * sight) glances off. Damage with no attacker is already refused by {@link NeroBossEntity};
+     * damage that bypasses invulnerability always lands.
+     */
+    //? if >=1.21.2 {
+    @Override
+    public boolean hurtServer(ServerLevel level, DamageSource source, float amount) {
+    //?} else {
+    /*@Override
+    public boolean hurt(DamageSource source, float amount) {
+        if (!(this.level() instanceof ServerLevel level)) {
+            return super.hurt(source, amount);
+        }
+    *///?}
+        if (!source.is(DamageTypeTags.BYPASSES_INVULNERABILITY) && source.getEntity() instanceof LivingEntity attacker
+                && !SovereignRules.barkLetsThrough(this.distanceTo(attacker), this.hasLineOfSight(attacker))) {
+            long now = level.getGameTime();
+            if (now - this.barkCueAt >= SovereignRules.BARK_CUE_TICKS || now < this.barkCueAt) {
+                this.barkCueAt = now;
+                level.playSound(null, this.blockPosition(), SoundEvents.MOSS_BREAK, SoundSource.HOSTILE, 1.4F, 1.6F);
+                level.sendParticles(ParticleTypes.SPORE_BLOSSOM_AIR, this.getX(), this.getY() + 2.0D, this.getZ(),
+                        8, 1.0D, 1.0D, 1.0D, 0.0D);
+            }
+            return false;
+        }
+        return super.hurtServer(level, source, amount);
     }
 
     // --- abilities --------------------------------------------------------------------------

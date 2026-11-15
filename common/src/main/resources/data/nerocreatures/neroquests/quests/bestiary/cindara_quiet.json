@@ -6,7 +6,7 @@
   "objectives": [
     {
       "type": "neroquests:custom_event",
-      "channel": "nerocreatures:boss_pressure",
+      "channel": "nerocreatures:cinder_tyrant_defeated",
       "event_scope": "nerospace:cindara",
       "direction": "falling",
       "audience": "world"

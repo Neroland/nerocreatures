@@ -89,7 +89,7 @@ class FacetRulesTest {
         assertEquals(0.0F, FacetRules.damageFactor(Hit.ARMOURED));
         assertEquals(1.0F, FacetRules.damageFactor(Hit.VULNERABLE));
         assertEquals(Hit.UNSOURCED, FacetRules.classify(false, 0.0D, 0.0D, 0.0D, 0, 0, false));
-        assertEquals(1.0F, FacetRules.damageFactor(Hit.UNSOURCED));
+        assertEquals(0.0F, FacetRules.damageFactor(Hit.UNSOURCED), "lava and fire skip the facets, so they do nothing");
     }
 
     @Test

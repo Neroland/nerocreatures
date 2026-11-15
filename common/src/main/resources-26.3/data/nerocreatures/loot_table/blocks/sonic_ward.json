@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:block",
+  "pools": [
+    {
+      "conditions": [
+        {
+          "condition": "minecraft:survives_explosion"
+        }
+      ],
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "nerocreatures:sonic_ward"
+        }
+      ],
+      "rolls": 1
+    }
+  ],
+  "random_sequence": "nerocreatures:blocks/sonic_ward"
+}

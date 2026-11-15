@@ -29,6 +29,7 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.entity.EntityTypeTest;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.phys.AABB;
 
@@ -45,11 +46,14 @@ import za.co.neroland.nerocreatures.NeroCreaturesCommon;
 import za.co.neroland.nerocreatures.budget.BudgetSampler;
 import za.co.neroland.nerocreatures.budget.CreatureBudget;
 import za.co.neroland.nerocreatures.config.NeroCreaturesConfig;
+import za.co.neroland.nerocreatures.block.EphemeralCrustBlock;
 import za.co.neroland.nerocreatures.entity.ai.SlagLobRules;
 import za.co.neroland.nerocreatures.entity.alpha.AlphaData;
 import za.co.neroland.nerocreatures.entity.alpha.AlphaRules;
 import za.co.neroland.nerocreatures.entity.alpha.AlphaSystem;
 import za.co.neroland.nerocreatures.entity.base.NeroCreatureEntity;
+import za.co.neroland.nerocreatures.entity.boss.ArenaCrystalRules;
+import za.co.neroland.nerocreatures.entity.boss.MatriarchRules;
 import za.co.neroland.nerocreatures.entity.greenxertz.BloomHost;
 import za.co.neroland.nerocreatures.entity.greenxertz.BloomRules;
 import za.co.neroland.nerocreatures.entity.luna.NoduleRules;
@@ -171,6 +175,10 @@ public final class BudgetProbe {
         boolean noduleFail;
         int maxCrust;
         int crustCap;
+        int maxRime;
+        int rimeCap;
+        int maxPrism;
+        int prismCap;
         boolean crustFail;
         int maxTethered;
         int leeches;
@@ -556,6 +564,8 @@ public final class BudgetProbe {
             int hosts = 0;
             int swarms = 0;
             int waders = 0;
+            int matriarchs = 0;
+            int colossi = 0;
             int leeches = 0;
             int tethered = 0;
             int noduleMax = 0;
@@ -575,6 +585,8 @@ public final class BudgetProbe {
                 switch (id) {
                     case "nerocreatures:static_swarm" -> swarms++;
                     case "nerocreatures:magma_wader" -> waders++;
+                    case "nerocreatures:rime_matriarch" -> matriarchs++;
+                    case "nerocreatures:facet_colossus" -> colossi++;
                     case "nerocreatures:gravity_leech" -> leeches++;
                     case "nerocreatures:lode_tortoise" -> {
                         if (m instanceof CreatureVisualsHolder h) {
@@ -619,13 +631,19 @@ public final class BudgetProbe {
                 c.tetherFail = true;
             }
             if ((t - w.start) % CRUST_SCAN_EVERY == 0) {
-                int crust = countCrust();
-                int crustCap = SlagLobRules.MAX_LIVE_CRUST * waders;
-                c.crustCap = Math.max(c.crustCap, crustCap);
-                c.maxCrust = Math.max(c.maxCrust, crust);
+                int[] crust = countCrust();
+                // Each variant against its own placer: slag per wader, rime (pillars + frozen water) per
+                // Rime Matriarch, prism crystals per Facet Colossus.
+                c.crustCap = Math.max(c.crustCap, SlagLobRules.MAX_LIVE_CRUST * waders);
+                c.rimeCap = Math.max(c.rimeCap,
+                        (MatriarchRules.MAX_PILLAR_BLOCKS + MatriarchRules.MAX_FROZEN_BLOCKS) * matriarchs);
+                c.prismCap = Math.max(c.prismCap, ArenaCrystalRules.HARD_CAP_BLOCKS * colossi);
+                c.maxCrust = Math.max(c.maxCrust, crust[0]);
+                c.maxRime = Math.max(c.maxRime, crust[1]);
+                c.maxPrism = Math.max(c.maxPrism, crust[2]);
                 // Crust outlives the wader that threw it until it reverts on its own, so the bound is
                 // the window's peak wader count, not the waders alive at this sample.
-                if (crust > c.crustCap) {
+                if (crust[0] > c.crustCap || crust[1] > c.rimeCap || crust[2] > c.prismCap) {
                     c.crustFail = true;
                 }
             }
@@ -664,16 +682,19 @@ public final class BudgetProbe {
             return false;
         }
 
-        int countCrust() {
-            int n = 0;
+        /** Ephemeral crust blocks in the probe area by variant: {slag, rime, prism}. */
+        int[] countCrust() {
+            int[] n = new int[3];
             int y0 = surface(0, 0).getY();
             BlockPos.MutableBlockPos p = new BlockPos.MutableBlockPos();
             for (int x = MIN; x <= MAX; x++) {
                 for (int z = MIN; z <= MAX; z++) {
                     for (int y = y0 - 3; y <= y0 + 12; y++) {
                         p.set(x, y, z);
-                        if (CRUST_ID.equals(String.valueOf(BuiltInRegistries.BLOCK.getKey(level.getBlockState(p).getBlock())))) {
-                            n++;
+                        BlockState state = level.getBlockState(p);
+                        if (CRUST_ID.equals(String.valueOf(BuiltInRegistries.BLOCK.getKey(state.getBlock())))
+                                && state.hasProperty(EphemeralCrustBlock.VARIANT)) {
+                            n[state.getValue(EphemeralCrustBlock.VARIANT).ordinal()]++;
                         }
                     }
                 }
@@ -736,8 +757,12 @@ public final class BudgetProbe {
                     c.swarmFail ? "FAIL" : "ok"));
             out.append(String.format(Locale.ROOT, "  nodule stage max %d (cap %d) %s%n", c.maxNoduleStage, NoduleRules.MAX_STAGE,
                     c.noduleFail ? "FAIL" : "ok"));
-            out.append(String.format(Locale.ROOT, "  ephemeral crust blocks max %d (cap %d = %d per wader) %s%n", c.maxCrust, c.crustCap,
-                    SlagLobRules.MAX_LIVE_CRUST, c.crustFail ? "FAIL" : "ok"));
+            out.append(String.format(Locale.ROOT,
+                    "  ephemeral crust blocks: slag max %d (cap %d = %d per wader), rime max %d (cap %d = %d per matriarch),"
+                            + " prism max %d (cap %d = %d per colossus) %s%n",
+                    c.maxCrust, c.crustCap, SlagLobRules.MAX_LIVE_CRUST,
+                    c.maxRime, c.rimeCap, MatriarchRules.MAX_PILLAR_BLOCKS + MatriarchRules.MAX_FROZEN_BLOCKS,
+                    c.maxPrism, c.prismCap, ArenaCrystalRules.HARD_CAP_BLOCKS, c.crustFail ? "FAIL" : "ok"));
             out.append(String.format(Locale.ROOT, "  tethered entities max %d (leeches %d, one each) %s%n", c.maxTethered, c.leeches,
                     c.tetherFail ? "FAIL" : "ok"));
             anyCapFail |= c.failed();

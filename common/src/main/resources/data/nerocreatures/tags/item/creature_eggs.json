@@ -1,0 +1,29 @@
+{
+  "replace": false,
+  "values": [
+    {
+      "id": "nerocreatures:lumen_moth_egg",
+      "required": false
+    },
+    {
+      "id": "nerocreatures:lode_tortoise_egg",
+      "required": false
+    },
+    {
+      "id": "nerocreatures:slag_beetle_egg",
+      "required": false
+    },
+    {
+      "id": "nerocreatures:magnet_crab_egg",
+      "required": false
+    },
+    {
+      "id": "nerocreatures:spore_drifter_egg",
+      "required": false
+    },
+    {
+      "id": "nerocreatures:void_manta_egg",
+      "required": false
+    }
+  ]
+}

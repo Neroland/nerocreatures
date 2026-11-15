@@ -15,7 +15,7 @@ import za.co.neroland.nerocreatures.registry.ModEntities;
  * reach {@code becomeSporeling()} and the shared sporeling tally, so her adds count against the same
  * per-dimension sporeling cap as every Bloom Host's.
  *
- * <p>Owned by the Stage 3 boss package (WP-Boss-A). The boss owns caps, life and removal of what this
+ * <p>Owned by the Bloom Sovereign's boss code. The boss owns caps, life and removal of what this
  * creates. Server thread only.
  */
 public final class SovereignBrood {

@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "lit=false": {
+      "model": "nerocreatures:block/lure_beacon"
+    },
+    "lit=true": {
+      "model": "nerocreatures:block/lure_beacon_lit"
+    }
+  }
+}

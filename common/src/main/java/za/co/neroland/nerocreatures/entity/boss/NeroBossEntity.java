@@ -2,6 +2,7 @@ package za.co.neroland.nerocreatures.entity.boss;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
@@ -10,6 +11,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.SpawnGroupData;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.monster.Enemy;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.storage.ValueInput;
@@ -20,6 +22,7 @@ import za.co.neroland.nerocreatures.boss.BossGoals;
 import za.co.neroland.nerocreatures.boss.BossSpawns;
 import za.co.neroland.nerocreatures.entity.base.CreatureTier;
 import za.co.neroland.nerocreatures.entity.base.NeroCreatureEntity;
+import za.co.neroland.nerocreatures.world.CreatureOwners;
 
 /**
  * Shared base for every NeroCreatures boss. It owns the plumbing between a
@@ -37,6 +40,11 @@ import za.co.neroland.nerocreatures.entity.base.NeroCreatureEntity;
  *       A boss that quietly vanished while the player went for better gear would be worse than no
  *       boss at all. The counterweight is that natural boss spawns are gated hard — see
  *       {@link BossSpawns}.</li>
+ *   <li><b>A boss stays in its arena.</b> It never uses a portal and never rides anything (a
+ *       minecart or boat would switch off its movement and attacks), so it cannot be carried
+ *       to another dimension or into a trap.</li>
+ *   <li><b>Only a player's damage counts.</b> See {@link BossDamageRules}: lava, suffocation,
+ *       falls, cacti and other mobs do nothing, so a boss cannot be killed at no risk.</li>
  *   <li><b>Contribution is attributed honestly.</b> Damage is recorded only for what actually landed
  *       (clamped to the health the boss had), so overkill on the last hit cannot buy a share.</li>
  * </ul>
@@ -108,6 +116,10 @@ public abstract class NeroBossEntity extends NeroCreatureEntity implements Enemy
         // Server-side only, so the level is always a ServerLevel here.
         ServerLevel level = (ServerLevel) this.level();
     *///?}
+        if (this.isPassenger()) {
+            // Forced onto a vehicle (a command can skip canRide): step straight off again.
+            this.stopRiding();
+        }
         this.controller.tick(level);
     }
 
@@ -126,12 +138,21 @@ public abstract class NeroBossEntity extends NeroCreatureEntity implements Enemy
             return super.hurt(source, amount);
         }
     *///?}
+        if (!BossDamageRules.accepts(playerBehind(source), source.is(DamageTypeTags.BYPASSES_INVULNERABILITY))) {
+            return false;
+        }
         float before = this.getHealth();
         boolean hurt = super.hurtServer(level, source, amount);
         if (hurt) {
             this.controller.recordDamage(level, source, Math.min(before, before - this.getHealth()));
         }
         return hurt;
+    }
+
+    /** A player, or something a player owns, caused this damage. */
+    private static boolean playerBehind(DamageSource source) {
+        Entity attacker = source.getEntity();
+        return attacker instanceof Player || CreatureOwners.ownerUuid(attacker) != null;
     }
 
     @Override
@@ -166,6 +187,18 @@ public abstract class NeroBossEntity extends NeroCreatureEntity implements Enemy
     /** A boss is not something a crowd of mobs (or a boat) can shove out of its own arena. */
     @Override
     public boolean isPushable() {
+        return false;
+    }
+
+    /** A boss never rides: a minecart or boat would carry it out of its arena and stop its attacks. */
+    @Override
+    protected boolean canRide(Entity vehicle) {
+        return false;
+    }
+
+    /** A boss never uses a portal: its arena, bar and fight belong to this dimension. */
+    @Override
+    public boolean canUsePortal(boolean allowPassengers) {
         return false;
     }
 

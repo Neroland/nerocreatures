@@ -23,6 +23,12 @@ import org.jetbrains.annotations.Nullable;
  * fight is released after {@value #MAX_FIGHT_LOCK_TICKS} ticks whatever happens, so a lost boss can
  * never brick an altar.
  *
+ * <h2>Refusals that keep the sigil</h2>
+ *
+ * <p>On Peaceful a boss could never fight back (it is removed, or never targets anyone), so the altar
+ * refuses. With no room for the boss's whole body above the altar ({@link #summonBox}) it refuses
+ * too, rather than summon a boss stuck in the walls. Neither consumes the sigil.
+ *
  * <p>Everything here is about the block. Nothing names, counts or remembers a player.
  */
 public final class ApexAltarRules {
@@ -41,15 +47,35 @@ public final class ApexAltarRules {
 
     /** The answer to "may this sigil summon now?". */
     public enum Verdict {
-        SUMMON, NOT_A_SIGIL, FIGHT_LIVE, COOLING_DOWN, UNKNOWN_BOSS, NO_ROOM, SUMMON_FAILED
+        SUMMON, NOT_A_SIGIL, FIGHT_LIVE, COOLING_DOWN, UNKNOWN_BOSS, PEACEFUL, NO_ROOM, SUMMON_FAILED
     }
 
     private ApexAltarRules() {
     }
 
-    /** The checks, in order. */
+    /** Clear space kept around the boss's body on every side but the floor, in blocks. */
+    public static final double SUMMON_MARGIN = 0.5D;
+
+    /**
+     * The box that must be free of collision for a boss of this size to arrive standing at
+     * ({@code x}, {@code floorY}, {@code z}): its own bounding box plus {@link #SUMMON_MARGIN} on
+     * every side and above. Returns {@code {minX, minY, minZ, maxX, maxY, maxZ}}.
+     */
+    public static double[] summonBox(double x, double floorY, double z, double width, double height) {
+        double half = Math.max(0.0D, width) / 2.0D + SUMMON_MARGIN;
+        return new double[] {x - half, floorY, z - half,
+                x + half, floorY + Math.max(0.0D, height) + SUMMON_MARGIN, z + half};
+    }
+
+    /** The checks, in order, for a level that is not on Peaceful. */
     public static Verdict decide(boolean isSigil, boolean bossKnown, long now, long readyAt, boolean fightLive,
             boolean headroom) {
+        return decide(isSigil, bossKnown, now, readyAt, fightLive, false, headroom);
+    }
+
+    /** The checks, in order. */
+    public static Verdict decide(boolean isSigil, boolean bossKnown, long now, long readyAt, boolean fightLive,
+            boolean peaceful, boolean headroom) {
         if (!isSigil) {
             return Verdict.NOT_A_SIGIL;
         }
@@ -61,6 +87,9 @@ public final class ApexAltarRules {
         }
         if (!bossKnown) {
             return Verdict.UNKNOWN_BOSS;
+        }
+        if (peaceful) {
+            return Verdict.PEACEFUL;
         }
         if (!headroom) {
             return Verdict.NO_ROOM;
@@ -100,7 +129,13 @@ public final class ApexAltarRules {
 
         public Outcome attempt(long now, boolean isSigil, boolean bossKnown, boolean headroom, boolean fightProbe,
                 int cooldownTicks, String sigilName, Summon summon) {
-            Verdict verdict = decide(isSigil, bossKnown, now, this.readyAt, this.fightLive(now, fightProbe), headroom);
+            return this.attempt(now, isSigil, bossKnown, false, headroom, fightProbe, cooldownTicks, sigilName, summon);
+        }
+
+        public Outcome attempt(long now, boolean isSigil, boolean bossKnown, boolean peaceful, boolean headroom,
+                boolean fightProbe, int cooldownTicks, String sigilName, Summon summon) {
+            Verdict verdict = decide(isSigil, bossKnown, now, this.readyAt, this.fightLive(now, fightProbe), peaceful,
+                    headroom);
             if (verdict != Verdict.SUMMON) {
                 return new Outcome(verdict, false, null);
             }
@@ -152,6 +187,22 @@ public final class ApexAltarRules {
 
         public String sigil() {
             return this.sigil;
+        }
+
+        /**
+         * Pulls a cooldown end that lies further ahead than any cooldown could (an altar copied in from
+         * another world, or a game-time rollback) back to at most {@link #MAX_COOLDOWN_TICKS} from now,
+         * so an altar can never stay locked and unbreakable for an arbitrary time.
+         *
+         * @return whether anything changed
+         */
+        public boolean clampToNow(long now) {
+            long latest = now + MAX_COOLDOWN_TICKS;
+            if (this.readyAt > latest) {
+                this.readyAt = latest;
+                return true;
+            }
+            return false;
         }
 
         /** Restores saved values (load). */

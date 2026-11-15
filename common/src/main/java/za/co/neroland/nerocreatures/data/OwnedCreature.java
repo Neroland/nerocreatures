@@ -37,12 +37,27 @@ import net.minecraft.world.level.Level;
  * @param dimension the dimension id the creature was last registered in
  * @param hatchAt   egg rows only: game time the egg hatches; {@code 0} for every other kind (and
  *                  then not written to disk, so pet and drone rows encode exactly as in 0.4.x)
+ * @param parked    a companion mod parked this pet in storage (companion SPI, 0.5.0): it is out of
+ *                  the world, still counts against its cap, and erasure and lost-pet logic do not look
+ *                  for it in {@code dimension}. {@code false} is not written to disk.
  */
-public record OwnedCreature(UUID entity, Kind kind, Identifier type, Identifier dimension, long hatchAt) {
+public record OwnedCreature(UUID entity, Kind kind, Identifier type, Identifier dimension, long hatchAt,
+        boolean parked) {
+
+    /** A row that is not parked. */
+    public OwnedCreature(UUID entity, Kind kind, Identifier type, Identifier dimension, long hatchAt) {
+        this(entity, kind, type, dimension, hatchAt, false);
+    }
 
     /** A row with no hatch time: every kind except {@link Kind#EGG}. */
     public OwnedCreature(UUID entity, Kind kind, Identifier type, Identifier dimension) {
-        this(entity, kind, type, dimension, 0L);
+        this(entity, kind, type, dimension, 0L, false);
+    }
+
+    /** This row parked or unparked; {@code dimension} replaces the stored one when not null. */
+    public OwnedCreature withParked(boolean parked, @org.jetbrains.annotations.Nullable Identifier dimension) {
+        return new OwnedCreature(this.entity, this.kind, this.type, dimension == null ? this.dimension : dimension,
+                this.hatchAt, parked);
     }
 
     /** What an owned creature is, which decides both its cap and what erasure does to it. */
@@ -104,7 +119,9 @@ public record OwnedCreature(UUID entity, Kind kind, Identifier type, Identifier 
             Identifier.CODEC.fieldOf("dimension").forGetter(OwnedCreature::dimension),
             // Optional with a 0 default: absent in every 0.4.x row, and omitted again on encode for
             // every non-egg row, so old saves load and re-save byte-for-byte the same shape.
-            Codec.LONG.optionalFieldOf("hatch_at", 0L).forGetter(OwnedCreature::hatchAt)
+            Codec.LONG.optionalFieldOf("hatch_at", 0L).forGetter(OwnedCreature::hatchAt),
+            // Companion SPI park mark (0.5.0): absent unless parked, same omit-on-default rule.
+            Codec.BOOL.optionalFieldOf("parked", false).forGetter(OwnedCreature::parked)
     ).apply(instance, OwnedCreature::new));
 
     /** Describes a live entity as a store row. */
