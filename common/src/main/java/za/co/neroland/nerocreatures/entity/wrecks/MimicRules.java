@@ -26,6 +26,11 @@ public final class MimicRules {
     /** How often a dormant mimic re-asserts its grid position and yaw. */
     public static final int SETTLE_INTERVAL_TICKS = 20;
 
+    /** Natural spawn cap (Stage 2 review M4): at most this many mimics within {@link #AREA_RADIUS}. */
+    public static final int MAX_PER_AREA = 1;
+    /** Radius (blocks) of the natural spawn cap. */
+    public static final double AREA_RADIUS = 48.0D;
+
     private MimicRules() {
     }
 
@@ -64,5 +69,20 @@ public final class MimicRules {
     /** The natural spawn rule's level gate: the config key on and a space level (decision 001). */
     public static boolean maySpawn(boolean keyOn, boolean spaceLevel) {
         return keyOn && spaceLevel;
+    }
+
+    /** The natural spawn rule's position gate: no other mimic within {@link #AREA_RADIUS}. */
+    public static boolean roomInArea(int mimicsNear) {
+        return mimicsNear < MAX_PER_AREA;
+    }
+
+    /**
+     * Whether the loot table pays out (Stage 2 review M4): every pool of
+     * {@code entities/cache_mimic} carries {@code minecraft:killed_by_player}, so a mimic killed by
+     * magma, a trap or another mob drops nothing and cannot be farmed with nobody present. This
+     * mirrors the loot condition for the tests.
+     */
+    public static boolean dropsLoot(boolean killedByPlayer) {
+        return killedByPlayer;
     }
 }

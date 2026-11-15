@@ -304,6 +304,7 @@ public class RimeYak extends LivestockCreature implements HerdMember {
             this.spawnAtLocation(level, new ItemStack(woolItem, count));
         }
         shears.hurtAndBreak(1, player, hand == InteractionHand.MAIN_HAND ? EquipmentSlot.MAINHAND : EquipmentSlot.OFFHAND);
+        this.markHusbanded();
         level.playSound(null, this.blockPosition(), SoundEvents.SHEEP_SHEAR, SoundSource.PLAYERS, 1.0F, 0.8F);
         this.visuals().playPose(VisualPose.ABILITY, RimeYakRules.SHIVER_TICKS);
         this.syncVisuals();
@@ -320,6 +321,7 @@ public class RimeYak extends LivestockCreature implements HerdMember {
         }
         player.setItemInHand(hand, ItemUtils.createFilledResult(bucket, player, new ItemStack(milkItem)));
         this.milkCooldown = RimeYakRules.milkCooldownTicks(milkCooldownTicks.getAsInt());
+        this.markHusbanded();
         level.playSound(null, this.blockPosition(), SoundEvents.COW_MILK, SoundSource.PLAYERS, 1.0F, 0.9F);
         this.visuals().playPose(VisualPose.ABILITY, RimeYakRules.SHIVER_TICKS);
         return InteractionResult.SUCCESS_SERVER;

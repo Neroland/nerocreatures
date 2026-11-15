@@ -17,8 +17,16 @@ package za.co.neroland.nerocreatures.entity.greenxertz;
  *
  * <h2>Population</h2>
  *
- * <p>At most {@link #MAX_PER_DIMENSION} loaded per dimension (spawn gate), and a natural one is never
- * saved, so it drifts out of the world when its chunk unloads. A named one is kept.
+ * <p>At most {@link #MAX_PER_DIMENSION} loaded per dimension (spawn gate). It is saved with its chunk
+ * like any mob, barnacles and deck axis included (Stage 2 review M3: an unsaved leviathan lost its
+ * barnacle progress on every unload, so barnacles were never harvestable). It never takes vanilla's
+ * random despawn ({@link #mayDespawnAt}); it leaves only past vanilla's hard 128-block range, and a
+ * named one is kept.
+ *
+ * <h2>Barnacles</h2>
+ *
+ * <p>A natural leviathan arrives with barnacles {@link #SEED_MIN_PERCENT}-100% grown
+ * ({@link #seedBarnacles}), so a player who finds one can usually harvest soon.
  */
 public final class LeviathanRules {
 
@@ -58,6 +66,10 @@ public final class LeviathanRules {
     public static final int BARNACLE_MAX_YIELD = 3;
     /** Barnacle growth is advanced this many ticks at a time. */
     public static final int GROWTH_STEP = 20;
+    /** A natural spawn's barnacles start at least this grown, in percent. */
+    public static final int SEED_MIN_PERCENT = 50;
+    /** Vanilla's hard despawn range (blocks); closer than this the leviathan never despawns. */
+    public static final double HARD_DESPAWN_RANGE = 128.0D;
 
     /**
      * The "song" pose (mouth opens, body arches): the art clip is 6 s, longer than the contract's
@@ -116,6 +128,24 @@ public final class LeviathanRules {
     /** The spawn gate. */
     public static boolean maySpawnNaturally(int loaded) {
         return loaded < MAX_PER_DIMENSION;
+    }
+
+    /**
+     * Seeded barnacle progress for a natural spawn: {@link #SEED_MIN_PERCENT}% to 100% of
+     * {@code regrowTicks} for a uniform {@code fraction} in {@code [0, 1]}.
+     */
+    public static int seedBarnacles(int regrowTicks, double fraction) {
+        if (regrowTicks <= 0) {
+            return 0;
+        }
+        double f = Math.max(0.0D, Math.min(1.0D, fraction));
+        double min = SEED_MIN_PERCENT / 100.0D;
+        return (int) Math.round(regrowTicks * (min + (1.0D - min) * f));
+    }
+
+    /** Only vanilla's hard range removes a leviathan; the 32-128 block random despawn never does. */
+    public static boolean mayDespawnAt(double distanceToClosestPlayerSqr) {
+        return distanceToClosestPlayerSqr > HARD_DESPAWN_RANGE * HARD_DESPAWN_RANGE;
     }
 
     /** Barnacle yield for one harvest. */

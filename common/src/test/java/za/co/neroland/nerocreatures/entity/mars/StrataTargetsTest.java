@@ -52,4 +52,30 @@ class StrataTargetsTest {
             assertTrue(f >= 0 && f <= 7, "variant range 0-7");
         }
     }
+
+    @Test
+    void chestsAndOtherBlockEntitiesAreRefused() {
+        // M5: showing the hound a chest must never lead anyone to another player's chest.
+        assertEquals("minecraft:chest", StrataTargets.specForBlock("minecraft", "chest"), "the spec is exact...");
+        assertFalse(StrataTargets.trackable(false, true), "...but a chest is refused: block entity, not allowed");
+        assertFalse(StrataTargets.trackable(true, true), "a block entity is refused even if a pack tags it");
+        assertFalse(StrataTargets.trackable(false, false), "anything outside the allow tag is refused");
+        assertTrue(StrataTargets.trackable(true, false), "ore or natural stone");
+    }
+
+    @Test
+    void allowTagHoldsOresAndStoneOnly() throws java.io.IOException {
+        try (java.io.InputStream in = StrataTargetsTest.class.getResourceAsStream(
+                "/data/nerocreatures/tags/block/strata_trackable.json")) {
+            assertTrue(in != null, "allow tag on the classpath");
+            String json = new String(in.readAllBytes(), java.nio.charset.StandardCharsets.UTF_8);
+            assertTrue(json.contains("#minecraft:iron_ores"));
+            assertTrue(json.contains("#c:ores"));
+            for (String banned : new String[] {"chest", "barrel", "shulker", "spawner", "furnace", "hopper",
+                    "#minecraft:logs", "planks"}) {
+                assertFalse(json.contains(banned), "never tracks " + banned);
+            }
+        }
+        assertEquals("nerocreatures:strata_trackable", StrataTargets.TRACKABLE_TAG);
+    }
 }

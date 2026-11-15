@@ -16,8 +16,20 @@ public final class AnimInput {
     public static final int FLAG_RADIANT = 1 << 2;
     public static final int FLAG_ALPHA = 1 << 3;
 
+    /**
+     * Period of the {@link #gameTime} clock: 4800 ticks is a whole number of turns for every spin speed
+     * a spec uses with it (0.75, 1.5 and 3 degrees per tick), so the wrap is invisible.
+     */
+    public static final long GAME_CLOCK_PERIOD = 4800L;
+
     /** Ticks alive, including the partial tick. */
     public double age;
+    /**
+     * The level's game time, wrapped ({@link #gameClock}), including the partial tick. The same on every
+     * client and on the server, so a {@code procedural.spin} with {@code "clock": "game"} shows the angle
+     * the server computes (the Facet Colossus ring). Not the entity's age, which differs per client.
+     */
+    public double gameTime;
     /** Vanilla walk animation position. */
     public double walkPos;
     /** Vanilla walk animation speed, 0..1 (clamped by the evaluator). */
@@ -50,6 +62,7 @@ public final class AnimInput {
     /** Back to the defaults (idle, no walk, not hurt). */
     public AnimInput reset() {
         age = 0.0;
+        gameTime = 0.0;
         walkPos = 0.0;
         walkSpeed = 0.0;
         headYaw = 0.0;
@@ -70,5 +83,10 @@ public final class AnimInput {
 
     public boolean flag(int flag) {
         return (flags & flag) != 0;
+    }
+
+    /** {@code floorMod(gameTime, GAME_CLOCK_PERIOD) + partialTick}: the value of {@link #gameTime}. */
+    public static double gameClock(long gameTime, double partialTick) {
+        return Math.floorMod(gameTime, GAME_CLOCK_PERIOD) + partialTick;
     }
 }

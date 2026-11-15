@@ -46,8 +46,10 @@ import za.co.neroland.nerocreatures.world.CreatureGriefing;
  *       (decision 006); denied, the beetle ignores the item.</li>
  *   <li>Each item digests for {@value SlagBeetleRules#DIGEST_TICKS} ticks (a furnace's ten seconds),
  *       in order, up to {@value SlagBeetleRules#STOMACH_CAPACITY} items. The result is the server's own
- *       vanilla smelting recipe for that item, so packs and other mods' ores work. Bountiful gives a
- *       second roll, and every item has a {@code 10%} chance of one extra ({@link SlagBeetleRules}).
+ *       vanilla smelting recipe for that item, so packs and other mods' raw ores work. Every item
+ *       has a {@code 10%} chance of one extra, and Bountiful adds a second {@code 10%} roll (never a
+ *       multiplier; {@link SlagBeetleRules}).
+ *       Food is raw-ore items only; ore blocks are refused.
  *       An item with no smelting recipe comes back out unchanged.</li>
  *   <li>The stomach is saved with the beetle ({@value #DIGEST_KEY}: item ids and ready times only).
  *       A beetle that dies returns everything still undigested. Nothing is ever lost.</li>
@@ -154,9 +156,14 @@ public class SlagBeetle extends TameableCreature {
             this.spawnAtLocation(level, raw);
             return;
         }
-        int rolls = TraitEffects.productRolls(this.traits(), TraitPool.get(), this.random);
-        boolean bonus = this.random.nextDouble() < SlagBeetleRules.BONUS_CHANCE;
-        int count = SlagBeetleRules.outputCount(result.getCount(), rolls, bonus);
+        int rolls = SlagBeetleRules.bonusRolls(TraitEffects.productRolls(this.traits(), TraitPool.get(), this.random));
+        int hits = 0;
+        for (int i = 0; i < rolls; i++) {
+            if (this.random.nextDouble() < SlagBeetleRules.BONUS_CHANCE) {
+                hits++;
+            }
+        }
+        int count = SlagBeetleRules.outputCount(result.getCount(), hits);
         result.setCount(Math.max(1, Math.min(count, result.getMaxStackSize())));
         this.spawnAtLocation(level, result);
         this.visuals().playPose(VisualPose.ABILITY_2, COUGH_POSE_TICKS);

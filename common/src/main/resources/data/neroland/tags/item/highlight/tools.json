@@ -38,6 +38,14 @@
     "nerocreatures:pirate_captain_spawn_egg",
     "nerocreatures:void_manta_spawn_egg",
     "nerocreatures:static_jar",
-    "nerocreatures:captains_ledger"
+    "nerocreatures:captains_ledger",
+    "nerocreatures:cinder_tyrant_sigil",
+    "nerocreatures:rime_matriarch_sigil",
+    "nerocreatures:bloom_sovereign_sigil",
+    "nerocreatures:facet_colossus_sigil",
+    "nerocreatures:apex_altar",
+    "nerocreatures:rime_matriarch_spawn_egg",
+    "nerocreatures:bloom_sovereign_spawn_egg",
+    "nerocreatures:facet_colossus_spawn_egg"
   ]
 }

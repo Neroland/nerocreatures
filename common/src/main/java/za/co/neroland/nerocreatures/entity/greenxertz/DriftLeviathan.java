@@ -73,13 +73,15 @@ import za.co.neroland.nerocreatures.entity.visual.VisualPose;
  *
  * <p>{@code leviathan_barnacle} regrows on a {@link ProductTimer} (one day, visuals {@code stage} 0-3).
  * Shears on a leviathan with ready barnacles (from its back, or within reach) put 2-3 barnacles in the
- * player's inventory, wear the shears by one, and restart growth. Saved.
+ * player's inventory, wear the shears by one, and restart growth. Saved. A natural leviathan starts
+ * with barnacles half to fully grown.
  *
  * <h2>Population</h2>
  *
  * <p>At most {@value LeviathanRules#MAX_PER_DIMENSION} loaded per dimension ({@link #maySpawnNaturally}
- * is the spawn gate); a natural one is never saved, so it leaves the world with its chunk. A named one
- * stays. It lifts itself to cruising altitude when it spawns.
+ * is the spawn gate). It is saved with its chunk (barnacles and axis included); it skips vanilla's
+ * random despawn and leaves only past the hard 128-block range. A named one stays. It lifts itself to
+ * cruising altitude when it spawns.
  */
 public class DriftLeviathan extends NeroCreatureEntity {
 
@@ -287,6 +289,10 @@ public class DriftLeviathan extends NeroCreatureEntity {
         SpawnGroupData result = super.finalizeSpawn(level, difficulty, spawnReason, groupData);
         if (spawnReason == EntitySpawnReason.NATURAL || spawnReason == EntitySpawnReason.CHUNK_GENERATION) {
             this.liftToCruise(level);
+            // M3: barnacles start partly grown, so one found in the wild is worth landing on.
+            this.barnacles.setProgress(LeviathanRules.seedBarnacles(this.barnacles.regrowTicks(),
+                    this.random.nextDouble()));
+            this.visuals().setStage(this.barnacles.stage());
         }
         LOADED.force(dimensionKey(level.getLevel()), this.getId());
         return result;
@@ -323,10 +329,14 @@ public class DriftLeviathan extends NeroCreatureEntity {
         super.remove(reason);
     }
 
-    /** A natural leviathan is never saved: it drifts out of the world with its chunk. Named ones stay. */
+    /**
+     * Saved like any mob (M3; the old "never saved" rule wiped barnacle progress on every unload).
+     * Vanilla's random despawn between 32 and 128 blocks is skipped; the hard range still applies.
+     */
     @Override
-    public boolean shouldBeSaved() {
-        return super.shouldBeSaved() && (this.isPersistenceRequired() || this.hasCustomName());
+    public boolean removeWhenFarAway(double distanceToClosestPlayerSqr) {
+        return super.removeWhenFarAway(distanceToClosestPlayerSqr)
+                && LeviathanRules.mayDespawnAt(distanceToClosestPlayerSqr);
     }
 
     private static boolean isLoadedLeviathan(ServerLevel level, int id) {

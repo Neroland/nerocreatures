@@ -7,6 +7,7 @@ import za.co.neroland.nerolandcore.registry.RegistrationProvider;
 import za.co.neroland.nerolandcore.registry.RegistrationProvider.RegistryEntry;
 
 import za.co.neroland.nerocreatures.NeroCreaturesCommon;
+import za.co.neroland.nerocreatures.block.ApexAltarBlock;
 import za.co.neroland.nerocreatures.block.EphemeralCrustBlock;
 
 /**
@@ -27,6 +28,13 @@ public final class ModBlocks {
     public static final RegistryEntry<EphemeralCrustBlock> EPHEMERAL_CRUST = BLOCKS.register(
             "ephemeral_crust",
             key -> new EphemeralCrustBlock(EphemeralCrustBlock.crustProperties().setId(key)));
+
+    /**
+     * The Apex Altar: a boss sigil used on it summons that boss as a contribution-tracked fight. Its
+     * block item is {@code ModItems.APEX_ALTAR}; its block entity is {@code ModBlockEntities.APEX_ALTAR}.
+     */
+    public static final RegistryEntry<ApexAltarBlock> APEX_ALTAR = BLOCKS.register(
+            "apex_altar", key -> new ApexAltarBlock(ApexAltarBlock.altarProperties().setId(key)));
 
     private ModBlocks() {
     }

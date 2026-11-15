@@ -1,6 +1,8 @@
 package za.co.neroland.nerocreatures.entity.boss;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
@@ -12,6 +14,7 @@ import net.minecraft.world.BossEvent;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.attributes.Attribute;
@@ -28,17 +31,22 @@ import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
+
+import org.jetbrains.annotations.Nullable;
 
 import za.co.neroland.nerocreatures.NeroCreaturesCommon;
 import za.co.neroland.nerocreatures.boss.BossController;
 import za.co.neroland.nerocreatures.boss.BossPhase;
+import za.co.neroland.nerocreatures.boss.BossSummons;
 import za.co.neroland.nerocreatures.entity.ai.FireVolleyGoal;
 import za.co.neroland.nerocreatures.entity.ai.GroundSlamGoal;
 import za.co.neroland.nerocreatures.entity.ai.SummonAddsGoal;
 import za.co.neroland.nerocreatures.entity.base.CreatureTier;
 import za.co.neroland.nerocreatures.entity.base.NeroCreatureEntity;
 import za.co.neroland.nerocreatures.entity.hostile.PlasmaSlime;
+import za.co.neroland.nerocreatures.entity.visual.VisualPose;
 import za.co.neroland.nerocreatures.registry.ModEntities;
 
 /**
@@ -162,6 +170,40 @@ public class CinderTyrant extends NeroBossEntity {
     }
 
     /**
+     * Summons a Tyrant as a contribution-tracked fight (the Apex Altar's factory). Empty when the
+     * population caps are full or the entity could not be added.
+     */
+    public static Optional<NeroBossEntity> summon(ServerLevel level, BlockPos pos, @Nullable UUID initiator) {
+        registerSummon();
+        return BossSummons.summon(level, pos, bossId(), initiator);
+    }
+
+    /** Adds the Tyrant to {@link BossSummons}' summonable set. Idempotent. */
+    public static void registerSummon() {
+        BossSummons.register(bossId(), (level, pos) -> ModEntities.CINDER_TYRANT.get().create(level, EntitySpawnReason.EVENT));
+    }
+
+    /**
+     * Drives the model's phase stance ({@code phase_1} .. {@code phase_3}) from the controller. Cheap:
+     * the visuals write only when the value changes, and a reloaded Tyrant picks its stance back up
+     * on its first tick.
+     */
+    //? if >=1.21.2 {
+    @Override
+    protected void customServerAiStep(ServerLevel level) {
+        super.customServerAiStep(level);
+    //?} else {
+    /*@Override
+    protected void customServerAiStep() {
+        super.customServerAiStep();
+    *///?}
+        int phase = this.controller.phaseNumber();
+        if (phase >= 1 && this.visuals().phase() != phase) {
+            this.visuals().setPhase(phase);
+        }
+    }
+
+    /**
      * The three phases. Each goal list is built by a factory rather than up front, because goals
      * carry cooldown state and must be fresh every time a phase is entered; the cooldowns themselves
      * are run through {@link BossController#scaleCooldown} so {@code bossDifficultyMultiplier}
@@ -171,7 +213,7 @@ public class CinderTyrant extends NeroBossEntity {
         return List.of(
                 BossPhase.of("stomp",
                         Component.translatable("boss.nerocreatures.cinder_tyrant.stomp"), 1.0F,
-                        () -> List.of(BossPhase.goal(1, new GroundSlamGoal(this, SLAM_RADIUS, 8.0F,
+                        () -> List.of(BossPhase.goal(1, new TelegraphedSlam(this, SLAM_RADIUS, 8.0F,
                                 BossController.scaleCooldown(140), 20)))),
 
                 BossPhase.of("volley",
@@ -187,11 +229,51 @@ public class CinderTyrant extends NeroBossEntity {
                         Component.translatable("boss.nerocreatures.cinder_tyrant.desperation"),
                         PHASE_DESPERATION,
                         () -> List.of(
-                                BossPhase.goal(1, new GroundSlamGoal(this, SLAM_RADIUS + 1.0D, 10.0F,
+                                BossPhase.goal(1, new TelegraphedSlam(this, SLAM_RADIUS + 1.0D, 10.0F,
                                         BossController.scaleCooldown(70), 12)),
                                 BossPhase.goal(2, new FireVolleyGoal(this, 5,
                                         BossController.scaleCooldown(70), 6, 4.0D, 28.0D, 0.22D))),
                         this::enrage));
+    }
+
+    /**
+     * The slam with its art timing: the {@code ability} pose ({@value BossArtTiming#SLAM_POSE_TICKS}
+     * ticks, both arms up then down) starts {@value BossArtTiming#SLAM_POSE_LEAD} ticks before the
+     * shockwave lands.
+     */
+    private static final class TelegraphedSlam extends GroundSlamGoal {
+
+        private final CinderTyrant tyrant;
+        private final int telegraph;
+        private int ticksToSlam;
+
+        TelegraphedSlam(CinderTyrant tyrant, double radius, float damage, int cooldownTicks, int telegraphTicks) {
+            super(tyrant, radius, damage, cooldownTicks, telegraphTicks);
+            this.tyrant = tyrant;
+            this.telegraph = Math.max(5, telegraphTicks);
+        }
+
+        @Override
+        public void start() {
+            super.start();
+            this.ticksToSlam = this.telegraph;
+            if (BossArtTiming.slamPoseStarts(this.ticksToSlam, true)) {
+                this.pose();
+            }
+        }
+
+        @Override
+        public void tick() {
+            this.ticksToSlam--;
+            if (BossArtTiming.slamPoseStarts(this.ticksToSlam, false)) {
+                this.pose();
+            }
+            super.tick();
+        }
+
+        private void pose() {
+            this.tyrant.visuals().playPose(VisualPose.ABILITY, BossArtTiming.SLAM_POSE_TICKS);
+        }
     }
 
     /** Shrinks a summoned slime to its smallest size — a cinder, not a boss-sized blob. */

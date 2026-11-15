@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "S": "nerocreatures:slag_carapace",
+    "H": "nerocreatures:heat_gland",
+    "P": "nerocreatures:plasma_cell"
+  },
+  "pattern": [
+    " S ",
+    "HPH",
+    " S "
+  ],
+  "result": {
+    "count": 1,
+    "id": "nerocreatures:cinder_tyrant_sigil"
+  }
+}

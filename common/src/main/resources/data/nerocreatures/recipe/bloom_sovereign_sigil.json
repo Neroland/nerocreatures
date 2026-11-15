@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "H": "nerocreatures:mossback_hide",
+    "D": "nerocreatures:drifter_spores",
+    "B": "nerocreatures:bloom_heart"
+  },
+  "pattern": [
+    " H ",
+    "DBD",
+    " H "
+  ],
+  "result": {
+    "count": 1,
+    "id": "nerocreatures:bloom_sovereign_sigil"
+  }
+}

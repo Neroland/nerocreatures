@@ -14,8 +14,11 @@ import net.minecraft.world.entity.EntitySpawnReason;
 import org.jetbrains.annotations.Nullable;
 
 import za.co.neroland.nerocreatures.NeroCreaturesCommon;
+import za.co.neroland.nerocreatures.entity.boss.BloomSovereign;
+import za.co.neroland.nerocreatures.entity.boss.CinderTyrant;
+import za.co.neroland.nerocreatures.entity.boss.FacetColossus;
 import za.co.neroland.nerocreatures.entity.boss.NeroBossEntity;
-import za.co.neroland.nerocreatures.registry.ModEntities;
+import za.co.neroland.nerocreatures.entity.boss.RimeMatriarch;
 import za.co.neroland.nerocreatures.spawn.CreatureCensus;
 
 /**
@@ -69,10 +72,11 @@ public final class BossSummons {
      * exist — the factories resolve their types eagerly on Fabric.
      */
     public static void init() {
-        register(id("cinder_tyrant"), (level, pos) -> {
-            NeroBossEntity boss = ModEntities.CINDER_TYRANT.get().create(level, EntitySpawnReason.EVENT);
-            return boss;
-        });
+        // Each boss owns its factory; the Apex Altar's sigils and the operator command both land here.
+        CinderTyrant.registerSummon();
+        RimeMatriarch.registerSummon();
+        BloomSovereign.registerSummon();
+        FacetColossus.registerSummon();
     }
 
     /** Adds a boss to the summonable set. Idempotent for a given id. */
@@ -133,9 +137,5 @@ public final class BossSummons {
         // A boss is a big addition to the population; the cached count is now stale by one.
         CreatureCensus.invalidate(level);
         return Optional.of(boss);
-    }
-
-    private static Identifier id(String path) {
-        return Identifier.fromNamespaceAndPath(NeroCreaturesCommon.MOD_ID, path);
     }
 }

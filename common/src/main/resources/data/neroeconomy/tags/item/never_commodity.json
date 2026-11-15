@@ -4,6 +4,22 @@
     {
       "id": "nerocreatures:apex_trophy",
       "required": false
+    },
+    {
+      "id": "nerocreatures:colossus_facet",
+      "required": false
+    },
+    {
+      "id": "nerocreatures:tyrant_ember",
+      "required": false
+    },
+    {
+      "id": "nerocreatures:matriarch_frostcore",
+      "required": false
+    },
+    {
+      "id": "nerocreatures:sovereign_seed",
+      "required": false
     }
   ]
 }

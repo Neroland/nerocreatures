@@ -229,9 +229,30 @@
     "wave": [],
     "look": [],
     "spin": [
-      {"part": "ring", "axis": "y", "speed": 1.5, "phase": 0, "when": {"pose": ["idle"], "phase": [0, 1]}},
-      {"part": "ring", "axis": "y", "speed": 3.0, "phase": 0, "when": {"pose": ["idle"], "phase": [2]}},
-      {"part": "ring", "axis": "y", "speed": 0.75, "phase": 0, "when": {"pose": ["idle"], "phase": [3]}}
+      {
+        "part": "ring",
+        "axis": "y",
+        "speed": 1.5,
+        "phase": 0,
+        "clock": "game",
+        "when": {"pose": ["idle"], "phase": [0, 1]}
+      },
+      {
+        "part": "ring",
+        "axis": "y",
+        "speed": 3.0,
+        "phase": 0,
+        "clock": "game",
+        "when": {"pose": ["idle"], "phase": [2]}
+      },
+      {
+        "part": "ring",
+        "axis": "y",
+        "speed": 0.75,
+        "phase": 0,
+        "clock": "game",
+        "when": {"pose": ["idle"], "phase": [3]}
+      }
     ]
   },
   "clips": {

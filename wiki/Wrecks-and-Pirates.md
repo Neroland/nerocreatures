@@ -43,7 +43,7 @@ structure mod may later place a real stash at the mark; the item will not change
 
 | Creature | Biome tag | Weight | Group |
 | -------- | --------- | ------ | ----- |
-| Cache Mimic | `nerocreatures:habitat/wrecks` | 4 | 1 (space levels, `cacheMimicSpawns`) |
+| Cache Mimic | `nerocreatures:habitat/wrecks` | 4 | 1 (space levels, `cacheMimicSpawns`, one per 48 blocks; loot only from player kills) |
 | Static Swarm | `nerocreatures:habitat/wrecks` | 8 | 1 (in the air; at most 2 per 32 blocks) |
 | Static Swarm | `nerocreatures:habitat/overworld` | 4 | 1 (thunderstorms only, see [Spawning](Spawning.md)) |
 | Pirate Captain | `neroland:space/planet_biomes` | 2 | 1 (+2 crew) |

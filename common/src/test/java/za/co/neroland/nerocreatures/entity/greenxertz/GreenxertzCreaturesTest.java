@@ -213,4 +213,54 @@ class GreenxertzCreaturesTest {
         assertEquals(0, barnacles.stage(), "regrows from bare");
         assertEquals(2, LeviathanRules.barnacleYield(2, 0));
     }
+
+    @Test
+    void naturalLeviathansArriveWithBarnaclesHalfToFullyGrown() {
+        // M3: seeded so a wild leviathan is worth landing on.
+        int regrow = LeviathanRules.BARNACLE_REGROW_TICKS;
+        assertEquals(regrow / 2, LeviathanRules.seedBarnacles(regrow, 0.0D));
+        assertEquals(regrow, LeviathanRules.seedBarnacles(regrow, 1.0D));
+        assertEquals(regrow, LeviathanRules.seedBarnacles(regrow, 7.0D), "fraction clamps");
+        assertEquals(0, LeviathanRules.seedBarnacles(0, 0.5D));
+        ProductTimer seeded = new ProductTimer(regrow, LeviathanRules.BARNACLE_STAGES, LeviathanRules.BARNACLE_MAX_YIELD);
+        seeded.setProgress(LeviathanRules.seedBarnacles(regrow, 0.0D));
+        assertTrue(seeded.stage() >= 1, "barnacles visibly present at spawn");
+    }
+
+    @Test
+    void leviathanStateSurvivesASaveRoundTrip() {
+        // M3: the leviathan is saved now; its saved state is barnacle progress and the deck axis.
+        ProductTimer before = new ProductTimer(LeviathanRules.BARNACLE_REGROW_TICKS,
+                LeviathanRules.BARNACLE_STAGES, LeviathanRules.BARNACLE_MAX_YIELD);
+        before.setProgress(LeviathanRules.seedBarnacles(LeviathanRules.BARNACLE_REGROW_TICKS, 0.4D));
+        before.advance(LeviathanRules.GROWTH_STEP * 10);
+        int saved = before.progress();
+        ProductTimer after = new ProductTimer(LeviathanRules.BARNACLE_REGROW_TICKS,
+                LeviathanRules.BARNACLE_STAGES, LeviathanRules.BARNACLE_MAX_YIELD);
+        after.setProgress(saved);
+        assertEquals(before.progress(), after.progress());
+        assertEquals(before.stage(), after.stage());
+        assertEquals(before.isReady(), after.isReady());
+        for (float yaw : new float[] {0.0F, 90.0F, 180.0F, 270.0F}) {
+            boolean axis = LeviathanRules.alongX(yaw);
+            double[] extents = LeviathanRules.halfExtents(axis);
+            assertEquals(extents[0], LeviathanRules.halfExtents(axis)[0], "deck box rebuilt from the saved axis");
+        }
+    }
+
+    @Test
+    void leviathansSkipRandomDespawnButHonourTheHardRange() {
+        assertFalse(LeviathanRules.mayDespawnAt(40.0D * 40.0D), "no random despawn at 40 blocks");
+        assertFalse(LeviathanRules.mayDespawnAt(128.0D * 128.0D));
+        assertTrue(LeviathanRules.mayDespawnAt(129.0D * 129.0D), "vanilla hard range still applies");
+    }
+
+    @Test
+    void onlyTheHostFormDropsLoot() {
+        // Pods regrow under the Bloom Sovereign: a pod kill must never pay out a bloom_heart.
+        assertTrue(BloomRules.dropsLoot(BloomRules.FORM_HOST));
+        assertFalse(BloomRules.dropsLoot(BloomRules.FORM_SPORELING), "sporelings drop nothing");
+        assertFalse(BloomRules.dropsLoot(BloomRules.FORM_POD), "pods drop nothing");
+        assertTrue(BloomRules.dropsLoot(99), "unknown forms read as the host");
+    }
 }

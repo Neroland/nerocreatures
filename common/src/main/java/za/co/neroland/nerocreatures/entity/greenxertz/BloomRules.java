@@ -103,6 +103,15 @@ public final class BloomRules {
         return ageTicks >= LIFE_TICKS;
     }
 
+    /**
+     * Whether a dead Bloom Host of this form drops its loot table and experience. Only the host
+     * does: sporelings are free raises, and pods are the Bloom Sovereign's regrowing spawns, so
+     * loot from a killed pod (a {@code bloom_heart}) would be a farm.
+     */
+    public static boolean dropsLoot(int form) {
+        return form(form) == FORM_HOST;
+    }
+
     /** Clamps a saved or synced form to the three known forms (unknown values become the host). */
     public static int form(int raw) {
         return raw == FORM_SPORELING || raw == FORM_POD ? raw : FORM_HOST;

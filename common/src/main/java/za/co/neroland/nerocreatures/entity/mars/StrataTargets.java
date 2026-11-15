@@ -19,6 +19,11 @@ import org.jetbrains.annotations.Nullable;
  *       which other mods fill. An empty tag simply finds nothing.</li>
  *   <li>An ore block item ({@code *_ore}) of a vanilla material maps to the same vanilla tag; any
  *       other block item tracks exactly that block.</li>
+ *   <li><b>Allow list</b> (Stage 2 review M5): whatever the spec, a block is only ever tracked when
+ *       it is in {@code #nerocreatures:strata_trackable} (ores, {@code #c:ores}, natural stone) and
+ *       has no block entity ({@link #trackable}). Chests, barrels, shulker boxes, spawners and any
+ *       other placed or container block are refused, so the hound is a prospector, never a base
+ *       finder.</li>
  * </ul>
  */
 public final class StrataTargets {
@@ -108,6 +113,18 @@ public final class StrataTargets {
             }
         }
         return p;
+    }
+
+    /** Tag id of the allow list every tracked block must be in. */
+    public static final String TRACKABLE_TAG = "nerocreatures:strata_trackable";
+
+    /**
+     * Whether a block may be tracked: in the allow tag and without a block entity. Block entities
+     * (containers, spawners, signs, anything with stored contents) are refused even if a pack adds
+     * them to the tag.
+     */
+    public static boolean trackable(boolean inAllowTag, boolean hasBlockEntity) {
+        return inAllowTag && !hasBlockEntity;
     }
 
     /** Whether a spec names a tag ({@code #ns:path}). */

@@ -69,8 +69,11 @@ public final class CreatureRig {
     record Look(int part, double yaw, double pitch, double limit) {
     }
 
-    /** A continuous turn of {@code speed} degrees per tick on one axis while {@code when} holds. */
-    record Spin(int part, int axis, double speed, double phase, @Nullable Condition when) {
+    /**
+     * A continuous turn of {@code speed} degrees per tick on one axis while {@code when} holds, on the
+     * entity's age or (when {@code gameClock}) on {@link AnimInput#gameTime}.
+     */
+    record Spin(int part, int axis, double speed, double phase, @Nullable Condition when, boolean gameClock) {
     }
 
     /** One channel of one part: {@code keys} is {@code t, x, y, z, ease} repeated. */
@@ -309,7 +312,8 @@ public final class CreatureRig {
             double before = when == null || when.test(in, source) ? 1.0 : 0.0;
             double share = before + (now - before) * weight;
             if (share > 0.0) {
-                double angle = pyMod(age * s.speed() + s.phase(), 360.0);
+                double clock = s.gameClock() ? in.gameTime : age;
+                double angle = pyMod(clock * s.speed() + s.phase(), 360.0);
                 rot[s.part() * 3 + s.axis()] += angle * share;
             }
         }
@@ -446,7 +450,16 @@ public final class CreatureRig {
 
         /** A continuous turn while {@code when} holds (faded across a pose change when it names poses). */
         public Builder spin(String part, char axis, double speed, double phase, @Nullable Condition when) {
-            spins.add(new Spin(index(part), axis - 'x', speed, phase, when));
+            return spin(part, axis, speed, phase, when, false);
+        }
+
+        /**
+         * As {@link #spin(String, char, double, double, Condition)}; {@code gameClock} turns it on the
+         * level's game time ({@code "clock": "game"}) instead of the entity's age.
+         */
+        public Builder spin(String part, char axis, double speed, double phase, @Nullable Condition when,
+                boolean gameClock) {
+            spins.add(new Spin(index(part), axis - 'x', speed, phase, when, gameClock));
             return this;
         }
 

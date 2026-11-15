@@ -1,6 +1,7 @@
 {
   "replace": false,
   "values": [
-    "nerocreatures:ephemeral_crust"
+    "nerocreatures:ephemeral_crust",
+    "nerocreatures:apex_altar"
   ]
 }

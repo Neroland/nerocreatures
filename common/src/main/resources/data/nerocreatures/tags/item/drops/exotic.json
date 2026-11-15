@@ -20,6 +20,18 @@
     {
       "id": "nerocreatures:graviton_node",
       "required": false
+    },
+    {
+      "id": "nerocreatures:matriarch_frostcore",
+      "required": false
+    },
+    {
+      "id": "nerocreatures:colossus_facet",
+      "required": false
+    },
+    {
+      "id": "nerocreatures:tyrant_ember",
+      "required": false
     }
   ]
 }

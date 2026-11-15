@@ -166,26 +166,78 @@ public class LunaCreaturesTest {
 
     @Test
     void grazingPicksSwitchesAndPausesFamilies() {
-        NoduleRules.GrazeResult none = NoduleRules.onGraze(null, false, null);
+        NoduleRules.GrazeResult none = NoduleRules.onGraze(null, 0, false, null);
         assertNull(none.family());
         assertFalse(none.growing());
 
-        NoduleRules.GrazeResult first = NoduleRules.onGraze(null, false, NoduleFamily.IRON);
+        NoduleRules.GrazeResult first = NoduleRules.onGraze(null, 0, false, NoduleFamily.IRON);
         assertEquals(NoduleFamily.IRON, first.family());
         assertTrue(first.growing());
         assertFalse(first.resetProgress());
 
-        NoduleRules.GrazeResult paused = NoduleRules.onGraze(NoduleFamily.IRON, false, null);
+        NoduleRules.GrazeResult paused = NoduleRules.onGraze(NoduleFamily.IRON, 1, false, null);
         assertEquals(NoduleFamily.IRON, paused.family());
         assertFalse(paused.growing(), "no ore in reach: growth pauses");
 
-        NoduleRules.GrazeResult switched = NoduleRules.onGraze(NoduleFamily.IRON, false, NoduleFamily.DIAMOND);
-        assertEquals(NoduleFamily.DIAMOND, switched.family());
+        NoduleRules.GrazeResult switched = NoduleRules.onGraze(NoduleFamily.IRON, 0, false, NoduleFamily.DIAMOND);
+        assertEquals(NoduleFamily.DIAMOND, switched.family(), "stage 0: nothing visible, the family may switch");
         assertTrue(switched.resetProgress(), "no diamonds grown on iron progress");
 
-        NoduleRules.GrazeResult ready = NoduleRules.onGraze(NoduleFamily.IRON, true, NoduleFamily.DIAMOND);
+        NoduleRules.GrazeResult ready = NoduleRules.onGraze(NoduleFamily.IRON, NoduleRules.MAX_STAGE, true, NoduleFamily.DIAMOND);
         assertEquals(NoduleFamily.IRON, ready.family(), "ready nodules keep their family");
         assertFalse(ready.resetProgress());
+    }
+
+    @Test
+    void visibleNodulesKeepTheirFamilyAndStageInAMixedCave() {
+        // M2: a tortoise at stage 1+ walking past other ores never loses progress.
+        for (int stage = 1; stage < NoduleRules.MAX_STAGE; stage++) {
+            NoduleRules.GrazeResult mixed = NoduleRules.onGraze(NoduleFamily.IRON, stage, false, NoduleFamily.COAL);
+            assertEquals(NoduleFamily.IRON, mixed.family(), "family fixed once nodules show");
+            assertFalse(mixed.resetProgress(), "progress kept");
+            assertTrue(mixed.growing(), "still grazing ore, still growing");
+        }
+        ProductTimer timer = new ProductTimer(NoduleRules.DEFAULT_REGROW_TICKS, NoduleRules.MAX_STAGE, 64);
+        timer.setProgress(NoduleRules.DEFAULT_REGROW_TICKS / 2);
+        NoduleFamily family = NoduleFamily.IRON;
+        NoduleFamily[] cave = {NoduleFamily.COAL, NoduleFamily.DIAMOND, NoduleFamily.IRON, NoduleFamily.REDSTONE};
+        int before = timer.progress();
+        for (NoduleFamily found : cave) {
+            NoduleRules.GrazeResult r = NoduleRules.onGraze(family, timer.stage(), timer.isReady(), found);
+            if (r.resetProgress()) {
+                timer.setProgress(0);
+            }
+            family = r.family();
+            timer.advance(NoduleRules.growthTicks(NoduleRules.GRAZE_INTERVAL, family));
+        }
+        assertEquals(NoduleFamily.IRON, family);
+        assertEquals(before + cave.length * NoduleRules.GRAZE_INTERVAL, timer.progress(), "grew at iron's rate throughout");
+    }
+
+    @Test
+    void wildTortoisesSpawnWithLowWeightedNodules() {
+        int[] counts = new int[NoduleRules.MAX_STAGE + 1];
+        for (int roll = 0; roll < 100; roll++) {
+            counts[NoduleRules.seedStage(roll)]++;
+        }
+        assertEquals(45, counts[0]);
+        assertEquals(35, counts[1]);
+        assertEquals(15, counts[2]);
+        assertEquals(5, counts[NoduleRules.MAX_STAGE], "ready is rare");
+        assertNull(NoduleRules.seedFamily(0, 7), "bare shells carry no family");
+        for (int roll = 0; roll < 20; roll++) {
+            NoduleFamily seeded = NoduleRules.seedFamily(1, roll);
+            assertEquals(1, seeded.regrowMultiplier(), "only common families spawn: " + seeded);
+        }
+        int regrow = NoduleRules.DEFAULT_REGROW_TICKS;
+        for (int stage = 0; stage <= NoduleRules.MAX_STAGE; stage++) {
+            for (double f : new double[] {0.0D, 0.5D, 0.999D, 1.0D}) {
+                ProductTimer timer = new ProductTimer(regrow, NoduleRules.MAX_STAGE, 64);
+                timer.setProgress(NoduleRules.seedProgress(stage, regrow, f));
+                assertEquals(stage, timer.stage(), "seed lands in its stage: " + stage + " @ " + f);
+            }
+        }
+        assertTrue(NoduleRules.DEFAULT_REGROW_TICKS >= 36_000, "slow, low-yield default (M2)");
     }
 
     @Test

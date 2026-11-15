@@ -49,6 +49,11 @@ item id.
 | Pirate Captain | Captain's Ledger | `nerocreatures:captains_ledger` | `nerocreatures:treasure_maps`, `neroland:quest/treasure_maps`, `neroland:highlight/tools` | NeroCreatures (opens a pirate stash), NeroQuests, structure mods | Marks one stash for the captain's killer; quest and structure hook. |
 | Void Manta | Leather (vanilla), Void Essence | `minecraft:leather`, `nerocreatures:void_essence` | see Void Essence | — | No new drop: Void Essence's second natural source after the Void Crawler. |
 | **Any planet boss** | Apex Trophy | `nerocreatures:apex_trophy` | `neroland:materials/apex_trophy`, `neroland:highlight/materials` | Nerotech (exotic recipes), NeroEconomy (high value) | The top of the ladder: proof of a boss kill, and the gating reagent for the ecosystem's most expensive recipes. Stacks to 8, because a trophy is meant to be counted rather than accumulated. |
+| Cinder Tyrant (always) | Tyrant Ember | `nerocreatures:tyrant_ember` | `neroland:materials/tyrant_ember`, `neroland:highlight/materials`, `nerocreatures:drops/exotic` | NeroCreatures (Trophy Plaque display; Heat-gland Greaves upgrade: coming with the gear), Nerotech | High-heat fuel / catalyst. Never a commodity (`neroeconomy:never_commodity`). |
+| Rime Matriarch | Matriarch Frostcore | `nerocreatures:matriarch_frostcore` | `neroland:materials/matriarch_frostcore`, `neroland:highlight/materials`, `nerocreatures:drops/exotic` | NeroCreatures (4 Rime Flasks: coming with the gear), Nerotech, Nerospace | Cryogenic core: coolant and reactor cooling. Stacks to 16. |
+| Bloom Sovereign | Sovereign Seed | `nerocreatures:sovereign_seed` | `neroland:materials/sovereign_seed`, `neroland:highlight/materials`, `nerocreatures:drops/organic` | NeroCreatures (breaks down into 4 Bloom Hearts), NeroAgriculture | Growth catalyst / resource seed. Stacks to 16. |
+| Facet Colossus (always) | Colossus Facet | `nerocreatures:colossus_facet` | `neroland:materials/colossus_facet`, `neroland:highlight/materials`, `nerocreatures:drops/exotic` | NeroCreatures (Trophy Plaque display; Mirror Shield upgrade: coming with the gear), Nerotech, Nerospace | Optical focus: lasers and resonators. Never a commodity. |
+| (crafted from habitat drops) | Boss sigils (4) | `nerocreatures:<boss>_sigil` | `nerocreatures:sigils`, `neroland:highlight/tools` | NeroCreatures (summon a boss at an [Apex Altar](Bosses.md#the-apex-altar)), NeroQuests | Not a drop. No sigil uses a boss signature drop. |
 
 ## Consumption inside NeroCreatures
 
@@ -65,6 +70,9 @@ their value even with no other Nero mod installed.
 | Android Core | Crafting a **Terraforming Drone Shell** | 1 per shell | Yes |
 | Static Jar | Thrown: disables machines for 5 s; or crafted with a redstone into 2 Plasma Cells | 1 per throw / craft | Yes |
 | Captain's Ledger | Opening its pirate stash | 1 | Yes |
+| Slag Carapace, Heat Gland, Plasma Cell; Rime Wool, Cryo Fang, Coolant Milk; Mossback Hide, Drifter Spores, Bloom Heart; Prism Antler, Mirror Scale, Refined Crystal | Crafting the four **boss sigils** ([Apex Altar](Bosses.md#the-apex-altar)) | 2 + 2 + 1 per sigil | Yes (the milk bucket comes back) |
+| Refined Crystal, Void Essence, Plasma Cell | Crafting an **Apex Altar** (with 4 obsidian) | 2, 1, 2 | Yes |
+| Sovereign Seed | Breaking down into Bloom Hearts | 1 → 4 | Yes |
 
 The reagent is consumed on a *failed* taming attempt as well as a successful one — but never when
 the attempt is refused for being at the pet cap, which is checked first. See
@@ -114,6 +122,10 @@ table is a plain data file — a pack may override any of them without touching 
 | Cinder Tyrant | Refined Crystal | 6–12 |
 | Cinder Tyrant | Plasma Cell | 4–8 |
 | Cinder Tyrant | Void Essence | 1–3, at 50% |
+| Cinder Tyrant | Tyrant Ember | 1 |
+| Rime Matriarch | Apex Trophy 1, Matriarch Frostcore 1–2, Refined Crystal 4–8 | altar-summoned only |
+| Bloom Sovereign | Apex Trophy 1, Sovereign Seed 1–2, Refined Crystal 4–8 | altar-summoned only (her pods drop nothing) |
+| Facet Colossus | Apex Trophy 1, Colossus Facet 1, Refined Crystal 6–12, Plasma Cell 4–8 | altar-summoned only |
 | Lumen Moth | Lumen Dust | 0–2 |
 | Echo Shrike | Resonant Membrane | 0–2 |
 | Lode Tortoise | Lode Scute | 0–1 |
@@ -134,8 +146,8 @@ table is a plain data file — a pack may override any of them without touching 
 | Shardback | Mirror Scale | 0–2 |
 | Magnet Crab | Iron Nugget | 1–3 (plus everything in its shell) |
 | Gravity Leech | Graviton Node | 0–2 |
-| Cache Mimic | Contraband 2–4, Salvaged Circuitry 2–4, Plasma Cell 1–2, Iron Ingot 3–6, Gold Ingot 1–3 | all guaranteed |
-| Cache Mimic | Android Core 1 at 35%, Diamond 1 at 20% | |
+| Cache Mimic | Contraband 2–4, Salvaged Circuitry 2–4, Plasma Cell 1–2, Iron Ingot 3–6, Gold Ingot 1–3 | all guaranteed, player kills only |
+| Cache Mimic | Android Core 1 at 35%, Diamond 1 at 20% | player kills only |
 | Static Swarm | Redstone 1–3, Glowstone Dust 0–2, Plasma Cell 1 at 25% | (bottling: 1 Static Jar) |
 | Scrap Hulk | Salvaged Circuitry 6–12, Android Core 1–2, Iron Ingot 4–8 | +1 circuitry per shed part (up to 3) |
 | Pirate Captain | Contraband 2–5, Gold Ingot 1–3 | (+ the Captain's Ledger, to the killer only) |

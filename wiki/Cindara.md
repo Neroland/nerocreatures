@@ -5,7 +5,7 @@ sulfur vents when a planet mod provides them; empty otherwise), at any light. Bo
 
 | Creature | Kind | Ability | Use to you | Drop |
 | -------- | ---- | ------- | ---------- | ---- |
-| Slag Beetle | Tameable (coal, charcoal) | Eats raw ore its owner throws to it and, after digesting, drops the smelted result, with a small bonus chance. Only items its owner threw. | A living furnace for a field base. | Slag Carapace |
+| Slag Beetle | Tameable (coal, charcoal) | Eats raw ore its owner throws to it and, after digesting, drops the smelted result, with a 10% chance of one extra (Bountiful adds a second 10% roll). Raw ore items only, never ore blocks. Only items its owner threw. | A living furnace for a field base. | Slag Carapace |
 | Magma Wader | Hostile | Wades through lava and, after a clear wind-up, lobs cooling slag that hardens into temporary **Ephemeral Crust**, which turns back into what was there after 30–60 seconds. | Drops Heat Glands for fire-proof gear. | Heat Gland |
 
 ## Ephemeral Crust

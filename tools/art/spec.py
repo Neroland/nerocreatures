@@ -32,6 +32,10 @@ FLAG_NAMES = ("saddled", "panniers", "radiant", "alpha")
 CONDITION_RANGES = {"stage": range(4), "variant": range(8), "form": range(8), "phase": range(4)}
 HEX = re.compile(r"^#[0-9A-Fa-f]{6}$")
 EASINGS = ("linear", "smooth")
+# procedural spin clocks: the entity's age (default) or the level's game time, wrapped at 4800 ticks
+# plus the partial tick (state key ``game_time``; Java AnimInput.gameTime). "game" is the same on every
+# client and on the server, so a spin can show an angle the server also computes.
+SPIN_CLOCKS = ("age", "game")
 HURT_TICKS = 6
 BLEND_TICKS = 4
 MIN_TELEGRAPH_TICKS = 10
@@ -276,6 +280,8 @@ def validate(spec: dict, palette: Palette, file_id: str = None) -> list:
         where = "procedural spin on '%s'" % entry.get("part")
         if not isinstance(entry.get("speed"), (int, float)) or entry.get("speed") == 0:
             err("%s: speed is non-zero degrees per tick" % where)
+        if entry.get("clock", "age") not in SPIN_CLOCKS:
+            err("%s: clock must be one of %s" % (where, ", ".join(SPIN_CLOCKS)))
         if "when" in entry:
             check_condition(entry["when"], where, err)
     check_presentation(spec, err)
@@ -464,7 +470,8 @@ def clip_time(clip: dict, clock: float) -> float:
 def evaluate(spec: dict, palette: Palette, state: dict) -> tuple:
     """Pose for one frame.
 
-    ``state`` keys (all optional): ``age`` ticks, ``walk_pos``, ``walk_speed`` 0-1, ``pose`` (a clip
+    ``state`` keys (all optional): ``age`` ticks, ``game_time`` (the wrapped game clock, read only by
+    spins with ``"clock": "game"``), ``walk_pos``, ``walk_speed`` 0-1, ``pose`` (a clip
     name from ACTION_CLIPS, or None for idle), ``pose_ticks`` (ticks since the pose began), ``phase``
     (0, or 1-3 for a boss phase), ``hurt_ticks`` (0-6 into the hurt, or None), the synced visuals
     ``stage``, ``variant``, ``form`` and ``flags`` (a list of flag names), and the blend source:
@@ -476,7 +483,8 @@ def evaluate(spec: dict, palette: Palette, state: dict) -> tuple:
     and the glow intensity 0-1. The layering is:
 
     1. procedural: swings (legs, scaled by walk speed), waves (faded by walk speed unless told not
-       to) and spins (continuous turns, gated by their ``when``)
+       to) and spins (continuous turns, gated by their ``when``; on ``age`` or, with
+       ``"clock": "game"``, on ``game_time``)
     2. held layer: ``idle`` on the age clock times (1 - walk), plus ``move`` on the walk clock times
        walk. In boss phase N, ``phase_N`` stands in for ``idle`` (the phase stance).
     3. pose layer: an action clip REPLACES the held layer on the channels (part x rot/pos) it keys,
@@ -517,7 +525,8 @@ def evaluate(spec: dict, palette: Palette, state: dict) -> tuple:
         before = 1.0 if condition_holds(cond, state, source) else 0.0
         share = before + (now - before) * weight
         if share > 0.0:
-            angle = (age * entry["speed"] + entry.get("phase", 0.0)) % 360.0
+            clock = float(state.get("game_time", 0.0)) if entry.get("clock") == "game" else age
+            angle = (clock * entry["speed"] + entry.get("phase", 0.0)) % 360.0
             deltas[entry["part"]][0]["xyz".index(entry["axis"])] += angle * share
 
     def add(into: dict, clip: dict, t: float, w: float) -> None:

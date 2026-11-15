@@ -86,6 +86,11 @@ public final class NeroCreaturesConfig {
             "Scales boss maximum health. Separate from bossDifficultyMultiplier so a pack can make a "
                     + "boss long without making it lethal.");
 
+    public static final ConfigValue<Integer> APEX_ALTAR_COOLDOWN_TICKS = SCHEMA.intRange(
+            "apexAltarCooldownTicks", 12000, 0, 1008000, true,
+            "Ticks an Apex Altar recharges after it summons a boss (per altar). 0 = no cooldown; a live "
+                    + "fight still blocks.");
+
     // --- Ownership caps (server-authoritative) ------------------------------
     public static final ConfigValue<Integer> MAX_PETS_PER_PLAYER = SCHEMA.intRange(
             "maxPetsPerPlayer", 3, 0, 64, true,
@@ -107,7 +112,7 @@ public final class NeroCreaturesConfig {
             "Lode Tortoises grow ore nodules (entity state; never breaks a block). Balance switch.");
 
     public static final ConfigValue<Integer> LODE_TORTOISE_NODULE_TICKS = SCHEMA.intRange(
-            "lodeTortoiseNoduleTicks", 24000, 1200, 240000, true,
+            "lodeTortoiseNoduleTicks", 36000, 1200, 240000, true,
             "Ticks of grazing for a Lode Tortoise to grow ready nodules of a common ore (rare ores take "
                     + "4x). New tortoises use the new value.");
 

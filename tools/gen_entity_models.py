@@ -252,6 +252,9 @@ def emit_rig(spec: dict) -> list:
                                                num(e.get("limit", 180))))
     for e in proc.get("spin", []):
         when = (", " + condition(e["when"])) if e.get("when") else ""
+        if e.get("clock") == "game":
+            # On AnimInput.gameTime instead of the entity's age (same angle on every client).
+            when = (when or ", null") + ", true"
         body.append(".spin(%s, '%s', %s, %s%s)" % (jstr(e["part"]), e["axis"], num(e["speed"]),
                                                     num(e.get("phase", 0)), when))
     for name, clip in spec.get("clips", {}).items():

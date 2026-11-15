@@ -48,6 +48,10 @@
     {
       "id": "nerocreatures:raw_mossback",
       "required": false
+    },
+    {
+      "id": "nerocreatures:sovereign_seed",
+      "required": false
     }
   ]
 }

@@ -14,20 +14,48 @@ import za.co.neroland.nerocreatures.world.CreatureGriefingTest.FakeChecks;
 class SlagBeetleRulesTest {
 
     @Test
-    void outputIsTheRecipeCountWithBountifulAndBonus() {
-        assertEquals(1, SlagBeetleRules.outputCount(1, 1, false));
-        assertEquals(2, SlagBeetleRules.outputCount(1, 2, false), "Bountiful doubles");
-        assertEquals(2, SlagBeetleRules.outputCount(1, 1, true), "flat bonus adds one");
-        assertEquals(3, SlagBeetleRules.outputCount(1, 2, true));
-        assertEquals(0, SlagBeetleRules.outputCount(0, 2, true), "unsmeltable produces nothing");
+    void outputIsTheRecipeCountPlusBonusHits() {
+        assertEquals(1, SlagBeetleRules.outputCount(1, 0));
+        assertEquals(2, SlagBeetleRules.outputCount(1, 1), "one bonus hit adds one");
+        assertEquals(3, SlagBeetleRules.outputCount(1, 2), "Bountiful's second roll adds one more, never doubles");
+        assertEquals(0, SlagBeetleRules.outputCount(0, 2), "unsmeltable produces nothing");
+        assertEquals(1, SlagBeetleRules.bonusRolls(1));
+        assertEquals(2, SlagBeetleRules.bonusRolls(2), "Bountiful: one extra roll");
+        assertEquals(2, SlagBeetleRules.bonusRolls(99), "rolls clamp to 2");
+        assertEquals(1, SlagBeetleRules.bonusRolls(-5), "rolls clamp to at least 1");
     }
 
     @Test
     void outputIsCapped() {
         assertEquals(3, SlagBeetleRules.maxOutput(1));
-        assertEquals(3, SlagBeetleRules.outputCount(1, 99, true), "rolls clamp to 2");
-        assertEquals(64, SlagBeetleRules.outputCount(40, 2, true), "never more than a stack");
-        assertEquals(1, SlagBeetleRules.outputCount(1, -5, false), "rolls clamp to at least 1");
+        assertEquals(3, SlagBeetleRules.outputCount(1, 99), "hits clamp to 2");
+        assertEquals(64, SlagBeetleRules.outputCount(63, 2), "never more than a stack");
+        assertEquals(1, SlagBeetleRules.outputCount(1, -5), "hits clamp to at least 0");
+    }
+
+    @Test
+    void expectedOutputStaysWithinAQuarterOfAFurnace() {
+        // M6: Bountiful used to multiply (about 1.6 per item); the bound is 1.25x a furnace.
+        for (int base = 1; base <= 4; base++) {
+            for (int rolls = 1; rolls <= 2; rolls++) {
+                double ratio = SlagBeetleRules.expectedOutput(base, rolls) / base;
+                assertTrue(ratio <= SlagBeetleRules.MAX_EXPECTED_RATIO, "base " + base + " rolls " + rolls + ": " + ratio);
+            }
+        }
+        assertEquals(1.2D, SlagBeetleRules.expectedOutput(1, 2), 1e-9, "worst case: a Bountiful roll every time");
+        assertEquals(0.0D, SlagBeetleRules.expectedOutput(0, 2));
+    }
+
+    @Test
+    void foodTagIsRawOreItemsOnly() throws java.io.IOException {
+        try (java.io.InputStream in = SlagBeetleRulesTest.class.getResourceAsStream(
+                "/data/nerocreatures/tags/item/slag_beetle_ores.json")) {
+            assertTrue(in != null, "tag on the classpath");
+            String json = new String(in.readAllBytes(), java.nio.charset.StandardCharsets.UTF_8);
+            assertFalse(json.contains("\"#c:ores\""), "no ore blocks via #c:ores");
+            assertFalse(json.contains("_ores\""), "no ore-block tags");
+            assertTrue(json.contains("minecraft:raw_iron"));
+        }
     }
 
     @Test

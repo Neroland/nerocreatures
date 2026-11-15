@@ -9,8 +9,10 @@ import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import net.neoforged.neoforge.client.event.RegisterClientCommandsEvent;
 import net.neoforged.neoforge.common.NeoForge;
 
+import za.co.neroland.nerocreatures.client.ApexAltarRenderer;
 import za.co.neroland.nerocreatures.client.ClientEntityRenderers;
 import za.co.neroland.nerocreatures.client.GalleryCaptureHarness;
+import za.co.neroland.nerocreatures.registry.ModBlockEntities;
 
 /**
  * NeoForge client-only wiring. Nothing here runs on a dedicated server: the entry point calls
@@ -40,5 +42,7 @@ public final class NeoForgeClientSetup {
                 event.registerEntityRenderer(type, provider);
             }
         });
+        // The Apex Altar's floating sigil (culled; see ApexAltarRenderer).
+        event.registerBlockEntityRenderer(ModBlockEntities.APEX_ALTAR.get(), ApexAltarRenderer::new);
     }
 }

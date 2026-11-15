@@ -11,8 +11,10 @@ import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 *///?}
 
+import za.co.neroland.nerocreatures.client.ApexAltarRenderer;
 import za.co.neroland.nerocreatures.client.ClientEntityRenderers;
 import za.co.neroland.nerocreatures.client.GalleryCaptureHarness;
+import za.co.neroland.nerocreatures.registry.ModBlockEntities;
 
 /**
  * Forge client-only wiring. Nothing here runs on a dedicated server: the entry point calls
@@ -69,5 +71,7 @@ public final class ForgeClientSetup {
                 event.registerEntityRenderer(type, provider);
             }
         });
+        // The Apex Altar's floating sigil (culled; see ApexAltarRenderer).
+        event.registerBlockEntityRenderer(ModBlockEntities.APEX_ALTAR.get(), ApexAltarRenderer::new);
     }
 }

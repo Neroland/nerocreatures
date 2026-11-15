@@ -22,7 +22,10 @@ import za.co.neroland.nerolandcore.registry.RegistrationProvider.RegistryEntry;
 import za.co.neroland.nerocreatures.NeroCreaturesCommon;
 import za.co.neroland.nerocreatures.entity.asteroid.GravityLeech;
 import za.co.neroland.nerocreatures.entity.asteroid.MagnetCrab;
+import za.co.neroland.nerocreatures.entity.boss.BloomSovereign;
 import za.co.neroland.nerocreatures.entity.boss.CinderTyrant;
+import za.co.neroland.nerocreatures.entity.boss.FacetColossus;
+import za.co.neroland.nerocreatures.entity.boss.RimeMatriarch;
 import za.co.neroland.nerocreatures.entity.deepspace.VoidManta;
 import za.co.neroland.nerocreatures.entity.glacira.FrostLurker;
 import za.co.neroland.nerocreatures.entity.glacira.RimeYak;
@@ -338,6 +341,26 @@ public final class ModEntities {
             key -> EntityType.Builder.of(VoidManta::new, MobCategory.CREATURE)
                     .sized(2.5F, 0.9F).eyeHeight(0.6F).clientTrackingRange(10).build(key));
 
+    // --- 0.5.0 Apex bosses (altar-summoned only: no spawn placement, no spawn rule) -----------
+
+    /** Rime Matriarch — Glacira's boss: blizzard beam, ice pillars, a freezing floor. */
+    public static final RegistryEntry<EntityType<RimeMatriarch>> RIME_MATRIARCH = ENTITY_TYPES.register(
+            "rime_matriarch",
+            key -> EntityType.Builder.of(RimeMatriarch::new, MobCategory.MONSTER)
+                    .sized(1.8F, 4.2F).eyeHeight(3.6F).clientTrackingRange(10).build(key));
+
+    /** Bloom Sovereign — Greenxertz's rooted boss: spore pods that heal her, infecting lashes. */
+    public static final RegistryEntry<EntityType<BloomSovereign>> BLOOM_SOVEREIGN = ENTITY_TYPES.register(
+            "bloom_sovereign",
+            key -> EntityType.Builder.of(BloomSovereign::new, MobCategory.MONSTER)
+                    .sized(3.0F, 4.5F).eyeHeight(3.8F).clientTrackingRange(10).build(key));
+
+    /** Facet Colossus — Nyxara's boss: one lit facet takes damage; the beam refracts through arena crystals. */
+    public static final RegistryEntry<EntityType<FacetColossus>> FACET_COLOSSUS = ENTITY_TYPES.register(
+            "facet_colossus",
+            key -> EntityType.Builder.of(FacetColossus::new, MobCategory.MONSTER)
+                    .sized(2.8F, 4.4F).eyeHeight(3.6F).clientTrackingRange(10).build(key));
+
     /**
      * Every creature type this mod registers, in roster order. Declared once here so anything that
      * has to walk the whole roster — the {@code /nerocreatures list} command, the link module's
@@ -357,7 +380,8 @@ public final class ModEntities {
                     PRISM_STAG, SHARDBACK,
                     MAGNET_CRAB, GRAVITY_LEECH,
                     CACHE_MIMIC, STATIC_SWARM, SCRAP_HULK, PIRATE_CAPTAIN,
-                    VOID_MANTA);
+                    VOID_MANTA,
+                    RIME_MATRIARCH, BLOOM_SOVEREIGN, FACET_COLOSSUS);
 
     private ModEntities() {
     }
@@ -431,6 +455,10 @@ public final class ModEntities {
         entities.registerAttributes(SCRAP_HULK, () -> withTemptRange(ScrapHulk.createAttributes()));
         entities.registerAttributes(PIRATE_CAPTAIN, () -> withTemptRange(PirateCaptain.createAttributes()));
         entities.registerAttributes(VOID_MANTA, () -> withTemptRange(VoidManta.createAttributes()));
+        // 0.5.0 Apex bosses. Like the Tyrant: attributes only, no placement (altar-summoned).
+        entities.registerAttributes(RIME_MATRIARCH, () -> withTemptRange(RimeMatriarch.createAttributes()));
+        entities.registerAttributes(BLOOM_SOVEREIGN, () -> withTemptRange(BloomSovereign.createAttributes()));
+        entities.registerAttributes(FACET_COLOSSUS, () -> withTemptRange(FacetColossus.createAttributes()));
 
         // Light-shy: crawlers and slimes are creatures of the dark side and the crystal caves.
         entities.registerSpawnPlacement(VOID_CRAWLER, SpawnPlacementTypes.ON_GROUND,

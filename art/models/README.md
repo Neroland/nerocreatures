@@ -82,6 +82,14 @@ hold; a missing key means "any".
 | `pose` | list of `idle`, `ability`, `ability_2`, `rest` | the synced pose |
 | `flag` | a name or a list, all required: `saddled`, `panniers`, `radiant`, `alpha` | flags |
 
+Facet Colossus decoys (phase 2+): `variant` is the lit facet (0-5; 0 while the beam fires), and the
+two decoy facets are synced as `form` = first decoy facet + 1 (0 = no decoys) and `stage` = the
+cyclic gap to the second decoy − 1 (0-2), so decoy B = `(form - 1 + stage + 1) mod 6`. "First" is
+the decoy from which the other lies 1-3 facets further round (lower index on a gap of 3). During the
+beam the decoys are turned with the lit facet, in the same numbering as `variant`
+(`FacetRules.decoyForm` / `decoyStage` / `decoyMaskOf`). Drive dim-lit decoy plates with
+`visible_when` (or a glow rule) on `form` and `stage`.
+
 ### Faces
 
 Painters address a cube face by name. In the sheet, a box at `uv = [u, v]` with size `[w, h, d]`:
@@ -118,6 +126,12 @@ and `.around()` hand these back already turned so that `x = 0` (or `y = 0`) is t
   where it names poses the spin fades out and back in over the 4-tick pose blend (the ring winds
   back to rest during that fade, so let the action's own track carry the ring if it must stop
   square). Spins are never faded by walking. A spun part counts as animated.
+  Optional `"clock": "game"` turns the spin on the level's game time instead of the entity's age:
+  `(floorMod(gameTime, 4800) + partialTick) * speed + phase`. That clock is the same on every client
+  and on the server, so the angle matches one the server computes (Facet Colossus: the lit facet is
+  where the server's vulnerable arc is). 4800 ticks is a whole number of turns at 0.75, 1.5 and 3
+  degrees per tick; pick speeds that divide evenly, or the ring jumps once every 4 minutes. Default
+  `"age"`. (Java: `AnimInput.gameTime`; reference evaluator state key `game_time`.)
 
 `phase`, `amplitude`, `limit` and `speed` are degrees; `frequency` is radians per tick.
 

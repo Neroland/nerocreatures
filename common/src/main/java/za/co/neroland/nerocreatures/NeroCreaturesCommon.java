@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 
 import net.minecraft.world.item.ItemStack;
 
+import za.co.neroland.nerocreatures.block.ApexAltarBlockEntity;
 import za.co.neroland.nerocreatures.boss.BossSummons;
 import za.co.neroland.nerocreatures.compat.CompanionBridge;
 import za.co.neroland.nerocreatures.config.NeroCreaturesConfig;
@@ -17,6 +18,7 @@ import za.co.neroland.nerocreatures.entity.mount.MountHooks;
 import za.co.neroland.nerocreatures.entity.nyxara.PrismStag;
 import za.co.neroland.nerocreatures.link.CreatureLinkModule;
 import za.co.neroland.nerocreatures.network.CreatureNetwork;
+import za.co.neroland.nerocreatures.registry.ModBlockEntities;
 import za.co.neroland.nerocreatures.registry.ModBlocks;
 import za.co.neroland.nerocreatures.registry.ModCreativeTab;
 import za.co.neroland.nerocreatures.registry.ModEntities;
@@ -56,6 +58,7 @@ public final class NeroCreaturesCommon {
         //    Entity types come first: the spawn eggs and the spawn table both name them, and on
         //    Fabric "first" is literal.
         ModBlocks.init();
+        ModBlockEntities.init();
         ModEntities.init();
         ModItems.init();
         ModSpawnEggs.init();
@@ -91,6 +94,8 @@ public final class NeroCreaturesCommon {
         RimeYak.configure(() -> NeroCreaturesConfig.RIME_YAK_WOOL_REGROW_TICKS.get(),
                 () -> NeroCreaturesConfig.RIME_YAK_MILK_COOLDOWN_TICKS.get());
         PrismStag.configure(() -> NeroCreaturesConfig.PRISM_STAG_HERD_AURA.get());
+        // 8e. Apex Altar recharge, read live (per altar, never per player).
+        ApexAltarBlockEntity.configure(() -> NeroCreaturesConfig.APEX_ALTAR_COOLDOWN_TICKS.get());
         // 9. Spawn rules last of the content steps — they reference entity types, which on Fabric
         //    must already have been registered by the step above, and Core's entity seam applies
         //    Fabric registrations eagerly too.

@@ -4,6 +4,10 @@
     {
       "id": "nerocreatures:frost_lurker",
       "required": false
+    },
+    {
+      "id": "nerocreatures:rime_matriarch",
+      "required": false
     }
   ]
 }

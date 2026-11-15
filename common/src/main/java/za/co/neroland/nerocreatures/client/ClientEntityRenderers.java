@@ -118,5 +118,13 @@ public final class ClientEntityRenderers {
                 new PirateCaptainModel(PirateCaptainModel.createBodyLayer().bakeRoot()), PirateCaptainModel.ART));
         sink.register(ModEntities.VOID_MANTA.get(), context -> new CreatureRenderer(context,
                 new VoidMantaModel(VoidMantaModel.createBodyLayer().bakeRoot()), VoidMantaModel.ART));
+
+        // 0.5.0 Apex bosses (altar-summoned), each on its generated model's ART.
+        sink.register(ModEntities.RIME_MATRIARCH.get(), context -> new CreatureRenderer(context,
+                new RimeMatriarchModel(RimeMatriarchModel.createBodyLayer().bakeRoot()), RimeMatriarchModel.ART));
+        sink.register(ModEntities.BLOOM_SOVEREIGN.get(), context -> new CreatureRenderer(context,
+                new BloomSovereignModel(BloomSovereignModel.createBodyLayer().bakeRoot()), BloomSovereignModel.ART));
+        sink.register(ModEntities.FACET_COLOSSUS.get(), context -> new CreatureRenderer(context,
+                new FacetColossusModel(FacetColossusModel.createBodyLayer().bakeRoot()), FacetColossusModel.ART));
     }
 }

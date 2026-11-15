@@ -203,10 +203,10 @@ public class BloomHost extends NeroCreatureEntity implements Enemy {
         }
     }
 
-    /** Sporelings drop nothing and give no experience. */
+    /** Sporelings and Bloom Sovereign pods drop nothing and give no experience ({@link BloomRules#dropsLoot}). */
     @Override
     protected void dropAllDeathLoot(ServerLevel level, DamageSource source) {
-        if (!this.isSporeling()) {
+        if (BloomRules.dropsLoot(this.form())) {
             super.dropAllDeathLoot(level, source);
         }
     }

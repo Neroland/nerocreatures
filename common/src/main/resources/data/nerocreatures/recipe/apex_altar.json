@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "R": "nerocreatures:refined_crystal",
+    "V": "nerocreatures:void_essence",
+    "P": "nerocreatures:plasma_cell",
+    "O": "minecraft:obsidian"
+  },
+  "pattern": [
+    "RVR",
+    "POP",
+    "OOO"
+  ],
+  "result": {
+    "count": 1,
+    "id": "nerocreatures:apex_altar"
+  }
+}

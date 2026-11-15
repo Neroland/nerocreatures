@@ -199,6 +199,7 @@ public abstract class CreatureModel extends net.minecraft.client.model.Hierarchi
     public static void fillVisuals(AnimInput in, Entity entity, float partialTick) {
         VisualsSnapshot visuals = entity instanceof CreatureVisualsHolder holder
                 ? holder.visuals().snapshot(partialTick) : VisualsSnapshot.EMPTY;
+        in.gameTime = AnimInput.gameClock(entity.level().getGameTime(), partialTick);
         in.pose = visuals.pose().ordinal();
         in.poseTicks = visuals.abilityTicks();
         in.phase = visuals.phase();

@@ -5,8 +5,10 @@ import java.util.List;
 
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.food.FoodProperties;
+import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.Rarity;
 import net.minecraft.world.level.ItemLike;
 
 import za.co.neroland.nerolandcore.registry.RegistrationProvider;
@@ -16,6 +18,7 @@ import za.co.neroland.nerocreatures.NeroCreaturesCommon;
 import za.co.neroland.nerocreatures.item.CaptainsLedgerItem;
 import za.co.neroland.nerocreatures.item.DrifterSporesItem;
 import za.co.neroland.nerocreatures.item.DroneShellItem;
+import za.co.neroland.nerocreatures.item.SigilItem;
 import za.co.neroland.nerocreatures.item.StaticJarItem;
 
 /**
@@ -184,6 +187,50 @@ public final class ModItems {
     public static final RegistryEntry<Item> APEX_TROPHY = ITEMS.register("apex_trophy",
             key -> new Item(new Item.Properties().stacksTo(8).setId(key)));
 
+    // --- 0.5.0 boss signature drops (decision 001; one per boss, beside the shared trophy) -------
+
+    /** Rime Matriarch drop — a cryogenic core; crafts Rime Flasks, coolant/reactor cooling elsewhere. */
+    public static final RegistryEntry<Item> MATRIARCH_FROSTCORE = ITEMS.register("matriarch_frostcore",
+            key -> new Item(new Item.Properties().stacksTo(16).rarity(Rarity.RARE).setId(key)));
+
+    /** Bloom Sovereign drop — breaks down into four Bloom Hearts; a growth catalyst elsewhere. */
+    public static final RegistryEntry<Item> SOVEREIGN_SEED = ITEMS.register("sovereign_seed",
+            key -> new Item(new Item.Properties().stacksTo(16).rarity(Rarity.RARE).setId(key)));
+
+    /** Facet Colossus drop — an optical focus plate (lasers, resonators). */
+    public static final RegistryEntry<Item> COLOSSUS_FACET = ITEMS.register("colossus_facet",
+            key -> new Item(new Item.Properties().rarity(Rarity.RARE).setId(key)));
+
+    /** Cinder Tyrant drop — a still-burning ember; high-heat fuel or catalyst. */
+    public static final RegistryEntry<Item> TYRANT_EMBER = ITEMS.register("tyrant_ember",
+            key -> new Item(new Item.Properties().rarity(Rarity.RARE).setId(key)));
+
+    // --- 0.5.0 boss sigils and the Apex Altar (crafted, not drops) --------------------------------
+
+    /** Used on an Apex Altar: summons a Cinder Tyrant as a contribution-tracked fight. */
+    public static final RegistryEntry<Item> CINDER_TYRANT_SIGIL = ITEMS.register("cinder_tyrant_sigil",
+            key -> new SigilItem(new Item.Properties().stacksTo(16).setId(key), SigilItem.Kind.CINDER_TYRANT));
+
+    /** Used on an Apex Altar: summons a Rime Matriarch. */
+    public static final RegistryEntry<Item> RIME_MATRIARCH_SIGIL = ITEMS.register("rime_matriarch_sigil",
+            key -> new SigilItem(new Item.Properties().stacksTo(16).setId(key), SigilItem.Kind.RIME_MATRIARCH));
+
+    /** Used on an Apex Altar: summons a Bloom Sovereign. */
+    public static final RegistryEntry<Item> BLOOM_SOVEREIGN_SIGIL = ITEMS.register("bloom_sovereign_sigil",
+            key -> new SigilItem(new Item.Properties().stacksTo(16).setId(key), SigilItem.Kind.BLOOM_SOVEREIGN));
+
+    /** Used on an Apex Altar: summons a Facet Colossus. */
+    public static final RegistryEntry<Item> FACET_COLOSSUS_SIGIL = ITEMS.register("facet_colossus_sigil",
+            key -> new SigilItem(new Item.Properties().stacksTo(16).setId(key), SigilItem.Kind.FACET_COLOSSUS));
+
+    /** The Apex Altar's block item. */
+    public static final RegistryEntry<Item> APEX_ALTAR = ITEMS.register("apex_altar",
+            key -> new BlockItem(ModBlocks.APEX_ALTAR.get(), new Item.Properties()
+                    //? if >=1.21.2 {
+                    .useBlockDescriptionPrefix()
+                    //?}
+                    .setId(key)));
+
     /**
      * Terraforming Drone deployment shell — the one item here that is <b>not</b> a drop.
      *
@@ -212,10 +259,11 @@ public final class ModItems {
             DRIFTER_SPORES, BLOOM_HEART, MOSSBACK_HIDE, RAW_MOSSBACK, COOKED_MOSSBACK, LEVIATHAN_BARNACLE,
             PRISM_ANTLER, MIRROR_SCALE,
             GRAVITON_NODE, CAPTAINS_LEDGER,
-            APEX_TROPHY);
+            APEX_TROPHY, MATRIARCH_FROSTCORE, SOVEREIGN_SEED, COLOSSUS_FACET, TYRANT_EMBER);
 
-    /** Crafted deployables — shown in the creative tab after the drops. */
-    private static final List<RegistryEntry<Item>> DEPLOYABLES = List.of(DRONE_SHELL, CREATURE_SADDLE, STATIC_JAR);
+    /** Crafted deployables — shown in the creative tab after the drops (sigils, then the altar). */
+    private static final List<RegistryEntry<Item>> DEPLOYABLES = List.of(DRONE_SHELL, CREATURE_SADDLE, STATIC_JAR,
+            CINDER_TYRANT_SIGIL, RIME_MATRIARCH_SIGIL, BLOOM_SOVEREIGN_SIGIL, FACET_COLOSSUS_SIGIL, APEX_ALTAR);
 
     private ModItems() {
     }

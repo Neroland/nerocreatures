@@ -1,0 +1,60 @@
+{
+  "type": "minecraft:entity",
+  "pools": [
+    {
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "nerocreatures:apex_trophy"
+        }
+      ],
+      "rolls": 1
+    },
+    {
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "nerocreatures:colossus_facet"
+        }
+      ],
+      "rolls": 1
+    },
+    {
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "modifier": {
+            "type": "minecraft:set_count",
+            "add": false,
+            "count": {
+              "type": "minecraft:uniform",
+              "max": 12.0,
+              "min": 6.0
+            }
+          },
+          "name": "nerocreatures:refined_crystal"
+        }
+      ],
+      "rolls": 1
+    },
+    {
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "modifier": {
+            "type": "minecraft:set_count",
+            "add": false,
+            "count": {
+              "type": "minecraft:uniform",
+              "max": 8.0,
+              "min": 4.0
+            }
+          },
+          "name": "nerocreatures:plasma_cell"
+        }
+      ],
+      "rolls": 1
+    }
+  ],
+  "random_sequence": "nerocreatures:entities/facet_colossus"
+}

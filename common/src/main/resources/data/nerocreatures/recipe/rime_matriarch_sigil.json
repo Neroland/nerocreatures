@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "W": "nerocreatures:rime_wool",
+    "F": "nerocreatures:cryo_fang",
+    "M": "nerocreatures:coolant_milk"
+  },
+  "pattern": [
+    " W ",
+    "FMF",
+    " W "
+  ],
+  "result": {
+    "count": 1,
+    "id": "nerocreatures:rime_matriarch_sigil"
+  }
+}

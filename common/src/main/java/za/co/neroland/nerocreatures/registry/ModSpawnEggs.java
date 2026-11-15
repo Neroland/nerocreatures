@@ -144,6 +144,17 @@ public final class ModSpawnEggs {
     public static final RegistryEntry<Item> VOID_MANTA_SPAWN_EGG =
             egg("void_manta_spawn_egg", ModEntities.VOID_MANTA);
 
+    // Apex boss eggs: like the Tyrant's, for operators and testers. An egg-placed boss is a plain
+    // fight (loot table only); the contribution-tracked fight is the Apex Altar's.
+    public static final RegistryEntry<Item> RIME_MATRIARCH_SPAWN_EGG =
+            egg("rime_matriarch_spawn_egg", ModEntities.RIME_MATRIARCH);
+
+    public static final RegistryEntry<Item> BLOOM_SOVEREIGN_SPAWN_EGG =
+            egg("bloom_sovereign_spawn_egg", ModEntities.BLOOM_SOVEREIGN);
+
+    public static final RegistryEntry<Item> FACET_COLOSSUS_SPAWN_EGG =
+            egg("facet_colossus_spawn_egg", ModEntities.FACET_COLOSSUS);
+
     /**
      * Every egg, in roster order — used for the creative tab.
      *
@@ -165,7 +176,8 @@ public final class ModSpawnEggs {
             PRISM_STAG_SPAWN_EGG, SHARDBACK_SPAWN_EGG,
             MAGNET_CRAB_SPAWN_EGG, GRAVITY_LEECH_SPAWN_EGG,
             CACHE_MIMIC_SPAWN_EGG, STATIC_SWARM_SPAWN_EGG, SCRAP_HULK_SPAWN_EGG, PIRATE_CAPTAIN_SPAWN_EGG,
-            VOID_MANTA_SPAWN_EGG);
+            VOID_MANTA_SPAWN_EGG,
+            RIME_MATRIARCH_SPAWN_EGG, BLOOM_SOVEREIGN_SPAWN_EGG, FACET_COLOSSUS_SPAWN_EGG);
 
     private ModSpawnEggs() {
     }

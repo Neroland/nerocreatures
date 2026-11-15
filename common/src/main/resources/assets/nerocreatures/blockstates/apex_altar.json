@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "sigil=none": {
+      "model": "nerocreatures:block/apex_altar"
+    },
+    "sigil=cindara": {
+      "model": "nerocreatures:block/apex_altar_lit"
+    },
+    "sigil=glacira": {
+      "model": "nerocreatures:block/apex_altar_lit"
+    },
+    "sigil=greenxertz": {
+      "model": "nerocreatures:block/apex_altar_lit"
+    },
+    "sigil=nyxara": {
+      "model": "nerocreatures:block/apex_altar_lit"
+    }
+  }
+}

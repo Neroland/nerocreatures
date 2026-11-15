@@ -1,0 +1,11 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "nerocreatures:sovereign_seed"
+  ],
+  "result": {
+    "count": 4,
+    "id": "nerocreatures:bloom_heart"
+  }
+}

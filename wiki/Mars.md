@@ -6,7 +6,7 @@ a planet mod provides them; empty otherwise), at any hour.
 | Creature | Kind | Ability | Use to you | Drop |
 | -------- | ---- | ------- | ---------- | ---- |
 | Dune Loper | Mount (beetroot) | A bounding low-gravity leap on the jump bar, paid for in stamina; carries panniers. Ridden with a [Creature Saddle](Mounts.md). | Fast surface travel with cargo. | Leather |
-| Strata Hound | Tameable (bone) | Show it a block or raw ore: it tracks the nearest match within `strataHoundRange` (24), leads you there and marks it. A read-only scan. | Prospecting without x-ray. | Bone |
+| Strata Hound | Tameable (bone) | Show it an ore, raw ore or natural stone (`#nerocreatures:strata_trackable`; never containers or other block entities): it tracks the nearest match within `strataHoundRange` (24), leads you there and marks it. A read-only scan. | Prospecting without x-ray. | Bone |
 | Dust Devil | Hostile | A whirlwind: it spins up (cannot be hit while it does), then lifts and throws players and dropped items and cuts visibility. | An arena hazard that changes a fight. | Charged Sand |
 
 ## Spawning

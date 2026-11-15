@@ -26,7 +26,7 @@ public class FacetColossusModel extends CreatureModel {
     /** Renderer settings, the textures present, the variant look and the culling reach. */
     public static final CreatureArt ART = new CreatureArt("facet_colossus", false, 1.0F, 1.8F, true, false,
             CreatureArt.Variants.NONE,
-            new CreatureArt.Cull(2.0F, 5.375F, 0.3125F));
+            new CreatureArt.Cull(2.0F, 5.375F, 0.0F));
 
     /** Parts, procedural motion, clips and visibility groups (see CreatureRig). */
     public static final CreatureRig RIG = CreatureRig.builder()
@@ -48,9 +48,9 @@ public class FacetColossusModel extends CreatureModel {
             .part("lit_4", "plate_4")
             .part("plate_5", "ring")
             .part("lit_5", "plate_5")
-            .spin("ring", 'y', 1.5, 0, CreatureRig.when(0, 0, 0, 0, 3, 1))
-            .spin("ring", 'y', 3, 0, CreatureRig.when(0, 0, 0, 0, 4, 1))
-            .spin("ring", 'y', 0.75, 0, CreatureRig.when(0, 0, 0, 0, 8, 1))
+            .spin("ring", 'y', 1.5, 0, CreatureRig.when(0, 0, 0, 0, 3, 1), true)
+            .spin("ring", 'y', 3, 0, CreatureRig.when(0, 0, 0, 0, 4, 1), true)
+            .spin("ring", 'y', 0.75, 0, CreatureRig.when(0, 0, 0, 0, 8, 1), true)
             .clip("idle", 240, true)
                 .glow(0, 0.35, 0,  120, 0.5, 1,  240, 0.35, 1)
                 .pos("crown", 0, 0, 0, 0, 0,  40, 0, -1, 0, 1,  80, 0, 0, 0, 1,  120, 0, -1, 0, 1,  160, 0, 0, 0, 1,  200, 0, -1, 0, 1,  240, 0, 0, 0, 1)

@@ -1,0 +1,21 @@
+{
+  "replace": false,
+  "values": [
+    {
+      "id": "nerocreatures:cinder_tyrant_sigil",
+      "required": false
+    },
+    {
+      "id": "nerocreatures:rime_matriarch_sigil",
+      "required": false
+    },
+    {
+      "id": "nerocreatures:bloom_sovereign_sigil",
+      "required": false
+    },
+    {
+      "id": "nerocreatures:facet_colossus_sigil",
+      "required": false
+    }
+  ]
+}

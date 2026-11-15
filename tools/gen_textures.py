@@ -344,6 +344,10 @@ PALETTES = {
     "pirate_captain": ((60, 44, 50, 255), (220, 170, 70, 255), (26, 20, 24, 255)),
     # 0.5.0 Deep space: a midnight manta with starlight speckle.
     "void_manta": ((30, 26, 54, 255), (200, 190, 255, 255), (12, 10, 24, 255)),
+    # 0.5.0 Apex bosses (eggs only: their entity sheets come from the art specs).
+    "rime_matriarch": ((120, 170, 205, 255), (235, 250, 255, 255), (40, 70, 100, 255)),
+    "bloom_sovereign": ((70, 120, 60, 255), (240, 130, 200, 255), (30, 50, 26, 255)),
+    "facet_colossus": ((80, 64, 120, 255), (210, 190, 255, 255), (30, 24, 50, 255)),
 }
 
 
@@ -484,6 +488,53 @@ def captains_ledger(c: Canvas, rng: random.Random) -> None:
     c.set(8, 10, (220, 60, 50, 255))
 
 
+# --- 0.5.0 boss signature drops and sigils ----------------------------------
+
+
+def matriarch_frostcore(c: Canvas, rng: random.Random) -> None:
+    c.diamond(7, 8, 6, (60, 110, 160, 255))
+    c.diamond(7, 8, 4, (150, 210, 245, 255))
+    c.disc(7.5, 8.0, 1.5, (240, 252, 255, 255))
+    c.speckle(rng, 6, (220, 246, 255, 255), (2, 2, 13, 13))
+
+
+def sovereign_seed(c: Canvas, rng: random.Random) -> None:
+    c.disc(7.5, 9.0, 5.0, (70, 110, 50, 255))
+    c.disc(7.5, 9.0, 3.4, (150, 200, 90, 255))
+    c.rect(7, 2, 8, 4, (90, 150, 70, 255))
+    c.disc(7.5, 9.0, 1.4, (240, 120, 190, 255))
+    c.speckle(rng, 5, (230, 250, 170, 255), (3, 5, 12, 13))
+
+
+def colossus_facet(c: Canvas, rng: random.Random) -> None:
+    for y in range(3, 14):
+        half = (y - 3) // 2 if y < 9 else (13 - y)
+        c.rect(7 - half, y, 8 + half, y, (110, 80, 170, 255))
+    c.rect(6, 6, 9, 10, (200, 170, 250, 255))
+    c.rect(6, 6, 7, 7, (255, 255, 255, 255))
+
+
+def tyrant_ember(c: Canvas, rng: random.Random) -> None:
+    c.disc(7.5, 8.5, 5.2, (60, 40, 36, 255))
+    c.disc(7.5, 8.5, 3.6, (214, 74, 26, 255))
+    c.disc(7.5, 8.5, 2.0, (255, 190, 96, 255))
+    c.speckle(rng, 8, (240, 128, 44, 255), (2, 3, 13, 14))
+
+
+def _sigil(rim: Colour, glyph: Colour, core: Colour):
+    """A round stone token carved with the boss's habitat accent; one per boss."""
+
+    def motif(c: Canvas, rng: random.Random) -> None:
+        c.disc(7.5, 7.5, 6.4, (40, 36, 46, 255))
+        c.disc(7.5, 7.5, 5.4, rim)
+        c.disc(7.5, 7.5, 3.6, (40, 36, 46, 255))
+        c.rect(7, 3, 8, 12, glyph)
+        c.rect(3, 7, 12, 8, glyph)
+        c.disc(7.5, 7.5, 1.4, core)
+
+    return motif
+
+
 MOTIFS = {
     "void_essence": void_essence,
     "stalker_hide": stalker_hide,
@@ -518,6 +569,14 @@ MOTIFS = {
     "graviton_node": graviton_node,
     "static_jar": static_jar,
     "captains_ledger": captains_ledger,
+    "matriarch_frostcore": matriarch_frostcore,
+    "sovereign_seed": sovereign_seed,
+    "colossus_facet": colossus_facet,
+    "tyrant_ember": tyrant_ember,
+    "cinder_tyrant_sigil": _sigil((120, 70, 50, 255), (240, 128, 44, 255), (255, 200, 110, 255)),
+    "rime_matriarch_sigil": _sigil((80, 120, 150, 255), (170, 225, 250, 255), (245, 252, 255, 255)),
+    "bloom_sovereign_sigil": _sigil((70, 110, 60, 255), (160, 220, 100, 255), (240, 130, 200, 255)),
+    "facet_colossus_sigil": _sigil((90, 70, 130, 255), (200, 170, 250, 255), (255, 255, 255, 255)),
 }
 
 # Creatures that have a palette (and therefore an entity sheet) but deliberately no spawn egg. The

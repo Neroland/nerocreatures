@@ -1,11 +1,20 @@
-# Bosses
+# Bosses and the Apex Altar
 
 Planet bosses: what they are, how a fight works, how one turns up, and exactly how the rewards are
-split. The framework here is shared — every future planet boss is built on it — and the first boss
-to use it is the **Cinder Tyrant**.
+split. Four bosses share one framework: the **Cinder Tyrant** (Cindara), the **Rime Matriarch**
+(Glacira), the **Bloom Sovereign** (Greenxertz) and the **Facet Colossus** (Nyxara). The Tyrant can
+also turn up on its own; the other three come only from the **[Apex Altar](#the-apex-altar)**.
 
-> **Status:** the boss framework and the first signature boss are in. Remaining planet bosses
-> ("one per major world") are a follow-on.
+| Boss | World | Health | Arena | Phases | Signature drop |
+| --- | --- | --- | --- | --- | --- |
+| Cinder Tyrant | Cindara | 320 | 32 blocks | Slag and Stone, Ashfall, Meltdown | Tyrant Ember |
+| Rime Matriarch | Glacira | 300 | 24 blocks | Veiled, Spreading Frost, Shattered Crown | Matriarch Frostcore |
+| Bloom Sovereign | Greenxertz | 340 | 20 blocks | Budding, Full Bloom, Wilting Heart | Sovereign Seed |
+| Facet Colossus | Nyxara | 380 | 28 blocks | Turning Facets, False Light, Shattered Ring | Colossus Facet |
+
+Health is before `bossHpMultiplier`. Every boss changes phase at 66% and 33% health; a phase change is
+a 30-tick pause in which the boss starts no attack. Every boss drops one **Apex Trophy**, its
+signature drop and Refined Crystal (see each boss and the [Drop Map](Drop-Map.md)).
 
 ## The Cinder Tyrant
 
@@ -18,7 +27,8 @@ to use it is the **Cinder Tyrant**.
 | **Health** | 320, before `bossHpMultiplier` |
 | **Arena** | 32 blocks around wherever it arrived |
 | **Immune to** | fire and lava (it is made of slag), poison and wither |
-| **Drops** | [Apex Trophy](Drop-Map.md) ×1, [Refined Crystal](Drop-Map.md) ×6–12, [Plasma Cell](Drop-Map.md) ×4–8, [Void Essence](Drop-Map.md) ×1–3 at 50% |
+| **Drops** | [Apex Trophy](Drop-Map.md) ×1, [Tyrant Ember](Drop-Map.md) ×1, [Refined Crystal](Drop-Map.md) ×6–12, [Plasma Cell](Drop-Map.md) ×4–8, [Void Essence](Drop-Map.md) ×1–3 at 50% |
+| **Sigil** | Cinder Tyrant Sigil ([Apex Altar](#the-apex-altar)) |
 | **Spawn egg** | `nerocreatures:cinder_tyrant_spawn_egg` |
 
 It is themed off the real character of Nerospace's Cindara: a hot, rainless, ash-black world with no
@@ -52,13 +62,107 @@ it drops its target, walks home and **regenerates fast** on the way; pull it mor
 and it is simply put back at full health.
 
 This is deliberate and it is not negotiable: kiting a boss into a hole, up a pillar or off the map is
-not a strategy in NeroCreatures, it is a reset. Fight it where you found it.
+not a strategy in NeroCreatures, it is a reset. Fight it where you found it. The same leash holds for
+every boss below, at its own arena radius.
+
+## The Rime Matriarch
+
+*Glacira's queen of the white-out; the cold follows her across the floor.*
+
+| | |
+| --- | --- |
+| **Health** | 300 · arena 24 blocks · immune to freezing |
+| **Drops** | Apex Trophy ×1, [Matriarch Frostcore](Drop-Map.md) ×1–2, Refined Crystal ×4–8 |
+| **Sigil** | Rime Matriarch Sigil · altar only, no natural spawn |
+
+- **Blizzard beam** (every phase; cooldown 160 / 120 / 80 ticks): a one-second telegraph, then the aim
+  **locks** and a beam fires for a second along that line, 24 blocks, hitting up to 8 players and
+  freezing them. Anything behind a solid block is safe.
+- **Ice pillars**: three-high columns of temporary rime ice rise around her (3 / 4 / 5 by phase, never
+  more than 6) — your cover from the beam. They melt after a minute.
+- **Freezing floor**: a ring that widens each phase (5 / 9 / 13 blocks) builds up frost on anyone
+  standing in it, harmless in phases 1–2 and lethal-cold in phase 3; still water in it freezes over
+  (and thaws back to water afterwards).
+- **When arena blocks are off** (`bossArenaBlocks=false`, `mobGriefing` off, or a claim): no pillars
+  and no frozen water; instead the beam's telegraph is **twice as long** and any solid block is cover.
+  The fight stays fair with zero world changes.
+
+## The Bloom Sovereign
+
+*A rooted flower the size of a house, and everything she has infected.*
+
+| | |
+| --- | --- |
+| **Health** | 340 · arena 20 blocks · rooted (never moves), knockback-immune |
+| **Drops** | Apex Trophy ×1, [Sovereign Seed](Drop-Map.md) ×1–2, Refined Crystal ×4–8 |
+| **Sigil** | Bloom Sovereign Sigil · altar only, no natural spawn |
+
+- **Spore pods** grow in a ring 5 blocks out (2 / 3 / 4 by phase, never more than 4) and regrow.
+- **Heal**: a three-second channel that heals 2.5% of her health **per pod alive when it ends**. Kill
+  the pods mid-channel and the heal is lost. Pods drop nothing.
+- **Infecting lash** (reach 14, needs line of sight): poison, then a sporeling at the target's feet
+  while she has fewer than 2 / 4 / 6 adds and the world's sporeling cap allows. With
+  `bloomHostSporelings=false` the lash still poisons but raises nothing.
+- When she dies or leaves, her pods and sporelings go with her.
+
+## The Facet Colossus
+
+*A crystal giant wearing a ring of six mirrors; only one of them is ever really there.*
+
+| | |
+| --- | --- |
+| **Health** | 380 · arena 28 blocks · armour 14 |
+| **Drops** | Apex Trophy ×1, [Colossus Facet](Drop-Map.md) ×1, Refined Crystal ×6–12, Plasma Cell ×4–8 |
+| **Sigil** | Facet Colossus Sigil · altar only, no natural spawn |
+
+- **One lit facet**: of the six plates turning round it, only the **lit** one takes damage, and only
+  from within 40° of where it faces. Other plates block with a clink. The lit facet moves every
+  160 / 120 / 100 ticks, never to the same plate twice.
+- **Refracting beam**: aim locks after half a second, then three pulses (6 / 8 / 10 damage by phase)
+  that bounce off its arena crystals (temporary prism pillars, at most 12 blocks, gone after 45 s).
+  With arena blocks off it fires two extra split beams instead of growing crystals.
+- **Phase 2, False Light**: two **decoy** plates glow too. Hitting a decoy does nothing to it and
+  sparks 3 damage back at you (at most once every half second).
+- **Phase 3, Shattered Ring**: after every turn of the ring its core is exposed for 1.5 seconds and
+  takes half damage from any side.
+
+## The Apex Altar
+
+The altar is how a planned boss fight starts. Craft it (Refined Crystal, Void Essence, Plasma Cell
+and obsidian), place it, and use a **boss sigil** on it.
+
+| Sigil | Recipe: top and bottom, left and right, centre | Summons |
+| --- | --- | --- |
+| Cinder Tyrant Sigil | Slag Carapace, Heat Gland, Plasma Cell | Cinder Tyrant |
+| Rime Matriarch Sigil | Rime Wool, Cryo Fang, Coolant Milk | Rime Matriarch |
+| Bloom Sovereign Sigil | Mossback Hide, Drifter Spores, Bloom Heart | Bloom Sovereign |
+| Facet Colossus Sigil | Prism Antler, Mirror Scale, Refined Crystal | Facet Colossus |
+
+Sigils are made from habitat drops, never from a boss's signature drop. The sigils are in the item
+tag `nerocreatures:sigils`.
+
+**What happens when you use a sigil.** The server checks, in this order:
+
+1. the fight this altar started is still going → refused;
+2. the altar is still **recharging** → refused, with the seconds left;
+3. the boss is known → otherwise refused;
+4. there are **four clear blocks** above the altar → otherwise refused;
+5. the dimension and chunk population caps have room → otherwise "the area is too crowded".
+
+On success the boss appears on top of the altar as a **summoned, contribution-tracked fight** (below),
+you are recorded as a zero-damage participant, and the sigil is used up (not in creative). A refused
+attempt uses nothing. The altar then **locks**: its top glows, it cannot be mined in survival, and it
+refuses sigils until the fight is over **and** the cooldown has run (`apexAltarCooldownTicks`,
+default 12000 ticks = 10 minutes). A fight older than one in-game hour never keeps an altar locked.
+
+The cooldown belongs to the **altar**, never to a player. The altar stores no items (the sigil goes
+straight from your hand into the summon) and has no screen; it is immune to withers and dragons.
 
 ## How a boss turns up
 
 Two entry modes, and they pay differently.
 
-### 1. Natural — you found it
+### 1. Natural — you found it (Cinder Tyrant only)
 
 Rare, and gated much harder than any other creature in the mod, because a boss **never despawns**.
 All four of these must hold before the spawn engine will even consider one:
@@ -73,9 +177,9 @@ nothing about the players who fought it is stored anywhere. Whoever kills it tak
 
 ### 2. Summoned — someone started it
 
-The public API `BossSummons.summon(level, pos, bossId, initiator)` starts a **tracked** fight. This
-is the seam NeroEvents will call when it lands, and what the operator summon command will use. A
-summoned fight:
+Using a sigil on the [Apex Altar](#the-apex-altar) starts a **tracked** fight. Under it is the public
+API `BossSummons.summon(level, pos, bossId, initiator)`, which is also the seam NeroEvents will call
+and what the operator summon command uses. A summoned fight:
 
 - anchors its arena at the summon position;
 - records **damage per player** for as long as the fight lasts;
@@ -171,7 +275,9 @@ All server-authoritative, in `nerocreatures.properties`:
 
 | Key | Default | Effect |
 | --- | ------- | ------ |
-| `naturalBossSpawnsEnabled` | `true` | Whether a boss may appear on its own. Off leaves bosses reachable only through the summon API and the spawn egg. |
+| `naturalBossSpawnsEnabled` | `true` | Whether the Cinder Tyrant may appear on its own (the other bosses never do). Off leaves bosses reachable only through the Apex Altar, the summon API and the spawn egg. |
+| `apexAltarCooldownTicks` | `12000` | How long an Apex Altar recharges after it summons a boss (per altar). `0` = no cooldown; a live fight still blocks. |
+| `bossArenaBlocks` | `true` | Rime Matriarch ice pillars and frozen water, Facet Colossus prism crystals. Off = each boss's block-free fallback. Always temporary, always restored when the fight ends. |
 | `bossHpMultiplier` | `1.0` | Scales a boss's maximum health, applied once at spawn. |
 | `bossDifficultyMultiplier` | `1.0` | Scales a boss's attack damage **and its pacing** — every phase cooldown is divided by it, so a higher value makes a boss slam and shoot more often, not just harder. |
 | `dropRateMultiplier` | `1.0` | Scales the contribution reward. `0` switches it off entirely; the loot table is untouched. |

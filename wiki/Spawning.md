@@ -66,7 +66,7 @@ Every line is declared in code, not in a datapack, and the whole table is public
 | Shardback | `nerocreatures:habitat/nyxara` | 12 | 1–2 |
 | Magnet Crab | `nerocreatures:habitat/asteroid` | 10 | 1–3 |
 | Gravity Leech | `nerocreatures:habitat/asteroid` | 12 | 1–2 |
-| Cache Mimic | `nerocreatures:habitat/wrecks` | 4 | 1 (**gated**: space levels, `cacheMimicSpawns`) |
+| Cache Mimic | `nerocreatures:habitat/wrecks` | 4 | 1 (**gated**: space levels, `cacheMimicSpawns`, one per 48 blocks) |
 | Static Swarm | `nerocreatures:habitat/wrecks` | 8 | 1 (in the air; **gated**: space levels, at most 2 per 32 blocks) |
 | Pirate Captain | `planet_biomes` | 2 | 1 (brings 2 crew) |
 | Scrap Hulk | — | — | never spawns; it [assembles](Wrecks-and-Pirates.md) where machines die |

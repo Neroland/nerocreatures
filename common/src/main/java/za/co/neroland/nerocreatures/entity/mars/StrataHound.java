@@ -156,7 +156,19 @@ public class StrataHound extends TameableCreature {
         return StrataTargets.specForItem(id.getNamespace(), id.getPath());
     }
 
-    /** Turns a spec into a block-state test, or null if it names nothing. */
+    /** {@code #nerocreatures:strata_trackable}: the only blocks a hound will ever track (M5). */
+    static final TagKey<Block> TRACKABLE = TagKey.create(Registries.BLOCK,
+            Identifier.tryParse(StrataTargets.TRACKABLE_TAG));
+
+    /** Whether one block state passes the allow list ({@link StrataTargets#trackable}). */
+    static boolean isTrackable(BlockState state) {
+        return StrataTargets.trackable(state.is(TRACKABLE), state.hasBlockEntity());
+    }
+
+    /**
+     * Turns a spec into a block-state test, or null if it names nothing or names a block the hound
+     * refuses (not in the allow tag, or a block entity). Every match also passes the allow list.
+     */
     @Nullable
     static Predicate<BlockState> resolve(String spec) {
         Identifier id = Identifier.tryParse(StrataTargets.idOf(spec));
@@ -165,13 +177,13 @@ public class StrataHound extends TameableCreature {
         }
         if (StrataTargets.isTag(spec)) {
             TagKey<Block> tag = TagKey.create(Registries.BLOCK, id);
-            return state -> state.is(tag);
+            return state -> state.is(tag) && isTrackable(state);
         }
         Block block = BuiltInRegistries.BLOCK.getValue(id);
-        if (block == null || block == Blocks.AIR) {
+        if (block == null || block == Blocks.AIR || !isTrackable(block.defaultBlockState())) {
             return null;
         }
-        return state -> state.is(block);
+        return state -> state.is(block) && isTrackable(state);
     }
 
     private void startTracking(ServerLevel level, Player owner, String spec) {

@@ -36,6 +36,18 @@ public final class WrecksSpawnGates {
         return MimicRules.maySpawn(NeroCreaturesConfig.CACHE_MIMIC_SPAWNS.get(), SpaceTags.isSpace(level));
     }
 
+    /** Position gate for the mimic's wreck rule: one mimic per {@link MimicRules#AREA_RADIUS} (M4). */
+    public static boolean mimicRoom(ServerLevel level, BlockPos pos, RandomSource random) {
+        if (!level.isLoaded(pos)) {
+            return false;
+        }
+        double r = MimicRules.AREA_RADIUS;
+        AABB box = new AABB(pos.getX() - r, pos.getY() - r, pos.getZ() - r, pos.getX() + r, pos.getY() + r, pos.getZ() + r);
+        List<CacheMimic> found = new ArrayList<>(MimicRules.MAX_PER_AREA);
+        level.getEntities(EntityTypeTest.forClass(CacheMimic.class), box, Entity::isAlive, found, MimicRules.MAX_PER_AREA);
+        return MimicRules.roomInArea(found.size());
+    }
+
     /** Position gate for the swarm's wreck rule: the hard area cap only. */
     public static boolean swarmRoom(ServerLevel level, BlockPos pos, RandomSource random) {
         return level.isLoaded(pos) && SwarmRules.roomInArea(swarmsNear(level, pos));

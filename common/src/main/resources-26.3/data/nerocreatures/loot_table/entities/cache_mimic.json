@@ -1,6 +1,9 @@
 {
   "pools": [
     {
+      "condition": {
+        "type": "minecraft:killed_by_player"
+      },
       "entries": [
         {
           "modifier": {
@@ -19,6 +22,9 @@
       "rolls": 1
     },
     {
+      "condition": {
+        "type": "minecraft:killed_by_player"
+      },
       "entries": [
         {
           "modifier": {
@@ -37,6 +43,9 @@
       "rolls": 1
     },
     {
+      "condition": {
+        "type": "minecraft:killed_by_player"
+      },
       "entries": [
         {
           "modifier": {
@@ -55,6 +64,9 @@
       "rolls": 1
     },
     {
+      "condition": {
+        "type": "minecraft:killed_by_player"
+      },
       "entries": [
         {
           "modifier": {
@@ -73,6 +85,9 @@
       "rolls": 1
     },
     {
+      "condition": {
+        "type": "minecraft:killed_by_player"
+      },
       "entries": [
         {
           "modifier": {
@@ -92,8 +107,16 @@
     },
     {
       "condition": {
-        "chance": 0.35,
-        "type": "minecraft:random_chance"
+        "terms": [
+          {
+            "type": "minecraft:killed_by_player"
+          },
+          {
+            "chance": 0.35,
+            "type": "minecraft:random_chance"
+          }
+        ],
+        "type": "minecraft:all_of"
       },
       "entries": [
         {
@@ -105,8 +128,16 @@
     },
     {
       "condition": {
-        "chance": 0.2,
-        "type": "minecraft:random_chance"
+        "terms": [
+          {
+            "type": "minecraft:killed_by_player"
+          },
+          {
+            "chance": 0.2,
+            "type": "minecraft:random_chance"
+          }
+        ],
+        "type": "minecraft:all_of"
       },
       "entries": [
         {

@@ -246,7 +246,7 @@ public final class CreatureSpawns {
         // hard cap of two per 32 blocks inside its position gate. The Scrap Hulk has no rule: it is
         // assembled from machine wreckage (entity/wrecks/ScrapHulkAssembly, via NeroCreatureEntity.die).
         register(SpawnRule.gated("cache_mimic", ModEntities.CACHE_MIMIC, HabitatTags.WRECKS,
-                4, 1, 1, WrecksSpawnGates::mimicLevel));
+                4, 1, 1, WrecksSpawnGates::mimicLevel, WrecksSpawnGates::mimicRoom));
         register(SpawnRule.gated("static_swarm", ModEntities.STATIC_SWARM, HabitatTags.WRECKS,
                 8, 1, 1, WrecksSpawnGates::wrecksLevel, WrecksSpawnGates::swarmRoom).airMode());
 

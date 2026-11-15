@@ -207,6 +207,66 @@ class CreatureRigTest {
         assertFalse(rig.visible(1, in));
     }
 
+    /** {@code "clock": "game"}: the spin follows the level's game time, not the entity's age. */
+    @Test
+    void gameClockSpinIgnoresAge() {
+        CreatureRig rig = CreatureRig.builder()
+                .part("aged", null)
+                .part("synced", null)
+                .spin("aged", 'y', 3, 10)
+                .spin("synced", 'y', 3, 10, null, true)
+                .build();
+        double[] r = new double[rig.partCount() * 3];
+        double[] p = new double[rig.partCount() * 3];
+        AnimInput in = new AnimInput();
+        in.age = 7.0;
+        in.gameTime = AnimInput.gameClock(4800L * 3 + 20L, 0.5);
+        rig.evaluate(in, r, p);
+        assertEquals((7.0 * 3 + 10) % 360.0, r[0 * 3 + 1], EPS, "age clock");
+        assertEquals((20.5 * 3 + 10) % 360.0, r[1 * 3 + 1], EPS, "game clock");
+        // Two clients with different entity ages see the same game-clock angle.
+        in.age = 9001.25;
+        double[] r2 = new double[rig.partCount() * 3];
+        rig.evaluate(in, r2, new double[rig.partCount() * 3]);
+        assertEquals(r[1 * 3 + 1], r2[1 * 3 + 1], EPS);
+    }
+
+    @Test
+    void gameClockWrapsWithoutAJump() {
+        assertEquals(0.25, AnimInput.gameClock(AnimInput.GAME_CLOCK_PERIOD, 0.25), EPS);
+        assertEquals(AnimInput.GAME_CLOCK_PERIOD - 1 + 0.5, AnimInput.gameClock(-1L, 0.5), EPS);
+        // Every speed the Colossus uses turns a whole number of times per period.
+        for (double speed : new double[] {0.75, 1.5, 3.0}) {
+            assertEquals(0.0, (AnimInput.GAME_CLOCK_PERIOD * speed) % 360.0, EPS, "speed " + speed);
+        }
+    }
+
+    /** The Facet Colossus ring, drawn on the game clock, sits at the server's ring angle. */
+    @Test
+    void facetColossusRingMatchesServerAngle() {
+        CreatureRig rig = FacetColossusModel.RIG;
+        int ring = -1;
+        for (int i = 0; i < rig.partCount(); i++) {
+            if ("ring".equals(rig.partName(i))) {
+                ring = i;
+            }
+        }
+        assertTrue(ring >= 0);
+        for (int phase = 1; phase <= 3; phase++) {
+            for (long time : new long[] {0L, 77L, 10_000L, 123_456L}) {
+                AnimInput in = new AnimInput();
+                in.phase = phase;
+                in.age = 31.0 * phase + time % 97; // any age: it must not matter
+                in.gameTime = AnimInput.gameClock(time, 0.0);
+                double[] r = new double[rig.partCount() * 3];
+                rig.evaluate(in, r, new double[rig.partCount() * 3]);
+                double expected = za.co.neroland.nerocreatures.entity.boss.FacetRules.ringAngle(time, phase);
+                double diff = ((r[ring * 3 + 1] - expected) % 360.0 + 360.0) % 360.0;
+                assertEquals(0.0, Math.min(diff, 360.0 - diff), 1e-6, "phase " + phase + " t " + time);
+            }
+        }
+    }
+
     @Test
     void argbMultiply() {
         assertEquals(0xFFD9D9D9, CreatureArt.multiplyArgb(-1, 0xFFD9D9D9));

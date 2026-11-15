@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:block",
+  "pools": [
+    {
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "nerocreatures:apex_altar"
+        }
+      ],
+      "rolls": 1
+    }
+  ],
+  "random_sequence": "nerocreatures:blocks/apex_altar"
+}

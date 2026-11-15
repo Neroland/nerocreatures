@@ -1,0 +1,24 @@
+{
+  "replace": false,
+  "values": [
+    "#minecraft:coal_ores",
+    "#minecraft:copper_ores",
+    "#minecraft:iron_ores",
+    "#minecraft:gold_ores",
+    "#minecraft:redstone_ores",
+    "#minecraft:lapis_ores",
+    "#minecraft:emerald_ores",
+    "#minecraft:diamond_ores",
+    {
+      "id": "#c:ores",
+      "required": false
+    },
+    "#minecraft:base_stone_overworld",
+    "#minecraft:base_stone_nether",
+    "minecraft:calcite",
+    "minecraft:dripstone_block",
+    "minecraft:amethyst_block",
+    "minecraft:budding_amethyst",
+    "minecraft:clay"
+  ]
+}

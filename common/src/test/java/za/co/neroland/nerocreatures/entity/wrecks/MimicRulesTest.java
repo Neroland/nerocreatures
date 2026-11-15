@@ -53,4 +53,35 @@ class MimicRulesTest {
         assertFalse(MimicRules.maySpawn(false, true), "cacheMimicSpawns off");
         assertFalse(MimicRules.maySpawn(true, false), "space levels only");
     }
+
+    @Test
+    void naturalSpawnsAreCappedPerArea() {
+        assertTrue(MimicRules.roomInArea(0));
+        assertFalse(MimicRules.roomInArea(MimicRules.MAX_PER_AREA), "one mimic per area");
+        assertTrue(MimicRules.AREA_RADIUS >= 32.0D, "cap area wider than a wreck room");
+    }
+
+    @Test
+    void lootNeedsAPlayerKill() throws java.io.IOException {
+        // M4: no AFK farm. Every pool of the loot table carries killed_by_player, whichever format
+        // (pools' "conditions" before 26.x, "condition"/all_of after) is on the classpath.
+        assertTrue(MimicRules.dropsLoot(true));
+        assertFalse(MimicRules.dropsLoot(false), "magma, traps and mobs earn nothing");
+        try (java.io.InputStream in = MimicRulesTest.class.getResourceAsStream(
+                "/data/nerocreatures/loot_table/entities/cache_mimic.json")) {
+            assertTrue(in != null, "loot table on the classpath");
+            String json = new String(in.readAllBytes(), java.nio.charset.StandardCharsets.UTF_8);
+            int pools = count(json, "\"rolls\"");
+            assertTrue(pools >= 7, "all seven pools present");
+            assertEquals(pools, count(json, "minecraft:killed_by_player"), "every pool needs a player kill");
+        }
+    }
+
+    private static int count(String haystack, String needle) {
+        int n = 0;
+        for (int i = haystack.indexOf(needle); i >= 0; i = haystack.indexOf(needle, i + needle.length())) {
+            n++;
+        }
+        return n;
+    }
 }

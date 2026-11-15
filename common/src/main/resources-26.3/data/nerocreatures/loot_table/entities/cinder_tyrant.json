@@ -14,6 +14,15 @@
       "entries": [
         {
           "type": "minecraft:item",
+          "name": "nerocreatures:tyrant_ember"
+        }
+      ],
+      "rolls": 1
+    },
+    {
+      "entries": [
+        {
+          "type": "minecraft:item",
           "modifier": {
             "type": "minecraft:set_count",
             "add": false,

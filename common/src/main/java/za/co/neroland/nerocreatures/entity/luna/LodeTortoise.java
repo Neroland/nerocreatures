@@ -12,12 +12,16 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.DifficultyInstance;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.SpawnGroupData;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
@@ -25,6 +29,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.ValueInput;
@@ -53,12 +58,14 @@ import za.co.neroland.nerocreatures.trait.TraitPool;
  *       {@code nerocreatures:lode_tortoise/<family>} block tag. It never breaks or changes it
  *       (decision 006: no world change; {@code lodeTortoiseNodules} is a balance switch). The
  *       {@code ability} pose (48 ticks) plays.</li>
- *   <li><b>Nodules</b> grow on a {@link ProductTimer} only while it grazes ore; switching family
- *       restarts growth; rare families grow four times slower. Synced as visuals {@code stage}
- *       (0 bare, 1-3 growth; 3 = ready) and {@code variant} (ore family).</li>
+ *   <li><b>Nodules</b> grow on a {@link ProductTimer} only while it grazes ore; the family is fixed
+ *       once nodules show (see {@link NoduleRules#onGraze}); rare families grow four times slower.
+ *       Natural spawns start with a random low-weighted stage of a common family. Synced as visuals
+ *       {@code stage} (0 bare, 1-3 growth; 3 = ready) and {@code variant} (ore family).</li>
  *   <li><b>Harvest.</b> Use a pickaxe on a tortoise with ready nodules: vanilla nuggets or raw ore
- *       drop, the tortoise is unharmed, growth restarts. Yield is {@code baseYield x rolls}
- *       (Bountiful) capped per harvest; 20% chance to shed a {@code lode_scute}.</li>
+ *       drop, the tortoise is unharmed, the pickaxe wears by one, growth restarts. Yield is
+ *       {@code baseYield x rolls} (Bountiful) capped per harvest; 20% chance to shed a
+ *       {@code lode_scute}. Harvesting marks the tortoise husbanded.</li>
  *   <li>Prey of grazer hunters; sleeps (held {@code rest} pose) when idle after dark.</li>
  * </ul>
  */
@@ -147,7 +154,8 @@ public class LodeTortoise extends LivestockCreature implements HerdMember {
         if (this.farTick().skip(this) || !this.grazeCadence.ready(level.getGameTime(), this.getId())) {
             return;
         }
-        NoduleRules.GrazeResult result = NoduleRules.onGraze(this.family, this.nodules.isReady(), this.graze(level));
+        NoduleRules.GrazeResult result = NoduleRules.onGraze(this.family, this.nodules.stage(),
+                this.nodules.isReady(), this.graze(level));
         if (result.resetProgress()) {
             this.nodules.setProgress(0);
         }
@@ -238,9 +246,32 @@ public class LodeTortoise extends LivestockCreature implements HerdMember {
                 this.spawnAtLocation(level, new ItemStack(scute));
             }
         }
+        held.hurtAndBreak(1, player, hand == InteractionHand.MAIN_HAND ? EquipmentSlot.MAINHAND : EquipmentSlot.OFFHAND);
         level.playSound(null, this.blockPosition(), SoundEvents.STONE_BREAK, SoundSource.NEUTRAL, 1.0F, 0.8F);
+        this.markHusbanded();
         this.syncVisuals();
         return InteractionResult.SUCCESS_SERVER;
+    }
+
+    // --- natural spawn (M2) -------------------------------------------------------------
+
+    /** A wild tortoise arrives with a random, low-weighted nodule stage of a common family. */
+    @Override
+    public SpawnGroupData finalizeSpawn(ServerLevelAccessor level, DifficultyInstance difficulty,
+            EntitySpawnReason spawnReason, SpawnGroupData groupData) {
+        SpawnGroupData result = super.finalizeSpawn(level, difficulty, spawnReason, groupData);
+        if ((spawnReason == EntitySpawnReason.NATURAL || spawnReason == EntitySpawnReason.CHUNK_GENERATION)
+                && !this.isBaby()) {
+            int stage = NoduleRules.seedStage(this.random.nextInt(100));
+            NoduleFamily seeded = NoduleRules.seedFamily(stage, this.random.nextInt(1000));
+            if (seeded != null) {
+                this.family = seeded;
+                this.nodules.setProgress(NoduleRules.seedProgress(stage, this.nodules.regrowTicks(),
+                        this.random.nextDouble()));
+                this.syncVisuals();
+            }
+        }
+        return result;
     }
 
     /** The vanilla item each family yields (nuggets or raw ore, never a new item). */

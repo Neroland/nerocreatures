@@ -16,6 +16,9 @@ import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.level.entity.EntityTypeTest;
 import net.minecraft.world.phys.AABB;
 
+import za.co.neroland.nerocreatures.entity.tame.HusbandryRules;
+import za.co.neroland.nerocreatures.entity.tame.LivestockCreature;
+
 /**
  * Target goal: a predator picks a prey from an entity-type tag, on a slow cadence with a cached
  * target, and respects the {@link PredatorPreyRules} caps (satiation, chase timeout, at most
@@ -59,15 +62,16 @@ public class PredatorHuntGoal extends Goal {
         this.setFlags(EnumSet.of(Goal.Flag.TARGET));
     }
 
-    /** Wild-prey filter shared with other goals: not tamed, not owned, not named. */
+    /**
+     * Wild-prey filter shared with other goals: not tamed, not owned, not named, and not livestock a
+     * player keeps or bred (Stage 2 review M1, {@link HusbandryRules#wildPrey}).
+     */
     public static boolean isWild(LivingEntity entity) {
-        if (entity.hasCustomName()) {
-            return false;
-        }
-        if (entity instanceof TamableAnimal tamable && tamable.isTame()) {
-            return false;
-        }
-        return !(entity instanceof OwnableEntity ownable) || ownable.getOwner() == null;
+        boolean husbanded = entity instanceof LivestockCreature livestock && livestock.isHusbanded();
+        boolean tame = entity instanceof TamableAnimal tamable && tamable.isTame();
+        // Owner checked last: it is the only lookup that may touch the level.
+        return HusbandryRules.wildPrey(entity.hasCustomName(), tame, false, husbanded)
+                && (!(entity instanceof OwnableEntity ownable) || ownable.getOwner() == null);
     }
 
     @Override
