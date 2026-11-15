@@ -9,6 +9,13 @@ import za.co.neroland.nerolandcore.registry.RegistrationProvider.RegistryEntry;
 import za.co.neroland.nerocreatures.NeroCreaturesCommon;
 import za.co.neroland.nerocreatures.block.ApexAltarBlock;
 import za.co.neroland.nerocreatures.block.EphemeralCrustBlock;
+import za.co.neroland.nerocreatures.block.NestBlock;
+import za.co.neroland.nerocreatures.block.FeedingTroughBlock;
+import za.co.neroland.nerocreatures.block.IncubatorBlock;
+import za.co.neroland.nerocreatures.block.LureBeaconBlock;
+import za.co.neroland.nerocreatures.block.SonicWardBlock;
+import za.co.neroland.nerocreatures.block.TerrariumBlock;
+import za.co.neroland.nerocreatures.block.TrophyPlaqueBlock;
 
 /**
  * NeroCreatures' blocks (decision 001: at most ten). Same Core {@link RegistrationProvider} seam as
@@ -35,6 +42,22 @@ public final class ModBlocks {
      */
     public static final RegistryEntry<ApexAltarBlock> APEX_ALTAR = BLOCKS.register(
             "apex_altar", key -> new ApexAltarBlock(ApexAltarBlock.altarProperties().setId(key)));
+
+    /** Stage 4 habitat blocks (decision 001). */
+    public static final RegistryEntry<NestBlock> NEST = BLOCKS.register("nest",
+            key -> new NestBlock(NestBlock.nestProperties().setId(key)));
+    public static final RegistryEntry<FeedingTroughBlock> FEEDING_TROUGH = BLOCKS.register("feeding_trough",
+            key -> new FeedingTroughBlock(FeedingTroughBlock.troughProperties().setId(key)));
+    public static final RegistryEntry<IncubatorBlock> INCUBATOR = BLOCKS.register("incubator",
+            key -> new IncubatorBlock(IncubatorBlock.incubatorProperties().setId(key)));
+    public static final RegistryEntry<LureBeaconBlock> LURE_BEACON = BLOCKS.register("lure_beacon",
+            key -> new LureBeaconBlock(LureBeaconBlock.fieldProperties().setId(key)));
+    public static final RegistryEntry<SonicWardBlock> SONIC_WARD = BLOCKS.register("sonic_ward",
+            key -> new SonicWardBlock(SonicWardBlock.fieldProperties().setId(key)));
+    public static final RegistryEntry<TerrariumBlock> TERRARIUM = BLOCKS.register("terrarium",
+            key -> new TerrariumBlock(TerrariumBlock.terrariumProperties().setId(key)));
+    public static final RegistryEntry<TrophyPlaqueBlock> TROPHY_PLAQUE = BLOCKS.register("trophy_plaque",
+            key -> new TrophyPlaqueBlock(TrophyPlaqueBlock.plaqueProperties().setId(key)));
 
     private ModBlocks() {
     }

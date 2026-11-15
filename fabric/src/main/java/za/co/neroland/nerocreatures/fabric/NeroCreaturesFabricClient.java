@@ -12,6 +12,7 @@ import net.minecraft.world.entity.EntityType;
 
 import za.co.neroland.nerocreatures.NeroCreaturesCommon;
 import za.co.neroland.nerocreatures.client.ApexAltarRenderer;
+import za.co.neroland.nerocreatures.client.HabitatDisplayRenderer;
 import za.co.neroland.nerocreatures.client.ClientEntityRenderers;
 import za.co.neroland.nerocreatures.client.GalleryCaptureHarness;
 import za.co.neroland.nerocreatures.network.CreatureNetwork;
@@ -37,6 +38,10 @@ public final class NeroCreaturesFabricClient implements ClientModInitializer {
         // The Apex Altar's floating sigil (culled; see ApexAltarRenderer). Vanilla's registry, made
         // accessible by Fabric API's transitive access widener.
         BlockEntityRenderers.register(ModBlockEntities.APEX_ALTAR.get(), ApexAltarRenderer::new);
+        // Incubator egg, Terrarium capture, Trophy Plaque trophy: one shared culled display renderer.
+        BlockEntityRenderers.register(ModBlockEntities.INCUBATOR.get(), HabitatDisplayRenderer::new);
+        BlockEntityRenderers.register(ModBlockEntities.TERRARIUM.get(), HabitatDisplayRenderer::new);
+        BlockEntityRenderers.register(ModBlockEntities.TROPHY_PLAQUE.get(), HabitatDisplayRenderer::new);
 
         // Drop any synced mirror caches on leaving a world/server, so one session's state can never
         // be shown in the next (or on a server that does not run NeroCreatures).

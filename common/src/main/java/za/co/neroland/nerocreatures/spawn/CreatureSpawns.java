@@ -22,6 +22,7 @@ import org.jetbrains.annotations.Nullable;
 
 import za.co.neroland.nerolandcore.worldgen.SpaceTags;
 
+import za.co.neroland.nerocreatures.block.HabitatFields;
 import za.co.neroland.nerocreatures.boss.BossFights;
 import za.co.neroland.nerocreatures.boss.BossSpawns;
 import za.co.neroland.nerocreatures.config.NeroCreaturesConfig;
@@ -30,6 +31,7 @@ import za.co.neroland.nerocreatures.entity.greenxertz.DriftLeviathan;
 import za.co.neroland.nerocreatures.entity.luna.LunaSpawnGates;
 import za.co.neroland.nerocreatures.entity.wrecks.ScrapHulkAssembly;
 import za.co.neroland.nerocreatures.entity.wrecks.WrecksSpawnGates;
+import za.co.neroland.nerocreatures.item.gear.CreatureGear;
 import za.co.neroland.nerocreatures.registry.ModEntities;
 
 /**
@@ -305,6 +307,8 @@ public final class CreatureSpawns {
         // Gravity Leech tethers expire on their own lease even when no leech is ticking (a frozen
         // chunk, a leech killed in another dimension). Self-throttled; nothing to do with no tethers.
         GravityTether.sweepIfDue(server);
+        // Creature gear's passive effects (cloak, greaves, boots, bulwark, amulet); own cadence.
+        CreatureGear.serverTick(server);
         if (RULES.isEmpty() || !NeroCreaturesConfig.SPAWNS_ENABLED.get()) {
             return;
         }
@@ -383,8 +387,11 @@ public final class CreatureSpawns {
         return !rule.overworldCapped() || CreatureCensus.overworldHasRoom(level);
     }
 
-    /** A rule chosen for one attempt, and the position it was tested at. */
-    private record Pick(SpawnRule rule, BlockPos pos) {
+    /**
+     * A rule chosen for one attempt, the position it was tested at, and its weight there (the rule's
+     * weight times the global multiplier times any Lure Beacon / Sonic Ward factor at that position).
+     */
+    private record Pick(SpawnRule rule, BlockPos pos, double weight) {
     }
 
     /**
@@ -466,8 +473,18 @@ public final class CreatureSpawns {
             }
             BlockPos pos = candidates.forMode(rule.candidate());
             if (pos != null && rule.matches(level, pos, random)) {
-                eligible.add(new Pick(rule, pos));
-                total += rule.weight() * multiplier;
+                EntityType<? extends Mob> type = rule.type().get();
+                if (type == null) {
+                    continue;
+                }
+                // Lure Beacons raise one species (hard cap 8x); Sonic Wards zero hostiles nearby.
+                double weight = rule.weight() * multiplier
+                        * HabitatFields.spawnWeightFactor(level, pos, rule.creatureId(), type);
+                if (weight <= 0.0D) {
+                    continue;
+                }
+                eligible.add(new Pick(rule, pos, weight));
+                total += weight;
             }
         }
         if (eligible.isEmpty() || total <= 0.0D) {
@@ -475,7 +492,7 @@ public final class CreatureSpawns {
         }
         double roll = random.nextDouble() * total;
         for (Pick pick : eligible) {
-            roll -= pick.rule().weight() * multiplier;
+            roll -= pick.weight();
             if (roll <= 0.0D) {
                 return pick;
             }
@@ -504,6 +521,10 @@ public final class CreatureSpawns {
                 break;
             }
             BlockPos pos = i == 0 ? origin : scatter(origin, random);
+            // A Sonic Ward's field is checked per member: a group never spills a hostile into it.
+            if (HabitatFields.blocksHostile(level, pos, type)) {
+                continue;
+            }
             if (!isPlaceable(level, type, pos, random)) {
                 continue;
             }

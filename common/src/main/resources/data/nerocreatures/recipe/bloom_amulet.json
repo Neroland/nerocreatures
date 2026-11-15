@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "key": {
+    "T": "minecraft:string",
+    "B": "nerocreatures:bloom_heart",
+    "G": "minecraft:gold_ingot"
+  },
+  "pattern": [
+    " T ",
+    "TBT",
+    " G "
+  ],
+  "result": {
+    "count": 1,
+    "id": "nerocreatures:bloom_amulet"
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "equipment",
+  "ingredients": [
+    "nerocreatures:coolant_milk",
+    "minecraft:glass_bottle",
+    "minecraft:snowball"
+  ],
+  "result": {
+    "count": 1,
+    "id": "nerocreatures:rime_flask"
+  }
+}

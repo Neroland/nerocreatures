@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "key": {
+    "S": "nerocreatures:slag_carapace",
+    "W": "nerocreatures:worm_chitin",
+    "L": "nerocreatures:lode_scute"
+  },
+  "pattern": [
+    "SWS",
+    "SLS",
+    " S "
+  ],
+  "result": {
+    "count": 1,
+    "id": "nerocreatures:chitin_bulwark"
+  }
+}

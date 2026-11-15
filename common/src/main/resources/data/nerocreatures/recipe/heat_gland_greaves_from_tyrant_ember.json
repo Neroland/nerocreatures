@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "equipment",
+  "ingredients": [
+    "nerocreatures:tyrant_ember",
+    "minecraft:leather_leggings"
+  ],
+  "result": {
+    "count": 1,
+    "id": "nerocreatures:heat_gland_greaves"
+  }
+}

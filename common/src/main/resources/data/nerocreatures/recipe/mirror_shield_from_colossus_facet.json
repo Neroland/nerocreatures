@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "equipment",
+  "ingredients": [
+    "nerocreatures:colossus_facet",
+    "minecraft:shield"
+  ],
+  "result": {
+    "count": 1,
+    "id": "nerocreatures:mirror_shield"
+  }
+}

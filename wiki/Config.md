@@ -70,6 +70,20 @@ its owner's own permission to build there.
 Colossus's prism crystals; `bloomHostSporelings` gates the Bloom Sovereign's sporeling adds. The boss
 health and difficulty multipliers are on [Bosses](Bosses.md#configuration).
 
+## Habitat blocks and gear
+
+The habitat-block keys are on [Habitat Blocks](Habitat-Blocks.md#config) and the gear keys on
+[Gear](Gear.md): `feedingTroughIntervalTicks`, `incubatorHatchTicks`, `incubatorPoweredHatchTicks`,
+`incubatorEnergyPerTick`, `lureBeaconBaitTicks`, `lureBeaconWeightMultiplier`, `sonicWardFuelTicks`,
+`nestHealIntervalTicks`, `mirrorShieldCooldownTicks`, `lurkerCloakSilences`, `blinkCharmCooldownTicks`,
+`blinkCharmRange`, `rimeFlaskCooldownTicks`, `heatGlandGreavesLavaTicks`,
+`heatGlandGreavesCooldownTicks`, `gravitonBootsGravityPercent`, `resonantWhistleCooldownTicks`,
+`resonantWhistleRange`, `chitinBulwarkCooldownTicks`, `bloomAmuletCooldownTicks`.
+
+| Key | Default | Range | What it does |
+| --- | --- | --- | --- |
+| `spacePirateTakesContraband` | true | | Space Pirates pick up loose contraband (max 16, dropped on death). Also needs `mobGriefing`. false = they ignore items. |
+
 ## See also
 
 - [Spawning](Spawning.md)

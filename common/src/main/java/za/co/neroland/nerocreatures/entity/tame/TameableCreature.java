@@ -69,6 +69,7 @@ import za.co.neroland.nerocreatures.trait.Inheritance;
 import za.co.neroland.nerocreatures.trait.TraitEffects;
 import za.co.neroland.nerocreatures.trait.TraitPool;
 import za.co.neroland.nerocreatures.trait.TraitSet;
+import za.co.neroland.nerocreatures.block.NestHome;
 
 /**
  * Shared base for NeroCreatures' tameable alien pets — everything the two species have in common,
@@ -446,6 +447,7 @@ public abstract class TameableCreature extends TamableAnimal implements ProductS
     protected void releaseToWild(boolean notifyOwner) {
         UUID formerOwner = notifyOwner ? this.ownerId() : null;
         this.setPerched(false);
+        NestHome.clear(this);
         this.setCommand(PetCommand.FOLLOW);
         this.setTame(false, false);
         //? if >=1.21.5 {
@@ -651,6 +653,8 @@ public abstract class TameableCreature extends TamableAnimal implements ProductS
                 }
             }
         }
+        // Nest home (Stage 4): rest/heal at the nest, return to it; forgets an invalid nest. Throttled.
+        NestHome.tick(this);
         if (!this.isTame() || --this.perkCooldown > 0) {
             return;
         }

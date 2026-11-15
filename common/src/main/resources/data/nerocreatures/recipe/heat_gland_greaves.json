@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "equipment",
+  "ingredients": [
+    "minecraft:leather_leggings",
+    "nerocreatures:heat_gland",
+    "nerocreatures:heat_gland",
+    "minecraft:magma_cream"
+  ],
+  "result": {
+    "count": 1,
+    "id": "nerocreatures:heat_gland_greaves"
+  }
+}

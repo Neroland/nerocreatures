@@ -257,6 +257,92 @@ public final class NeroCreaturesConfig {
             "The most alphas loaded in one dimension. -1 = use the data pack value "
                     + "(alpha/settings.json, 4 by default); 0 = no new alphas.");
 
+    // --- Habitat blocks (server-authoritative; Stage 4) ---------------------------------
+    public static final ConfigValue<Integer> FEEDING_TROUGH_INTERVAL_TICKS = SCHEMA.intRange(
+            "feedingTroughIntervalTicks", 200, 0, 24000, true,
+            "Ticks between a trough's feeding pulses. 0 = troughs never feed.");
+
+    public static final ConfigValue<Integer> INCUBATOR_HATCH_TICKS = SCHEMA.intRange(
+            "incubatorHatchTicks", 24000, 1200, 240000, true,
+            "Unpowered incubator hatch time in ticks.");
+
+    public static final ConfigValue<Integer> INCUBATOR_POWERED_HATCH_TICKS = SCHEMA.intRange(
+            "incubatorPoweredHatchTicks", 6000, 600, 240000, true,
+            "Fully powered incubator hatch time in ticks. Not shorter than the unpowered time = power gives no speed-up.");
+
+    public static final ConfigValue<Integer> INCUBATOR_ENERGY_PER_TICK = SCHEMA.intRange(
+            "incubatorEnergyPerTick", 20, 0, 10000, true,
+            "Energy an incubator pulls per tick from adjacent storages. 0 = power ignored (always the unpowered rate).");
+
+    public static final ConfigValue<Integer> LURE_BEACON_BAIT_TICKS = SCHEMA.intRange(
+            "lureBeaconBaitTicks", 6000, 0, 72000, true,
+            "Ticks one bait item burns in a Lure Beacon. 0 = lure beacons do nothing.");
+
+    public static final ConfigValue<Double> LURE_BEACON_WEIGHT_MULTIPLIER = SCHEMA.doubleRange(
+            "lureBeaconWeightMultiplier", 4.0D, 1.0D, 8.0D, true,
+            "Spawn-weight multiplier for the lured species within 24 blocks of a lit Lure Beacon (hard-clamped to 8; 1 = no effect).");
+
+    public static final ConfigValue<Integer> SONIC_WARD_FUEL_TICKS = SCHEMA.intRange(
+            "sonicWardFuelTicks", 6000, 0, 72000, true,
+            "Ticks one fuel item burns in a Sonic Ward. 0 = sonic wards do nothing.");
+
+    public static final ConfigValue<Integer> NEST_HEAL_INTERVAL_TICKS = SCHEMA.intRange(
+            "nestHealIntervalTicks", 200, 0, 24000, true,
+            "A creature resting at its nest heals 1 HP this often (ticks). 0 = no healing.");
+
+    // --- Creature gear (server-authoritative; Stage 4) -----------------------------------
+    public static final ConfigValue<Integer> MIRROR_SHIELD_COOLDOWN_TICKS = SCHEMA.intRange(
+            "mirrorShieldCooldownTicks", 200, 20, 6000, true,
+            "Ticks between Mirror Shield reflections (one projectile each).");
+
+    public static final ConfigValue<Boolean> LURKER_CLOAK_SILENCES = SCHEMA.bool(
+            "lurkerCloakSilences", true, true,
+            "Lurker Cloak wearers are silent to sound hunters unless sprinting. false = the cloak does nothing.");
+
+    public static final ConfigValue<Integer> BLINK_CHARM_COOLDOWN_TICKS = SCHEMA.intRange(
+            "blinkCharmCooldownTicks", 100, 20, 6000, true,
+            "Blink Charm cooldown in ticks. A failed blink (no room) costs none.");
+
+    public static final ConfigValue<Integer> BLINK_CHARM_RANGE = SCHEMA.intRange(
+            "blinkCharmRange", 8, 2, 16, true,
+            "Blink Charm distance in blocks.");
+
+    public static final ConfigValue<Integer> RIME_FLASK_COOLDOWN_TICKS = SCHEMA.intRange(
+            "rimeFlaskCooldownTicks", 1200, 20, 24000, true,
+            "Rime Flask cooldown in ticks (10 s fire resistance and put out).");
+
+    public static final ConfigValue<Integer> HEAT_GLAND_GREAVES_LAVA_TICKS = SCHEMA.intRange(
+            "heatGlandGreavesLavaTicks", 100, 1, 400, true,
+            "Ticks of lava walking per Heat-gland Greaves charge.");
+
+    public static final ConfigValue<Integer> HEAT_GLAND_GREAVES_COOLDOWN_TICKS = SCHEMA.intRange(
+            "heatGlandGreavesCooldownTicks", 600, 20, 24000, true,
+            "Heat-gland Greaves recharge in ticks after the charge is spent.");
+
+    public static final ConfigValue<Integer> GRAVITON_BOOTS_GRAVITY_PERCENT = SCHEMA.intRange(
+            "gravitonBootsGravityPercent", 50, 20, 90, true,
+            "Gravity (percent) while Graviton Boots are active (sneak = normal); plus 4 blocks of safe fall.");
+
+    public static final ConfigValue<Integer> RESONANT_WHISTLE_COOLDOWN_TICKS = SCHEMA.intRange(
+            "resonantWhistleCooldownTicks", 600, 20, 24000, true,
+            "Resonant Whistle cooldown in ticks.");
+
+    public static final ConfigValue<Integer> RESONANT_WHISTLE_RANGE = SCHEMA.intRange(
+            "resonantWhistleRange", 48, 8, 128, true,
+            "Resonant Whistle range in blocks: your own loaded pets and mounts in the same dimension only, at most 8 per call; sitting ones stay.");
+
+    public static final ConfigValue<Integer> CHITIN_BULWARK_COOLDOWN_TICKS = SCHEMA.intRange(
+            "chitinBulwarkCooldownTicks", 1800, 20, 24000, true,
+            "Chitin Bulwark brace cooldown in ticks (Absorption II for 10 s at 40% health or less). Its knockback resistance while held is always on.");
+
+    public static final ConfigValue<Integer> BLOOM_AMULET_COOLDOWN_TICKS = SCHEMA.intRange(
+            "bloomAmuletCooldownTicks", 900, 20, 24000, true,
+            "Bloom Amulet pulse cooldown in ticks (Regeneration I for 5 s at 60% health or less; never stacks).");
+
+    public static final ConfigValue<Boolean> SPACE_PIRATE_TAKES_CONTRABAND = SCHEMA.bool(
+            "spacePirateTakesContraband", true, true,
+            "Space Pirates pick up loose contraband (also needs mobGriefing). false = they ignore items. Carried loot (max 16) drops on death.");
+
     private NeroCreaturesConfig() {
     }
 

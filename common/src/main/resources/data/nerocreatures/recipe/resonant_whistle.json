@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "equipment",
+  "ingredients": [
+    "nerocreatures:resonant_membrane",
+    "nerocreatures:resonant_membrane",
+    "minecraft:copper_ingot"
+  ],
+  "result": {
+    "count": 1,
+    "id": "nerocreatures:resonant_whistle"
+  }
+}

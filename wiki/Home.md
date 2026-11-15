@@ -36,6 +36,10 @@ drops are deliberately raw materials that other mods spend.
   NeroCompanion starts.
 - [Traits](Traits.md) — the two traits every tameable carries, inheritance, and the Radiant morph.
 - [Mounts](Mounts.md) — taming, the Creature Saddle, riding, stamina and panniers.
+- [Habitat Blocks](Habitat-Blocks.md) — Nest, Feeding Trough, Incubator, Lure Beacon, Sonic Ward,
+  Terrarium and Trophy Plaque.
+- [Livestock and Breeding](Livestock-and-Breeding.md) — breeding foods, eggs and hatchlings.
+- [Gear](Gear.md) — the creature gear and the Capture Pod.
 - [Alphas](Alphas.md) — rare, larger hostiles: how often, how many, what they drop.
 - [Config](Config.md) — the 0.5.0 config keys: mounts, eggs, alphas, overworld spawns, the tick
   budget and the world-changing abilities.

@@ -1,12 +1,44 @@
 {
   "parent": "minecraft:block/block",
   "textures": {
-    "particle": "minecraft:block/hay_block_side",
-    "side": "minecraft:block/hay_block_side",
-    "top": "minecraft:block/hay_block_top",
-    "bottom": "minecraft:block/spruce_planks"
+    "particle": "nerocreatures:block/nest_side",
+    "side": "nerocreatures:block/nest_side",
+    "top": "nerocreatures:block/nest_top",
+    "bed": "nerocreatures:block/nest_bed"
   },
   "elements": [
+    {
+      "from": [
+        1,
+        0,
+        1
+      ],
+      "to": [
+        15,
+        2,
+        15
+      ],
+      "faces": {
+        "down": {
+          "texture": "#side"
+        },
+        "up": {
+          "texture": "#bed"
+        },
+        "north": {
+          "texture": "#side"
+        },
+        "south": {
+          "texture": "#side"
+        },
+        "west": {
+          "texture": "#side"
+        },
+        "east": {
+          "texture": "#side"
+        }
+      }
+    },
     {
       "from": [
         0,
@@ -16,11 +48,107 @@
       "to": [
         16,
         6,
+        2
+      ],
+      "faces": {
+        "down": {
+          "texture": "#side"
+        },
+        "up": {
+          "texture": "#top"
+        },
+        "north": {
+          "texture": "#side"
+        },
+        "south": {
+          "texture": "#side"
+        },
+        "west": {
+          "texture": "#side"
+        },
+        "east": {
+          "texture": "#side"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        0,
+        14
+      ],
+      "to": [
+        16,
+        6,
         16
       ],
       "faces": {
         "down": {
-          "texture": "#bottom"
+          "texture": "#side"
+        },
+        "up": {
+          "texture": "#top"
+        },
+        "north": {
+          "texture": "#side"
+        },
+        "south": {
+          "texture": "#side"
+        },
+        "west": {
+          "texture": "#side"
+        },
+        "east": {
+          "texture": "#side"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        0,
+        2
+      ],
+      "to": [
+        2,
+        6,
+        14
+      ],
+      "faces": {
+        "down": {
+          "texture": "#side"
+        },
+        "up": {
+          "texture": "#top"
+        },
+        "north": {
+          "texture": "#side"
+        },
+        "south": {
+          "texture": "#side"
+        },
+        "west": {
+          "texture": "#side"
+        },
+        "east": {
+          "texture": "#side"
+        }
+      }
+    },
+    {
+      "from": [
+        14,
+        0,
+        2
+      ],
+      "to": [
+        16,
+        6,
+        14
+      ],
+      "faces": {
+        "down": {
+          "texture": "#side"
         },
         "up": {
           "texture": "#top"

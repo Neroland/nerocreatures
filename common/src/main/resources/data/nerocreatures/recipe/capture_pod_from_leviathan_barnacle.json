@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "nerocreatures:leviathan_barnacle",
+    "minecraft:ender_pearl",
+    "#c:ingots/iron"
+  ],
+  "result": {
+    "count": 1,
+    "id": "nerocreatures:capture_pod"
+  }
+}

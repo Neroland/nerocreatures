@@ -6,16 +6,25 @@ import org.slf4j.LoggerFactory;
 import net.minecraft.world.item.ItemStack;
 
 import za.co.neroland.nerocreatures.block.ApexAltarBlockEntity;
+import za.co.neroland.nerocreatures.block.EggLaying;
+import za.co.neroland.nerocreatures.block.FeedingTroughBlockEntity;
+import za.co.neroland.nerocreatures.block.IncubatorBlockEntity;
+import za.co.neroland.nerocreatures.block.LureBeaconBlockEntity;
+import za.co.neroland.nerocreatures.block.NestHome;
+import za.co.neroland.nerocreatures.block.SonicWardBlockEntity;
 import za.co.neroland.nerocreatures.boss.BossSummons;
 import za.co.neroland.nerocreatures.compat.CompanionBridge;
 import za.co.neroland.nerocreatures.config.NeroCreaturesConfig;
 import za.co.neroland.nerocreatures.data.CreatureData;
 import za.co.neroland.nerocreatures.entity.alpha.AlphaSystem;
 import za.co.neroland.nerocreatures.entity.glacira.RimeYak;
+import za.co.neroland.nerocreatures.entity.humanoid.SpacePirate;
 import za.co.neroland.nerocreatures.entity.luna.LodeTortoise;
 import za.co.neroland.nerocreatures.entity.mount.MountCreature;
 import za.co.neroland.nerocreatures.entity.mount.MountHooks;
 import za.co.neroland.nerocreatures.entity.nyxara.PrismStag;
+import za.co.neroland.nerocreatures.item.gear.CreatureGear;
+import za.co.neroland.nerocreatures.item.gear.GearSettings;
 import za.co.neroland.nerocreatures.link.CreatureLinkModule;
 import za.co.neroland.nerocreatures.network.CreatureNetwork;
 import za.co.neroland.nerocreatures.registry.ModBlockEntities;
@@ -96,6 +105,32 @@ public final class NeroCreaturesCommon {
         PrismStag.configure(() -> NeroCreaturesConfig.PRISM_STAG_HERD_AURA.get());
         // 8e. Apex Altar recharge, read live (per altar, never per player).
         ApexAltarBlockEntity.configure(() -> NeroCreaturesConfig.APEX_ALTAR_COOLDOWN_TICKS.get());
+        // 8f. Stage 4 habitat blocks, read live (per block, never per player).
+        FeedingTroughBlockEntity.configure(() -> NeroCreaturesConfig.FEEDING_TROUGH_INTERVAL_TICKS.get());
+        IncubatorBlockEntity.configure(() -> NeroCreaturesConfig.INCUBATOR_HATCH_TICKS.get(),
+                () -> NeroCreaturesConfig.INCUBATOR_POWERED_HATCH_TICKS.get(),
+                () -> NeroCreaturesConfig.INCUBATOR_ENERGY_PER_TICK.get());
+        LureBeaconBlockEntity.configure(() -> NeroCreaturesConfig.LURE_BEACON_BAIT_TICKS.get(),
+                () -> NeroCreaturesConfig.LURE_BEACON_WEIGHT_MULTIPLIER.get());
+        SonicWardBlockEntity.configure(() -> NeroCreaturesConfig.SONIC_WARD_FUEL_TICKS.get());
+        NestHome.configure(() -> NeroCreaturesConfig.NEST_HEAL_INTERVAL_TICKS.get());
+        // 8g. Creature gear: the Lurker Cloak silencer, and every cooldown read live from the config.
+        CreatureGear.init();
+        GearSettings.mirrorShieldCooldownTicks = () -> NeroCreaturesConfig.MIRROR_SHIELD_COOLDOWN_TICKS.get();
+        GearSettings.lurkerCloakSilences = () -> NeroCreaturesConfig.LURKER_CLOAK_SILENCES.get();
+        GearSettings.blinkCharmCooldownTicks = () -> NeroCreaturesConfig.BLINK_CHARM_COOLDOWN_TICKS.get();
+        GearSettings.blinkCharmRange = () -> NeroCreaturesConfig.BLINK_CHARM_RANGE.get();
+        GearSettings.rimeFlaskCooldownTicks = () -> NeroCreaturesConfig.RIME_FLASK_COOLDOWN_TICKS.get();
+        GearSettings.heatGlandGreavesLavaTicks = () -> NeroCreaturesConfig.HEAT_GLAND_GREAVES_LAVA_TICKS.get();
+        GearSettings.heatGlandGreavesCooldownTicks = () -> NeroCreaturesConfig.HEAT_GLAND_GREAVES_COOLDOWN_TICKS.get();
+        GearSettings.gravitonBootsGravityPercent = () -> NeroCreaturesConfig.GRAVITON_BOOTS_GRAVITY_PERCENT.get();
+        GearSettings.resonantWhistleCooldownTicks = () -> NeroCreaturesConfig.RESONANT_WHISTLE_COOLDOWN_TICKS.get();
+        GearSettings.resonantWhistleRange = () -> NeroCreaturesConfig.RESONANT_WHISTLE_RANGE.get();
+        GearSettings.chitinBulwarkCooldownTicks = () -> NeroCreaturesConfig.CHITIN_BULWARK_COOLDOWN_TICKS.get();
+        GearSettings.bloomAmuletCooldownTicks = () -> NeroCreaturesConfig.BLOOM_AMULET_COOLDOWN_TICKS.get();
+        SpacePirate.configureContraband(NeroCreaturesConfig.SPACE_PIRATE_TAKES_CONTRABAND);
+        // 8h. Egg layer: egg-birth species drop <species>_egg instead of a baby (live birth if the item is missing).
+        EggLaying.init();
         // 9. Spawn rules last of the content steps — they reference entity types, which on Fabric
         //    must already have been registered by the step above, and Core's entity seam applies
         //    Fabric registrations eagerly too.

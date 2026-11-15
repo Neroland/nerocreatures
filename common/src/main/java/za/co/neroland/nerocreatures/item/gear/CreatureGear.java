@@ -169,7 +169,7 @@ public final class CreatureGear {
             }
             projectile.setDeltaMovement(v.scale(-GearRules.REFLECT_SPEED));
             projectile.setOwner(player);
-            projectile.hurtMarked = true;
+            markMoved(projectile);
             level.playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.AMETHYST_BLOCK_RESONATE,
                     SoundSource.PLAYERS, 0.8F, 1.6F);
             startCooldown(player, shield, GearSettings.mirrorShieldCooldownTicks.getAsInt());
@@ -195,7 +195,7 @@ public final class CreatureGear {
             Vec3 v = player.getDeltaMovement();
             if (v.y < GearRules.GREAVES_LIFT) {
                 player.setDeltaMovement(v.x, GearRules.GREAVES_LIFT, v.z);
-                player.hurtMarked = true;
+                markMoved(player);
             }
         }
         if (GearRules.greavesExhausted(before, charge[0])) {
@@ -236,6 +236,15 @@ public final class CreatureGear {
             player.addEffect(new MobEffectInstance(MobEffects.REGENERATION, GearRules.AMULET_REGEN_TICKS, 0));
             startCooldown(player, amulet, GearSettings.bloomAmuletCooldownTicks.getAsInt());
         }
+    }
+
+    /** Without this a client never sees a server-side velocity change. */
+    private static void markMoved(Entity entity) {
+        //? if >=26.3 {
+        entity.syncVelocity = true;
+        //?} else {
+        /*entity.hurtMarked = true;
+        *///?}
     }
 
     /** Adds or removes one transient attribute modifier. */

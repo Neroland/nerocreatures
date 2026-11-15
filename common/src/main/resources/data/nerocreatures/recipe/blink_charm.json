@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "key": {
+    "S": "nerocreatures:charged_sand",
+    "V": "nerocreatures:void_essence",
+    "E": "minecraft:ender_pearl"
+  },
+  "pattern": [
+    " S ",
+    "VEV",
+    " S "
+  ],
+  "result": {
+    "count": 1,
+    "id": "nerocreatures:blink_charm"
+  }
+}

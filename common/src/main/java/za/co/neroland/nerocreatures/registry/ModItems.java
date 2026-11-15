@@ -16,10 +16,13 @@ import za.co.neroland.nerolandcore.registry.RegistrationProvider.RegistryEntry;
 
 import za.co.neroland.nerocreatures.NeroCreaturesCommon;
 import za.co.neroland.nerocreatures.item.CaptainsLedgerItem;
+import za.co.neroland.nerocreatures.item.CapturePodItem;
 import za.co.neroland.nerocreatures.item.DrifterSporesItem;
 import za.co.neroland.nerocreatures.item.DroneShellItem;
 import za.co.neroland.nerocreatures.item.SigilItem;
 import za.co.neroland.nerocreatures.item.StaticJarItem;
+import za.co.neroland.nerocreatures.item.gear.CreatureGearItem;
+import za.co.neroland.nerocreatures.item.gear.GearKind;
 
 /**
  * NeroCreatures' item registrations — the creature drops.
@@ -250,6 +253,101 @@ public final class ModItems {
     public static final RegistryEntry<Item> CREATURE_SADDLE = ITEMS.register("creature_saddle",
             key -> new Item(new Item.Properties().stacksTo(1).setId(key)));
 
+
+    // --- 0.5.0 habitat block items (Stage 4) -------------------------------------------------------
+
+    public static final RegistryEntry<Item> NEST = ITEMS.register("nest",
+            key -> new BlockItem(ModBlocks.NEST.get(), new Item.Properties()
+                    //? if >=1.21.2 {
+                    .useBlockDescriptionPrefix()
+                    //?}
+                    .setId(key)));
+
+    public static final RegistryEntry<Item> FEEDING_TROUGH = ITEMS.register("feeding_trough",
+            key -> new BlockItem(ModBlocks.FEEDING_TROUGH.get(), new Item.Properties()
+                    //? if >=1.21.2 {
+                    .useBlockDescriptionPrefix()
+                    //?}
+                    .setId(key)));
+
+    public static final RegistryEntry<Item> INCUBATOR = ITEMS.register("incubator",
+            key -> new BlockItem(ModBlocks.INCUBATOR.get(), new Item.Properties()
+                    //? if >=1.21.2 {
+                    .useBlockDescriptionPrefix()
+                    //?}
+                    .setId(key)));
+
+    public static final RegistryEntry<Item> LURE_BEACON = ITEMS.register("lure_beacon",
+            key -> new BlockItem(ModBlocks.LURE_BEACON.get(), new Item.Properties()
+                    //? if >=1.21.2 {
+                    .useBlockDescriptionPrefix()
+                    //?}
+                    .setId(key)));
+
+    public static final RegistryEntry<Item> SONIC_WARD = ITEMS.register("sonic_ward",
+            key -> new BlockItem(ModBlocks.SONIC_WARD.get(), new Item.Properties()
+                    //? if >=1.21.2 {
+                    .useBlockDescriptionPrefix()
+                    //?}
+                    .setId(key)));
+
+    public static final RegistryEntry<Item> TERRARIUM = ITEMS.register("terrarium",
+            key -> new BlockItem(ModBlocks.TERRARIUM.get(), new Item.Properties()
+                    //? if >=1.21.2 {
+                    .useBlockDescriptionPrefix()
+                    //?}
+                    .setId(key)));
+
+    public static final RegistryEntry<Item> TROPHY_PLAQUE = ITEMS.register("trophy_plaque",
+            key -> new BlockItem(ModBlocks.TROPHY_PLAQUE.get(), new Item.Properties()
+                    //? if >=1.21.2 {
+                    .useBlockDescriptionPrefix()
+                    //?}
+                    .setId(key)));
+
+    // --- 0.5.0 Capture Pod and creature gear (Stage 4) -------------------------------------------
+
+    /** Captures a small tameable creature (no owner stored) and releases it on a block. */
+    public static final RegistryEntry<Item> CAPTURE_POD = ITEMS.register("capture_pod",
+            key -> new CapturePodItem(new Item.Properties().stacksTo(1).setId(key)));
+    public static final RegistryEntry<Item> MIRROR_SHIELD = gear("mirror_shield", GearKind.MIRROR_SHIELD);
+    public static final RegistryEntry<Item> LURKER_CLOAK = gear("lurker_cloak", GearKind.LURKER_CLOAK);
+    public static final RegistryEntry<Item> BLINK_CHARM = gear("blink_charm", GearKind.BLINK_CHARM);
+    public static final RegistryEntry<Item> RIME_FLASK = gear("rime_flask", GearKind.RIME_FLASK);
+    public static final RegistryEntry<Item> HEAT_GLAND_GREAVES = gear("heat_gland_greaves", GearKind.HEAT_GLAND_GREAVES);
+    public static final RegistryEntry<Item> GRAVITON_BOOTS = gear("graviton_boots", GearKind.GRAVITON_BOOTS);
+    public static final RegistryEntry<Item> RESONANT_WHISTLE = gear("resonant_whistle", GearKind.RESONANT_WHISTLE);
+    public static final RegistryEntry<Item> CHITIN_BULWARK = gear("chitin_bulwark", GearKind.CHITIN_BULWARK);
+    public static final RegistryEntry<Item> BLOOM_AMULET = gear("bloom_amulet", GearKind.BLOOM_AMULET);
+
+    // --- 0.5.0 creature eggs (Stage 4; traits in custom data, hatched in an Incubator) ----------
+    public static final RegistryEntry<Item> LUMEN_MOTH_EGG = ITEMS.register("lumen_moth_egg",
+            key -> new Item(new Item.Properties().stacksTo(16).setId(key)));
+    public static final RegistryEntry<Item> LODE_TORTOISE_EGG = ITEMS.register("lode_tortoise_egg",
+            key -> new Item(new Item.Properties().stacksTo(16).setId(key)));
+    public static final RegistryEntry<Item> SLAG_BEETLE_EGG = ITEMS.register("slag_beetle_egg",
+            key -> new Item(new Item.Properties().stacksTo(16).setId(key)));
+    public static final RegistryEntry<Item> MAGNET_CRAB_EGG = ITEMS.register("magnet_crab_egg",
+            key -> new Item(new Item.Properties().stacksTo(16).setId(key)));
+    public static final RegistryEntry<Item> SPORE_DRIFTER_EGG = ITEMS.register("spore_drifter_egg",
+            key -> new Item(new Item.Properties().stacksTo(16).setId(key)));
+    public static final RegistryEntry<Item> VOID_MANTA_EGG = ITEMS.register("void_manta_egg",
+            key -> new Item(new Item.Properties().stacksTo(16).setId(key)));
+
+    /** One gear item: stacks to 1, uncommon, and worn in its slot where it has one (1.21.2+). */
+    private static RegistryEntry<Item> gear(String id, GearKind kind) {
+        return ITEMS.register(id, key -> {
+            Item.Properties properties = new Item.Properties().stacksTo(1).rarity(Rarity.UNCOMMON);
+            //? if >=1.21.2 {
+            if (kind.slot() != null) {
+                properties = properties.component(net.minecraft.core.component.DataComponents.EQUIPPABLE,
+                        net.minecraft.world.item.equipment.Equippable.builder(kind.slot()).build());
+            }
+            //?}
+            return new CreatureGearItem(properties.setId(key), kind);
+        });
+    }
+
     /** Every drop, in Drop-Map order — used for the creative tab and by the wiki check. */
     private static final List<RegistryEntry<Item>> DROPS = List.of(
             VOID_ESSENCE, STALKER_HIDE, STALKER_SINEW, REFINED_CRYSTAL, WORM_CHITIN,
@@ -263,7 +361,11 @@ public final class ModItems {
 
     /** Crafted deployables — shown in the creative tab after the drops (sigils, then the altar). */
     private static final List<RegistryEntry<Item>> DEPLOYABLES = List.of(DRONE_SHELL, CREATURE_SADDLE, STATIC_JAR,
-            CINDER_TYRANT_SIGIL, RIME_MATRIARCH_SIGIL, BLOOM_SOVEREIGN_SIGIL, FACET_COLOSSUS_SIGIL, APEX_ALTAR);
+            CINDER_TYRANT_SIGIL, RIME_MATRIARCH_SIGIL, BLOOM_SOVEREIGN_SIGIL, FACET_COLOSSUS_SIGIL, APEX_ALTAR,
+            NEST, FEEDING_TROUGH, INCUBATOR, LURE_BEACON, SONIC_WARD, TERRARIUM, TROPHY_PLAQUE,
+            LUMEN_MOTH_EGG, LODE_TORTOISE_EGG, SLAG_BEETLE_EGG, MAGNET_CRAB_EGG, SPORE_DRIFTER_EGG, VOID_MANTA_EGG,
+            CAPTURE_POD, MIRROR_SHIELD, LURKER_CLOAK, BLINK_CHARM, RIME_FLASK, HEAT_GLAND_GREAVES, GRAVITON_BOOTS,
+            RESONANT_WHISTLE, CHITIN_BULWARK, BLOOM_AMULET);
 
     private ModItems() {
     }

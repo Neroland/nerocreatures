@@ -12,6 +12,7 @@ import net.minecraftforge.eventbus.api.IEventBus;
 *///?}
 
 import za.co.neroland.nerocreatures.client.ApexAltarRenderer;
+import za.co.neroland.nerocreatures.client.HabitatDisplayRenderer;
 import za.co.neroland.nerocreatures.client.ClientEntityRenderers;
 import za.co.neroland.nerocreatures.client.GalleryCaptureHarness;
 import za.co.neroland.nerocreatures.registry.ModBlockEntities;
@@ -73,5 +74,9 @@ public final class ForgeClientSetup {
         });
         // The Apex Altar's floating sigil (culled; see ApexAltarRenderer).
         event.registerBlockEntityRenderer(ModBlockEntities.APEX_ALTAR.get(), ApexAltarRenderer::new);
+        // Incubator egg, Terrarium capture, Trophy Plaque trophy: one shared culled display renderer.
+        event.registerBlockEntityRenderer(ModBlockEntities.INCUBATOR.get(), HabitatDisplayRenderer::new);
+        event.registerBlockEntityRenderer(ModBlockEntities.TERRARIUM.get(), HabitatDisplayRenderer::new);
+        event.registerBlockEntityRenderer(ModBlockEntities.TROPHY_PLAQUE.get(), HabitatDisplayRenderer::new);
     }
 }

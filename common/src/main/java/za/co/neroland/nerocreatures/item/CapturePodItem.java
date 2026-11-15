@@ -5,6 +5,7 @@ import java.util.UUID;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -159,7 +160,7 @@ public class CapturePodItem extends Item {
 
     /** Puts the captured creature into the world, or refuses (with a message) and changes nothing. */
     private boolean spawn(ServerLevel level, Player player, BlockPos pos, boolean mayUse, CapturedCreature captured) {
-        Optional<EntityType<?>> type = captured.understood() ? EntityType.byString(captured.species())
+        Optional<EntityType<?>> type = captured.understood() ? entityType(captured.species())
                 : Optional.empty();
         Entity created = type.isPresent() ? type.get().create(level, EntitySpawnReason.SPAWN_ITEM_USE) : null;
         if (!(created instanceof TameableCreature creature)) {
@@ -200,6 +201,12 @@ public class CapturePodItem extends Item {
             CompanionBridge.hooks().onPetTamed(creature, player);
         }
         return true;
+    }
+
+    /** The registered entity type for an id, if any (never the registry's default). */
+    private static Optional<EntityType<?>> entityType(String id) {
+        Identifier key = Identifier.tryParse(id);
+        return key == null ? Optional.empty() : BuiltInRegistries.ENTITY_TYPE.getOptional(key);
     }
 
     // --- adapters ------------------------------------------------------------------------------

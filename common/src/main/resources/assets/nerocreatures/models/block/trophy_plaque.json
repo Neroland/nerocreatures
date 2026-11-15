@@ -1,16 +1,16 @@
 {
   "parent": "minecraft:block/block",
   "textures": {
-    "particle": "minecraft:block/dark_oak_planks",
-    "side": "minecraft:block/dark_oak_planks",
-    "top": "minecraft:block/dark_oak_planks",
-    "bottom": "minecraft:block/dark_oak_planks"
+    "particle": "nerocreatures:block/trophy_plaque",
+    "side": "nerocreatures:block/trophy_plaque",
+    "top": "nerocreatures:block/habitat_plating",
+    "bottom": "nerocreatures:block/habitat_frame"
   },
   "elements": [
     {
       "from": [
         1,
-        1,
+        6,
         15
       ],
       "to": [
@@ -36,6 +36,134 @@
         },
         "east": {
           "texture": "#side"
+        }
+      }
+    },
+    {
+      "from": [
+        2,
+        4,
+        15
+      ],
+      "to": [
+        14,
+        6,
+        16
+      ],
+      "faces": {
+        "down": {
+          "texture": "#bottom"
+        },
+        "up": {
+          "texture": "#top"
+        },
+        "north": {
+          "texture": "#side"
+        },
+        "south": {
+          "texture": "#side"
+        },
+        "west": {
+          "texture": "#side"
+        },
+        "east": {
+          "texture": "#side"
+        }
+      }
+    },
+    {
+      "from": [
+        4,
+        2,
+        15
+      ],
+      "to": [
+        12,
+        4,
+        16
+      ],
+      "faces": {
+        "down": {
+          "texture": "#bottom"
+        },
+        "up": {
+          "texture": "#top"
+        },
+        "north": {
+          "texture": "#side"
+        },
+        "south": {
+          "texture": "#side"
+        },
+        "west": {
+          "texture": "#side"
+        },
+        "east": {
+          "texture": "#side"
+        }
+      }
+    },
+    {
+      "from": [
+        6,
+        1,
+        15
+      ],
+      "to": [
+        10,
+        2,
+        16
+      ],
+      "faces": {
+        "down": {
+          "texture": "#bottom"
+        },
+        "up": {
+          "texture": "#top"
+        },
+        "north": {
+          "texture": "#side"
+        },
+        "south": {
+          "texture": "#side"
+        },
+        "west": {
+          "texture": "#side"
+        },
+        "east": {
+          "texture": "#side"
+        }
+      }
+    },
+    {
+      "from": [
+        7,
+        12,
+        14
+      ],
+      "to": [
+        9,
+        14,
+        15
+      ],
+      "faces": {
+        "down": {
+          "texture": "#bottom"
+        },
+        "up": {
+          "texture": "#top"
+        },
+        "north": {
+          "texture": "#top"
+        },
+        "south": {
+          "texture": "#top"
+        },
+        "west": {
+          "texture": "#top"
+        },
+        "east": {
+          "texture": "#top"
         }
       }
     }

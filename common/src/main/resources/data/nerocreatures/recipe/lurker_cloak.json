@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "key": {
+    "F": "nerocreatures:cryo_fang",
+    "W": "nerocreatures:rime_wool"
+  },
+  "pattern": [
+    "F F",
+    "WWW",
+    "WWW"
+  ],
+  "result": {
+    "count": 1,
+    "id": "nerocreatures:lurker_cloak"
+  }
+}

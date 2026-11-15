@@ -1,0 +1,17 @@
+{
+  "replace": false,
+  "values": [
+    {
+      "id": "#nerocreatures:terrarium_small",
+      "required": false
+    },
+    {
+      "id": "nerocreatures:strata_hound",
+      "required": false
+    },
+    {
+      "id": "nerocreatures:lode_tortoise",
+      "required": false
+    }
+  ]
+}

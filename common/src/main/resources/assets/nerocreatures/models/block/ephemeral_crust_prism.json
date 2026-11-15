@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:block/cube_all",
   "textures": {
-    "all": "minecraft:block/amethyst_block"
+    "all": "nerocreatures:block/ephemeral_crust_prism"
   }
 }

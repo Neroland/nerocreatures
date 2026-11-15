@@ -49,7 +49,13 @@ structure mod may later place a real stash at the mark; the item will not change
 | Pirate Captain | `neroland:space/planet_biomes` | 2 | 1 (+2 crew) |
 | Scrap Hulk | — | — | assembled, never spawned |
 
+## Space Pirates and contraband
+
+Space Pirates pick up loose Contraband into a carried-loot slot (at most 16) and drop all of it when
+they die. Gated by `spacePirateTakesContraband` and `mobGriefing` (on Fabric a claim mod's protection
+is not consulted for item pick-up).
+
 ## Config
 
-`cacheMimicSpawns`, `staticSwarmDrain`, `scrapHulkAssembly` (all true); the overworld swarm also
+`spacePirateTakesContraband` (true), `cacheMimicSpawns`, `staticSwarmDrain`, `scrapHulkAssembly` (all true); the overworld swarm also
 follows `overworldSpawns` and `overworldSpawnCap`. See [Config](Config.md).

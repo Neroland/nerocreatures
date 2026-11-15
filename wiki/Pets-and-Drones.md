@@ -194,6 +194,13 @@ hook is a no-op. A companion mod may tell NeroCreatures that it is driving a pet
 in which case NeroCreatures stands down from the species perk — and from nothing else, because
 taming, caps and the command cycle are its contract with the player.
 
+From 0.5.0 the interface also lets a companion mod perch small pets (Lumen Moth, Magnet Crab, Glacite
+Wisp, Slag Beetle: `#nerocreatures:companion_perch`), send fetchers on errands (Lumen Moth, Magnet
+Crab: `#nerocreatures:companion_fetch`), add its own goals at priorities 3 to 6 only, show a hat, and
+**park** a tamed pet in its own storage. A parked pet keeps its row in the ownership store (it still
+counts against your cap, marked `parked`); the pet itself lives in the companion mod's data, which that
+mod erases on its own. A perched pet behaves as if sitting, but keeps its species perk running.
+
 ## See also
 
 - [Bestiary](Bestiary.md) — the rest of the roster

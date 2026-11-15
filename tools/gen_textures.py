@@ -588,6 +588,14 @@ for _creature, (_base, _spot, _outline) in PALETTES.items():
     if _creature not in NO_SPAWN_EGG:
         MOTIFS[_creature + "_spawn_egg"] = _spawn_egg(_base, _spot, _outline)
 
+# Stage 4 creature eggs (laid by egg-birth species, hatched in an Incubator): a paler shell in the
+# species palette so an egg never reads as its spawn egg.
+EGG_SPECIES = ("lumen_moth", "lode_tortoise", "slag_beetle", "magnet_crab", "spore_drifter", "void_manta")
+
+for _creature in EGG_SPECIES:
+    _base, _spot, _outline = PALETTES[_creature]
+    MOTIFS[_creature + "_egg"] = _spawn_egg(_lighten(_base, 40), _spot, _darken(_outline, 10))
+
 
 # --- entity sheets --------------------------------------------------------
 # 64x64. Top half (y 0..31) is the body field the models sample with texOffs(0, 0); bottom half

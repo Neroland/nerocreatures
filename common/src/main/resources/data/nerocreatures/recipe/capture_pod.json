@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "G": "minecraft:glass",
+    "I": "#c:ingots/iron",
+    "E": "minecraft:ender_pearl"
+  },
+  "pattern": [
+    " G ",
+    "IEI",
+    " I "
+  ],
+  "result": {
+    "count": 1,
+    "id": "nerocreatures:capture_pod"
+  }
+}

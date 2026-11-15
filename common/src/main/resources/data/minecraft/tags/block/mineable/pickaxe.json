@@ -2,6 +2,9 @@
   "replace": false,
   "values": [
     "nerocreatures:ephemeral_crust",
-    "nerocreatures:apex_altar"
+    "nerocreatures:apex_altar",
+    "nerocreatures:incubator",
+    "nerocreatures:lure_beacon",
+    "nerocreatures:sonic_ward"
   ]
 }

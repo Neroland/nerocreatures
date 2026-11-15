@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "equipment",
+  "ingredients": [
+    "minecraft:leather_boots",
+    "nerocreatures:graviton_node",
+    "nerocreatures:graviton_node",
+    "minecraft:feather"
+  ],
+  "result": {
+    "count": 1,
+    "id": "nerocreatures:graviton_boots"
+  }
+}
