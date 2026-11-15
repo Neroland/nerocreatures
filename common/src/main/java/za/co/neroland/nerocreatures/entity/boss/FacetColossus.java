@@ -56,8 +56,10 @@ import za.co.neroland.nerocreatures.entity.base.NeroCreatureEntity;
 import za.co.neroland.nerocreatures.entity.visual.CreatureVisuals;
 import za.co.neroland.nerocreatures.entity.visual.VisualPose;
 import za.co.neroland.nerocreatures.registry.ModEntities;
+import za.co.neroland.nerocreatures.sound.CreatureSound;
 import za.co.neroland.nerocreatures.world.CreatureGriefing;
 import za.co.neroland.nerocreatures.world.CreatureOwners;
+import za.co.neroland.nerocreatures.registry.ModSounds;
 
 /**
  * <b>Facet Colossus</b> — Nyxara's boss: a standing monolith inside a ring of six facet plates.
@@ -181,14 +183,14 @@ public class FacetColossus extends NeroBossEntity {
     private void enterDecoys(ServerLevel level) {
         this.rotateIn = 1;
         this.burst(level, ParticleTypes.END_ROD, 30);
-        this.playSound(SoundEvents.AMETHYST_BLOCK_RESONATE, 2.0F, 0.5F);
+        ModSounds.FACET_COLOSSUS_PHASE.play(this);
     }
 
     private void enterShatter(ServerLevel level) {
         this.rotateIn = 1;
         this.crystalIn = 1;
         this.burst(level, ParticleTypes.END_ROD, 50);
-        this.playSound(SoundEvents.AMETHYST_CLUSTER_BREAK, 2.0F, 0.4F);
+        ModSounds.FACET_COLOSSUS_PHASE.play(this);
     }
 
     // --- per tick -------------------------------------------------------------
@@ -232,7 +234,7 @@ public class FacetColossus extends NeroBossEntity {
                 ? FacetRules.decoyMask(this.vulnerable, this.random.nextInt(20)) : 0;
         this.exposedFor = FacetRules.exposedTicks(phase);
         this.rotateIn = BossController.scaleCooldown(FacetRules.rotationTicks(phase));
-        this.playSound(SoundEvents.AMETHYST_BLOCK_CHIME, 1.6F, 0.6F);
+        ModSounds.FACET_COLOSSUS_ROTATE.play(this);
     }
 
     private double ringAngle(ServerLevel level, int phase) {
@@ -277,7 +279,7 @@ public class FacetColossus extends NeroBossEntity {
             this.beamTick = 0;
             this.visuals().playPose(VisualPose.ABILITY, ArenaCrystalRules.BEAM_POSE_TICKS);
             this.getNavigation().stop();
-            this.playSound(SoundEvents.BEACON_ACTIVATE, 2.0F, 1.4F);
+            ModSounds.FACET_COLOSSUS_BEAM.play(this);
             return;
         }
         int t = this.beamTick++;
@@ -660,16 +662,21 @@ public class FacetColossus extends NeroBossEntity {
 
     @Override
     protected SoundEvent getAmbientSound() {
-        return SoundEvents.AMETHYST_BLOCK_RESONATE;
+        return ModSounds.FACET_COLOSSUS_AMBIENT.get();
     }
 
     @Override
     protected SoundEvent getHurtSound(DamageSource damageSource) {
-        return SoundEvents.AMETHYST_CLUSTER_HIT;
+        return ModSounds.FACET_COLOSSUS_HURT.get();
     }
 
     @Override
     protected SoundEvent getDeathSound() {
-        return SoundEvents.AMETHYST_CLUSTER_BREAK;
+        return ModSounds.FACET_COLOSSUS_DEATH.get();
+    }
+
+    @Override
+    public CreatureSound summonSound() {
+        return ModSounds.FACET_COLOSSUS_SUMMON;
     }
 }

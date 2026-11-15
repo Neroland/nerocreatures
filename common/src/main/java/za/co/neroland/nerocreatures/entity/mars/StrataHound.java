@@ -11,7 +11,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
-import net.minecraft.sounds.SoundEvents;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -38,6 +37,7 @@ import za.co.neroland.nerocreatures.entity.tame.TameableCreature;
 import za.co.neroland.nerocreatures.entity.visual.VisualPose;
 import za.co.neroland.nerocreatures.trait.TraitEffects;
 import za.co.neroland.nerocreatures.trait.TraitPool;
+import za.co.neroland.nerocreatures.registry.ModSounds;
 
 /**
  * <b>Strata Hound</b> (Mars; tameable, breedable, live birth) — a prospecting dog with a shovel
@@ -200,7 +200,7 @@ public class StrataHound extends TameableCreature {
         this.foundPos = null;
         this.setMode(Mode.SEARCHING);
         this.visuals().setVariant(StrataTargets.colourFamily(spec));
-        this.playSound(SoundEvents.FOX_SNIFF, 1.0F, 0.8F);
+        ModSounds.STRATA_HOUND_SNIFF.play(this);
         notifyOwner(owner, Component.translatable("message.nerocreatures.strata_hound.searching"));
     }
 
@@ -274,7 +274,7 @@ public class StrataHound extends TameableCreature {
         this.foundPos = origin.offset(this.scan.bestDx(), this.scan.bestDy(), this.scan.bestDz());
         this.scan = null;
         this.setMode(Mode.LEADING);
-        this.playSound(SoundEvents.FOX_SNIFF, 1.0F, 1.2F);
+        ModSounds.STRATA_HOUND_SNIFF.play(this);
         if (this.getOwner() instanceof Player owner) {
             int distance = (int) Math.round(Math.sqrt(this.foundPos.distSqr(this.blockPosition())));
             notifyOwner(owner, Component.translatable("message.nerocreatures.strata_hound.found", distance));
@@ -320,7 +320,7 @@ public class StrataHound extends TameableCreature {
     void point() {
         if (this.mode == Mode.LEADING) {
             this.setMode(Mode.POINTING);
-            this.playSound(SoundEvents.AMETHYST_BLOCK_CHIME, 1.0F, 0.8F);
+            ModSounds.STRATA_HOUND_POINT.play(this);
         }
     }
 
@@ -363,17 +363,17 @@ public class StrataHound extends TameableCreature {
 
     @Override
     protected SoundEvent getAmbientSound() {
-        return SoundEvents.FOX_AMBIENT;
+        return ModSounds.STRATA_HOUND_AMBIENT.get();
     }
 
     @Override
     protected SoundEvent getHurtSound(DamageSource damageSource) {
-        return SoundEvents.FOX_HURT;
+        return ModSounds.STRATA_HOUND_HURT.get();
     }
 
     @Override
     protected SoundEvent getDeathSound() {
-        return SoundEvents.FOX_DEATH;
+        return ModSounds.STRATA_HOUND_DEATH.get();
     }
 
     /**

@@ -8,6 +8,7 @@ import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.phys.Vec3;
 
 import za.co.neroland.nerocreatures.entity.visual.VisualPose;
+import za.co.neroland.nerocreatures.registry.ModSounds;
 
 /**
  * The Echo Shrike's attack: it closes on the target it heard, then a telegraphed lunge. The
@@ -76,6 +77,7 @@ public class ShrikeLungeGoal extends Goal {
             this.lungeTick = 0;
             this.shrike.getNavigation().stop();
             this.shrike.visuals().playPose(VisualPose.ABILITY, ShrikeRules.LUNGE_POSE_TICKS);
+            ModSounds.ECHO_SHRIKE_SCREECH.play(this.shrike);
             return;
         }
         if (--this.repath <= 0) {

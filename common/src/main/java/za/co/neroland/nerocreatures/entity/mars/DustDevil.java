@@ -6,7 +6,6 @@ import net.minecraft.core.particles.BlockParticleOption;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
-import net.minecraft.sounds.SoundEvents;
 import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -37,6 +36,7 @@ import za.co.neroland.nerocreatures.entity.base.NeroCreatureEntity;
 import za.co.neroland.nerocreatures.entity.mars.DustDevilRules.Phase;
 import za.co.neroland.nerocreatures.entity.visual.VisualPose;
 import za.co.neroland.nerocreatures.world.CreatureGriefing;
+import za.co.neroland.nerocreatures.registry.ModSounds;
 
 /**
  * <b>Dust Devil</b> (Mars; hostile) — a headless whirlwind of three sand rings around a charged
@@ -169,7 +169,7 @@ public class DustDevil extends NeroCreatureEntity implements Enemy {
             case SPIN_UP -> {
                 this.visuals().playPose(VisualPose.ABILITY, DustDevilRules.SPIN_UP_TICKS);
                 this.visuals().setForm(FORM_COLUMN);
-                this.playSound(SoundEvents.SAND_FALL, 1.2F, 0.6F);
+                ModSounds.DUST_DEVIL_WHIRL.play(this);
             }
             case WHIRL -> {
                 this.visuals().setForm(0);
@@ -179,6 +179,7 @@ public class DustDevil extends NeroCreatureEntity implements Enemy {
             }
             case THROW -> {
                 this.visuals().playPose(VisualPose.ABILITY_2, DustDevilRules.THROW_TICKS);
+                ModSounds.DUST_DEVIL_THROW.play(this);
                 this.throwAll(level);
                 this.visuals().setStage(0);
             }
@@ -278,17 +279,17 @@ public class DustDevil extends NeroCreatureEntity implements Enemy {
 
     @Override
     protected SoundEvent getAmbientSound() {
-        return SoundEvents.SAND_STEP;
+        return ModSounds.DUST_DEVIL_AMBIENT.get();
     }
 
     @Override
     protected SoundEvent getHurtSound(DamageSource damageSource) {
-        return SoundEvents.SAND_HIT;
+        return ModSounds.DUST_DEVIL_HURT.get();
     }
 
     @Override
     protected SoundEvent getDeathSound() {
-        return SoundEvents.SAND_BREAK;
+        return ModSounds.DUST_DEVIL_DEATH.get();
     }
 
     /** Vanilla melee chase, idle while spinning up (it is rooted then). */

@@ -27,6 +27,7 @@ import net.minecraft.world.phys.Vec3;
 import za.co.neroland.nerocreatures.entity.base.CreatureTier;
 import za.co.neroland.nerocreatures.entity.base.NeroCreatureEntity;
 import za.co.neroland.nerocreatures.entity.nyxara.ShardbackRules.Phase;
+import za.co.neroland.nerocreatures.registry.ModSounds;
 
 /**
  * <b>Shardback</b> (Nyxara; hostile) — a low charging quadruped behind a fan of five mirror plates.
@@ -120,8 +121,7 @@ public class Shardback extends NeroCreatureEntity implements Enemy {
             }
             level.sendParticles(ParticleTypes.ELECTRIC_SPARK, projectile.getX(), projectile.getY(), projectile.getZ(),
                     6, 0.15D, 0.15D, 0.15D, 0.05D);
-            level.playSound(null, this.blockPosition(), SoundEvents.AMETHYST_BLOCK_RESONATE, SoundSource.HOSTILE,
-                    1.0F, 1.4F);
+            ModSounds.SHARDBACK_DEFLECT.play(this);
         }
         return ProjectileDeflection.REVERSE;
     }
@@ -155,16 +155,16 @@ public class Shardback extends NeroCreatureEntity implements Enemy {
 
     @Override
     protected SoundEvent getAmbientSound() {
-        return SoundEvents.AMETHYST_CLUSTER_STEP;
+        return ModSounds.SHARDBACK_AMBIENT.get();
     }
 
     @Override
     protected SoundEvent getHurtSound(DamageSource damageSource) {
-        return SoundEvents.AMETHYST_CLUSTER_HIT;
+        return ModSounds.SHARDBACK_HURT.get();
     }
 
     @Override
     protected SoundEvent getDeathSound() {
-        return SoundEvents.AMETHYST_CLUSTER_BREAK;
+        return ModSounds.SHARDBACK_DEATH.get();
     }
 }

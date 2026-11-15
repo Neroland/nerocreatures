@@ -56,6 +56,15 @@ public class EnergyAuraGoal extends Goal {
      * @param damage        damage dealt per pulse to each victim
      * @param intervalTicks ticks between pulses (20 = once a second)
      */
+    @org.jetbrains.annotations.Nullable
+    private za.co.neroland.nerocreatures.sound.CreatureSound sound;
+
+    /** The ability's own sound, played at the strike (optional; none by default). */
+    public EnergyAuraGoal withSound(za.co.neroland.nerocreatures.sound.CreatureSound abilitySound) {
+        this.sound = abilitySound;
+        return this;
+    }
+
     public EnergyAuraGoal(Mob mob, double radius, float damage, int intervalTicks) {
         this(mob, radius, damage, intervalTicks, 0, 0);
     }
@@ -124,6 +133,9 @@ public class EnergyAuraGoal extends Goal {
             hit++;
         }
         if (hit > 0) {
+            if (this.sound != null) {
+                this.sound.play(this.mob);
+            }
             this.onPulse(level);
         }
     }

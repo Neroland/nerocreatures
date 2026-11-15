@@ -52,7 +52,9 @@ import za.co.neroland.nerocreatures.config.NeroCreaturesConfig;
 import za.co.neroland.nerocreatures.entity.base.CreatureTier;
 import za.co.neroland.nerocreatures.entity.base.NeroCreatureEntity;
 import za.co.neroland.nerocreatures.entity.visual.VisualPose;
+import za.co.neroland.nerocreatures.sound.CreatureSound;
 import za.co.neroland.nerocreatures.world.CreatureGriefing;
+import za.co.neroland.nerocreatures.registry.ModSounds;
 
 /**
  * <b>Rime Matriarch</b> — Glacira's signature boss (altar-summoned only, decision 001).
@@ -181,7 +183,7 @@ public class RimeMatriarch extends NeroBossEntity {
     private void onPhaseEntered(ServerLevel level) {
         this.pillarTick = 0;
         this.floorTick = 0;
-        level.playSound(null, this.blockPosition(), SoundEvents.POWDER_SNOW_BREAK, SoundSource.HOSTILE, 2.0F, 0.5F);
+        ModSounds.RIME_MATRIARCH_PHASE.play(this);
         level.sendParticles(ParticleTypes.SNOWFLAKE, this.getX(), this.getY() + 2.0D, this.getZ(),
                 60, 2.0D, 1.5D, 2.0D, 0.05D);
     }
@@ -226,6 +228,7 @@ public class RimeMatriarch extends NeroBossEntity {
         if (--this.floorTick <= 0) {
             this.floorTick = MatriarchRules.FLOOR_INTERVAL;
             this.freezeFloor(level, anchor, phase);
+            ModSounds.RIME_MATRIARCH_FREEZE.play(this);
         }
     }
 
@@ -578,7 +581,7 @@ public class RimeMatriarch extends NeroBossEntity {
                 this.direction = target != null
                         ? target.getEyePosition().subtract(eye).normalize()
                         : RimeMatriarch.this.getLookAngle();
-                RimeMatriarch.this.playSound(SoundEvents.POWDER_SNOW_BREAK, 2.0F, 0.4F);
+                ModSounds.RIME_MATRIARCH_BEAM.play(RimeMatriarch.this);
             }
             Vec3 locked = this.direction;
             if (locked != null && MatriarchRules.beamLive(this.clipTick)) {
@@ -633,16 +636,21 @@ public class RimeMatriarch extends NeroBossEntity {
 
     @Override
     protected SoundEvent getAmbientSound() {
-        return SoundEvents.STRAY_AMBIENT;
+        return ModSounds.RIME_MATRIARCH_AMBIENT.get();
     }
 
     @Override
     protected SoundEvent getHurtSound(DamageSource damageSource) {
-        return SoundEvents.STRAY_HURT;
+        return ModSounds.RIME_MATRIARCH_HURT.get();
     }
 
     @Override
     protected SoundEvent getDeathSound() {
-        return SoundEvents.STRAY_DEATH;
+        return ModSounds.RIME_MATRIARCH_DEATH.get();
+    }
+
+    @Override
+    public CreatureSound summonSound() {
+        return ModSounds.RIME_MATRIARCH_SUMMON;
     }
 }

@@ -32,6 +32,7 @@ import za.co.neroland.nerocreatures.registry.ModBlocks;
 import za.co.neroland.nerocreatures.registry.ModCreativeTab;
 import za.co.neroland.nerocreatures.registry.ModEntities;
 import za.co.neroland.nerocreatures.registry.ModItems;
+import za.co.neroland.nerocreatures.registry.ModSounds;
 import za.co.neroland.nerocreatures.registry.ModSpawnEggs;
 import za.co.neroland.nerocreatures.spawn.CreatureSpawns;
 import za.co.neroland.nerocreatures.telemetry.NeroCreaturesTelemetry;
@@ -66,6 +67,7 @@ public final class NeroCreaturesCommon {
         //    event bus with RegistrationProvider.attach(...).
         //    Entity types come first: the spawn eggs and the spawn table both name them, and on
         //    Fabric "first" is literal.
+        ModSounds.init();
         ModBlocks.init();
         ModBlockEntities.init();
         ModEntities.init();

@@ -37,6 +37,7 @@ import za.co.neroland.nerocreatures.data.OwnedCreature;
 import za.co.neroland.nerocreatures.entity.ai.shared.SoundHearing;
 import za.co.neroland.nerocreatures.entity.tame.PetCommand;
 import za.co.neroland.nerocreatures.entity.tame.TameableCreature;
+import za.co.neroland.nerocreatures.registry.ModSounds;
 
 /**
  * The server half of the creature gear: the passive effects (one pass over online players per tick,
@@ -170,8 +171,7 @@ public final class CreatureGear {
             projectile.setDeltaMovement(v.scale(-GearRules.REFLECT_SPEED));
             projectile.setOwner(player);
             markMoved(projectile);
-            level.playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.AMETHYST_BLOCK_RESONATE,
-                    SoundSource.PLAYERS, 0.8F, 1.6F);
+            ModSounds.MIRROR_SHIELD_REFLECT.play(level, player.getX(), player.getY(), player.getZ(), SoundSource.PLAYERS);
             startCooldown(player, shield, GearSettings.mirrorShieldCooldownTicks.getAsInt());
             return;
         }
@@ -283,8 +283,7 @@ public final class CreatureGear {
             }
             player.teleportTo(feet.x, feet.y, feet.z);
             player.resetFallDistance();
-            level.playSound(null, feet.x, feet.y, feet.z, SoundEvents.ENDERMAN_TELEPORT, SoundSource.PLAYERS,
-                    0.6F, 1.4F);
+            ModSounds.BLINK_CHARM_USE.play(level, feet.x, feet.y, feet.z, SoundSource.PLAYERS);
             startCooldown(player, stack, GearSettings.blinkCharmCooldownTicks.getAsInt());
             return;
         }
@@ -330,8 +329,7 @@ public final class CreatureGear {
                 called++;
             }
         }
-        level.playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.NOTE_BLOCK_FLUTE.value(),
-                SoundSource.PLAYERS, 1.0F, 1.6F);
+        ModSounds.RESONANT_WHISTLE_USE.play(level, player.getX(), player.getY(), player.getZ(), SoundSource.PLAYERS);
         player.sendSystemMessage(Component.translatable("message.nerocreatures.resonant_whistle.called", called), true);
         startCooldown(player, stack, GearSettings.resonantWhistleCooldownTicks.getAsInt());
     }

@@ -7,7 +7,6 @@ import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
-import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MoverType;
@@ -29,6 +28,7 @@ import za.co.neroland.nerocreatures.entity.mount.MountCreature;
 import za.co.neroland.nerocreatures.entity.tame.TameableCreature;
 import za.co.neroland.nerocreatures.entity.visual.VisualPose;
 import za.co.neroland.nerocreatures.spawn.HabitatTags;
+import za.co.neroland.nerocreatures.registry.ModSounds;
 import za.co.neroland.nerolandcore.worldgen.SpaceTags;
 
 /**
@@ -253,7 +253,7 @@ public class VoidManta extends MountCreature {
         if (this.serverBlinkFx > 0 && --this.serverBlinkFx == 0) {
             level.sendParticles(ParticleTypes.REVERSE_PORTAL, this.getX(), this.getY() + 0.4D, this.getZ(),
                     16, 1.0D, 0.2D, 1.0D, 0.02D);
-            this.playSound(SoundEvents.ENDERMAN_TELEPORT, 0.7F, 0.6F);
+            ModSounds.VOID_MANTA_BLINK.play(this);
             this.serverArrivalFx = ARRIVAL_FX_DELAY;
         } else if (this.serverArrivalFx > 0 && --this.serverArrivalFx == 0) {
             level.sendParticles(ParticleTypes.REVERSE_PORTAL, this.getX(), this.getY() + 0.4D, this.getZ(),
@@ -299,16 +299,16 @@ public class VoidManta extends MountCreature {
 
     @Override
     protected SoundEvent getAmbientSound() {
-        return SoundEvents.GLOW_SQUID_AMBIENT;
+        return ModSounds.VOID_MANTA_AMBIENT.get();
     }
 
     @Override
     protected SoundEvent getHurtSound(DamageSource damageSource) {
-        return SoundEvents.GLOW_SQUID_HURT;
+        return ModSounds.VOID_MANTA_HURT.get();
     }
 
     @Override
     protected SoundEvent getDeathSound() {
-        return SoundEvents.GLOW_SQUID_DEATH;
+        return ModSounds.VOID_MANTA_DEATH.get();
     }
 }

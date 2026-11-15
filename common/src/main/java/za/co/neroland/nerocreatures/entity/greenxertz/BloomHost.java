@@ -10,8 +10,6 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
-import net.minecraft.sounds.SoundEvents;
-import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.AgeableMob;
@@ -47,6 +45,7 @@ import za.co.neroland.nerocreatures.entity.base.NeroCreatureEntity;
 import za.co.neroland.nerocreatures.entity.boss.NeroBossEntity;
 import za.co.neroland.nerocreatures.entity.visual.VisualPose;
 import za.co.neroland.nerocreatures.world.CreatureOwners;
+import za.co.neroland.nerocreatures.registry.ModSounds;
 
 /**
  * <b>Bloom Host</b> (Greenxertz, hostile) — a stooped walker carrying one huge lopsided flower cap.
@@ -268,7 +267,7 @@ public class BloomHost extends NeroCreatureEntity implements Enemy {
         this.raised.add(sporeling.getId());
         this.visuals().playPose(VisualPose.ABILITY, BloomRules.RAISE_POSE_TICKS);
         this.strand(level, victim.position());
-        level.playSound(null, victim.blockPosition(), SoundEvents.MOSS_BREAK, SoundSource.HOSTILE, 1.0F, 0.6F);
+        ModSounds.BLOOM_HOST_RAISE.play(level, victim.blockPosition(), this.getSoundSource());
     }
 
     /** The spore strand from corpse to host (decision 007 readability fix). */
@@ -310,16 +309,16 @@ public class BloomHost extends NeroCreatureEntity implements Enemy {
     @Override
     @Nullable
     protected SoundEvent getAmbientSound() {
-        return this.isSporeling() ? null : SoundEvents.MOSS_STEP;
+        return this.isSporeling() ? null : ModSounds.BLOOM_HOST_AMBIENT.get();
     }
 
     @Override
     protected SoundEvent getHurtSound(DamageSource damageSource) {
-        return this.isSporeling() ? SoundEvents.SLIME_HURT_SMALL : SoundEvents.SLIME_HURT;
+        return ModSounds.BLOOM_HOST_HURT.get();
     }
 
     @Override
     protected SoundEvent getDeathSound() {
-        return this.isSporeling() ? SoundEvents.SLIME_DEATH_SMALL : SoundEvents.MOSS_BREAK;
+        return ModSounds.BLOOM_HOST_DEATH.get();
     }
 }

@@ -36,6 +36,7 @@ import za.co.neroland.nerocreatures.entity.ai.shared.PredatorHuntGoal;
 import za.co.neroland.nerocreatures.entity.base.CreatureTier;
 import za.co.neroland.nerocreatures.entity.base.NeroCreatureEntity;
 import za.co.neroland.nerocreatures.entity.visual.VisualPose;
+import za.co.neroland.nerocreatures.registry.ModSounds;
 
 /**
  * <b>Frost Lurker</b> (Glacira, hostile): a flat diamond body with a row of ice-shard spines and two
@@ -145,7 +146,7 @@ public class FrostLurker extends NeroCreatureEntity implements Enemy, Ambusher {
                 16, 0.6D, 0.3D, 0.6D, 0.05D);
         level.sendParticles(ParticleTypes.ITEM_SNOWBALL, this.getX(), this.getY() + 0.2D, this.getZ(),
                 10, 0.5D, 0.2D, 0.5D, 0.1D);
-        level.playSound(null, this.blockPosition(), SoundEvents.POWDER_SNOW_BREAK, SoundSource.HOSTILE, 1.2F, 0.6F);
+        ModSounds.FROST_LURKER_ERUPT.play(this);
     }
 
     /** The bite at the end of the telegraph: damage and a capped freeze, only if still in reach. */
@@ -216,16 +217,16 @@ public class FrostLurker extends NeroCreatureEntity implements Enemy, Ambusher {
     @Override
     @Nullable
     protected SoundEvent getAmbientSound() {
-        return this.lurking ? null : SoundEvents.STRAY_AMBIENT;
+        return this.lurking ? null : ModSounds.FROST_LURKER_AMBIENT.get();
     }
 
     @Override
     protected SoundEvent getHurtSound(DamageSource damageSource) {
-        return SoundEvents.STRAY_HURT;
+        return ModSounds.FROST_LURKER_HURT.get();
     }
 
     @Override
     protected SoundEvent getDeathSound() {
-        return SoundEvents.STRAY_DEATH;
+        return ModSounds.FROST_LURKER_DEATH.get();
     }
 }

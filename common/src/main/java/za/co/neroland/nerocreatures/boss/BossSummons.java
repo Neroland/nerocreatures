@@ -19,6 +19,7 @@ import za.co.neroland.nerocreatures.entity.boss.CinderTyrant;
 import za.co.neroland.nerocreatures.entity.boss.FacetColossus;
 import za.co.neroland.nerocreatures.entity.boss.NeroBossEntity;
 import za.co.neroland.nerocreatures.entity.boss.RimeMatriarch;
+import za.co.neroland.nerocreatures.sound.CreatureSound;
 import za.co.neroland.nerocreatures.spawn.CreatureCensus;
 
 /**
@@ -137,6 +138,10 @@ public final class BossSummons {
         }
         if (initiator != null) {
             BossContributionState.get(level.getServer()).join(fight, bossId, initiator);
+        }
+        CreatureSound stinger = boss.summonSound();
+        if (stinger != null) {
+            stinger.play(boss);
         }
         // A boss is a big addition to the population; the cached count is now stale by one.
         CreatureCensus.invalidate(level);

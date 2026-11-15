@@ -12,7 +12,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.InteractionHand;
@@ -41,6 +40,7 @@ import za.co.neroland.nerocreatures.entity.mount.MountCreature;
 import za.co.neroland.nerocreatures.entity.tame.LivestockCreature;
 import za.co.neroland.nerocreatures.entity.tame.PetCommand;
 import za.co.neroland.nerocreatures.entity.tame.TameableCreature;
+import za.co.neroland.nerocreatures.registry.ModSounds;
 
 /**
  * {@code capture_pod}: a reusable pod that holds one small tamed or passive creature.
@@ -103,8 +103,7 @@ public class CapturePodItem extends Item {
         CaptureFlow.Outcome outcome = CaptureFlow.capture(new StackPod(player, hand, stack),
                 new CreatureTarget(level, player, creature));
         if (outcome == CaptureFlow.Outcome.CAPTURED) {
-            level.playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.BOTTLE_FILL,
-                    SoundSource.PLAYERS, 0.8F, 1.2F);
+            ModSounds.CAPTURE_POD_CAPTURE.play(level, player.getX(), player.getY(), player.getZ(), SoundSource.PLAYERS);
             notifyRaw(player, Component.translatable("message.nerocreatures.capture_pod.captured",
                     creature.getType().getDescription()));
         }
@@ -151,7 +150,7 @@ public class CapturePodItem extends Item {
         CaptureFlow.Outcome outcome = CaptureFlow.release(new StackPod(player, context.getHand(), stack),
                 captured -> this.spawn(level, player, pos, mayUse, captured));
         if (outcome == CaptureFlow.Outcome.RELEASED) {
-            level.playSound(null, pos, SoundEvents.BOTTLE_EMPTY, SoundSource.PLAYERS, 0.8F, 1.0F);
+            ModSounds.CAPTURE_POD_RELEASE.play(level, pos, SoundSource.PLAYERS);
         } else if (outcome == CaptureFlow.Outcome.KEPT && CapturedCreature.read(stack).isEmpty()) {
             notify(player, CaptureRules.Release.UNKNOWN.key());
         }

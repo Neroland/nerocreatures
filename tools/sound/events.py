@@ -123,7 +123,7 @@ creature("prism_stag", "Prism Stag", "nyxara", NEU, lambda r, p, k: an(r, p, k, 
 creature("shardback", "Shardback", "nyxara", H, lambda r, p, k: an(r, p, k, 110, [(400, 3, 1), (1300, 5, .5)], .5, .2),
          "snorts", "M", [("deflect", A.shardback_deflect, "Shardback deflects", "projectile reflected from the front", 1.0, 24),
                          ("charge", A.shardback_charge, "Shardback charges", "charge telegraph, plates fold (ability)", 1.0, 24)])
-creature("crystal_golem", "Crystal Golem", "nyxara", H, lambda r, p, k: gl(r, p, k, 220, CRYSTAL, 3.0, True), "resonates", "L",
+creature("crystal_golem", "Crystal Golem", "nyxara", NEU, lambda r, p, k: gl(r, p, k, 220, CRYSTAL, 3.0, True), "resonates", "L",
          [("smash", A.golem_smash, "Crystal Golem smashes", "overhead smash (ability)", 1.1, 24)])
 creature("facet_colossus", "Facet Colossus", "nyxara", H, lambda r, p, k: gl(r, p, k, 131, METAL, 2.0, True), "tolls", "XL",
          [("beam", A.colossus_beam, "Facet Colossus fires a beam", "20-tick telegraph then beam (signature attack)", 1.4, 32),

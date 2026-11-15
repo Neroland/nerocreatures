@@ -10,7 +10,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.entity.EntityDimensions;
@@ -32,6 +31,7 @@ import za.co.neroland.nerocreatures.boss.BossFights;
 import za.co.neroland.nerocreatures.boss.BossSummons;
 import za.co.neroland.nerocreatures.entity.boss.NeroBossEntity;
 import za.co.neroland.nerocreatures.item.SigilItem;
+import za.co.neroland.nerocreatures.registry.ModSounds;
 
 /**
  * The Apex Altar's state: its cooldown end, the fight it started (a random per-fight id, never a
@@ -102,7 +102,7 @@ public class ApexAltarBlockEntity extends BlockEntity {
             stack.consume(1, player);
             this.setChanged();
             this.applyLock(level, pos, this.getBlockState(), now, true);
-            level.playSound(null, pos, SoundEvents.RESPAWN_ANCHOR_CHARGE, SoundSource.BLOCKS, 1.0F, 0.7F);
+            ModSounds.APEX_ALTAR_SUMMON.play(level, pos, SoundSource.BLOCKS);
             return;
         }
         player.sendSystemMessage(message(outcome.verdict(), now, this.state.readyAt()), true);

@@ -7,7 +7,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -23,6 +22,7 @@ import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
 import za.co.neroland.nerocreatures.config.NeroCreaturesConfig;
+import za.co.neroland.nerocreatures.registry.ModSounds;
 
 /**
  * The thrown {@code static_jar}: its arc and its burst. Server side only.
@@ -110,7 +110,7 @@ public final class StaticJarBurst {
 
     /** Shatters a jar at {@code at}. @return how many mechanical creatures were disabled */
     public static int burst(ServerLevel level, Vec3 at) {
-        level.playSound(null, at.x, at.y, at.z, SoundEvents.GLASS_BREAK, SoundSource.PLAYERS, 1.0F, 1.4F);
+        ModSounds.STATIC_JAR_SHATTER.play(level, at.x, at.y, at.z, SoundSource.PLAYERS);
         level.sendParticles(ParticleTypes.ELECTRIC_SPARK, at.x, at.y, at.z, 24, 1.2D, 0.8D, 1.2D, 0.15D);
         if (!SwarmRules.drainEnabled(NeroCreaturesConfig.STATIC_SWARM_DRAIN.get())) {
             return 0;

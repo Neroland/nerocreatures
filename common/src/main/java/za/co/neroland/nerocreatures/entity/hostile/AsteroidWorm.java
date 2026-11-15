@@ -5,7 +5,6 @@ import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
-import net.minecraft.sounds.SoundEvents;
 import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntityType;
@@ -27,6 +26,7 @@ import za.co.neroland.nerocreatures.entity.ai.Burrower;
 import za.co.neroland.nerocreatures.entity.ai.EmergeAttackGoal;
 import za.co.neroland.nerocreatures.entity.base.CreatureTier;
 import za.co.neroland.nerocreatures.entity.base.NeroCreatureEntity;
+import za.co.neroland.nerocreatures.registry.ModSounds;
 
 /**
  * <b>Asteroid Worm</b> — the ambush predator of the rubble fields.
@@ -110,7 +110,7 @@ public class AsteroidWorm extends NeroCreatureEntity implements Enemy, Burrower 
         this.goalSelector.addGoal(0, new FloatGoal(this));
         // Emerge outranks burrow: once the worm is under and in range, surfacing wins.
         this.goalSelector.addGoal(1, new EmergeAttackGoal<>(this, STRIKE_RANGE, TELEGRAPH_TICKS, BITE_TICK,
-                EMERGE_CLIP_TICKS));
+                EMERGE_CLIP_TICKS).withSound(ModSounds.ASTEROID_WORM_EMERGE));
         this.goalSelector.addGoal(2, new BurrowGoal<>(this, EMERGE_RANGE, BURROWED_SPEED));
         this.goalSelector.addGoal(3, new MeleeAttackGoal(this, 1.0D, true));
         this.goalSelector.addGoal(7, new RandomStrollGoal(this, 0.7D));
@@ -211,16 +211,16 @@ public class AsteroidWorm extends NeroCreatureEntity implements Enemy, Burrower 
 
     @Override
     protected SoundEvent getAmbientSound() {
-        return SoundEvents.RAVAGER_AMBIENT;
+        return ModSounds.ASTEROID_WORM_AMBIENT.get();
     }
 
     @Override
     protected SoundEvent getHurtSound(DamageSource damageSource) {
-        return SoundEvents.RAVAGER_HURT;
+        return ModSounds.ASTEROID_WORM_HURT.get();
     }
 
     @Override
     protected SoundEvent getDeathSound() {
-        return SoundEvents.RAVAGER_DEATH;
+        return ModSounds.ASTEROID_WORM_DEATH.get();
     }
 }

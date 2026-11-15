@@ -4,7 +4,6 @@ import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
-import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntityType;
@@ -20,6 +19,7 @@ import za.co.neroland.nerocreatures.entity.base.CreatureTier;
 import za.co.neroland.nerocreatures.entity.mount.MountCreature;
 import za.co.neroland.nerocreatures.entity.tame.TameableCreature;
 import za.co.neroland.nerocreatures.entity.visual.VisualPose;
+import za.co.neroland.nerocreatures.registry.ModSounds;
 
 /**
  * <b>Dune Loper</b> (Mars; mount, tameable, breedable, live birth) — a digitigrade biped that
@@ -135,7 +135,7 @@ public class DuneLoper extends MountCreature {
     protected void onAbilityServer(ServerLevel level, ServerPlayer rider, float strength) {
         this.serverLeapAge = 0;
         this.visuals().playPose(VisualPose.ABILITY, DuneLoperLeap.LEAP_POSE_TICKS);
-        this.playSound(SoundEvents.HORSE_JUMP, 0.6F, 1.2F);
+        ModSounds.DUNE_LOPER_LEAP.play(this);
         level.sendParticles(ParticleTypes.CLOUD, this.getX(), this.getY() + 0.1D, this.getZ(),
                 6, 0.5D, 0.05D, 0.5D, 0.02D);
     }
@@ -167,16 +167,16 @@ public class DuneLoper extends MountCreature {
 
     @Override
     protected SoundEvent getAmbientSound() {
-        return SoundEvents.HORSE_AMBIENT;
+        return ModSounds.DUNE_LOPER_AMBIENT.get();
     }
 
     @Override
     protected SoundEvent getHurtSound(DamageSource damageSource) {
-        return SoundEvents.HORSE_HURT;
+        return ModSounds.DUNE_LOPER_HURT.get();
     }
 
     @Override
     protected SoundEvent getDeathSound() {
-        return SoundEvents.HORSE_DEATH;
+        return ModSounds.DUNE_LOPER_DEATH.get();
     }
 }

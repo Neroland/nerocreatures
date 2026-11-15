@@ -42,6 +42,7 @@ import za.co.neroland.nerocreatures.entity.base.CreatureTier;
 import za.co.neroland.nerocreatures.entity.tame.TameableCreature;
 import za.co.neroland.nerocreatures.entity.visual.VisualPose;
 import za.co.neroland.nerocreatures.world.CreatureGriefing;
+import za.co.neroland.nerocreatures.registry.ModSounds;
 
 /**
  * <b>Spore Drifter</b> (Greenxertz, ambient, tameable) — a translucent umbrella canopy with six
@@ -180,6 +181,7 @@ public class SporeDrifter extends TameableCreature
             return;
         }
         this.visuals().playPose(VisualPose.ABILITY, DrifterRules.GROWTH_POSE_TICKS);
+        ModSounds.SPORE_DRIFTER_PUFF.play(this);
         this.strand(level, crop);
         if (growth == DrifterRules.Growth.TICK) {
             BlockState state = level.getBlockState(crop);
@@ -262,17 +264,17 @@ public class SporeDrifter extends TameableCreature
     @Override
     @Nullable
     protected SoundEvent getAmbientSound() {
-        return null;
+        return ModSounds.SPORE_DRIFTER_AMBIENT.get();
     }
 
     @Override
     protected SoundEvent getHurtSound(DamageSource damageSource) {
-        return SoundEvents.SLIME_SQUISH_SMALL;
+        return ModSounds.SPORE_DRIFTER_HURT.get();
     }
 
     @Override
     protected SoundEvent getDeathSound() {
-        return SoundEvents.SLIME_DEATH_SMALL;
+        return ModSounds.SPORE_DRIFTER_DEATH.get();
     }
 
     // --- persistence ------------------------------------------------------------------

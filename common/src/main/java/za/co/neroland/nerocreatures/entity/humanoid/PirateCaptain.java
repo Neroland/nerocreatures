@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.jetbrains.annotations.Nullable;
 
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.particles.ParticleTypes;
@@ -38,6 +39,7 @@ import za.co.neroland.nerocreatures.entity.wrecks.WrecksLookups;
 import za.co.neroland.nerocreatures.item.CaptainsLedgerItem;
 import za.co.neroland.nerocreatures.registry.ModEntities;
 import za.co.neroland.nerocreatures.spawn.CreatureCensus;
+import za.co.neroland.nerocreatures.registry.ModSounds;
 
 /**
  * <b>Pirate Captain</b> (pirates; hostile elite) — a Space Pirate 15% taller, long split coat, twin jet
@@ -180,7 +182,7 @@ public class PirateCaptain extends SpacePirate {
         level.getEntities(EntityTypeTest.forClass(SpacePirate.class), box,
                 p -> p != this && p.isAlive() && !(p instanceof PirateCaptain), crew, CaptainRules.MAX_RALLIED);
         this.visuals().playPose(VisualPose.ABILITY_2, CaptainRules.RALLY_POSE_TICKS);
-        this.playSound(SoundEvents.PILLAGER_CELEBRATE, 1.2F, 0.8F);
+        ModSounds.PIRATE_CAPTAIN_RALLY.play(this);
         Holder<MobEffect> speed = WrecksLookups.effect("speed");
         Holder<MobEffect> strength = WrecksLookups.effect("strength");
         for (SpacePirate pirate : crew) {
@@ -271,11 +273,26 @@ public class PirateCaptain extends SpacePirate {
             }
             double[] v = CaptainRules.dashVelocity(target.getX() - this.captain.getX(), target.getZ() - this.captain.getZ());
             this.captain.setDeltaMovement(v[0], v[1], v[2]);
-            this.captain.playSound(SoundEvents.FIREWORK_ROCKET_LAUNCH, 1.0F, 0.7F);
+            ModSounds.PIRATE_CAPTAIN_DASH.play(this.captain);
             level.sendParticles(ParticleTypes.FLAME, this.captain.getX(), this.captain.getY() + 1.6D, this.captain.getZ(),
                     12, 0.3D, 0.2D, 0.3D, 0.02D);
             level.sendParticles(ParticleTypes.CLOUD, this.captain.getX(), this.captain.getY() + 0.2D, this.captain.getZ(),
                     8, 0.4D, 0.1D, 0.4D, 0.02D);
         }
+    }
+
+    @Override
+    protected SoundEvent getAmbientSound() {
+        return ModSounds.PIRATE_CAPTAIN_AMBIENT.get();
+    }
+
+    @Override
+    protected SoundEvent getHurtSound(DamageSource damageSource) {
+        return ModSounds.PIRATE_CAPTAIN_HURT.get();
+    }
+
+    @Override
+    protected SoundEvent getDeathSound() {
+        return ModSounds.PIRATE_CAPTAIN_DEATH.get();
     }
 }

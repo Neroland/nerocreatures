@@ -2,12 +2,12 @@ package za.co.neroland.nerocreatures.entity.ai;
 
 import java.util.EnumSet;
 
-import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.goal.Goal;
 
 import za.co.neroland.nerocreatures.entity.hostile.MagmaWader;
 import za.co.neroland.nerocreatures.entity.visual.VisualPose;
+import za.co.neroland.nerocreatures.registry.ModSounds;
 
 /**
  * The Magma Wader's telegraphed slag lob. The goal owns only the wind-up: it stops, rears back on
@@ -61,7 +61,7 @@ public class SlagLobGoal extends Goal {
         this.thrown = false;
         this.wader.getNavigation().stop();
         this.wader.visuals().playPose(VisualPose.ABILITY, SlagLobRules.POSE_TICKS);
-        this.wader.playSound(SoundEvents.LAVA_AMBIENT, 1.0F, 0.7F);
+        ModSounds.MAGMA_WADER_SLAG.play(this.wader);
     }
 
     @Override

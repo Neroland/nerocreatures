@@ -39,6 +39,7 @@ import za.co.neroland.nerocreatures.data.OwnedCreature;
 import za.co.neroland.nerocreatures.data.OwnershipCaps;
 import za.co.neroland.nerocreatures.entity.tame.LivestockCreature;
 import za.co.neroland.nerocreatures.entity.tame.TameableCreature;
+import za.co.neroland.nerocreatures.registry.ModSounds;
 
 /**
  * The Incubator's one egg, its progress and its incubation id (rules: {@link IncubatorRules}).
@@ -235,7 +236,7 @@ public class IncubatorBlockEntity extends HabitatBlockEntity implements HabitatD
             }
         }
         level.addFreshEntity(entity);
-        level.playSound(null, pos, SoundEvents.SNIFFER_EGG_HATCH, SoundSource.BLOCKS, 1.0F, 1.0F);
+        ModSounds.INCUBATOR_HATCH.play(level, pos, SoundSource.BLOCKS);
         HatchListener listener = hatchListener;
         if (listener != null && this.incubation != null) {
             try {

@@ -47,6 +47,7 @@ import za.co.neroland.nerocreatures.entity.base.NeroCreatureEntity;
 import za.co.neroland.nerocreatures.entity.visual.VisualPose;
 import za.co.neroland.nerocreatures.registry.ModItems;
 import za.co.neroland.nerocreatures.world.CreatureGriefing;
+import za.co.neroland.nerocreatures.registry.ModSounds;
 
 /**
  * <b>Space Pirate</b> — the humanoid raider of the shipping lanes.
@@ -265,7 +266,7 @@ public class SpacePirate extends NeroCreatureEntity implements Enemy, RangedAtta
         double deltaZ = target.getZ() - this.getZ();
         double horizontal = Math.sqrt(deltaX * deltaX + deltaZ * deltaZ);
         bolt.shoot(deltaX, deltaY + horizontal * BOLT_ARC, deltaZ, BOLT_VELOCITY, BOLT_INACCURACY);
-        this.playSound(SoundEvents.CROSSBOW_SHOOT, 1.0F, 1.0F / (this.random.nextFloat() * 0.4F + 0.8F));
+        ModSounds.SPACE_PIRATE_VOLLEY.play(this);
         this.level().addFreshEntity(bolt);
     }
 
@@ -307,17 +308,17 @@ public class SpacePirate extends NeroCreatureEntity implements Enemy, RangedAtta
 
     @Override
     protected SoundEvent getAmbientSound() {
-        return SoundEvents.PILLAGER_AMBIENT;
+        return ModSounds.SPACE_PIRATE_AMBIENT.get();
     }
 
     @Override
     protected SoundEvent getHurtSound(DamageSource damageSource) {
-        return SoundEvents.PILLAGER_HURT;
+        return ModSounds.SPACE_PIRATE_HURT.get();
     }
 
     @Override
     protected SoundEvent getDeathSound() {
-        return SoundEvents.PILLAGER_DEATH;
+        return ModSounds.SPACE_PIRATE_DEATH.get();
     }
 
     /**

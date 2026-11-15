@@ -54,6 +54,7 @@ import za.co.neroland.nerocreatures.entity.visual.VisualPose;
 import za.co.neroland.nerocreatures.trait.TraitEffects;
 import za.co.neroland.nerocreatures.trait.TraitPool;
 import za.co.neroland.nerocreatures.world.CreatureGriefing;
+import za.co.neroland.nerocreatures.registry.ModSounds;
 
 /**
  * <b>Rime Yak</b> (Glacira, livestock): a haystack of frost-cream wool under wide sweeping horns.
@@ -307,6 +308,7 @@ public class RimeYak extends LivestockCreature implements HerdMember {
         this.markHusbanded();
         level.playSound(null, this.blockPosition(), SoundEvents.SHEEP_SHEAR, SoundSource.PLAYERS, 1.0F, 0.8F);
         this.visuals().playPose(VisualPose.ABILITY, RimeYakRules.SHIVER_TICKS);
+        ModSounds.RIME_YAK_SHIVER.play(this);
         this.syncVisuals();
         return InteractionResult.SUCCESS_SERVER;
     }
@@ -324,6 +326,7 @@ public class RimeYak extends LivestockCreature implements HerdMember {
         this.markHusbanded();
         level.playSound(null, this.blockPosition(), SoundEvents.COW_MILK, SoundSource.PLAYERS, 1.0F, 0.9F);
         this.visuals().playPose(VisualPose.ABILITY, RimeYakRules.SHIVER_TICKS);
+        ModSounds.RIME_YAK_SHIVER.play(this);
         return InteractionResult.SUCCESS_SERVER;
     }
 
@@ -349,17 +352,17 @@ public class RimeYak extends LivestockCreature implements HerdMember {
 
     @Override
     protected SoundEvent getAmbientSound() {
-        return SoundEvents.GOAT_AMBIENT;
+        return ModSounds.RIME_YAK_AMBIENT.get();
     }
 
     @Override
     protected SoundEvent getHurtSound(DamageSource damageSource) {
-        return SoundEvents.GOAT_HURT;
+        return ModSounds.RIME_YAK_HURT.get();
     }
 
     @Override
     protected SoundEvent getDeathSound() {
-        return SoundEvents.GOAT_DEATH;
+        return ModSounds.RIME_YAK_DEATH.get();
     }
 
     @Override

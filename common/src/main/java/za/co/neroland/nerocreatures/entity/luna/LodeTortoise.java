@@ -48,6 +48,7 @@ import za.co.neroland.nerocreatures.entity.tame.LivestockCreature;
 import za.co.neroland.nerocreatures.entity.visual.VisualPose;
 import za.co.neroland.nerocreatures.trait.TraitEffects;
 import za.co.neroland.nerocreatures.trait.TraitPool;
+import za.co.neroland.nerocreatures.registry.ModSounds;
 
 /**
  * <b>Lode Tortoise</b> (Luna, livestock) — grows ore nodules on its shell.
@@ -163,6 +164,7 @@ public class LodeTortoise extends LivestockCreature implements HerdMember {
         if (result.growing()) {
             this.nodules.advance(NoduleRules.growthTicks(NoduleRules.GRAZE_INTERVAL, this.family));
             this.visuals().playPose(VisualPose.ABILITY, GRAZE_POSE_TICKS);
+            ModSounds.LODE_TORTOISE_GRAZE.play(this);
         }
         this.syncVisuals();
     }
@@ -310,17 +312,17 @@ public class LodeTortoise extends LivestockCreature implements HerdMember {
 
     @Override
     protected SoundEvent getAmbientSound() {
-        return SoundEvents.TURTLE_AMBIENT_LAND;
+        return ModSounds.LODE_TORTOISE_AMBIENT.get();
     }
 
     @Override
     protected SoundEvent getHurtSound(DamageSource damageSource) {
-        return SoundEvents.TURTLE_HURT;
+        return ModSounds.LODE_TORTOISE_HURT.get();
     }
 
     @Override
     protected SoundEvent getDeathSound() {
-        return SoundEvents.TURTLE_DEATH;
+        return ModSounds.LODE_TORTOISE_DEATH.get();
     }
 
     // --- persistence ----------------------------------------------------------------------

@@ -16,12 +16,14 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
+import org.jetbrains.annotations.Nullable;
 
 import za.co.neroland.nerocreatures.boss.BossController;
 import za.co.neroland.nerocreatures.boss.BossGoals;
 import za.co.neroland.nerocreatures.boss.BossSpawns;
 import za.co.neroland.nerocreatures.entity.base.CreatureTier;
 import za.co.neroland.nerocreatures.entity.base.NeroCreatureEntity;
+import za.co.neroland.nerocreatures.sound.CreatureSound;
 import za.co.neroland.nerocreatures.world.CreatureOwners;
 
 /**
@@ -233,5 +235,11 @@ public abstract class NeroBossEntity extends NeroCreatureEntity implements Enemy
     /** The arena centre this boss belongs to, or {@code null} before its fight starts. */
     public BlockPos arenaAnchor() {
         return this.controller.anchor();
+    }
+
+    /** The stinger played when an altar (or another mod) summons this boss; {@code null} for none. */
+    @Nullable
+    public CreatureSound summonSound() {
+        return null;
     }
 }

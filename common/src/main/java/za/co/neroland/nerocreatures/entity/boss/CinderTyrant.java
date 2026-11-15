@@ -9,7 +9,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
-import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.BossEvent;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -48,6 +47,8 @@ import za.co.neroland.nerocreatures.entity.base.NeroCreatureEntity;
 import za.co.neroland.nerocreatures.entity.hostile.PlasmaSlime;
 import za.co.neroland.nerocreatures.entity.visual.VisualPose;
 import za.co.neroland.nerocreatures.registry.ModEntities;
+import za.co.neroland.nerocreatures.registry.ModSounds;
+import za.co.neroland.nerocreatures.sound.CreatureSound;
 import za.co.neroland.nerolandcore.event.ThresholdEvents;
 
 /**
@@ -269,6 +270,7 @@ public class CinderTyrant extends NeroBossEntity {
 
         TelegraphedSlam(CinderTyrant tyrant, double radius, float damage, int cooldownTicks, int telegraphTicks) {
             super(tyrant, radius, damage, cooldownTicks, telegraphTicks);
+            this.withSound(ModSounds.CINDER_TYRANT_SLAM);
             this.tyrant = tyrant;
             this.telegraph = Math.max(5, telegraphTicks);
         }
@@ -316,7 +318,7 @@ public class CinderTyrant extends NeroBossEntity {
                 this.getZ(), 40, 1.2D, 1.2D, 1.2D, 0.1D);
         level.sendParticles(ParticleTypes.FLAME, this.getX(), this.getY() + this.getBbHeight() * 0.5D,
                 this.getZ(), 60, 1.4D, 1.4D, 1.4D, 0.05D);
-        this.playSound(SoundEvents.RAVAGER_ROAR, 2.0F, 0.6F);
+        ModSounds.CINDER_TYRANT_PHASE.play(this);
     }
 
     private void scaleBase(Holder<Attribute> attribute, double factor) {
@@ -345,16 +347,21 @@ public class CinderTyrant extends NeroBossEntity {
 
     @Override
     protected SoundEvent getAmbientSound() {
-        return SoundEvents.BLAZE_AMBIENT;
+        return ModSounds.CINDER_TYRANT_AMBIENT.get();
     }
 
     @Override
     protected SoundEvent getHurtSound(DamageSource damageSource) {
-        return SoundEvents.RAVAGER_HURT;
+        return ModSounds.CINDER_TYRANT_HURT.get();
     }
 
     @Override
     protected SoundEvent getDeathSound() {
-        return SoundEvents.RAVAGER_DEATH;
+        return ModSounds.CINDER_TYRANT_DEATH.get();
+    }
+
+    @Override
+    public CreatureSound summonSound() {
+        return ModSounds.CINDER_TYRANT_SUMMON;
     }
 }

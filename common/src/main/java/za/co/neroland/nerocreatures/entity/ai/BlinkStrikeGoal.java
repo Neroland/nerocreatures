@@ -69,6 +69,15 @@ public class BlinkStrikeGoal extends Goal {
      * @param maxDistance    do not blink when further away than this (blocks)
      * @param cooldownTicks  minimum ticks between blinks
      */
+    @org.jetbrains.annotations.Nullable
+    private za.co.neroland.nerocreatures.sound.CreatureSound sound;
+
+    /** The ability's own sound, played at the strike (optional; none by default). */
+    public BlinkStrikeGoal withSound(za.co.neroland.nerocreatures.sound.CreatureSound abilitySound) {
+        this.sound = abilitySound;
+        return this;
+    }
+
     public BlinkStrikeGoal(PathfinderMob mob, double minDistance, double maxDistance, int cooldownTicks) {
         this.mob = mob;
         this.minDistanceSqr = minDistance * minDistance;
@@ -114,7 +123,9 @@ public class BlinkStrikeGoal extends Goal {
         if (this.mob instanceof CreatureVisualsHolder holder) {
             holder.visuals().playPose(VisualPose.ABILITY, CLIP_TICKS);
         }
-        this.mob.playSound(SoundEvents.ENDERMAN_TELEPORT, 0.5F, 0.5F);
+        if (this.sound == null) {
+            this.mob.playSound(SoundEvents.ENDERMAN_TELEPORT, 0.5F, 0.5F);
+        }
     }
 
     @Override
@@ -178,6 +189,10 @@ public class BlinkStrikeGoal extends Goal {
         // The afterimage: slow reverse-portal motes in the crawler's outline at the origin.
         level.sendParticles(ParticleTypes.REVERSE_PORTAL, fromX, fromY + 0.4D, fromZ, 24,
                 0.35D, 0.25D, 0.35D, 0.0D);
-        this.mob.playSound(SoundEvents.ENDERMAN_TELEPORT, 0.8F, 1.4F);
+        if (this.sound != null) {
+            this.sound.play(this.mob);
+        } else {
+            this.mob.playSound(SoundEvents.ENDERMAN_TELEPORT, 0.8F, 1.4F);
+        }
     }
 }

@@ -63,6 +63,15 @@ public class EmergeAttackGoal<T extends PathfinderMob & Burrower> extends Goal {
      * @param strikeRange    distance (blocks) the target must be within for the strike to land
      * @param telegraphTicks how long the "it is about to come up" warning lasts
      */
+    @org.jetbrains.annotations.Nullable
+    private za.co.neroland.nerocreatures.sound.CreatureSound sound;
+
+    /** The ability's own sound, played at the strike (optional; none by default). */
+    public EmergeAttackGoal<T> withSound(za.co.neroland.nerocreatures.sound.CreatureSound abilitySound) {
+        this.sound = abilitySound;
+        return this;
+    }
+
     public EmergeAttackGoal(T mob, double strikeRange, int telegraphTicks) {
         this(mob, strikeRange, telegraphTicks, telegraphTicks, 0);
     }
@@ -174,6 +183,10 @@ public class EmergeAttackGoal<T extends PathfinderMob & Burrower> extends Goal {
                     this.mob.getY() + 0.1D, this.mob.getZ() + Math.sin(angle) * this.strikeRange,
                     1, 0.0D, 0.0D, 0.0D, 0.0D);
         }
-        this.mob.playSound(SoundEvents.WARDEN_EMERGE, 1.0F, 1.0F);
+        if (this.sound != null) {
+            this.sound.play(this.mob);
+        } else {
+            this.mob.playSound(SoundEvents.WARDEN_EMERGE, 1.0F, 1.0F);
+        }
     }
 }

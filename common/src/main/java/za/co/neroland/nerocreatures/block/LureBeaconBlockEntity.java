@@ -15,6 +15,8 @@ import net.minecraft.world.level.block.state.BlockState;
 
 import za.co.neroland.nerocreatures.breeding.SpeciesProfile;
 import za.co.neroland.nerocreatures.breeding.SpeciesProfiles;
+import za.co.neroland.nerocreatures.registry.ModSounds;
+import za.co.neroland.nerocreatures.sound.CreatureSound;
 
 /**
  * The Lure Beacon. Bait is any species' breeding food ({@code species.json} food tag, so packs retag it):
@@ -69,6 +71,17 @@ public class LureBeaconBlockEntity extends FieldBlockEntity {
     @Override
     protected double multiplier() {
         return FieldRules.clampMultiplier(weightMultiplier.getAsDouble());
+    }
+
+    /** The bait pulse, every four seconds while burning. */
+    @Override
+    protected CreatureSound burningSound() {
+        return ModSounds.LURE_BEACON_PULSE;
+    }
+
+    @Override
+    protected int soundPulses() {
+        return 4;
     }
 
     @Override

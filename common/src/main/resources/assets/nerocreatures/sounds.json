@@ -1,0 +1,2062 @@
+{
+  "lumen_moth.ambient": {
+    "subtitle": "subtitles.nerocreatures.lumen_moth.ambient",
+    "sounds": [
+      {
+        "name": "nerocreatures:entity/lumen_moth_ambient_1",
+        "volume": 0.56,
+        "attenuation_distance": 16
+      },
+      {
+        "name": "nerocreatures:entity/lumen_moth_ambient_2",
+        "volume": 0.56,
+        "attenuation_distance": 16
+      }
+    ]
+  },
+  "lumen_moth.hurt": {
+    "subtitle": "subtitles.nerocreatures.lumen_moth.hurt",
+    "sounds": [
+      {
+        "name": "nerocreatures:entity/lumen_moth_hurt",
+        "volume": 0.7,
+        "attenuation_distance": 16
+      }
+    ]
+  },
+  "lumen_moth.death": {
+    "subtitle": "subtitles.nerocreatures.lumen_moth.death",
+    "sounds": [
+      {
+        "name": "nerocreatures:entity/lumen_moth_death",
+        "volume": 0.7,
+        "attenuation_distance": 16
+      }
+    ]
+  },
+  "lumen_moth.pulse": {
+    "subtitle": "subtitles.nerocreatures.lumen_moth.pulse",
+    "sounds": [
+      {
+        "name": "nerocreatures:entity/lumen_moth_pulse",
+        "volume": 0.7,
+        "attenuation_distance": 16
+      }
+    ]
+  },
+  "echo_shrike.ambient": {
+    "subtitle": "subtitles.nerocreatures.echo_shrike.ambient",
+    "sounds": [
+      {
+        "name": "nerocreatures:entity/echo_shrike_ambient_1",
+        "volume": 0.56,
+        "attenuation_distance": 16
+      },
+      {
+        "name": "nerocreatures:entity/echo_shrike_ambient_2",
+        "volume": 0.56,
+        "attenuation_distance": 16
+      }
+    ]
+  },
+  "echo_shrike.hurt": {
+    "subtitle": "subtitles.nerocreatures.echo_shrike.hurt",
+    "sounds": [
+      {
+        "name": "nerocreatures:entity/echo_shrike_hurt",
+        "volume": 0.7,
+        "attenuation_distance": 16
+      }
+    ]
+  },
+  "echo_shrike.death": {
+    "subtitle": "subtitles.nerocreatures.echo_shrike.death",
+    "sounds": [
+      {
+        "name": "nerocreatures:entity/echo_shrike_death",
+        "volume": 0.7,
+        "attenuation_distance": 16
+      }
+    ]
+  },
+  "echo_shrike.screech": {
+    "subtitle": "subtitles.nerocreatures.echo_shrike.screech",
+    "sounds": [
+      {
+        "name": "nerocreatures:entity/echo_shrike_screech",
+        "volume": 1.0,
+        "attenuation_distance": 24
+      }
+    ]
+  },
+  "echo_shrike.listen": {
+    "subtitle": "subtitles.nerocreatures.echo_shrike.listen",
+    "sounds": [
+      {
+        "name": "nerocreatures:entity/echo_shrike_listen",
+        "volume": 0.7,
+        "attenuation_distance": 16
+      }
+    ]
+  },
+  "lode_tortoise.ambient": {
+    "subtitle": "subtitles.nerocreatures.lode_tortoise.ambient",
+    "sounds": [
+      {
+        "name": "nerocreatures:entity/lode_tortoise_ambient_1",
+        "volume": 0.72,
+        "attenuation_distance": 16
+      },
+      {
+        "name": "nerocreatures:entity/lode_tortoise_ambient_2",
+        "volume": 0.72,
+        "attenuation_distance": 16
+      }
+    ]
+  },
+  "lode_tortoise.hurt": {
+    "subtitle": "subtitles.nerocreatures.lode_tortoise.hurt",
+    "sounds": [
+      {
+        "name": "nerocreatures:entity/lode_tortoise_hurt",
+        "volume": 0.9,
+        "attenuation_distance": 16
+      }
+    ]
+  },
+  "lode_tortoise.death": {
+    "subtitle": "subtitles.nerocreatures.lode_tortoise.death",
+    "sounds": [
+      {
+        "name": "nerocreatures:entity/lode_tortoise_death",
+        "volume": 0.9,
+        "attenuation_distance": 16
+      }
+    ]
+  },
+  "lode_tortoise.graze": {
+    "subtitle": "subtitles.nerocreatures.lode_tortoise.graze",
+    "sounds": [
+      {
+        "name": "nerocreatures:entity/lode_tortoise_graze",
+        "volume": 0.9,
+        "attenuation_distance": 16
+      }
+    ]
+  },
+  "lunar_stalker.ambient": {
+    "subtitle": "subtitles.nerocreatures.lunar_stalker.ambient",
+    "sounds": [
+      {
+        "name": "nerocreatures:entity/lunar_stalker_ambient_1",
+        "volume": 0.72,
+        "attenuation_distance": 16
+      },
+      {
+        "name": "nerocreatures:entity/lunar_stalker_ambient_2",
+        "volume": 0.72,
+        "attenuation_distance": 16
+      }
+    ]
+  },
+  "lunar_stalker.hurt": {
+    "subtitle": "subtitles.nerocreatures.lunar_stalker.hurt",
+    "sounds": [
+      {
+        "name": "nerocreatures:entity/lunar_stalker_hurt",
+        "volume": 0.9,
+        "attenuation_distance": 16
+      }
+    ]
+  },
+  "lunar_stalker.death": {
+    "subtitle": "subtitles.nerocreatures.lunar_stalker.death",
+    "sounds": [
+      {
+        "name": "nerocreatures:entity/lunar_stalker_death",
+        "volume": 0.9,
+        "attenuation_distance": 16
+      }
+    ]
+  },
+  "lunar_stalker.howl": {
+    "subtitle": "subtitles.nerocreatures.lunar_stalker.howl",
+    "sounds": [
+      {
+        "name": "nerocreatures:entity/lunar_stalker_howl",
+        "volume": 1.0,
+        "attenuation_distance": 32
+      }
+    ]
+  },
+  "dune_loper.ambient": {
+    "subtitle": "subtitles.nerocreatures.dune_loper.ambient",
+    "sounds": [
+      {
+        "name": "nerocreatures:entity/dune_loper_ambient_1",
+        "volume": 0.8,
+        "attenuation_distance": 24
+      },
+      {
+        "name": "nerocreatures:entity/dune_loper_ambient_2",
+        "volume": 0.8,
+        "attenuation_distance": 24
+      }
+    ]
+  },
+  "dune_loper.hurt": {
+    "subtitle": "subtitles.nerocreatures.dune_loper.hurt",
+    "sounds": [
+      {
+        "name": "nerocreatures:entity/dune_loper_hurt",
+        "volume": 1.0,
+        "attenuation_distance": 24
+      }
+    ]
+  },
+  "dune_loper.death": {
+    "subtitle": "subtitles.nerocreatures.dune_loper.death",
+    "sounds": [
+      {
+        "name": "nerocreatures:entity/dune_loper_death",
+        "volume": 1.0,
+        "attenuation_distance": 24
+      }
+    ]
+  },
+  "dune_loper.leap": {
+    "subtitle": "subtitles.nerocreatures.dune_loper.leap",
+    "sounds": [
+      {
+        "name": "nerocreatures:entity/dune_loper_leap",
+        "volume": 1.0,
+        "attenuation_distance": 24
+      }
+    ]
+  },
+  "strata_hound.ambient": {
+    "subtitle": "subtitles.nerocreatures.strata_hound.ambient",
+    "sounds": [
+      {
+        "name": "nerocreatures:entity/strata_hound_ambient_1",
+        "volume": 0.72,
+        "attenuation_distance": 16
+      },
+      {
+        "name": "nerocreatures:entity/strata_hound_ambient_2",
+        "volume": 0.72,
+        "attenuation_distance": 16
+      }
+    ]
+  },
+  "strata_hound.hurt": {
+    "subtitle": "subtitles.nerocreatures.strata_hound.hurt",
+    "sounds": [
+      {
+        "name": "nerocreatures:entity/strata_hound_hurt",
+        "volume": 0.9,
+        "attenuation_distance": 16
+      }
+    ]
+  },
+  "strata_hound.death": {
+    "subtitle": "subtitles.nerocreatures.strata_hound.death",
+    "sounds": [
+      {
+        "name": "nerocreatures:entity/strata_hound_death",
+        "volume": 0.9,
+        "attenuation_distance": 16
+      }
+    ]
+  },
+  "strata_hound.sniff": {
+    "subtitle": "subtitles.nerocreatures.strata_hound.sniff",
+    "sounds": [
+      {
+        "name": "nerocreatures:entity/strata_hound_sniff",
+        "volume": 0.7,
+        "attenuation_distance": 16
+      }
+    ]
+  },
+  "strata_hound.point": {
+    "subtitle": "subtitles.nerocreatures.strata_hound.point",
+    "sounds": [
+      {
+        "name": "nerocreatures:entity/strata_hound_point",
+        "volume": 1.0,
+        "attenuation_distance": 16
+      }
+    ]
+  },
+  "dust_devil.ambient": {
+    "subtitle": "subtitles.nerocreatures.dust_devil.ambient",
+    "sounds": [
+      {
+        "name": "nerocreatures:entity/dust_devil_ambient_1",
+        "volume": 0.72,
+        "attenuation_distance": 16
+      },
+      {
+        "name": "nerocreatures:entity/dust_devil_ambient_2",
+        "volume": 0.72,
+        "attenuation_distance": 16
+      }
+    ]
+  },
+  "dust_devil.hurt": {
+    "subtitle": "subtitles.nerocreatures.dust_devil.hurt",
+    "sounds": [
+      {
+        "name": "nerocreatures:entity/dust_devil_hurt",
+        "volume": 0.9,
+        "attenuation_distance": 16
+      }
+    ]
+  },
+  "dust_devil.death": {
+    "subtitle": "subtitles.nerocreatures.dust_devil.death",
+    "sounds": [
+      {
+        "name": "nerocreatures:entity/dust_devil_death",
+        "volume": 0.9,
+        "attenuation_distance": 16
+      }
+    ]
+  },
+  "dust_devil.whirl": {
+    "subtitle": "subtitles.nerocreatures.dust_devil.whirl",
+    "sounds": [
+      {
+        "name": "nerocreatures:entity/dust_devil_whirl",
+        "volume": 1.0,
+        "attenuation_distance": 24
+      }
+    ]
+  },
+  "dust_devil.throw": {
+    "subtitle": "subtitles.nerocreatures.dust_devil.throw",
+    "sounds": [
+      {
+        "name": "nerocreatures:entity/dust_devil_throw",
+        "volume": 1.0,
+        "attenuation_distance": 24
+      }
+    ]
+  },
+  "slag_beetle.ambient": {
+    "subtitle": "subtitles.nerocreatures.slag_beetle.ambient",
+    "sounds": [
+      {
+        "name": "nerocreatures:entity/slag_beetle_ambient_1",
+        "volume": 0.56,
+        "attenuation_distance": 16
+      },
+      {
+        "name": "nerocreatures:entity/slag_beetle_ambient_2",
+        "volume": 0.56,
+        "attenuation_distance": 16
+      }
+    ]
+  },
+  "slag_beetle.hurt": {
+    "subtitle": "subtitles.nerocreatures.slag_beetle.hurt",
+    "sounds": [
+      {
+        "name": "nerocreatures:entity/slag_beetle_hurt",
+        "volume": 0.7,
+        "attenuation_distance": 16
+      }
+    ]
+  },
+  "slag_beetle.death": {
+    "subtitle": "subtitles.nerocreatures.slag_beetle.death",
+    "sounds": [
+      {
+        "name": "nerocreatures:entity/slag_beetle_death",
+        "volume": 0.7,
+        "attenuation_distance": 16
+      }
+    ]
+  },
+  "slag_beetle.eat": {
+    "subtitle": "subtitles.nerocreatures.slag_beetle.eat",
+    "sounds": [
+      {
+        "name": "nerocreatures:entity/slag_beetle_eat",
+        "volume": 0.7,
+        "attenuation_distance": 16
+      }
+    ]
+  },
+  "slag_beetle.digest": {
+    "subtitle": "subtitles.nerocreatures.slag_beetle.digest",
+    "sounds": [
+      {
+        "name": "nerocreatures:entity/slag_beetle_digest",
+        "volume": 0.7,
+        "attenuation_distance": 16
+      }
+    ]
+  },
+  "slag_beetle.cough": {
+    "subtitle": "subtitles.nerocreatures.slag_beetle.cough",
+    "sounds": [
+      {
+        "name": "nerocreatures:entity/slag_beetle_cough",
+        "volume": 0.7,
+        "attenuation_distance": 16
+      }
+    ]
+  },
+  "magma_wader.ambient": {
+    "subtitle": "subtitles.nerocreatures.magma_wader.ambient",
+    "sounds": [
+      {
+        "name": "nerocreatures:entity/magma_wader_ambient_1",
+        "volume": 0.8,
+        "attenuation_distance": 24
+      },
+      {
+        "name": "nerocreatures:entity/magma_wader_ambient_2",
+        "volume": 0.8,
+        "attenuation_distance": 24
+      }
+    ]
+  },
+  "magma_wader.hurt": {
+    "subtitle": "subtitles.nerocreatures.magma_wader.hurt",
+    "sounds": [
+      {
+        "name": "nerocreatures:entity/magma_wader_hurt",
+        "volume": 1.0,
+        "attenuation_distance": 24
+      }
+    ]
+  },
+  "magma_wader.death": {
+    "subtitle": "subtitles.nerocreatures.magma_wader.death",
+    "sounds": [
+      {
+        "name": "nerocreatures:entity/magma_wader_death",
+        "volume": 1.0,
+        "attenuation_distance": 24
+      }
+    ]
+  },
+  "magma_wader.slag": {
+    "subtitle": "subtitles.nerocreatures.magma_wader.slag",
+    "sounds": [
+      {
+        "name": "nerocreatures:entity/magma_wader_slag",
+        "volume": 1.0,
+        "attenuation_distance": 24
+      }
+    ]
+  },
+  "magma_wader.slag_land": {
+    "subtitle": "subtitles.nerocreatures.magma_wader.slag_land",
+    "sounds": [
+      {
+        "name": "nerocreatures:entity/magma_wader_slag_land",
+        "volume": 0.9,
+        "attenuation_distance": 16
+      }
+    ]
+  },
+  "cinder_tyrant.ambient": {
+    "subtitle": "subtitles.nerocreatures.cinder_tyrant.ambient",
+    "sounds": [
+      {
+        "name": "nerocreatures:boss/cinder_tyrant_ambient_1",
+        "volume": 0.96,
+        "attenuation_distance": 32
+      },
+      {
+        "name": "nerocreatures:boss/cinder_tyrant_ambient_2",
+        "volume": 0.96,
+        "attenuation_distance": 32
+      }
+    ]
+  },
+  "cinder_tyrant.hurt": {
+    "subtitle": "subtitles.nerocreatures.cinder_tyrant.hurt",
+    "sounds": [
+      {
+        "name": "nerocreatures:boss/cinder_tyrant_hurt",
+        "volume": 1.0,
+        "attenuation_distance": 32
+      }
+    ]
+  },
+  "cinder_tyrant.death": {
+    "subtitle": "subtitles.nerocreatures.cinder_tyrant.death",
+    "sounds": [
+      {
+        "name": "nerocreatures:boss/cinder_tyrant_death",
+        "volume": 1.0,
+        "attenuation_distance": 32
+      }
+    ]
+  },
+  "cinder_tyrant.slam": {
+    "subtitle": "subtitles.nerocreatures.cinder_tyrant.slam",
+    "sounds": [
+      {
+        "name": "nerocreatures:boss/cinder_tyrant_slam",
+        "volume": 1.0,
+        "attenuation_distance": 32
+      }
+    ]
+  },
+  "cinder_tyrant.phase": {
+    "subtitle": "subtitles.nerocreatures.cinder_tyrant.phase",
+    "sounds": [
+      {
+        "name": "nerocreatures:boss/cinder_tyrant_phase",
+        "volume": 1.0,
+        "attenuation_distance": 48
+      }
+    ]
+  },
+  "cinder_tyrant.summon": {
+    "subtitle": "subtitles.nerocreatures.cinder_tyrant.summon",
+    "sounds": [
+      {
+        "name": "nerocreatures:boss/cinder_tyrant_summon",
+        "volume": 1.0,
+        "attenuation_distance": 48
+      }
+    ]
+  },
+  "rime_yak.ambient": {
+    "subtitle": "subtitles.nerocreatures.rime_yak.ambient",
+    "sounds": [
+      {
+        "name": "nerocreatures:entity/rime_yak_ambient_1",
+        "volume": 0.72,
+        "attenuation_distance": 16
+      },
+      {
+        "name": "nerocreatures:entity/rime_yak_ambient_2",
+        "volume": 0.72,
+        "attenuation_distance": 16
+      }
+    ]
+  },
+  "rime_yak.hurt": {
+    "subtitle": "subtitles.nerocreatures.rime_yak.hurt",
+    "sounds": [
+      {
+        "name": "nerocreatures:entity/rime_yak_hurt",
+        "volume": 0.9,
+        "attenuation_distance": 16
+      }
+    ]
+  },
+  "rime_yak.death": {
+    "subtitle": "subtitles.nerocreatures.rime_yak.death",
+    "sounds": [
+      {
+        "name": "nerocreatures:entity/rime_yak_death",
+        "volume": 0.9,
+        "attenuation_distance": 16
+      }
+    ]
+  },
+  "rime_yak.shiver": {
+    "subtitle": "subtitles.nerocreatures.rime_yak.shiver",
+    "sounds": [
+      {
+        "name": "nerocreatures:entity/rime_yak_shiver",
+        "volume": 0.9,
+        "attenuation_distance": 16
+      }
+    ]
+  },
+  "frost_lurker.ambient": {
+    "subtitle": "subtitles.nerocreatures.frost_lurker.ambient",
+    "sounds": [
+      {
+        "name": "nerocreatures:entity/frost_lurker_ambient_1",
+        "volume": 0.72,
+        "attenuation_distance": 16
+      },
+      {
+        "name": "nerocreatures:entity/frost_lurker_ambient_2",
+        "volume": 0.72,
+        "attenuation_distance": 16
+      }
+    ]
+  },
+  "frost_lurker.hurt": {
+    "subtitle": "subtitles.nerocreatures.frost_lurker.hurt",
+    "sounds": [
+      {
+        "name": "nerocreatures:entity/frost_lurker_hurt",
+        "volume": 0.9,
+        "attenuation_distance": 16
+      }
+    ]
+  },
+  "frost_lurker.death": {
+    "subtitle": "subtitles.nerocreatures.frost_lurker.death",
+    "sounds": [
+      {
+        "name": "nerocreatures:entity/frost_lurker_death",
+        "volume": 0.9,
+        "attenuation_distance": 16
+      }
+    ]
+  },
+  "frost_lurker.erupt": {
+    "subtitle": "subtitles.nerocreatures.frost_lurker.erupt",
+    "sounds": [
+      {
+        "name": "nerocreatures:entity/frost_lurker_erupt",
+        "volume": 1.0,
+        "attenuation_distance": 24
+      }
+    ]
+  },
+  "glacite_wisp.ambient": {
+    "subtitle": "subtitles.nerocreatures.glacite_wisp.ambient",
+    "sounds": [
+      {
+        "name": "nerocreatures:entity/glacite_wisp_ambient_1",
+        "volume": 0.56,
+        "attenuation_distance": 16
+      },
+      {
+        "name": "nerocreatures:entity/glacite_wisp_ambient_2",
+        "volume": 0.56,
+        "attenuation_distance": 16
+      }
+    ]
+  },
+  "glacite_wisp.hurt": {
+    "subtitle": "subtitles.nerocreatures.glacite_wisp.hurt",
+    "sounds": [
+      {
+        "name": "nerocreatures:entity/glacite_wisp_hurt",
+        "volume": 0.7,
+        "attenuation_distance": 16
+      }
+    ]
+  },
+  "glacite_wisp.death": {
+    "subtitle": "subtitles.nerocreatures.glacite_wisp.death",
+    "sounds": [
+      {
+        "name": "nerocreatures:entity/glacite_wisp_death",
+        "volume": 0.7,
+        "attenuation_distance": 16
+      }
+    ]
+  },
+  "glacite_wisp.cushion": {
+    "subtitle": "subtitles.nerocreatures.glacite_wisp.cushion",
+    "sounds": [
+      {
+        "name": "nerocreatures:entity/glacite_wisp_cushion",
+        "volume": 0.7,
+        "attenuation_distance": 16
+      }
+    ]
+  },
+  "rime_matriarch.ambient": {
+    "subtitle": "subtitles.nerocreatures.rime_matriarch.ambient",
+    "sounds": [
+      {
+        "name": "nerocreatures:boss/rime_matriarch_ambient_1",
+        "volume": 0.96,
+        "attenuation_distance": 32
+      },
+      {
+        "name": "nerocreatures:boss/rime_matriarch_ambient_2",
+        "volume": 0.96,
+        "attenuation_distance": 32
+      }
+    ]
+  },
+  "rime_matriarch.hurt": {
+    "subtitle": "subtitles.nerocreatures.rime_matriarch.hurt",
+    "sounds": [
+      {
+        "name": "nerocreatures:boss/rime_matriarch_hurt",
+        "volume": 1.0,
+        "attenuation_distance": 32
+      }
+    ]
+  },
+  "rime_matriarch.death": {
+    "subtitle": "subtitles.nerocreatures.rime_matriarch.death",
+    "sounds": [
+      {
+        "name": "nerocreatures:boss/rime_matriarch_death",
+        "volume": 1.0,
+        "attenuation_distance": 32
+      }
+    ]
+  },
+  "rime_matriarch.beam": {
+    "subtitle": "subtitles.nerocreatures.rime_matriarch.beam",
+    "sounds": [
+      {
+        "name": "nerocreatures:boss/rime_matriarch_beam",
+        "volume": 1.0,
+        "attenuation_distance": 32
+      }
+    ]
+  },
+  "rime_matriarch.freeze": {
+    "subtitle": "subtitles.nerocreatures.rime_matriarch.freeze",
+    "sounds": [
+      {
+        "name": "nerocreatures:boss/rime_matriarch_freeze",
+        "volume": 1.0,
+        "attenuation_distance": 32
+      }
+    ]
+  },
+  "rime_matriarch.phase": {
+    "subtitle": "subtitles.nerocreatures.rime_matriarch.phase",
+    "sounds": [
+      {
+        "name": "nerocreatures:boss/rime_matriarch_phase",
+        "volume": 1.0,
+        "attenuation_distance": 48
+      }
+    ]
+  },
+  "rime_matriarch.summon": {
+    "subtitle": "subtitles.nerocreatures.rime_matriarch.summon",
+    "sounds": [
+      {
+        "name": "nerocreatures:boss/rime_matriarch_summon",
+        "volume": 1.0,
+        "attenuation_distance": 48
+      }
+    ]
+  },
+  "spore_drifter.ambient": {
+    "subtitle": "subtitles.nerocreatures.spore_drifter.ambient",
+    "sounds": [
+      {
+        "name": "nerocreatures:entity/spore_drifter_ambient_1",
+        "volume": 0.56,
+        "attenuation_distance": 16
+      },
+      {
+        "name": "nerocreatures:entity/spore_drifter_ambient_2",
+        "volume": 0.56,
+        "attenuation_distance": 16
+      }
+    ]
+  },
+  "spore_drifter.hurt": {
+    "subtitle": "subtitles.nerocreatures.spore_drifter.hurt",
+    "sounds": [
+      {
+        "name": "nerocreatures:entity/spore_drifter_hurt",
+        "volume": 0.7,
+        "attenuation_distance": 16
+      }
+    ]
+  },
+  "spore_drifter.death": {
+    "subtitle": "subtitles.nerocreatures.spore_drifter.death",
+    "sounds": [
+      {
+        "name": "nerocreatures:entity/spore_drifter_death",
+        "volume": 0.7,
+        "attenuation_distance": 16
+      }
+    ]
+  },
+  "spore_drifter.puff": {
+    "subtitle": "subtitles.nerocreatures.spore_drifter.puff",
+    "sounds": [
+      {
+        "name": "nerocreatures:entity/spore_drifter_puff",
+        "volume": 0.6,
+        "attenuation_distance": 16
+      }
+    ]
+  },
+  "bloom_host.ambient": {
+    "subtitle": "subtitles.nerocreatures.bloom_host.ambient",
+    "sounds": [
+      {
+        "name": "nerocreatures:entity/bloom_host_ambient_1",
+        "volume": 0.72,
+        "attenuation_distance": 16
+      },
+      {
+        "name": "nerocreatures:entity/bloom_host_ambient_2",
+        "volume": 0.72,
+        "attenuation_distance": 16
+      }
+    ]
+  },
+  "bloom_host.hurt": {
+    "subtitle": "subtitles.nerocreatures.bloom_host.hurt",
+    "sounds": [
+      {
+        "name": "nerocreatures:entity/bloom_host_hurt",
+        "volume": 0.9,
+        "attenuation_distance": 16
+      }
+    ]
+  },
+  "bloom_host.death": {
+    "subtitle": "subtitles.nerocreatures.bloom_host.death",
+    "sounds": [
+      {
+        "name": "nerocreatures:entity/bloom_host_death",
+        "volume": 0.9,
+        "attenuation_distance": 16
+      }
+    ]
+  },
+  "bloom_host.raise": {
+    "subtitle": "subtitles.nerocreatures.bloom_host.raise",
+    "sounds": [
+      {
+        "name": "nerocreatures:entity/bloom_host_raise",
+        "volume": 1.0,
+        "attenuation_distance": 24
+      }
+    ]
+  },
+  "mossback.ambient": {
+    "subtitle": "subtitles.nerocreatures.mossback.ambient",
+    "sounds": [
+      {
+        "name": "nerocreatures:entity/mossback_ambient_1",
+        "volume": 0.72,
+        "attenuation_distance": 16
+      },
+      {
+        "name": "nerocreatures:entity/mossback_ambient_2",
+        "volume": 0.72,
+        "attenuation_distance": 16
+      }
+    ]
+  },
+  "mossback.hurt": {
+    "subtitle": "subtitles.nerocreatures.mossback.hurt",
+    "sounds": [
+      {
+        "name": "nerocreatures:entity/mossback_hurt",
+        "volume": 0.9,
+        "attenuation_distance": 16
+      }
+    ]
+  },
+  "mossback.death": {
+    "subtitle": "subtitles.nerocreatures.mossback.death",
+    "sounds": [
+      {
+        "name": "nerocreatures:entity/mossback_death",
+        "volume": 0.9,
+        "attenuation_distance": 16
+      }
+    ]
+  },
+  "mossback.graze": {
+    "subtitle": "subtitles.nerocreatures.mossback.graze",
+    "sounds": [
+      {
+        "name": "nerocreatures:entity/mossback_graze",
+        "volume": 0.7,
+        "attenuation_distance": 16
+      }
+    ]
+  },
+  "xertz_forager.ambient": {
+    "subtitle": "subtitles.nerocreatures.xertz_forager.ambient",
+    "sounds": [
+      {
+        "name": "nerocreatures:entity/xertz_forager_ambient_1",
+        "volume": 0.56,
+        "attenuation_distance": 16
+      },
+      {
+        "name": "nerocreatures:entity/xertz_forager_ambient_2",
+        "volume": 0.56,
+        "attenuation_distance": 16
+      }
+    ]
+  },
+  "xertz_forager.hurt": {
+    "subtitle": "subtitles.nerocreatures.xertz_forager.hurt",
+    "sounds": [
+      {
+        "name": "nerocreatures:entity/xertz_forager_hurt",
+        "volume": 0.7,
+        "attenuation_distance": 16
+      }
+    ]
+  },
+  "xertz_forager.death": {
+    "subtitle": "subtitles.nerocreatures.xertz_forager.death",
+    "sounds": [
+      {
+        "name": "nerocreatures:entity/xertz_forager_death",
+        "volume": 0.7,
+        "attenuation_distance": 16
+      }
+    ]
+  },
+  "xertz_forager.dig": {
+    "subtitle": "subtitles.nerocreatures.xertz_forager.dig",
+    "sounds": [
+      {
+        "name": "nerocreatures:entity/xertz_forager_dig",
+        "volume": 0.7,
+        "attenuation_distance": 16
+      }
+    ]
+  },
+  "drift_leviathan.ambient": {
+    "subtitle": "subtitles.nerocreatures.drift_leviathan.ambient",
+    "sounds": [
+      {
+        "name": "nerocreatures:entity/drift_leviathan_ambient_1",
+        "volume": 0.96,
+        "attenuation_distance": 32
+      },
+      {
+        "name": "nerocreatures:entity/drift_leviathan_ambient_2",
+        "volume": 0.96,
+        "attenuation_distance": 32
+      }
+    ]
+  },
+  "drift_leviathan.hurt": {
+    "subtitle": "subtitles.nerocreatures.drift_leviathan.hurt",
+    "sounds": [
+      {
+        "name": "nerocreatures:entity/drift_leviathan_hurt",
+        "volume": 1.0,
+        "attenuation_distance": 32
+      }
+    ]
+  },
+  "drift_leviathan.death": {
+    "subtitle": "subtitles.nerocreatures.drift_leviathan.death",
+    "sounds": [
+      {
+        "name": "nerocreatures:entity/drift_leviathan_death",
+        "volume": 1.0,
+        "attenuation_distance": 32
+      }
+    ]
+  },
+  "drift_leviathan.song": {
+    "subtitle": "subtitles.nerocreatures.drift_leviathan.song",
+    "sounds": [
+      {
+        "name": "nerocreatures:entity/drift_leviathan_song",
+        "volume": 1.0,
+        "attenuation_distance": 64
+      }
+    ]
+  },
+  "bloom_sovereign.ambient": {
+    "subtitle": "subtitles.nerocreatures.bloom_sovereign.ambient",
+    "sounds": [
+      {
+        "name": "nerocreatures:boss/bloom_sovereign_ambient_1",
+        "volume": 0.96,
+        "attenuation_distance": 32
+      },
+      {
+        "name": "nerocreatures:boss/bloom_sovereign_ambient_2",
+        "volume": 0.96,
+        "attenuation_distance": 32
+      }
+    ]
+  },
+  "bloom_sovereign.hurt": {
+    "subtitle": "subtitles.nerocreatures.bloom_sovereign.hurt",
+    "sounds": [
+      {
+        "name": "nerocreatures:boss/bloom_sovereign_hurt",
+        "volume": 1.0,
+        "attenuation_distance": 32
+      }
+    ]
+  },
+  "bloom_sovereign.death": {
+    "subtitle": "subtitles.nerocreatures.bloom_sovereign.death",
+    "sounds": [
+      {
+        "name": "nerocreatures:boss/bloom_sovereign_death",
+        "volume": 1.0,
+        "attenuation_distance": 32
+      }
+    ]
+  },
+  "bloom_sovereign.infect": {
+    "subtitle": "subtitles.nerocreatures.bloom_sovereign.infect",
+    "sounds": [
+      {
+        "name": "nerocreatures:boss/bloom_sovereign_infect",
+        "volume": 1.0,
+        "attenuation_distance": 32
+      }
+    ]
+  },
+  "bloom_sovereign.heal": {
+    "subtitle": "subtitles.nerocreatures.bloom_sovereign.heal",
+    "sounds": [
+      {
+        "name": "nerocreatures:boss/bloom_sovereign_heal",
+        "volume": 1.0,
+        "attenuation_distance": 32
+      }
+    ]
+  },
+  "bloom_sovereign.phase": {
+    "subtitle": "subtitles.nerocreatures.bloom_sovereign.phase",
+    "sounds": [
+      {
+        "name": "nerocreatures:boss/bloom_sovereign_phase",
+        "volume": 1.0,
+        "attenuation_distance": 48
+      }
+    ]
+  },
+  "bloom_sovereign.summon": {
+    "subtitle": "subtitles.nerocreatures.bloom_sovereign.summon",
+    "sounds": [
+      {
+        "name": "nerocreatures:boss/bloom_sovereign_summon",
+        "volume": 1.0,
+        "attenuation_distance": 48
+      }
+    ]
+  },
+  "prism_stag.ambient": {
+    "subtitle": "subtitles.nerocreatures.prism_stag.ambient",
+    "sounds": [
+      {
+        "name": "nerocreatures:entity/prism_stag_ambient_1",
+        "volume": 0.72,
+        "attenuation_distance": 16
+      },
+      {
+        "name": "nerocreatures:entity/prism_stag_ambient_2",
+        "volume": 0.72,
+        "attenuation_distance": 16
+      }
+    ]
+  },
+  "prism_stag.hurt": {
+    "subtitle": "subtitles.nerocreatures.prism_stag.hurt",
+    "sounds": [
+      {
+        "name": "nerocreatures:entity/prism_stag_hurt",
+        "volume": 0.9,
+        "attenuation_distance": 16
+      }
+    ]
+  },
+  "prism_stag.death": {
+    "subtitle": "subtitles.nerocreatures.prism_stag.death",
+    "sounds": [
+      {
+        "name": "nerocreatures:entity/prism_stag_death",
+        "volume": 0.9,
+        "attenuation_distance": 16
+      }
+    ]
+  },
+  "prism_stag.shed": {
+    "subtitle": "subtitles.nerocreatures.prism_stag.shed",
+    "sounds": [
+      {
+        "name": "nerocreatures:entity/prism_stag_shed",
+        "volume": 0.9,
+        "attenuation_distance": 16
+      }
+    ]
+  },
+  "prism_stag.aura": {
+    "subtitle": "subtitles.nerocreatures.prism_stag.aura",
+    "sounds": [
+      {
+        "name": "nerocreatures:entity/prism_stag_aura",
+        "volume": 0.8,
+        "attenuation_distance": 24
+      }
+    ]
+  },
+  "shardback.ambient": {
+    "subtitle": "subtitles.nerocreatures.shardback.ambient",
+    "sounds": [
+      {
+        "name": "nerocreatures:entity/shardback_ambient_1",
+        "volume": 0.72,
+        "attenuation_distance": 16
+      },
+      {
+        "name": "nerocreatures:entity/shardback_ambient_2",
+        "volume": 0.72,
+        "attenuation_distance": 16
+      }
+    ]
+  },
+  "shardback.hurt": {
+    "subtitle": "subtitles.nerocreatures.shardback.hurt",
+    "sounds": [
+      {
+        "name": "nerocreatures:entity/shardback_hurt",
+        "volume": 0.9,
+        "attenuation_distance": 16
+      }
+    ]
+  },
+  "shardback.death": {
+    "subtitle": "subtitles.nerocreatures.shardback.death",
+    "sounds": [
+      {
+        "name": "nerocreatures:entity/shardback_death",
+        "volume": 0.9,
+        "attenuation_distance": 16
+      }
+    ]
+  },
+  "shardback.deflect": {
+    "subtitle": "subtitles.nerocreatures.shardback.deflect",
+    "sounds": [
+      {
+        "name": "nerocreatures:entity/shardback_deflect",
+        "volume": 1.0,
+        "attenuation_distance": 24
+      }
+    ]
+  },
+  "shardback.charge": {
+    "subtitle": "subtitles.nerocreatures.shardback.charge",
+    "sounds": [
+      {
+        "name": "nerocreatures:entity/shardback_charge",
+        "volume": 1.0,
+        "attenuation_distance": 24
+      }
+    ]
+  },
+  "crystal_golem.ambient": {
+    "subtitle": "subtitles.nerocreatures.crystal_golem.ambient",
+    "sounds": [
+      {
+        "name": "nerocreatures:entity/crystal_golem_ambient_1",
+        "volume": 0.8,
+        "attenuation_distance": 24
+      },
+      {
+        "name": "nerocreatures:entity/crystal_golem_ambient_2",
+        "volume": 0.8,
+        "attenuation_distance": 24
+      }
+    ]
+  },
+  "crystal_golem.hurt": {
+    "subtitle": "subtitles.nerocreatures.crystal_golem.hurt",
+    "sounds": [
+      {
+        "name": "nerocreatures:entity/crystal_golem_hurt",
+        "volume": 1.0,
+        "attenuation_distance": 24
+      }
+    ]
+  },
+  "crystal_golem.death": {
+    "subtitle": "subtitles.nerocreatures.crystal_golem.death",
+    "sounds": [
+      {
+        "name": "nerocreatures:entity/crystal_golem_death",
+        "volume": 1.0,
+        "attenuation_distance": 24
+      }
+    ]
+  },
+  "crystal_golem.smash": {
+    "subtitle": "subtitles.nerocreatures.crystal_golem.smash",
+    "sounds": [
+      {
+        "name": "nerocreatures:entity/crystal_golem_smash",
+        "volume": 1.0,
+        "attenuation_distance": 24
+      }
+    ]
+  },
+  "facet_colossus.ambient": {
+    "subtitle": "subtitles.nerocreatures.facet_colossus.ambient",
+    "sounds": [
+      {
+        "name": "nerocreatures:boss/facet_colossus_ambient_1",
+        "volume": 0.96,
+        "attenuation_distance": 32
+      },
+      {
+        "name": "nerocreatures:boss/facet_colossus_ambient_2",
+        "volume": 0.96,
+        "attenuation_distance": 32
+      }
+    ]
+  },
+  "facet_colossus.hurt": {
+    "subtitle": "subtitles.nerocreatures.facet_colossus.hurt",
+    "sounds": [
+      {
+        "name": "nerocreatures:boss/facet_colossus_hurt",
+        "volume": 1.0,
+        "attenuation_distance": 32
+      }
+    ]
+  },
+  "facet_colossus.death": {
+    "subtitle": "subtitles.nerocreatures.facet_colossus.death",
+    "sounds": [
+      {
+        "name": "nerocreatures:boss/facet_colossus_death",
+        "volume": 1.0,
+        "attenuation_distance": 32
+      }
+    ]
+  },
+  "facet_colossus.beam": {
+    "subtitle": "subtitles.nerocreatures.facet_colossus.beam",
+    "sounds": [
+      {
+        "name": "nerocreatures:boss/facet_colossus_beam",
+        "volume": 1.0,
+        "attenuation_distance": 32
+      }
+    ]
+  },
+  "facet_colossus.rotate": {
+    "subtitle": "subtitles.nerocreatures.facet_colossus.rotate",
+    "sounds": [
+      {
+        "name": "nerocreatures:boss/facet_colossus_rotate",
+        "volume": 1.0,
+        "attenuation_distance": 32
+      }
+    ]
+  },
+  "facet_colossus.phase": {
+    "subtitle": "subtitles.nerocreatures.facet_colossus.phase",
+    "sounds": [
+      {
+        "name": "nerocreatures:boss/facet_colossus_phase",
+        "volume": 1.0,
+        "attenuation_distance": 48
+      }
+    ]
+  },
+  "facet_colossus.summon": {
+    "subtitle": "subtitles.nerocreatures.facet_colossus.summon",
+    "sounds": [
+      {
+        "name": "nerocreatures:boss/facet_colossus_summon",
+        "volume": 1.0,
+        "attenuation_distance": 48
+      }
+    ]
+  },
+  "magnet_crab.ambient": {
+    "subtitle": "subtitles.nerocreatures.magnet_crab.ambient",
+    "sounds": [
+      {
+        "name": "nerocreatures:entity/magnet_crab_ambient_1",
+        "volume": 0.56,
+        "attenuation_distance": 16
+      },
+      {
+        "name": "nerocreatures:entity/magnet_crab_ambient_2",
+        "volume": 0.56,
+        "attenuation_distance": 16
+      }
+    ]
+  },
+  "magnet_crab.hurt": {
+    "subtitle": "subtitles.nerocreatures.magnet_crab.hurt",
+    "sounds": [
+      {
+        "name": "nerocreatures:entity/magnet_crab_hurt",
+        "volume": 0.7,
+        "attenuation_distance": 16
+      }
+    ]
+  },
+  "magnet_crab.death": {
+    "subtitle": "subtitles.nerocreatures.magnet_crab.death",
+    "sounds": [
+      {
+        "name": "nerocreatures:entity/magnet_crab_death",
+        "volume": 0.7,
+        "attenuation_distance": 16
+      }
+    ]
+  },
+  "magnet_crab.snap": {
+    "subtitle": "subtitles.nerocreatures.magnet_crab.snap",
+    "sounds": [
+      {
+        "name": "nerocreatures:entity/magnet_crab_snap",
+        "volume": 0.7,
+        "attenuation_distance": 16
+      }
+    ]
+  },
+  "magnet_crab.magnet": {
+    "subtitle": "subtitles.nerocreatures.magnet_crab.magnet",
+    "sounds": [
+      {
+        "name": "nerocreatures:entity/magnet_crab_magnet",
+        "volume": 0.5,
+        "attenuation_distance": 16
+      }
+    ]
+  },
+  "gravity_leech.ambient": {
+    "subtitle": "subtitles.nerocreatures.gravity_leech.ambient",
+    "sounds": [
+      {
+        "name": "nerocreatures:entity/gravity_leech_ambient_1",
+        "volume": 0.56,
+        "attenuation_distance": 16
+      },
+      {
+        "name": "nerocreatures:entity/gravity_leech_ambient_2",
+        "volume": 0.56,
+        "attenuation_distance": 16
+      }
+    ]
+  },
+  "gravity_leech.hurt": {
+    "subtitle": "subtitles.nerocreatures.gravity_leech.hurt",
+    "sounds": [
+      {
+        "name": "nerocreatures:entity/gravity_leech_hurt",
+        "volume": 0.7,
+        "attenuation_distance": 16
+      }
+    ]
+  },
+  "gravity_leech.death": {
+    "subtitle": "subtitles.nerocreatures.gravity_leech.death",
+    "sounds": [
+      {
+        "name": "nerocreatures:entity/gravity_leech_death",
+        "volume": 0.7,
+        "attenuation_distance": 16
+      }
+    ]
+  },
+  "gravity_leech.latch": {
+    "subtitle": "subtitles.nerocreatures.gravity_leech.latch",
+    "sounds": [
+      {
+        "name": "nerocreatures:entity/gravity_leech_latch",
+        "volume": 1.0,
+        "attenuation_distance": 16
+      }
+    ]
+  },
+  "gravity_leech.detach": {
+    "subtitle": "subtitles.nerocreatures.gravity_leech.detach",
+    "sounds": [
+      {
+        "name": "nerocreatures:entity/gravity_leech_detach",
+        "volume": 1.0,
+        "attenuation_distance": 16
+      }
+    ]
+  },
+  "asteroid_worm.ambient": {
+    "subtitle": "subtitles.nerocreatures.asteroid_worm.ambient",
+    "sounds": [
+      {
+        "name": "nerocreatures:entity/asteroid_worm_ambient_1",
+        "volume": 0.8,
+        "attenuation_distance": 24
+      },
+      {
+        "name": "nerocreatures:entity/asteroid_worm_ambient_2",
+        "volume": 0.8,
+        "attenuation_distance": 24
+      }
+    ]
+  },
+  "asteroid_worm.hurt": {
+    "subtitle": "subtitles.nerocreatures.asteroid_worm.hurt",
+    "sounds": [
+      {
+        "name": "nerocreatures:entity/asteroid_worm_hurt",
+        "volume": 1.0,
+        "attenuation_distance": 24
+      }
+    ]
+  },
+  "asteroid_worm.death": {
+    "subtitle": "subtitles.nerocreatures.asteroid_worm.death",
+    "sounds": [
+      {
+        "name": "nerocreatures:entity/asteroid_worm_death",
+        "volume": 1.0,
+        "attenuation_distance": 24
+      }
+    ]
+  },
+  "asteroid_worm.emerge": {
+    "subtitle": "subtitles.nerocreatures.asteroid_worm.emerge",
+    "sounds": [
+      {
+        "name": "nerocreatures:entity/asteroid_worm_emerge",
+        "volume": 1.0,
+        "attenuation_distance": 32
+      }
+    ]
+  },
+  "cache_mimic.ambient": {
+    "subtitle": "subtitles.nerocreatures.cache_mimic.ambient",
+    "sounds": [
+      {
+        "name": "nerocreatures:entity/cache_mimic_ambient_1",
+        "volume": 0.56,
+        "attenuation_distance": 16
+      },
+      {
+        "name": "nerocreatures:entity/cache_mimic_ambient_2",
+        "volume": 0.56,
+        "attenuation_distance": 16
+      }
+    ]
+  },
+  "cache_mimic.hurt": {
+    "subtitle": "subtitles.nerocreatures.cache_mimic.hurt",
+    "sounds": [
+      {
+        "name": "nerocreatures:entity/cache_mimic_hurt",
+        "volume": 0.7,
+        "attenuation_distance": 16
+      }
+    ]
+  },
+  "cache_mimic.death": {
+    "subtitle": "subtitles.nerocreatures.cache_mimic.death",
+    "sounds": [
+      {
+        "name": "nerocreatures:entity/cache_mimic_death",
+        "volume": 0.7,
+        "attenuation_distance": 16
+      }
+    ]
+  },
+  "cache_mimic.reveal": {
+    "subtitle": "subtitles.nerocreatures.cache_mimic.reveal",
+    "sounds": [
+      {
+        "name": "nerocreatures:entity/cache_mimic_reveal",
+        "volume": 1.0,
+        "attenuation_distance": 16
+      }
+    ]
+  },
+  "static_swarm.ambient": {
+    "subtitle": "subtitles.nerocreatures.static_swarm.ambient",
+    "sounds": [
+      {
+        "name": "nerocreatures:entity/static_swarm_ambient_1",
+        "volume": 0.72,
+        "attenuation_distance": 16
+      },
+      {
+        "name": "nerocreatures:entity/static_swarm_ambient_2",
+        "volume": 0.72,
+        "attenuation_distance": 16
+      }
+    ]
+  },
+  "static_swarm.hurt": {
+    "subtitle": "subtitles.nerocreatures.static_swarm.hurt",
+    "sounds": [
+      {
+        "name": "nerocreatures:entity/static_swarm_hurt",
+        "volume": 0.9,
+        "attenuation_distance": 16
+      }
+    ]
+  },
+  "static_swarm.death": {
+    "subtitle": "subtitles.nerocreatures.static_swarm.death",
+    "sounds": [
+      {
+        "name": "nerocreatures:entity/static_swarm_death",
+        "volume": 0.9,
+        "attenuation_distance": 16
+      }
+    ]
+  },
+  "static_swarm.drain": {
+    "subtitle": "subtitles.nerocreatures.static_swarm.drain",
+    "sounds": [
+      {
+        "name": "nerocreatures:entity/static_swarm_drain",
+        "volume": 1.0,
+        "attenuation_distance": 16
+      }
+    ]
+  },
+  "scrap_hulk.ambient": {
+    "subtitle": "subtitles.nerocreatures.scrap_hulk.ambient",
+    "sounds": [
+      {
+        "name": "nerocreatures:entity/scrap_hulk_ambient_1",
+        "volume": 0.8,
+        "attenuation_distance": 24
+      },
+      {
+        "name": "nerocreatures:entity/scrap_hulk_ambient_2",
+        "volume": 0.8,
+        "attenuation_distance": 24
+      }
+    ]
+  },
+  "scrap_hulk.hurt": {
+    "subtitle": "subtitles.nerocreatures.scrap_hulk.hurt",
+    "sounds": [
+      {
+        "name": "nerocreatures:entity/scrap_hulk_hurt",
+        "volume": 1.0,
+        "attenuation_distance": 24
+      }
+    ]
+  },
+  "scrap_hulk.death": {
+    "subtitle": "subtitles.nerocreatures.scrap_hulk.death",
+    "sounds": [
+      {
+        "name": "nerocreatures:entity/scrap_hulk_death",
+        "volume": 1.0,
+        "attenuation_distance": 24
+      }
+    ]
+  },
+  "scrap_hulk.assemble": {
+    "subtitle": "subtitles.nerocreatures.scrap_hulk.assemble",
+    "sounds": [
+      {
+        "name": "nerocreatures:entity/scrap_hulk_assemble",
+        "volume": 1.0,
+        "attenuation_distance": 32
+      }
+    ]
+  },
+  "scrap_hulk.sweep": {
+    "subtitle": "subtitles.nerocreatures.scrap_hulk.sweep",
+    "sounds": [
+      {
+        "name": "nerocreatures:entity/scrap_hulk_sweep",
+        "volume": 1.0,
+        "attenuation_distance": 24
+      }
+    ]
+  },
+  "scrap_hulk.shed": {
+    "subtitle": "subtitles.nerocreatures.scrap_hulk.shed",
+    "sounds": [
+      {
+        "name": "nerocreatures:entity/scrap_hulk_shed",
+        "volume": 1.0,
+        "attenuation_distance": 24
+      }
+    ]
+  },
+  "rogue_drone.ambient": {
+    "subtitle": "subtitles.nerocreatures.rogue_drone.ambient",
+    "sounds": [
+      {
+        "name": "nerocreatures:entity/rogue_drone_ambient_1",
+        "volume": 0.56,
+        "attenuation_distance": 16
+      },
+      {
+        "name": "nerocreatures:entity/rogue_drone_ambient_2",
+        "volume": 0.56,
+        "attenuation_distance": 16
+      }
+    ]
+  },
+  "rogue_drone.hurt": {
+    "subtitle": "subtitles.nerocreatures.rogue_drone.hurt",
+    "sounds": [
+      {
+        "name": "nerocreatures:entity/rogue_drone_hurt",
+        "volume": 0.7,
+        "attenuation_distance": 16
+      }
+    ]
+  },
+  "rogue_drone.death": {
+    "subtitle": "subtitles.nerocreatures.rogue_drone.death",
+    "sounds": [
+      {
+        "name": "nerocreatures:entity/rogue_drone_death",
+        "volume": 0.7,
+        "attenuation_distance": 16
+      }
+    ]
+  },
+  "rogue_drone.leap": {
+    "subtitle": "subtitles.nerocreatures.rogue_drone.leap",
+    "sounds": [
+      {
+        "name": "nerocreatures:entity/rogue_drone_leap",
+        "volume": 0.7,
+        "attenuation_distance": 16
+      }
+    ]
+  },
+  "rogue_android.ambient": {
+    "subtitle": "subtitles.nerocreatures.rogue_android.ambient",
+    "sounds": [
+      {
+        "name": "nerocreatures:entity/rogue_android_ambient_1",
+        "volume": 0.8,
+        "attenuation_distance": 24
+      },
+      {
+        "name": "nerocreatures:entity/rogue_android_ambient_2",
+        "volume": 0.8,
+        "attenuation_distance": 24
+      }
+    ]
+  },
+  "rogue_android.hurt": {
+    "subtitle": "subtitles.nerocreatures.rogue_android.hurt",
+    "sounds": [
+      {
+        "name": "nerocreatures:entity/rogue_android_hurt",
+        "volume": 1.0,
+        "attenuation_distance": 24
+      }
+    ]
+  },
+  "rogue_android.death": {
+    "subtitle": "subtitles.nerocreatures.rogue_android.death",
+    "sounds": [
+      {
+        "name": "nerocreatures:entity/rogue_android_death",
+        "volume": 1.0,
+        "attenuation_distance": 24
+      }
+    ]
+  },
+  "rogue_android.shield": {
+    "subtitle": "subtitles.nerocreatures.rogue_android.shield",
+    "sounds": [
+      {
+        "name": "nerocreatures:entity/rogue_android_shield",
+        "volume": 1.0,
+        "attenuation_distance": 24
+      }
+    ]
+  },
+  "terraforming_drone.ambient": {
+    "subtitle": "subtitles.nerocreatures.terraforming_drone.ambient",
+    "sounds": [
+      {
+        "name": "nerocreatures:entity/terraforming_drone_ambient_1",
+        "volume": 0.56,
+        "attenuation_distance": 16
+      },
+      {
+        "name": "nerocreatures:entity/terraforming_drone_ambient_2",
+        "volume": 0.56,
+        "attenuation_distance": 16
+      }
+    ]
+  },
+  "terraforming_drone.hurt": {
+    "subtitle": "subtitles.nerocreatures.terraforming_drone.hurt",
+    "sounds": [
+      {
+        "name": "nerocreatures:entity/terraforming_drone_hurt",
+        "volume": 0.7,
+        "attenuation_distance": 16
+      }
+    ]
+  },
+  "terraforming_drone.death": {
+    "subtitle": "subtitles.nerocreatures.terraforming_drone.death",
+    "sounds": [
+      {
+        "name": "nerocreatures:entity/terraforming_drone_death",
+        "volume": 0.7,
+        "attenuation_distance": 16
+      }
+    ]
+  },
+  "terraforming_drone.work": {
+    "subtitle": "subtitles.nerocreatures.terraforming_drone.work",
+    "sounds": [
+      {
+        "name": "nerocreatures:entity/terraforming_drone_work",
+        "volume": 0.6,
+        "attenuation_distance": 16
+      }
+    ]
+  },
+  "space_pirate.ambient": {
+    "subtitle": "subtitles.nerocreatures.space_pirate.ambient",
+    "sounds": [
+      {
+        "name": "nerocreatures:entity/space_pirate_ambient_1",
+        "volume": 0.72,
+        "attenuation_distance": 16
+      },
+      {
+        "name": "nerocreatures:entity/space_pirate_ambient_2",
+        "volume": 0.72,
+        "attenuation_distance": 16
+      }
+    ]
+  },
+  "space_pirate.hurt": {
+    "subtitle": "subtitles.nerocreatures.space_pirate.hurt",
+    "sounds": [
+      {
+        "name": "nerocreatures:entity/space_pirate_hurt",
+        "volume": 0.9,
+        "attenuation_distance": 16
+      }
+    ]
+  },
+  "space_pirate.death": {
+    "subtitle": "subtitles.nerocreatures.space_pirate.death",
+    "sounds": [
+      {
+        "name": "nerocreatures:entity/space_pirate_death",
+        "volume": 0.9,
+        "attenuation_distance": 16
+      }
+    ]
+  },
+  "space_pirate.volley": {
+    "subtitle": "subtitles.nerocreatures.space_pirate.volley",
+    "sounds": [
+      {
+        "name": "nerocreatures:entity/space_pirate_volley",
+        "volume": 1.0,
+        "attenuation_distance": 24
+      }
+    ]
+  },
+  "pirate_captain.ambient": {
+    "subtitle": "subtitles.nerocreatures.pirate_captain.ambient",
+    "sounds": [
+      {
+        "name": "nerocreatures:entity/pirate_captain_ambient_1",
+        "volume": 0.72,
+        "attenuation_distance": 16
+      },
+      {
+        "name": "nerocreatures:entity/pirate_captain_ambient_2",
+        "volume": 0.72,
+        "attenuation_distance": 16
+      }
+    ]
+  },
+  "pirate_captain.hurt": {
+    "subtitle": "subtitles.nerocreatures.pirate_captain.hurt",
+    "sounds": [
+      {
+        "name": "nerocreatures:entity/pirate_captain_hurt",
+        "volume": 0.9,
+        "attenuation_distance": 16
+      }
+    ]
+  },
+  "pirate_captain.death": {
+    "subtitle": "subtitles.nerocreatures.pirate_captain.death",
+    "sounds": [
+      {
+        "name": "nerocreatures:entity/pirate_captain_death",
+        "volume": 0.9,
+        "attenuation_distance": 16
+      }
+    ]
+  },
+  "pirate_captain.dash": {
+    "subtitle": "subtitles.nerocreatures.pirate_captain.dash",
+    "sounds": [
+      {
+        "name": "nerocreatures:entity/pirate_captain_dash",
+        "volume": 1.0,
+        "attenuation_distance": 24
+      }
+    ]
+  },
+  "pirate_captain.rally": {
+    "subtitle": "subtitles.nerocreatures.pirate_captain.rally",
+    "sounds": [
+      {
+        "name": "nerocreatures:entity/pirate_captain_rally",
+        "volume": 1.0,
+        "attenuation_distance": 32
+      }
+    ]
+  },
+  "void_crawler.ambient": {
+    "subtitle": "subtitles.nerocreatures.void_crawler.ambient",
+    "sounds": [
+      {
+        "name": "nerocreatures:entity/void_crawler_ambient_1",
+        "volume": 0.56,
+        "attenuation_distance": 16
+      },
+      {
+        "name": "nerocreatures:entity/void_crawler_ambient_2",
+        "volume": 0.56,
+        "attenuation_distance": 16
+      }
+    ]
+  },
+  "void_crawler.hurt": {
+    "subtitle": "subtitles.nerocreatures.void_crawler.hurt",
+    "sounds": [
+      {
+        "name": "nerocreatures:entity/void_crawler_hurt",
+        "volume": 0.7,
+        "attenuation_distance": 16
+      }
+    ]
+  },
+  "void_crawler.death": {
+    "subtitle": "subtitles.nerocreatures.void_crawler.death",
+    "sounds": [
+      {
+        "name": "nerocreatures:entity/void_crawler_death",
+        "volume": 0.7,
+        "attenuation_distance": 16
+      }
+    ]
+  },
+  "void_crawler.blink": {
+    "subtitle": "subtitles.nerocreatures.void_crawler.blink",
+    "sounds": [
+      {
+        "name": "nerocreatures:entity/void_crawler_blink",
+        "volume": 0.7,
+        "attenuation_distance": 16
+      }
+    ]
+  },
+  "plasma_slime.ambient": {
+    "subtitle": "subtitles.nerocreatures.plasma_slime.ambient",
+    "sounds": [
+      {
+        "name": "nerocreatures:entity/plasma_slime_ambient_1",
+        "volume": 0.56,
+        "attenuation_distance": 16
+      },
+      {
+        "name": "nerocreatures:entity/plasma_slime_ambient_2",
+        "volume": 0.56,
+        "attenuation_distance": 16
+      }
+    ]
+  },
+  "plasma_slime.hurt": {
+    "subtitle": "subtitles.nerocreatures.plasma_slime.hurt",
+    "sounds": [
+      {
+        "name": "nerocreatures:entity/plasma_slime_hurt",
+        "volume": 0.7,
+        "attenuation_distance": 16
+      }
+    ]
+  },
+  "plasma_slime.death": {
+    "subtitle": "subtitles.nerocreatures.plasma_slime.death",
+    "sounds": [
+      {
+        "name": "nerocreatures:entity/plasma_slime_death",
+        "volume": 0.7,
+        "attenuation_distance": 16
+      }
+    ]
+  },
+  "plasma_slime.pulse": {
+    "subtitle": "subtitles.nerocreatures.plasma_slime.pulse",
+    "sounds": [
+      {
+        "name": "nerocreatures:entity/plasma_slime_pulse",
+        "volume": 0.7,
+        "attenuation_distance": 16
+      }
+    ]
+  },
+  "void_manta.ambient": {
+    "subtitle": "subtitles.nerocreatures.void_manta.ambient",
+    "sounds": [
+      {
+        "name": "nerocreatures:entity/void_manta_ambient_1",
+        "volume": 0.8,
+        "attenuation_distance": 24
+      },
+      {
+        "name": "nerocreatures:entity/void_manta_ambient_2",
+        "volume": 0.8,
+        "attenuation_distance": 24
+      }
+    ]
+  },
+  "void_manta.hurt": {
+    "subtitle": "subtitles.nerocreatures.void_manta.hurt",
+    "sounds": [
+      {
+        "name": "nerocreatures:entity/void_manta_hurt",
+        "volume": 1.0,
+        "attenuation_distance": 24
+      }
+    ]
+  },
+  "void_manta.death": {
+    "subtitle": "subtitles.nerocreatures.void_manta.death",
+    "sounds": [
+      {
+        "name": "nerocreatures:entity/void_manta_death",
+        "volume": 1.0,
+        "attenuation_distance": 24
+      }
+    ]
+  },
+  "void_manta.blink": {
+    "subtitle": "subtitles.nerocreatures.void_manta.blink",
+    "sounds": [
+      {
+        "name": "nerocreatures:entity/void_manta_blink",
+        "volume": 1.0,
+        "attenuation_distance": 32
+      }
+    ]
+  },
+  "incubator.hatch": {
+    "subtitle": "subtitles.nerocreatures.incubator.hatch",
+    "sounds": [
+      {
+        "name": "nerocreatures:block/incubator_hatch",
+        "volume": 1.0,
+        "attenuation_distance": 16
+      }
+    ]
+  },
+  "lure_beacon.pulse": {
+    "subtitle": "subtitles.nerocreatures.lure_beacon.pulse",
+    "sounds": [
+      {
+        "name": "nerocreatures:block/lure_beacon_pulse",
+        "volume": 0.6,
+        "attenuation_distance": 16
+      }
+    ]
+  },
+  "sonic_ward.hum": {
+    "subtitle": "subtitles.nerocreatures.sonic_ward.hum",
+    "sounds": [
+      {
+        "name": "nerocreatures:block/sonic_ward_hum",
+        "volume": 0.4,
+        "attenuation_distance": 12
+      }
+    ]
+  },
+  "apex_altar.summon": {
+    "subtitle": "subtitles.nerocreatures.apex_altar.summon",
+    "sounds": [
+      {
+        "name": "nerocreatures:block/apex_altar_summon",
+        "volume": 1.0,
+        "attenuation_distance": 48
+      }
+    ]
+  },
+  "capture_pod.capture": {
+    "subtitle": "subtitles.nerocreatures.capture_pod.capture",
+    "sounds": [
+      {
+        "name": "nerocreatures:item/capture_pod_capture",
+        "volume": 0.9,
+        "attenuation_distance": 16
+      }
+    ]
+  },
+  "capture_pod.release": {
+    "subtitle": "subtitles.nerocreatures.capture_pod.release",
+    "sounds": [
+      {
+        "name": "nerocreatures:item/capture_pod_release",
+        "volume": 0.9,
+        "attenuation_distance": 16
+      }
+    ]
+  },
+  "mirror_shield.reflect": {
+    "subtitle": "subtitles.nerocreatures.mirror_shield.reflect",
+    "sounds": [
+      {
+        "name": "nerocreatures:item/mirror_shield_reflect",
+        "volume": 1.0,
+        "attenuation_distance": 16
+      }
+    ]
+  },
+  "blink_charm.use": {
+    "subtitle": "subtitles.nerocreatures.blink_charm.use",
+    "sounds": [
+      {
+        "name": "nerocreatures:item/blink_charm_use",
+        "volume": 0.9,
+        "attenuation_distance": 16
+      }
+    ]
+  },
+  "resonant_whistle.use": {
+    "subtitle": "subtitles.nerocreatures.resonant_whistle.use",
+    "sounds": [
+      {
+        "name": "nerocreatures:item/resonant_whistle_use",
+        "volume": 1.0,
+        "attenuation_distance": 32
+      }
+    ]
+  },
+  "static_jar.shatter": {
+    "subtitle": "subtitles.nerocreatures.static_jar.shatter",
+    "sounds": [
+      {
+        "name": "nerocreatures:item/static_jar_shatter",
+        "volume": 1.0,
+        "attenuation_distance": 16
+      }
+    ]
+  },
+  "field_scanner.scan": {
+    "subtitle": "subtitles.nerocreatures.field_scanner.scan",
+    "sounds": [
+      {
+        "name": "nerocreatures:item/field_scanner_scan",
+        "volume": 0.7,
+        "attenuation_distance": 8
+      }
+    ]
+  }
+}

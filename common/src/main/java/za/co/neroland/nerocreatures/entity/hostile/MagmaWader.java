@@ -12,7 +12,6 @@ import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
-import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
@@ -45,6 +44,7 @@ import za.co.neroland.nerocreatures.entity.base.CreatureTier;
 import za.co.neroland.nerocreatures.entity.base.NeroCreatureEntity;
 import za.co.neroland.nerocreatures.entity.visual.VisualPose;
 import za.co.neroland.nerocreatures.world.CreatureGriefing;
+import za.co.neroland.nerocreatures.registry.ModSounds;
 
 /**
  * <b>Magma Wader</b> (Cindara, hostile): a small body on four very long stilt legs with a hanging
@@ -220,7 +220,7 @@ public class MagmaWader extends NeroCreatureEntity implements Enemy {
     /** The landing: splash damage, then (gated, capped) crust. */
     private void land(ServerLevel level, Vec3 at) {
         level.sendParticles(ParticleTypes.LAVA, at.x, at.y + 0.2D, at.z, 6, 0.4D, 0.2D, 0.4D, 0.0D);
-        level.playSound(null, BlockPos.containing(at), SoundEvents.LAVA_EXTINGUISH, SoundSource.HOSTILE, 1.0F, 0.8F);
+        ModSounds.MAGMA_WADER_SLAG_LAND.play(level, at.x, at.y, at.z, this.getSoundSource());
         AABB splash = new AABB(at, at).inflate(SlagLobRules.SPLASH_RADIUS);
         DamageSource source = this.damageSources().mobAttack(this);
         for (LivingEntity victim : level.getEntitiesOfClass(LivingEntity.class, splash,
@@ -310,16 +310,16 @@ public class MagmaWader extends NeroCreatureEntity implements Enemy {
 
     @Override
     protected SoundEvent getAmbientSound() {
-        return SoundEvents.STRIDER_AMBIENT;
+        return ModSounds.MAGMA_WADER_AMBIENT.get();
     }
 
     @Override
     protected SoundEvent getHurtSound(DamageSource damageSource) {
-        return SoundEvents.STRIDER_HURT;
+        return ModSounds.MAGMA_WADER_HURT.get();
     }
 
     @Override
     protected SoundEvent getDeathSound() {
-        return SoundEvents.STRIDER_DEATH;
+        return ModSounds.MAGMA_WADER_DEATH.get();
     }
 }

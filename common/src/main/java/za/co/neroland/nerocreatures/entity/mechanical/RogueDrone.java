@@ -27,6 +27,7 @@ import net.minecraft.world.phys.Vec3;
 import za.co.neroland.nerocreatures.entity.base.CreatureTier;
 import za.co.neroland.nerocreatures.entity.base.NeroCreatureEntity;
 import za.co.neroland.nerocreatures.entity.visual.VisualPose;
+import za.co.neroland.nerocreatures.registry.ModSounds;
 
 /**
  * <b>Rogue Drone</b> — the small, cheap half of the android family.
@@ -109,7 +110,7 @@ public class RogueDrone extends AbstractAndroid {
     /** A rotor hum rather than a voice. */
     @Override
     protected SoundEvent getAmbientSound() {
-        return SoundEvents.BEE_LOOP;
+        return ModSounds.ROGUE_DRONE_AMBIENT.get();
     }
 
     @Override
@@ -191,6 +192,7 @@ public class RogueDrone extends AbstractAndroid {
             this.ticks = 0;
             this.drone.getNavigation().stop();
             this.drone.visuals().playPose(VisualPose.ABILITY, LEAP_CLIP_TICKS);
+            ModSounds.ROGUE_DRONE_LEAP.play(this.drone);
         }
 
         @Override
@@ -212,5 +214,15 @@ public class RogueDrone extends AbstractAndroid {
             }
             this.drone.setDeltaMovement(toward.x, LEAP_STRENGTH, toward.z);
         }
+    }
+
+    @Override
+    protected SoundEvent getHurtSound(DamageSource damageSource) {
+        return ModSounds.ROGUE_DRONE_HURT.get();
+    }
+
+    @Override
+    protected SoundEvent getDeathSound() {
+        return ModSounds.ROGUE_DRONE_DEATH.get();
     }
 }

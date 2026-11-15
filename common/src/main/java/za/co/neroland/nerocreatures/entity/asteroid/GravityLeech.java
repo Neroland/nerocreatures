@@ -4,7 +4,6 @@ import java.util.EnumSet;
 
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
-import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -29,6 +28,7 @@ import za.co.neroland.nerocreatures.entity.ai.shared.TetherState;
 import za.co.neroland.nerocreatures.entity.base.CreatureTier;
 import za.co.neroland.nerocreatures.entity.base.NeroCreatureEntity;
 import za.co.neroland.nerocreatures.entity.visual.VisualPose;
+import za.co.neroland.nerocreatures.registry.ModSounds;
 
 /**
  * <b>Gravity Leech</b> (Asteroid, hostile): a floating sucker disc with a ribbon tail that latches a
@@ -185,17 +185,17 @@ public class GravityLeech extends NeroCreatureEntity implements Enemy
 
     @Override
     protected SoundEvent getAmbientSound() {
-        return SoundEvents.SLIME_SQUISH_SMALL;
+        return ModSounds.GRAVITY_LEECH_AMBIENT.get();
     }
 
     @Override
     protected SoundEvent getHurtSound(DamageSource damageSource) {
-        return SoundEvents.SLIME_HURT_SMALL;
+        return ModSounds.GRAVITY_LEECH_HURT.get();
     }
 
     @Override
     protected SoundEvent getDeathSound() {
-        return SoundEvents.SLIME_DEATH_SMALL;
+        return ModSounds.GRAVITY_LEECH_DEATH.get();
     }
 
     @Override

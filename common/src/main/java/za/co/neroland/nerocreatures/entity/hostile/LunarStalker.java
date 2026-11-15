@@ -6,7 +6,6 @@ import java.util.List;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.Identifier;
 import net.minecraft.sounds.SoundEvent;
-import net.minecraft.sounds.SoundEvents;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.damagesource.DamageSource;
@@ -43,6 +42,7 @@ import za.co.neroland.nerocreatures.entity.ai.shared.EcosystemTags;
 import za.co.neroland.nerocreatures.entity.ai.shared.PredatorHuntGoal;
 import za.co.neroland.nerocreatures.entity.base.CreatureTier;
 import za.co.neroland.nerocreatures.entity.base.NeroCreatureEntity;
+import za.co.neroland.nerocreatures.registry.ModSounds;
 
 /**
  * <b>Lunar Stalker</b> — the pack hunter of the regolith moons.
@@ -158,7 +158,7 @@ public class LunarStalker extends NeroCreatureEntity implements Enemy {
      * up the same target, so the player sees the pack turn. Once per acquisition, bounded query.
      */
     private void howl(LivingEntity target) {
-        this.playSound(SoundEvents.POLAR_BEAR_WARNING, 1.6F, 0.8F + this.getRandom().nextFloat() * 0.2F);
+        ModSounds.LUNAR_STALKER_HOWL.play(this);
         List<LunarStalker> mates = this.level().getEntitiesOfClass(LunarStalker.class,
                 this.getBoundingBox().inflate(PACK_RADIUS),
                 mate -> mate != this && mate.isAlive() && mate.getTarget() == target);
@@ -195,23 +195,21 @@ public class LunarStalker extends NeroCreatureEntity implements Enemy {
         }
     }
 
-    // Vanilla sound events, mapped rather than shipped: the polar bear's set is the right weight for
-    // a big quadruped predator. (The wolf set is deliberately not used — 26.x moved it behind the
-    // per-variant wolf sound registry, so it is no longer a plain SoundEvents constant.)
+    // Original synthesised sounds (tools/sound), registered in ModSounds.
 
     @Override
     protected SoundEvent getAmbientSound() {
-        return SoundEvents.POLAR_BEAR_AMBIENT;
+        return ModSounds.LUNAR_STALKER_AMBIENT.get();
     }
 
     @Override
     protected SoundEvent getHurtSound(DamageSource damageSource) {
-        return SoundEvents.POLAR_BEAR_HURT;
+        return ModSounds.LUNAR_STALKER_HURT.get();
     }
 
     @Override
     protected SoundEvent getDeathSound() {
-        return SoundEvents.POLAR_BEAR_DEATH;
+        return ModSounds.LUNAR_STALKER_DEATH.get();
     }
 
     /**

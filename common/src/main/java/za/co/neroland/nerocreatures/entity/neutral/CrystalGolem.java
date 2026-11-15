@@ -2,7 +2,6 @@ package za.co.neroland.nerocreatures.entity.neutral;
 
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
-import net.minecraft.sounds.SoundEvents;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
@@ -33,6 +32,7 @@ import za.co.neroland.nerocreatures.entity.base.CreatureTier;
 import za.co.neroland.nerocreatures.entity.base.NeroCreatureEntity;
 import za.co.neroland.nerocreatures.entity.visual.VisualPose;
 import za.co.neroland.nerocreatures.registry.ModItems;
+import za.co.neroland.nerocreatures.registry.ModSounds;
 
 /**
  * <b>Crystal Golem</b> — a walking crystal seam that would rather be left alone.
@@ -241,6 +241,7 @@ public class CrystalGolem extends NeroCreatureEntity implements NeutralMob {
             this.smashTick = 0;
             this.smashTarget = target;
             this.visuals().playPose(VisualPose.ABILITY, SMASH_POSE_TICKS);
+            ModSounds.CRYSTAL_GOLEM_SMASH.play(this);
         }
         return false;
     }
@@ -286,21 +287,20 @@ public class CrystalGolem extends NeroCreatureEntity implements NeutralMob {
     }
 
     // --- Sounds -------------------------------------------------------------
-    // Mapped vanilla events: the amethyst set for the crystal read, the iron golem's for the weight
-    // of a large construct taking a hit.
+    // Original synthesised sounds (tools/sound), registered in ModSounds.
 
     @Override
     protected SoundEvent getAmbientSound() {
-        return SoundEvents.AMETHYST_BLOCK_RESONATE;
+        return ModSounds.CRYSTAL_GOLEM_AMBIENT.get();
     }
 
     @Override
     protected SoundEvent getHurtSound(DamageSource damageSource) {
-        return SoundEvents.IRON_GOLEM_HURT;
+        return ModSounds.CRYSTAL_GOLEM_HURT.get();
     }
 
     @Override
     protected SoundEvent getDeathSound() {
-        return SoundEvents.IRON_GOLEM_DEATH;
+        return ModSounds.CRYSTAL_GOLEM_DEATH.get();
     }
 }

@@ -27,6 +27,7 @@ import za.co.neroland.nerocreatures.entity.base.CreatureTier;
 import za.co.neroland.nerocreatures.entity.base.NeroCreatureEntity;
 import za.co.neroland.nerocreatures.entity.visual.VisualPose;
 import za.co.neroland.nerocreatures.registry.ModItems;
+import za.co.neroland.nerocreatures.registry.ModSounds;
 
 /**
  * <b>Rogue Android</b> — the heavy frame: a walking security system that has stopped taking orders.
@@ -211,7 +212,7 @@ public class RogueAndroid extends AbstractAndroid {
         this.setDeltaMovement(this.getDeltaMovement().multiply(STAGGER_DRAG, 1.0D, STAGGER_DRAG));
         if (--this.staggerTicks == 0) {
             this.shieldCharges = SHIELD_CHARGES;
-            this.playSound(MechanicalSounds.spin(), 0.6F, 1.2F);
+            ModSounds.ROGUE_ANDROID_SHIELD.play(this);
         }
     }
 
@@ -283,6 +284,16 @@ public class RogueAndroid extends AbstractAndroid {
 
     @Override
     protected SoundEvent getAmbientSound() {
-        return MechanicalSounds.step();
+        return ModSounds.ROGUE_ANDROID_AMBIENT.get();
+    }
+
+    @Override
+    protected SoundEvent getHurtSound(DamageSource damageSource) {
+        return ModSounds.ROGUE_ANDROID_HURT.get();
+    }
+
+    @Override
+    protected SoundEvent getDeathSound() {
+        return ModSounds.ROGUE_ANDROID_DEATH.get();
     }
 }

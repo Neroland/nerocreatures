@@ -41,6 +41,7 @@ import za.co.neroland.nerocreatures.entity.base.CreatureTier;
 import za.co.neroland.nerocreatures.entity.base.NeroCreatureEntity;
 import za.co.neroland.nerocreatures.entity.visual.VisualPose;
 import za.co.neroland.nerocreatures.spawn.HabitatTags;
+import za.co.neroland.nerocreatures.registry.ModSounds;
 import za.co.neroland.nerolandcore.worldgen.SpaceTags;
 
 /**
@@ -191,7 +192,7 @@ public class StaticSwarm extends NeroCreatureEntity implements Enemy
         if (total > 0) {
             this.heal(total * SwarmRules.HEAL_PER_UNIT);
             this.visuals().playPose(VisualPose.ABILITY, SwarmRules.DRAIN_POSE_TICKS);
-            this.playSound(SoundEvents.BEACON_DEACTIVATE, 0.6F, 1.8F);
+            ModSounds.STATIC_SWARM_DRAIN.play(this);
         }
     }
 
@@ -253,17 +254,17 @@ public class StaticSwarm extends NeroCreatureEntity implements Enemy
 
     @Override
     protected SoundEvent getAmbientSound() {
-        return SoundEvents.BEACON_AMBIENT;
+        return ModSounds.STATIC_SWARM_AMBIENT.get();
     }
 
     @Override
     protected SoundEvent getHurtSound(DamageSource damageSource) {
-        return SoundEvents.BEACON_DEACTIVATE;
+        return ModSounds.STATIC_SWARM_HURT.get();
     }
 
     @Override
     protected SoundEvent getDeathSound() {
-        return SoundEvents.GLASS_BREAK;
+        return ModSounds.STATIC_SWARM_DEATH.get();
     }
 
     @Override

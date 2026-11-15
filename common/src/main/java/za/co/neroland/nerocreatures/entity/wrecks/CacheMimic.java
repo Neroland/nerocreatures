@@ -28,6 +28,7 @@ import net.minecraft.world.level.ServerLevelAccessor;
 import za.co.neroland.nerocreatures.entity.base.CreatureTier;
 import za.co.neroland.nerocreatures.entity.base.NeroCreatureEntity;
 import za.co.neroland.nerocreatures.entity.visual.VisualPose;
+import za.co.neroland.nerocreatures.registry.ModSounds;
 
 /**
  * <b>Cache Mimic</b> (wrecks and stations; hostile) — an entity drawn as a loot crate. It places no
@@ -122,7 +123,7 @@ public class CacheMimic extends NeroCreatureEntity implements Enemy {
         this.visuals().playPose(VisualPose.ABILITY, MimicRules.REVEAL_TICKS);
         this.ticksSinceReveal = 0;
         this.ticksWithoutTarget = 0;
-        this.playSound(SoundEvents.IRON_TRAPDOOR_OPEN, 1.0F, 0.6F);
+        ModSounds.CACHE_MIMIC_REVEAL.play(this);
         if (cause != null && cause.isAlive() && !(cause instanceof Player p && (p.isCreative() || p.isSpectator()))) {
             this.setTarget(cause);
         }
@@ -203,17 +204,17 @@ public class CacheMimic extends NeroCreatureEntity implements Enemy {
     @Override
     @Nullable
     protected SoundEvent getAmbientSound() {
-        return this.isDormant() ? null : SoundEvents.IRON_TRAPDOOR_CLOSE;
+        return this.isDormant() ? null : ModSounds.CACHE_MIMIC_AMBIENT.get();
     }
 
     @Override
     protected SoundEvent getHurtSound(DamageSource damageSource) {
-        return SoundEvents.ANVIL_LAND;
+        return ModSounds.CACHE_MIMIC_HURT.get();
     }
 
     @Override
     protected SoundEvent getDeathSound() {
-        return SoundEvents.ANVIL_BREAK;
+        return ModSounds.CACHE_MIMIC_DEATH.get();
     }
 
     @Override

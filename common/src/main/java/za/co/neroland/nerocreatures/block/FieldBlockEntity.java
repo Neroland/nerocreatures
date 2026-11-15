@@ -2,6 +2,7 @@ package za.co.neroland.nerocreatures.block;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -9,6 +10,8 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
+
+import za.co.neroland.nerocreatures.sound.CreatureSound;
 
 /**
  * Shared engine of the Lure Beacon and the Sonic Ward: burn one stock item for a configured number of
@@ -23,6 +26,7 @@ public abstract class FieldBlockEntity extends InventoryHabitatBlockEntity {
     private int burnLeft;
     private String species = "";
     private int pulse;
+    private int soundPulse;
 
     protected FieldBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
         super(type, pos, state);
@@ -42,6 +46,17 @@ public abstract class FieldBlockEntity extends InventoryHabitatBlockEntity {
     /** The field's weight multiplier (lure only). */
     protected double multiplier() {
         return 1.0D;
+    }
+
+    /** The block's sound while burning, replayed every {@link #soundPulses()} pulses; {@code null} for none. */
+    @org.jetbrains.annotations.Nullable
+    protected CreatureSound burningSound() {
+        return null;
+    }
+
+    /** How many pulses between plays of {@link #burningSound()}. */
+    protected int soundPulses() {
+        return 1;
     }
 
     /** Extra work on a burning pulse (the ward's repel sweep). */
@@ -74,7 +89,12 @@ public abstract class FieldBlockEntity extends InventoryHabitatBlockEntity {
         if (this.burnLeft > 0) {
             HabitatFields.refresh(level, pos, this.kind(), this.species, this.multiplier());
             this.onBurningPulse(level, pos);
+            CreatureSound sound = this.burningSound();
+            if (sound != null && this.soundPulse++ % Math.max(1, this.soundPulses()) == 0) {
+                sound.play(level, pos, SoundSource.BLOCKS);
+            }
         } else {
+            this.soundPulse = 0;
             HabitatFields.clear(level, pos);
         }
         setLit(level, pos, state, this.burnLeft > 0);

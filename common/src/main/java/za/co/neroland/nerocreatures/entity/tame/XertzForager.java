@@ -3,7 +3,6 @@ package za.co.neroland.nerocreatures.entity.tame;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
-import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
@@ -17,6 +16,7 @@ import net.minecraft.world.level.Level;
 import za.co.neroland.nerocreatures.entity.base.CreatureTier;
 import za.co.neroland.nerocreatures.entity.visual.VisualPose;
 import za.co.neroland.nerocreatures.registry.ModItems;
+import za.co.neroland.nerocreatures.registry.ModSounds;
 
 /**
  * <b>Xertz Forager</b> — the quartz-forest critter of the lush green worlds.
@@ -113,6 +113,7 @@ public class XertzForager extends TameableCreature {
         if (this.visuals().abilityDuration() == 0 && this.onGround() && this.getTarget() == null
                 && this.getNavigation().isDone() && this.random.nextInt(DIG_CHANCE) == 0) {
             this.visuals().playPose(VisualPose.ABILITY, DIG_POSE_TICKS);
+            ModSounds.XERTZ_FORAGER_DIG.play(this);
         }
     }
 
@@ -120,16 +121,16 @@ public class XertzForager extends TameableCreature {
 
     @Override
     protected SoundEvent getAmbientSound() {
-        return SoundEvents.FOX_AMBIENT;
+        return ModSounds.XERTZ_FORAGER_AMBIENT.get();
     }
 
     @Override
     protected SoundEvent getHurtSound(DamageSource damageSource) {
-        return SoundEvents.FOX_HURT;
+        return ModSounds.XERTZ_FORAGER_HURT.get();
     }
 
     @Override
     protected SoundEvent getDeathSound() {
-        return SoundEvents.FOX_DEATH;
+        return ModSounds.XERTZ_FORAGER_DEATH.get();
     }
 }

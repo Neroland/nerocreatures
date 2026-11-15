@@ -3,7 +3,6 @@ package za.co.neroland.nerocreatures.entity.tame;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
-import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
@@ -17,6 +16,7 @@ import net.minecraft.world.level.Level;
 import za.co.neroland.nerocreatures.entity.base.CreatureTier;
 import za.co.neroland.nerocreatures.entity.visual.VisualPose;
 import za.co.neroland.nerocreatures.registry.ModItems;
+import za.co.neroland.nerocreatures.registry.ModSounds;
 
 /**
  * <b>Glacite Wisp</b> — the ice-lattice fauna of the frozen worlds.
@@ -96,6 +96,7 @@ public class GlaciteWisp extends TameableCreature {
                 4, 0.3D, 0.2D, 0.3D, 0.0D);
         if (!this.isOrderedToSit() && this.visuals().abilityDuration() == 0) {
             this.visuals().playPose(VisualPose.ABILITY, CUSHION_POSE_TICKS);
+            ModSounds.GLACITE_WISP_CUSHION.play(this);
         }
     }
 
@@ -118,16 +119,16 @@ public class GlaciteWisp extends TameableCreature {
 
     @Override
     protected SoundEvent getAmbientSound() {
-        return SoundEvents.AMETHYST_BLOCK_CHIME;
+        return ModSounds.GLACITE_WISP_AMBIENT.get();
     }
 
     @Override
     protected SoundEvent getHurtSound(DamageSource damageSource) {
-        return SoundEvents.AMETHYST_CLUSTER_BREAK;
+        return ModSounds.GLACITE_WISP_HURT.get();
     }
 
     @Override
     protected SoundEvent getDeathSound() {
-        return SoundEvents.GLASS_BREAK;
+        return ModSounds.GLACITE_WISP_DEATH.get();
     }
 }

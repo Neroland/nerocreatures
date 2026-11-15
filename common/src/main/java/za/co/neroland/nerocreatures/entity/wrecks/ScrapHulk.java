@@ -6,7 +6,6 @@ import java.util.List;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
-import net.minecraft.sounds.SoundEvents;
 import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
@@ -35,6 +34,7 @@ import net.minecraft.world.phys.AABB;
 import za.co.neroland.nerocreatures.entity.base.CreatureTier;
 import za.co.neroland.nerocreatures.entity.base.NeroCreatureEntity;
 import za.co.neroland.nerocreatures.entity.visual.VisualPose;
+import za.co.neroland.nerocreatures.registry.ModSounds;
 
 /**
  * <b>Scrap Hulk</b> (wrecks and stations; hostile elite) — a lopsided knuckle-walker built from the
@@ -95,7 +95,7 @@ public class ScrapHulk extends NeroCreatureEntity implements Enemy {
         this.assembling = ScrapHulkRules.ASSEMBLE_TICKS;
         this.visuals().playPose(VisualPose.ABILITY, ScrapHulkRules.ASSEMBLE_TICKS);
         this.visuals().setStage(0);
-        this.playSound(SoundEvents.ANVIL_USE, 1.2F, 0.5F);
+        ModSounds.SCRAP_HULK_ASSEMBLE.play(this);
     }
 
     /** Whether it is still assembling (invulnerable, inert). */
@@ -141,7 +141,7 @@ public class ScrapHulk extends NeroCreatureEntity implements Enemy {
                 this.spawnAtLocation(level, new ItemStack(part));
             }
         }
-        this.playSound(SoundEvents.ANVIL_LAND, 1.0F, 0.7F);
+        ModSounds.SCRAP_HULK_SHED.play(this);
         level.sendParticles(ParticleTypes.ELECTRIC_SPARK, this.getX(), this.getY() + 1.4D, this.getZ(),
                 16, 0.6D, 0.6D, 0.6D, 0.1D);
     }
@@ -199,17 +199,17 @@ public class ScrapHulk extends NeroCreatureEntity implements Enemy {
 
     @Override
     protected SoundEvent getAmbientSound() {
-        return SoundEvents.IRON_GOLEM_STEP;
+        return ModSounds.SCRAP_HULK_AMBIENT.get();
     }
 
     @Override
     protected SoundEvent getHurtSound(DamageSource damageSource) {
-        return SoundEvents.IRON_GOLEM_HURT;
+        return ModSounds.SCRAP_HULK_HURT.get();
     }
 
     @Override
     protected SoundEvent getDeathSound() {
-        return SoundEvents.IRON_GOLEM_DEATH;
+        return ModSounds.SCRAP_HULK_DEATH.get();
     }
 
     /** Vanilla melee, idle while assembling or mid-sweep. */
@@ -311,7 +311,7 @@ public class ScrapHulk extends NeroCreatureEntity implements Enemy {
                     *///?}
                 }
             }
-            this.hulk.playSound(SoundEvents.IRON_GOLEM_ATTACK, 1.2F, 0.6F);
+            ModSounds.SCRAP_HULK_SWEEP.play(this.hulk);
         }
     }
 }

@@ -27,6 +27,7 @@ import za.co.neroland.nerocreatures.entity.base.CreatureTier;
 import za.co.neroland.nerocreatures.entity.tame.LivestockCreature;
 import za.co.neroland.nerocreatures.entity.visual.VisualPose;
 import za.co.neroland.nerocreatures.world.CreatureGriefing;
+import za.co.neroland.nerocreatures.registry.ModSounds;
 
 /**
  * <b>Mossback</b> (Greenxertz, livestock) — a long, low barrel body with a flat moss-carpeted back and
@@ -105,6 +106,7 @@ public class Mossback extends LivestockCreature implements HerdMember {
             return;
         }
         this.visuals().playPose(VisualPose.ABILITY, MossbackRules.GRAZE_POSE_TICKS);
+        ModSounds.MOSSBACK_GRAZE.play(this);
         this.fertiliseAt = now + MossbackRules.FERTILISE_AT_TICK;
     }
 
@@ -171,16 +173,16 @@ public class Mossback extends LivestockCreature implements HerdMember {
 
     @Override
     protected SoundEvent getAmbientSound() {
-        return SoundEvents.CAMEL_AMBIENT;
+        return ModSounds.MOSSBACK_AMBIENT.get();
     }
 
     @Override
     protected SoundEvent getHurtSound(DamageSource damageSource) {
-        return SoundEvents.CAMEL_HURT;
+        return ModSounds.MOSSBACK_HURT.get();
     }
 
     @Override
     protected SoundEvent getDeathSound() {
-        return SoundEvents.CAMEL_DEATH;
+        return ModSounds.MOSSBACK_DEATH.get();
     }
 }

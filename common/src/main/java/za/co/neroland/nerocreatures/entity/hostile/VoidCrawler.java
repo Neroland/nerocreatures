@@ -1,7 +1,6 @@
 package za.co.neroland.nerocreatures.entity.hostile;
 
 import net.minecraft.sounds.SoundEvent;
-import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
@@ -20,6 +19,7 @@ import net.minecraft.world.level.Level;
 import za.co.neroland.nerocreatures.entity.ai.BlinkStrikeGoal;
 import za.co.neroland.nerocreatures.entity.base.CreatureTier;
 import za.co.neroland.nerocreatures.entity.base.NeroCreatureEntity;
+import za.co.neroland.nerocreatures.registry.ModSounds;
 
 /**
  * <b>Void Crawler</b> — the low-light ambusher of the dark planets.
@@ -68,7 +68,7 @@ public class VoidCrawler extends NeroCreatureEntity implements Enemy {
         // The blink sits above melee: when it is off cooldown and the target is in the window, it
         // fires first and hands straight back to MeleeAttackGoal.
         this.goalSelector.addGoal(1, new BlinkStrikeGoal(this,
-                BLINK_MIN_DISTANCE, BLINK_MAX_DISTANCE, BLINK_COOLDOWN_TICKS));
+                BLINK_MIN_DISTANCE, BLINK_MAX_DISTANCE, BLINK_COOLDOWN_TICKS).withSound(ModSounds.VOID_CRAWLER_BLINK));
         this.goalSelector.addGoal(2, new MeleeAttackGoal(this, 1.0D, false));
         this.goalSelector.addGoal(7, new WaterAvoidingRandomStrollGoal(this, 1.0D));
         this.goalSelector.addGoal(8, new LookAtPlayerGoal(this, Player.class, 8.0F));
@@ -80,16 +80,16 @@ public class VoidCrawler extends NeroCreatureEntity implements Enemy {
 
     @Override
     protected SoundEvent getAmbientSound() {
-        return SoundEvents.ENDERMAN_AMBIENT;
+        return ModSounds.VOID_CRAWLER_AMBIENT.get();
     }
 
     @Override
     protected SoundEvent getHurtSound(DamageSource damageSource) {
-        return SoundEvents.ENDERMAN_HURT;
+        return ModSounds.VOID_CRAWLER_HURT.get();
     }
 
     @Override
     protected SoundEvent getDeathSound() {
-        return SoundEvents.ENDERMAN_DEATH;
+        return ModSounds.VOID_CRAWLER_DEATH.get();
     }
 }

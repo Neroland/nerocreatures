@@ -17,7 +17,6 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
-import net.minecraft.sounds.SoundEvents;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
@@ -44,6 +43,7 @@ import za.co.neroland.nerocreatures.entity.tame.SlagBeetleClaims;
 import za.co.neroland.nerocreatures.entity.tame.TameableCreature;
 import za.co.neroland.nerocreatures.entity.visual.VisualPose;
 import za.co.neroland.nerocreatures.world.CreatureGriefing;
+import za.co.neroland.nerocreatures.registry.ModSounds;
 
 /**
  * <b>Magnet Crab</b> (Asteroid, tameable): an auto-pickup pet for mining.
@@ -92,6 +92,7 @@ public class MagnetCrab extends TameableCreature {
     private final CadenceTimer magnetPulse = new CadenceTimer(MagnetCrabRules.MAGNET_PULSE_TICKS);
     private int poseCheck;
     private long lastPull = Long.MIN_VALUE / 2;
+    private long lastMagnetSound = Long.MIN_VALUE / 2;
 
     public MagnetCrab(EntityType<? extends MagnetCrab> type, Level level) {
         super(type, level, CreatureTier.LESSER);
@@ -279,7 +280,10 @@ public class MagnetCrab extends TameableCreature {
         if (this.visuals().pose() != VisualPose.ABILITY) {
             this.visuals().holdPose(VisualPose.ABILITY_2);
         }
-        this.playSound(SoundEvents.AMETHYST_BLOCK_CHIME, 0.5F, 1.6F);
+        if (MagnetCrabRules.magnetSoundDue(this.lastMagnetSound, level.getGameTime())) {
+            this.lastMagnetSound = level.getGameTime();
+            ModSounds.MAGNET_CRAB_MAGNET.play(this);
+        }
     }
 
     // --- wild shell -----------------------------------------------------------------
@@ -316,7 +320,7 @@ public class MagnetCrab extends TameableCreature {
         this.shell.add(taken);
         this.setPersistenceRequired();
         this.updateStage();
-        this.playSound(SoundEvents.ITEM_PICKUP, 0.6F, 0.7F);
+        ModSounds.MAGNET_CRAB_SNAP.play(this);
         return true;
     }
 
@@ -390,17 +394,17 @@ public class MagnetCrab extends TameableCreature {
 
     @Override
     protected SoundEvent getAmbientSound() {
-        return SoundEvents.SILVERFISH_AMBIENT;
+        return ModSounds.MAGNET_CRAB_AMBIENT.get();
     }
 
     @Override
     protected SoundEvent getHurtSound(DamageSource damageSource) {
-        return SoundEvents.SILVERFISH_HURT;
+        return ModSounds.MAGNET_CRAB_HURT.get();
     }
 
     @Override
     protected SoundEvent getDeathSound() {
-        return SoundEvents.SILVERFISH_DEATH;
+        return ModSounds.MAGNET_CRAB_DEATH.get();
     }
 
     @Override

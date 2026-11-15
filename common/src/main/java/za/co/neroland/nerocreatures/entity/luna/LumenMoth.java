@@ -12,7 +12,6 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
-import net.minecraft.sounds.SoundEvents;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -53,6 +52,7 @@ import za.co.neroland.nerocreatures.entity.visual.VisualPose;
 import za.co.neroland.nerocreatures.trait.TraitEffects;
 import za.co.neroland.nerocreatures.trait.TraitPool;
 import za.co.neroland.nerocreatures.world.CreatureGriefing;
+import za.co.neroland.nerocreatures.registry.ModSounds;
 
 /**
  * <b>Lumen Moth</b> (Luna, tameable) — a living lantern.
@@ -178,6 +178,7 @@ public class LumenMoth extends TameableCreature implements HerdMember
         }
         if (this.pulseAt != Long.MIN_VALUE && level.getGameTime() >= this.pulseAt) {
             this.pulseAt = Long.MIN_VALUE;
+            ModSounds.LUMEN_MOTH_PULSE.play(this);
             this.reveal(level, true);
         }
         // Perch / sit is the held rest pose (Art-Luna); a companion shoulder perch counts.
@@ -365,17 +366,17 @@ public class LumenMoth extends TameableCreature implements HerdMember
     @Override
     @Nullable
     protected SoundEvent getAmbientSound() {
-        return null;
+        return ModSounds.LUMEN_MOTH_AMBIENT.get();
     }
 
     @Override
     protected SoundEvent getHurtSound(DamageSource damageSource) {
-        return SoundEvents.PARROT_HURT;
+        return ModSounds.LUMEN_MOTH_HURT.get();
     }
 
     @Override
     protected SoundEvent getDeathSound() {
-        return SoundEvents.PARROT_DEATH;
+        return ModSounds.LUMEN_MOTH_DEATH.get();
     }
 
     // --- persistence ----------------------------------------------------------------

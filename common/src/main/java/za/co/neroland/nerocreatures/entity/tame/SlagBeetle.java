@@ -6,7 +6,6 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
-import net.minecraft.sounds.SoundEvents;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntityType;
@@ -32,6 +31,7 @@ import za.co.neroland.nerocreatures.entity.visual.VisualPose;
 import za.co.neroland.nerocreatures.trait.TraitEffects;
 import za.co.neroland.nerocreatures.trait.TraitPool;
 import za.co.neroland.nerocreatures.world.CreatureGriefing;
+import za.co.neroland.nerocreatures.registry.ModSounds;
 
 /**
  * <b>Slag Beetle</b> (Cindara, tameable): a living furnace for a field base.
@@ -167,7 +167,7 @@ public class SlagBeetle extends TameableCreature {
         result.setCount(Math.max(1, Math.min(count, result.getMaxStackSize())));
         this.spawnAtLocation(level, result);
         this.visuals().playPose(VisualPose.ABILITY_2, COUGH_POSE_TICKS);
-        this.playSound(SoundEvents.LAVA_POP, 0.8F, 1.2F);
+        ModSounds.SLAG_BEETLE_COUGH.play(this);
         level.sendParticles(ParticleTypes.SMOKE, this.getX(), this.getY() + 0.4D, this.getZ(),
                 4, 0.2D, 0.1D, 0.2D, 0.01D);
     }
@@ -208,7 +208,7 @@ public class SlagBeetle extends TameableCreature {
         int size = belly.size();
         if (size > this.lastStomachSize) {
             this.visuals().playPose(VisualPose.ABILITY, EAT_POSE_TICKS);
-            this.playSound(SoundEvents.FURNACE_FIRE_CRACKLE, 0.8F, 1.0F);
+            ModSounds.SLAG_BEETLE_EAT.play(this);
         }
         this.lastStomachSize = size;
         if (--this.digestPollCooldown > 0) {
@@ -220,7 +220,11 @@ public class SlagBeetle extends TameableCreature {
             this.eating.tickDigestion(level);
         }
         this.lastStomachSize = belly.size();
-        this.visuals().setStage(belly.stage(level.getGameTime()));
+        int stage = belly.stage(level.getGameTime());
+        if (stage != this.visuals().stage() && stage > 0) {
+            ModSounds.SLAG_BEETLE_DIGEST.play(this);
+        }
+        this.visuals().setStage(stage);
     }
 
     /** A warm shell: an owner nearby stops freezing. */
@@ -282,17 +286,17 @@ public class SlagBeetle extends TameableCreature {
 
     @Override
     protected SoundEvent getAmbientSound() {
-        return SoundEvents.SILVERFISH_AMBIENT;
+        return ModSounds.SLAG_BEETLE_AMBIENT.get();
     }
 
     @Override
     protected SoundEvent getHurtSound(DamageSource damageSource) {
-        return SoundEvents.SILVERFISH_HURT;
+        return ModSounds.SLAG_BEETLE_HURT.get();
     }
 
     @Override
     protected SoundEvent getDeathSound() {
-        return SoundEvents.SILVERFISH_DEATH;
+        return ModSounds.SLAG_BEETLE_DEATH.get();
     }
 
     @Override

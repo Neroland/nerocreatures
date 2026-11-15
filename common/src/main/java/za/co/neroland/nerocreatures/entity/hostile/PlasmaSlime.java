@@ -4,7 +4,6 @@ import net.minecraft.core.Holder;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
-import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntityType;
@@ -30,6 +29,7 @@ import za.co.neroland.nerocreatures.entity.ai.SplitOnDamageBehaviour;
 import za.co.neroland.nerocreatures.entity.base.CreatureTier;
 import za.co.neroland.nerocreatures.entity.base.NeroCreatureEntity;
 import za.co.neroland.nerocreatures.registry.ModEntities;
+import za.co.neroland.nerocreatures.registry.ModSounds;
 
 /**
  * <b>Plasma Slime</b> — a charged blob that punishes standing next to it and refuses to die once.
@@ -109,7 +109,7 @@ public class PlasmaSlime extends NeroCreatureEntity implements Enemy {
     protected void registerGoals() {
         this.goalSelector.addGoal(0, new FloatGoal(this));
         this.goalSelector.addGoal(1, new EnergyAuraGoal(this, AURA_RADIUS, AURA_DAMAGE, AURA_INTERVAL_TICKS,
-                AURA_CLIP_TICKS, AURA_PULSE_FRAME));
+                AURA_CLIP_TICKS, AURA_PULSE_FRAME).withSound(ModSounds.PLASMA_SLIME_PULSE));
         this.goalSelector.addGoal(2, new MeleeAttackGoal(this, 1.0D, true));
         this.goalSelector.addGoal(7, new WaterAvoidingRandomStrollGoal(this, 0.8D));
         this.goalSelector.addGoal(8, new LookAtPlayerGoal(this, Player.class, 8.0F));
@@ -205,16 +205,16 @@ public class PlasmaSlime extends NeroCreatureEntity implements Enemy {
 
     @Override
     protected SoundEvent getAmbientSound() {
-        return SoundEvents.SLIME_SQUISH;
+        return ModSounds.PLASMA_SLIME_AMBIENT.get();
     }
 
     @Override
     protected SoundEvent getHurtSound(DamageSource damageSource) {
-        return SoundEvents.SLIME_HURT;
+        return ModSounds.PLASMA_SLIME_HURT.get();
     }
 
     @Override
     protected SoundEvent getDeathSound() {
-        return SoundEvents.SLIME_DEATH;
+        return ModSounds.PLASMA_SLIME_DEATH.get();
     }
 }

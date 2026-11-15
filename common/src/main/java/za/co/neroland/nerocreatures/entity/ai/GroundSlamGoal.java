@@ -63,6 +63,15 @@ public class GroundSlamGoal extends Goal {
      * @param cooldownTicks  ticks between slams
      * @param telegraphTicks how long the wind-up lasts — the player's warning, and their way out
      */
+    @org.jetbrains.annotations.Nullable
+    private za.co.neroland.nerocreatures.sound.CreatureSound sound;
+
+    /** The ability's own sound, played at the strike (optional; none by default). */
+    public GroundSlamGoal withSound(za.co.neroland.nerocreatures.sound.CreatureSound abilitySound) {
+        this.sound = abilitySound;
+        return this;
+    }
+
     public GroundSlamGoal(Mob mob, double radius, float damage, int cooldownTicks, int telegraphTicks) {
         this.mob = mob;
         this.radius = radius;
@@ -166,6 +175,10 @@ public class GroundSlamGoal extends Goal {
                 this.mob.getZ(), 3, this.radius * 0.4D, 0.0D, this.radius * 0.4D, 0.0D);
         level.sendParticles(ParticleTypes.LARGE_SMOKE, this.mob.getX(), this.mob.getY() + 0.2D,
                 this.mob.getZ(), 24, this.radius * 0.5D, 0.1D, this.radius * 0.5D, 0.02D);
-        this.mob.playSound(SoundEvents.ANVIL_LAND, 1.4F, 0.5F);
+        if (this.sound != null) {
+            this.sound.play(this.mob);
+        } else {
+            this.mob.playSound(SoundEvents.ANVIL_LAND, 1.4F, 0.5F);
+        }
     }
 }

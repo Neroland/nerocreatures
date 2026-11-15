@@ -62,6 +62,14 @@ public final class MagnetCrabRules {
     /** Tamed: the held pull pose stays on this long after the last delivery. */
     public static final int PULL_LINGER_TICKS = 40;
 
+    /** The tamed pull's sound replays at most this often while the magnet is delivering (2 s). */
+    public static final int MAGNET_SOUND_TICKS = 40;
+
+    /** Whether the magnet loop sound is due again ({@code lastSound} = game time it last played). */
+    public static boolean magnetSoundDue(long lastSound, long now) {
+        return now - lastSound >= MAGNET_SOUND_TICKS || now < lastSound;
+    }
+
     /**
      * The shell plate visual ({@code stage}) by stored item count: 0 none, then one plate per started
      * {@value #MAX_PER_SLOT} items, at most 3.

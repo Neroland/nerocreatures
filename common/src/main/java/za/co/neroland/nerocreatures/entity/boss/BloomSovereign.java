@@ -48,6 +48,8 @@ import za.co.neroland.nerocreatures.entity.base.NeroCreatureEntity;
 import za.co.neroland.nerocreatures.entity.greenxertz.BloomHost;
 import za.co.neroland.nerocreatures.entity.greenxertz.SovereignBrood;
 import za.co.neroland.nerocreatures.entity.visual.VisualPose;
+import za.co.neroland.nerocreatures.registry.ModSounds;
+import za.co.neroland.nerocreatures.sound.CreatureSound;
 
 /**
  * <b>Bloom Sovereign</b> — Greenxertz's signature boss (altar-summoned only, decision 001).
@@ -170,7 +172,7 @@ public class BloomSovereign extends NeroBossEntity {
 
     private void onPhaseEntered(ServerLevel level) {
         this.podTick = 0;
-        level.playSound(null, this.blockPosition(), SoundEvents.MOSS_BREAK, SoundSource.HOSTILE, 2.0F, 0.5F);
+        ModSounds.BLOOM_SOVEREIGN_PHASE.play(this);
         level.sendParticles(ParticleTypes.SPORE_BLOSSOM_AIR, this.getX(), this.getY() + 3.0D, this.getZ(),
                 60, 2.0D, 1.0D, 2.0D, 0.0D);
     }
@@ -401,7 +403,7 @@ public class BloomSovereign extends NeroBossEntity {
             this.running = true;
             this.tick = 0;
             BloomSovereign.this.visuals().playPose(VisualPose.ABILITY_2, SovereignRules.HEAL_CLIP_TICKS);
-            BloomSovereign.this.playSound(SoundEvents.AMETHYST_BLOCK_CHIME, 1.6F, 0.5F);
+            ModSounds.BLOOM_SOVEREIGN_HEAL.play(BloomSovereign.this);
         }
 
         @Override
@@ -513,7 +515,7 @@ public class BloomSovereign extends NeroBossEntity {
                 Vec3 at = from.lerp(to, i / 10.0D);
                 level.sendParticles(ParticleTypes.SPORE_BLOSSOM_AIR, at.x, at.y, at.z, 1, 0.02D, 0.02D, 0.02D, 0.0D);
             }
-            BloomSovereign.this.playSound(SoundEvents.SLIME_SQUISH, 1.6F, 0.6F);
+            ModSounds.BLOOM_SOVEREIGN_INFECT.play(BloomSovereign.this);
             DamageSource source = BloomSovereign.this.damageSources().mobAttack(BloomSovereign.this);
             if (!target.hurtServer(level, source, SovereignRules.infectDamage(this.phase))) {
                 return;
@@ -536,16 +538,21 @@ public class BloomSovereign extends NeroBossEntity {
     @Override
     @Nullable
     protected SoundEvent getAmbientSound() {
-        return SoundEvents.MOSS_STEP;
+        return ModSounds.BLOOM_SOVEREIGN_AMBIENT.get();
     }
 
     @Override
     protected SoundEvent getHurtSound(DamageSource damageSource) {
-        return SoundEvents.SLIME_HURT;
+        return ModSounds.BLOOM_SOVEREIGN_HURT.get();
     }
 
     @Override
     protected SoundEvent getDeathSound() {
-        return SoundEvents.MOSS_BREAK;
+        return ModSounds.BLOOM_SOVEREIGN_DEATH.get();
+    }
+
+    @Override
+    public CreatureSound summonSound() {
+        return ModSounds.BLOOM_SOVEREIGN_SUMMON;
     }
 }

@@ -4,7 +4,6 @@ import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
-import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -25,6 +24,7 @@ import za.co.neroland.nerocreatures.entity.ai.shared.SoundHuntGoal;
 import za.co.neroland.nerocreatures.entity.base.CreatureTier;
 import za.co.neroland.nerocreatures.entity.base.NeroCreatureEntity;
 import za.co.neroland.nerocreatures.entity.visual.VisualPose;
+import za.co.neroland.nerocreatures.registry.ModSounds;
 
 /**
  * <b>Echo Shrike</b> (Luna, hostile) — blind, and hunts by sound.
@@ -107,6 +107,7 @@ public class EchoShrike extends NeroCreatureEntity implements Enemy {
             // Lost it (it went quiet): listen with the searching head tilt.
             this.lostTargetAt = this.level().getGameTime();
             this.visuals().holdPose(VisualPose.ABILITY_2);
+            ModSounds.ECHO_SHRIKE_LISTEN.play(this);
         }
     }
 
@@ -129,20 +130,20 @@ public class EchoShrike extends NeroCreatureEntity implements Enemy {
         }
     }
 
-    // Mapped vanilla sounds until Stage 5 ships the family set: a small, chittering flyer's register.
+    // Original synthesised sounds (tools/sound), registered in ModSounds.
 
     @Override
     protected SoundEvent getAmbientSound() {
-        return SoundEvents.BAT_AMBIENT;
+        return ModSounds.ECHO_SHRIKE_AMBIENT.get();
     }
 
     @Override
     protected SoundEvent getHurtSound(DamageSource damageSource) {
-        return SoundEvents.BAT_HURT;
+        return ModSounds.ECHO_SHRIKE_HURT.get();
     }
 
     @Override
     protected SoundEvent getDeathSound() {
-        return SoundEvents.BAT_DEATH;
+        return ModSounds.ECHO_SHRIKE_DEATH.get();
     }
 }

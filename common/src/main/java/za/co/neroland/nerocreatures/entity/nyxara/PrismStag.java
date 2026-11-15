@@ -10,8 +10,6 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
-import net.minecraft.sounds.SoundEvents;
-import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
@@ -45,6 +43,7 @@ import za.co.neroland.nerocreatures.entity.tame.LivestockCreature;
 import za.co.neroland.nerocreatures.entity.visual.VisualPose;
 import za.co.neroland.nerocreatures.trait.TraitEffects;
 import za.co.neroland.nerocreatures.trait.TraitPool;
+import za.co.neroland.nerocreatures.registry.ModSounds;
 
 /**
  * <b>Prism Stag</b> (Nyxara; neutral livestock) — a slender deer with two tall crystal antlers.
@@ -200,7 +199,7 @@ public class PrismStag extends LivestockCreature {
         if (this.visuals().pose() != VisualPose.REST) {
             this.visuals().playPose(VisualPose.ABILITY, PrismStagRules.SHED_POSE_TICKS);
         }
-        level.playSound(null, this.blockPosition(), SoundEvents.AMETHYST_CLUSTER_BREAK, SoundSource.NEUTRAL, 1.0F, 1.1F);
+        ModSounds.PRISM_STAG_SHED.play(this);
     }
 
     private void tickAura(ServerLevel level) {
@@ -239,7 +238,7 @@ public class PrismStag extends LivestockCreature {
         level.sendParticles(ParticleTypes.END_ROD, this.getX(), this.getY() + this.getBbHeight() + 0.4D, this.getZ(),
                 6, 0.6D, 0.4D, 0.6D, 0.01D);
         if (n > 0) {
-            level.playSound(null, this.blockPosition(), SoundEvents.AMETHYST_BLOCK_CHIME, SoundSource.NEUTRAL, 0.8F, 1.3F);
+            ModSounds.PRISM_STAG_AURA.play(this);
         }
     }
 
@@ -267,17 +266,17 @@ public class PrismStag extends LivestockCreature {
 
     @Override
     protected SoundEvent getAmbientSound() {
-        return SoundEvents.AMETHYST_BLOCK_CHIME;
+        return ModSounds.PRISM_STAG_AMBIENT.get();
     }
 
     @Override
     protected SoundEvent getHurtSound(DamageSource damageSource) {
-        return SoundEvents.AMETHYST_BLOCK_HIT;
+        return ModSounds.PRISM_STAG_HURT.get();
     }
 
     @Override
     protected SoundEvent getDeathSound() {
-        return SoundEvents.AMETHYST_BLOCK_BREAK;
+        return ModSounds.PRISM_STAG_DEATH.get();
     }
 
     // --- persistence -----------------------------------------------------------------

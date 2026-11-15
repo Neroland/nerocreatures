@@ -49,6 +49,7 @@ import za.co.neroland.nerocreatures.entity.ai.shared.ProductTimer;
 import za.co.neroland.nerocreatures.entity.base.CreatureTier;
 import za.co.neroland.nerocreatures.entity.base.NeroCreatureEntity;
 import za.co.neroland.nerocreatures.entity.visual.VisualPose;
+import za.co.neroland.nerocreatures.registry.ModSounds;
 
 /**
  * <b>Drift Leviathan</b> (Greenxertz skies and gas giants, ambient) — a very long flattened whale-ray
@@ -249,7 +250,7 @@ public class DriftLeviathan extends NeroCreatureEntity {
         }
         if (this.visuals().pose() == VisualPose.IDLE && this.random.nextInt(SONG_CHANCE) < 10) {
             this.visuals().playPose(VisualPose.ABILITY, LeviathanRules.SONG_POSE_TICKS);
-            level.playSound(null, this.blockPosition(), SoundEvents.ELDER_GUARDIAN_AMBIENT, SoundSource.AMBIENT, 2.0F, 0.5F);
+            ModSounds.DRIFT_LEVIATHAN_SONG.play(this);
         }
     }
 
@@ -352,17 +353,17 @@ public class DriftLeviathan extends NeroCreatureEntity {
     @Override
     @Nullable
     protected SoundEvent getAmbientSound() {
-        return null;
+        return ModSounds.DRIFT_LEVIATHAN_AMBIENT.get();
     }
 
     @Override
     protected SoundEvent getHurtSound(DamageSource damageSource) {
-        return SoundEvents.ELDER_GUARDIAN_HURT;
+        return ModSounds.DRIFT_LEVIATHAN_HURT.get();
     }
 
     @Override
     protected SoundEvent getDeathSound() {
-        return SoundEvents.ELDER_GUARDIAN_DEATH;
+        return ModSounds.DRIFT_LEVIATHAN_DEATH.get();
     }
 
     @Override

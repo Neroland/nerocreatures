@@ -11,8 +11,6 @@ import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.sounds.SoundEvents;
-import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
@@ -23,6 +21,7 @@ import net.minecraft.world.phys.Vec3;
 import za.co.neroland.nerocreatures.NeroCreaturesCommon;
 import za.co.neroland.nerocreatures.entity.ai.shared.TetherGoal;
 import za.co.neroland.nerocreatures.entity.ai.shared.TetherState;
+import za.co.neroland.nerocreatures.registry.ModSounds;
 
 /**
  * The Gravity Leech tether effect: a transient {@code minecraft:gravity} modifier on the target,
@@ -64,8 +63,8 @@ public final class GravityTether implements TetherGoal.TetherEffect {
         this.latchedAt = level.getGameTime();
         this.held = new WeakReference<>(target);
         apply(level, target, GravityTetherRules.amount(this.mode, 0L));
-        level.playSound(null, tetherer.blockPosition(), SoundEvents.BEACON_ACTIVATE, SoundSource.HOSTILE, 0.6F, 1.8F);
         if (tetherer instanceof GravityLeech leech) {
+            ModSounds.GRAVITY_LEECH_LATCH.play(leech);
             leech.onLatched();
         }
     }
@@ -85,6 +84,9 @@ public final class GravityTether implements TetherGoal.TetherEffect {
         }
         this.held = null;
         if (tetherer instanceof GravityLeech leech) {
+            if (leech.isAlive()) {
+                ModSounds.GRAVITY_LEECH_DETACH.play(leech);
+            }
             leech.onReleased();
         }
     }

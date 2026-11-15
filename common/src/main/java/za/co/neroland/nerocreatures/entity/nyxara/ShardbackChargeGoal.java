@@ -13,6 +13,7 @@ import net.minecraft.world.phys.Vec3;
 
 import za.co.neroland.nerocreatures.entity.nyxara.ShardbackRules.Phase;
 import za.co.neroland.nerocreatures.entity.visual.VisualPose;
+import za.co.neroland.nerocreatures.registry.ModSounds;
 
 /**
  * The Shardback's charge: wind-up (telegraph, plates fold), a locked straight run that hits at most
@@ -66,7 +67,7 @@ public class ShardbackChargeGoal extends Goal {
         this.mob.getNavigation().stop();
         this.mob.enterPhase(ShardbackRules.next(Phase.ROAM, 0, true, false));
         this.mob.visuals().playPose(VisualPose.ABILITY, ShardbackRules.CHARGE_POSE_TICKS);
-        this.mob.playSound(SoundEvents.AMETHYST_CLUSTER_PLACE, 1.0F, 0.6F);
+        ModSounds.SHARDBACK_CHARGE.play(this.mob);
     }
 
     @Override

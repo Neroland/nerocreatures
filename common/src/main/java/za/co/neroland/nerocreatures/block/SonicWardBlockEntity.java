@@ -18,6 +18,8 @@ import net.minecraft.world.phys.AABB;
 import za.co.neroland.nerocreatures.NeroCreaturesCommon;
 import za.co.neroland.nerocreatures.entity.base.NeroCreatureEntity;
 import za.co.neroland.nerocreatures.entity.boss.NeroBossEntity;
+import za.co.neroland.nerocreatures.registry.ModSounds;
+import za.co.neroland.nerocreatures.sound.CreatureSound;
 
 /**
  * The Sonic Ward. Burns {@code #nerocreatures:sonic_ward_fuel}. While burning:
@@ -76,6 +78,17 @@ public class SonicWardBlockEntity extends FieldBlockEntity {
     @Override
     protected int ticksPerItem() {
         return fuelTicks.getAsInt();
+    }
+
+    /** The hum is a seamless three-second loop: replayed every three one-second pulses while fuelled. */
+    @Override
+    protected CreatureSound burningSound() {
+        return ModSounds.SONIC_WARD_HUM;
+    }
+
+    @Override
+    protected int soundPulses() {
+        return 3;
     }
 
     @Override

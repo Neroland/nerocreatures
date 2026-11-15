@@ -48,6 +48,7 @@ import za.co.neroland.nerocreatures.link.CreatureLinkEvents;
 import za.co.neroland.nerocreatures.progression.CreatureMilestones;
 import za.co.neroland.nerocreatures.registry.ModItems;
 import za.co.neroland.nerocreatures.world.CreatureGriefing;
+import za.co.neroland.nerocreatures.registry.ModSounds;
 
 /**
  * <b>Terraforming Drone</b> — the mod's one utility mob: an owned, deployed machine that tends the
@@ -346,6 +347,7 @@ public class TerraformingDrone extends NeroCreatureEntity implements OwnableEnti
             }
             if (BoneMealItem.growCrop(new ItemStack(Items.BONE_MEAL), level, target)) {
                 level.playSound(null, target, SoundEvents.BONE_MEAL_USE, SoundSource.NEUTRAL, 0.4F, 1.2F);
+                ModSounds.TERRAFORMING_DRONE_WORK.play(this);
                 return;
             }
         }
@@ -512,16 +514,16 @@ public class TerraformingDrone extends NeroCreatureEntity implements OwnableEnti
 
     @Override
     protected SoundEvent getAmbientSound() {
-        return SoundEvents.BEE_LOOP;
+        return ModSounds.TERRAFORMING_DRONE_AMBIENT.get();
     }
 
     @Override
     protected SoundEvent getHurtSound(DamageSource damageSource) {
-        return MechanicalSounds.hurt();
+        return ModSounds.TERRAFORMING_DRONE_HURT.get();
     }
 
     @Override
     protected SoundEvent getDeathSound() {
-        return MechanicalSounds.death();
+        return ModSounds.TERRAFORMING_DRONE_DEATH.get();
     }
 }
