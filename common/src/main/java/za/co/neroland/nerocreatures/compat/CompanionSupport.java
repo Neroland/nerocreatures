@@ -59,11 +59,11 @@ public final class CompanionSupport {
     // --- SPI default bodies ---------------------------------------------------------------------
 
     static boolean isSmall(TamableAnimal pet) {
-        return optedIn(pet instanceof TameableCreature, pet.isTame(), pet.isBaby(), pet.getType().is(PERCH));
+        return optedIn(pet instanceof TameableCreature, pet.isTame(), pet.isBaby(), pet.getType().builtInRegistryHolder().is(PERCH));
     }
 
     static boolean canFetch(TamableAnimal pet) {
-        return optedIn(pet instanceof TameableCreature, pet.isTame(), pet.isBaby(), pet.getType().is(FETCH));
+        return optedIn(pet instanceof TameableCreature, pet.isTame(), pet.isBaby(), pet.getType().builtInRegistryHolder().is(FETCH));
     }
 
     static void perched(TamableAnimal pet, boolean perched) {

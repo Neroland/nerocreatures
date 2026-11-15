@@ -69,6 +69,12 @@ public class XertzForager extends TameableCreature {
                 .add(Attributes.FOLLOW_RANGE, 20.0D);
     }
 
+    /** Breeding opt-in (decision 003, additive): live birth, food = its taming food. */
+    @Override
+    public boolean breedable() {
+        return true;
+    }
+
     @Override
     public Item tamingFood() {
         return ModItems.PLASMA_CELL.get();

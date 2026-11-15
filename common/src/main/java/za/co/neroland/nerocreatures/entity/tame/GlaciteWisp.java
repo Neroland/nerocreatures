@@ -72,6 +72,12 @@ public class GlaciteWisp extends TameableCreature {
                 .add(Attributes.SAFE_FALL_DISTANCE, DRIFT_SAFE_FALL);
     }
 
+    /** Breeding opt-in (decision 003, additive): live birth, food = its taming food. */
+    @Override
+    public boolean breedable() {
+        return true;
+    }
+
     @Override
     public Item tamingFood() {
         return ModItems.STALKER_SINEW.get();
@@ -100,7 +106,7 @@ public class GlaciteWisp extends TameableCreature {
         if (!(this.level() instanceof ServerLevel)) {
             return;
         }
-        if (this.isOrderedToSit()) {
+        if (this.isResting()) {
             this.visuals().holdPose(VisualPose.REST);
         } else if (this.visuals().pose() == VisualPose.REST) {
             this.visuals().holdPose(VisualPose.IDLE);

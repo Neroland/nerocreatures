@@ -114,7 +114,8 @@ public class IncubatorBlockEntity extends HabitatBlockEntity implements HabitatD
 
     /** A player used an egg on the incubator. Server thread only. */
     void insert(ServerLevel level, ServerPlayer player, ItemStack held) {
-        Optional<EggData> data = EggData.read(held);
+        // A creature egg with no data (creative, a command) is resolved from its item id + fresh traits.
+        Optional<EggData> data = EggLaying.resolve(held, level.getRandom());
         boolean readable = data.isPresent()
                 && entityType(data.get().speciesId()).isPresent();
         IncubatorRules.Insert verdict = IncubatorRules.decideInsert(this.occupied(), readable, true);
@@ -128,6 +129,7 @@ public class IncubatorBlockEntity extends HabitatBlockEntity implements HabitatD
                 verdict = IncubatorRules.Insert.CAP;
             } else {
                 this.egg = held.copyWithCount(1);
+                data.get().write(this.egg); // fixes the resolved traits on the stored egg
                 this.progress = 0L;
                 this.incubation = row.entity();
                 held.consume(1, player);
@@ -220,15 +222,15 @@ public class IncubatorBlockEntity extends HabitatBlockEntity implements HabitatD
             return;
         }
         entity.snapTo(pos.getX() + 0.5D, pos.getY() + 1.0D, pos.getZ() + 0.5D, level.getRandom().nextFloat() * 360.0F, 0.0F);
-        if (entity instanceof AgeableMob ageable) {
+        HatchRules outcome = HatchRules.of(entity instanceof TameableCreature c && c.isTameable(),
+                entity instanceof LivestockCreature);
+        if (outcome.baby() && entity instanceof AgeableMob ageable) {
             ageable.setBaby(true);
         }
         if (entity instanceof TameableCreature creature) {
             creature.setTraits(data.get().traits());
-            if (creature.isTameable()) {
-                creature.setHatchling(true);
-            }
-            if (creature instanceof LivestockCreature livestock) {
+            creature.setHatchling(outcome.hatchling());
+            if (outcome.husbanded() && creature instanceof LivestockCreature livestock) {
                 livestock.markHusbanded();
             }
         }

@@ -180,8 +180,8 @@ public class LumenMoth extends TameableCreature implements HerdMember
             this.pulseAt = Long.MIN_VALUE;
             this.reveal(level, true);
         }
-        // Perch / sit is the held rest pose (Art-Luna).
-        if (this.isOrderedToSit()) {
+        // Perch / sit is the held rest pose (Art-Luna); a companion shoulder perch counts.
+        if (this.isResting()) {
             this.visuals().holdPose(VisualPose.REST);
         } else if (this.visuals().pose() == VisualPose.REST) {
             this.visuals().holdPose(VisualPose.IDLE);

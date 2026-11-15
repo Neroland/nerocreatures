@@ -183,7 +183,7 @@ public class MagnetCrab extends TameableCreature {
             this.visuals().holdPose(VisualPose.IDLE);
             pose = VisualPose.IDLE;
         }
-        boolean resting = this.isOrderedToSit();
+        boolean resting = this.isResting();
         if (resting && pose == VisualPose.IDLE) {
             this.visuals().holdPose(VisualPose.REST);
         } else if (!resting && pose == VisualPose.REST) {
