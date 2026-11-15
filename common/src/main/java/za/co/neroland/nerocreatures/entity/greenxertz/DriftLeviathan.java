@@ -279,7 +279,7 @@ public class DriftLeviathan extends NeroCreatureEntity {
         held.hurtAndBreak(1, player, hand == InteractionHand.MAIN_HAND ? EquipmentSlot.MAINHAND : EquipmentSlot.OFFHAND);
         level.playSound(null, this.blockPosition(), SoundEvents.SHEEP_SHEAR, SoundSource.NEUTRAL, 1.0F, 0.7F);
         level.sendParticles(ParticleTypes.BUBBLE_POP, player.getX(), player.getY(), player.getZ(), 6, 0.4D, 0.1D, 0.4D, 0.0D);
-        return InteractionResult.SUCCESS_SERVER;
+        return za.co.neroland.nerocreatures.bestiary.BestiaryProgress.noteHarvest(player, this, InteractionResult.SUCCESS_SERVER);
     }
 
     // --- population -----------------------------------------------------------------------

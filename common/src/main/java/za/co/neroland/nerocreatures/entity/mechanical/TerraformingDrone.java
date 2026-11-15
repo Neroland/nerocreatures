@@ -189,6 +189,7 @@ public class TerraformingDrone extends NeroCreatureEntity implements OwnableEnti
         this.workAnchor = anchor.immutable();
         this.setPersistenceRequired();
         CreatureMilestones.record(player, CreatureMilestones.FIRST_DEPLOY); // record gate, never a lock
+        za.co.neroland.nerocreatures.bestiary.BestiaryProgress.noteTame(player, this); // Bestiary: deploying a drone studies it
     }
 
     //? if >=1.21.5 {

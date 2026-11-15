@@ -1,0 +1,7 @@
+{
+  "scope": "player",
+  "requires": [
+    "nerocreatures:bestiary/scanned/asteroid_worm"
+  ],
+  "title": "Asteroid Worm studied"
+}

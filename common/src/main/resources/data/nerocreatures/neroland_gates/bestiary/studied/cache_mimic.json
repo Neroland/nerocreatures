@@ -1,0 +1,7 @@
+{
+  "scope": "player",
+  "requires": [
+    "nerocreatures:bestiary/scanned/cache_mimic"
+  ],
+  "title": "Cache Mimic studied"
+}

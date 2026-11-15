@@ -26,6 +26,8 @@ public final class CreatureMilestones {
     public static final Identifier FIRST_TAME = gate("first_tame");
     /** The player deployed their first Terraforming Drone from a drone shell. */
     public static final Identifier FIRST_DEPLOY = gate("first_deploy");
+    /** The player bred a pair or hatched an egg for the first time (quest pack hook). */
+    public static final Identifier FIRST_BREED = gate("first_breed");
 
     private CreatureMilestones() {
     }

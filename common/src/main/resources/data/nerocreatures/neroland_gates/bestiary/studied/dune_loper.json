@@ -1,0 +1,7 @@
+{
+  "scope": "player",
+  "requires": [
+    "nerocreatures:bestiary/scanned/dune_loper"
+  ],
+  "title": "Dune Loper studied"
+}

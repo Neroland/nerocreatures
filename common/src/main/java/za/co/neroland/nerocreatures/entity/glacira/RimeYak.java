@@ -282,10 +282,10 @@ public class RimeYak extends LivestockCreature implements HerdMember {
     public InteractionResult mobInteract(Player player, InteractionHand hand) {
         ItemStack held = player.getItemInHand(hand);
         if (!held.isEmpty() && held.getItem() instanceof ShearsItem && !this.isBaby()) {
-            return this.shear(player, hand, held);
+            return za.co.neroland.nerocreatures.bestiary.BestiaryProgress.noteHarvest(player, this, this.shear(player, hand, held));
         }
         if (!held.isEmpty() && held.is(Items.BUCKET) && !this.isBaby()) {
-            return this.milk(player, hand, held);
+            return za.co.neroland.nerocreatures.bestiary.BestiaryProgress.noteHarvest(player, this, this.milk(player, hand, held));
         }
         return super.mobInteract(player, hand);
     }

@@ -252,7 +252,7 @@ public class LodeTortoise extends LivestockCreature implements HerdMember {
         level.playSound(null, this.blockPosition(), SoundEvents.STONE_BREAK, SoundSource.NEUTRAL, 1.0F, 0.8F);
         this.markHusbanded();
         this.syncVisuals();
-        return InteractionResult.SUCCESS_SERVER;
+        return za.co.neroland.nerocreatures.bestiary.BestiaryProgress.noteHarvest(player, this, InteractionResult.SUCCESS_SERVER);
     }
 
     // --- natural spawn (M2) -------------------------------------------------------------

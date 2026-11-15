@@ -1,0 +1,7 @@
+{
+  "scope": "player",
+  "requires": [
+    "nerocreatures:bestiary/scanned/glacite_wisp"
+  ],
+  "title": "Glacite Wisp studied"
+}

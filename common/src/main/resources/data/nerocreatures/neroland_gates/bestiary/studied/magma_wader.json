@@ -1,0 +1,7 @@
+{
+  "scope": "player",
+  "requires": [
+    "nerocreatures:bestiary/scanned/magma_wader"
+  ],
+  "title": "Magma Wader studied"
+}

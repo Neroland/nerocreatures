@@ -1,0 +1,7 @@
+{
+  "scope": "player",
+  "requires": [
+    "nerocreatures:bestiary/scanned/facet_colossus"
+  ],
+  "title": "Facet Colossus studied"
+}

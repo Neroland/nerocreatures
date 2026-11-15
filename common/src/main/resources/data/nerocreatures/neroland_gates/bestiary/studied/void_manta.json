@@ -1,0 +1,7 @@
+{
+  "scope": "player",
+  "requires": [
+    "nerocreatures:bestiary/scanned/void_manta"
+  ],
+  "title": "Void Manta studied"
+}

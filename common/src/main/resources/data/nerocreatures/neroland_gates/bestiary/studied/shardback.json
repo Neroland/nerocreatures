@@ -1,0 +1,7 @@
+{
+  "scope": "player",
+  "requires": [
+    "nerocreatures:bestiary/scanned/shardback"
+  ],
+  "title": "Shardback studied"
+}

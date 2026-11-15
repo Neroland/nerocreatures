@@ -1,0 +1,7 @@
+{
+  "scope": "player",
+  "requires": [
+    "nerocreatures:bestiary/scanned/lumen_moth"
+  ],
+  "title": "Lumen Moth studied"
+}

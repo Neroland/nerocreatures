@@ -19,6 +19,7 @@ import za.co.neroland.nerocreatures.item.CaptainsLedgerItem;
 import za.co.neroland.nerocreatures.item.CapturePodItem;
 import za.co.neroland.nerocreatures.item.DrifterSporesItem;
 import za.co.neroland.nerocreatures.item.DroneShellItem;
+import za.co.neroland.nerocreatures.item.FieldScannerItem;
 import za.co.neroland.nerocreatures.item.SigilItem;
 import za.co.neroland.nerocreatures.item.StaticJarItem;
 import za.co.neroland.nerocreatures.item.gear.CreatureGearItem;
@@ -178,6 +179,13 @@ public final class ModItems {
      */
     public static final RegistryEntry<Item> STATIC_JAR = ITEMS.register("static_jar",
             key -> new StaticJarItem(new Item.Properties().stacksTo(16).setId(key)));
+
+    /**
+     * The Field Scanner (decision 010): hold Use on a creature to scan it into the Bestiary; Sneak +
+     * Use opens the Bestiary. Stack size 1, no durability.
+     */
+    public static final RegistryEntry<Item> FIELD_SCANNER = ITEMS.register("field_scanner",
+            key -> new FieldScannerItem(new Item.Properties().stacksTo(1).setId(key)));
 
     /**
      * Planet-boss drop — the proof you killed one, and the ecosystem's top-tier reagent.
@@ -366,7 +374,7 @@ public final class ModItems {
             APEX_TROPHY, MATRIARCH_FROSTCORE, SOVEREIGN_SEED, COLOSSUS_FACET, TYRANT_EMBER);
 
     /** Crafted deployables — shown in the creative tab after the drops (sigils, then the altar). */
-    private static final List<RegistryEntry<Item>> DEPLOYABLES = List.of(DRONE_SHELL, CREATURE_SADDLE, STATIC_JAR,
+    private static final List<RegistryEntry<Item>> DEPLOYABLES = List.of(FIELD_SCANNER, DRONE_SHELL, CREATURE_SADDLE, STATIC_JAR,
             CINDER_TYRANT_SIGIL, RIME_MATRIARCH_SIGIL, BLOOM_SOVEREIGN_SIGIL, FACET_COLOSSUS_SIGIL, APEX_ALTAR,
             NEST, FEEDING_TROUGH, INCUBATOR, LURE_BEACON, SONIC_WARD, TERRARIUM, TROPHY_PLAQUE,
             LUMEN_MOTH_EGG, LODE_TORTOISE_EGG, SLAG_BEETLE_EGG, MAGNET_CRAB_EGG, SPORE_DRIFTER_EGG, VOID_MANTA_EGG,

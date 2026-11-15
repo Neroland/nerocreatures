@@ -1,0 +1,7 @@
+{
+  "scope": "player",
+  "requires": [
+    "nerocreatures:bestiary/scanned/slag_beetle"
+  ],
+  "title": "Slag Beetle studied"
+}

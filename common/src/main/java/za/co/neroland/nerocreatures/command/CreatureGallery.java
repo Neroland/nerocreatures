@@ -519,6 +519,8 @@ public final class CreatureGallery {
             return null;
         }
         mob.setPersistenceRequired();
+        // Gallery displays are never scanned and never count toward the Bestiary.
+        mob.addTag(za.co.neroland.nerocreatures.bestiary.BestiaryProgress.GALLERY_TAG);
         //? if >=26.3 {
         mob.setPermanentlyInvulnerable(true);
         //?} else {
@@ -562,6 +564,7 @@ public final class CreatureGallery {
         /*boss.setInvulnerable(true);
         *///?}
         boss.setPersistenceRequired();
+        boss.addTag(za.co.neroland.nerocreatures.bestiary.BestiaryProgress.GALLERY_TAG);
         return level.addFreshEntity(boss) ? boss : null;
     }
 

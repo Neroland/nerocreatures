@@ -1,0 +1,7 @@
+{
+  "scope": "player",
+  "requires": [
+    "nerocreatures:bestiary/scanned/prism_stag"
+  ],
+  "title": "Prism Stag studied"
+}

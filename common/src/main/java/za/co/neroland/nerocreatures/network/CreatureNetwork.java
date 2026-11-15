@@ -115,6 +115,15 @@ public final class CreatureNetwork {
         // ServerPayloadGuard before any action handler sees the entity.
         serverbound(CreatureActionPayload.TYPE, CreatureActionPayload.STREAM_CODEC,
                 CreatureActions::handle);
+        // The Bestiary (decision 010 section 9): one request answered with the sender's own counts,
+        // and scan/tier events sent only to the player they are about. Client handlers go through
+        // BestiaryClientHooks so this common class never names a client class.
+        serverbound(BestiaryRequestPayload.TYPE, BestiaryRequestPayload.STREAM_CODEC,
+                za.co.neroland.nerocreatures.bestiary.BestiaryProgress::handleRequest);
+        clientbound(BestiaryCountsPayload.TYPE, BestiaryCountsPayload.STREAM_CODEC,
+                payload -> za.co.neroland.nerocreatures.bestiary.BestiaryClientHooks.counts.accept(payload));
+        clientbound(BestiaryEventPayload.TYPE, BestiaryEventPayload.STREAM_CODEC,
+                payload -> za.co.neroland.nerocreatures.bestiary.BestiaryClientHooks.event.accept(payload));
     }
 
     /** Client side: sends a payload to the server (no-op on a server without the channel). */
@@ -128,6 +137,7 @@ public final class CreatureNetwork {
      * server that does not run NeroCreatures. No-op while there are no client caches.
      */
     public static void clearClientCaches() {
-        // Nothing mirrored on the client yet.
+        // The Bestiary's client state (counts, scan HUD, screen memory) is the only mirror.
+        za.co.neroland.nerocreatures.bestiary.BestiaryClientHooks.clear.run();
     }
 }

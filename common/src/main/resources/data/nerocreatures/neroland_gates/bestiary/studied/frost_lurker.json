@@ -1,0 +1,7 @@
+{
+  "scope": "player",
+  "requires": [
+    "nerocreatures:bestiary/scanned/frost_lurker"
+  ],
+  "title": "Frost Lurker studied"
+}

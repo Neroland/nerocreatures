@@ -1,0 +1,7 @@
+{
+  "scope": "player",
+  "requires": [
+    "nerocreatures:bestiary/scanned/terraforming_drone"
+  ],
+  "title": "Terraforming Drone studied"
+}

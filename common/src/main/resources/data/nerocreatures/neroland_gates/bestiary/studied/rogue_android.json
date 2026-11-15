@@ -1,0 +1,7 @@
+{
+  "scope": "player",
+  "requires": [
+    "nerocreatures:bestiary/scanned/rogue_android"
+  ],
+  "title": "Rogue Android studied"
+}

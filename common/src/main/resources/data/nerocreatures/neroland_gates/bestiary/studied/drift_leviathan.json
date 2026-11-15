@@ -1,0 +1,7 @@
+{
+  "scope": "player",
+  "requires": [
+    "nerocreatures:bestiary/scanned/drift_leviathan"
+  ],
+  "title": "Drift Leviathan studied"
+}

@@ -308,6 +308,8 @@ public abstract class NeroCreatureEntity extends PathfinderMob implements Creatu
     public void die(DamageSource source) {
         super.die(source);
         if (this.level() instanceof ServerLevel serverLevel) {
+            // Bestiary: the kill statistic was just awarded by super.die; a met kill goal studies it.
+            za.co.neroland.nerocreatures.bestiary.BestiaryProgress.noteKill(this, source.getEntity());
             ScrapHulkAssembly.onCreatureDeath(serverLevel, this);
         }
     }

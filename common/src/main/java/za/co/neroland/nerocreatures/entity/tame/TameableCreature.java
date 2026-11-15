@@ -540,6 +540,7 @@ public abstract class TameableCreature extends TamableAnimal implements ProductS
         this.tame(player);
         this.hatchling = false;
         CreatureMilestones.record(player, CreatureMilestones.FIRST_TAME); // record gate, never a lock
+        za.co.neroland.nerocreatures.bestiary.BestiaryProgress.noteTame(player, this); // Bestiary: tames study tameables and mounts
         this.setCommand(PetCommand.FOLLOW);
         this.setTarget(null);
         state.add(owner, OwnedCreature.of(this, kind));
@@ -745,6 +746,8 @@ public abstract class TameableCreature extends TamableAnimal implements ProductS
      */
     @Override
     public void spawnChildFromBreeding(ServerLevel level, Animal partner) {
+        // Bestiary: credit each parent's love cause (the player who fed it), never a nearby player.
+        za.co.neroland.nerocreatures.bestiary.BestiaryProgress.noteBreed(level, this, partner);
         BreedingHooks.EggLayer layer = BreedingHooks.eggLayer();
         if (this.breedable() && this.birthMode() == BirthMode.EGG && layer != null
                 && partner instanceof TameableCreature mate) {

@@ -1,0 +1,7 @@
+{
+  "scope": "player",
+  "requires": [
+    "nerocreatures:bestiary/scanned/void_crawler"
+  ],
+  "title": "Void Crawler studied"
+}

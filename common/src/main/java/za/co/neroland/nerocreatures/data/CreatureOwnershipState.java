@@ -306,6 +306,22 @@ public final class CreatureOwnershipState extends SavedData {
     }
 
     /**
+     * The player whose row holds {@code entity} (an egg's incubation id, for example), or
+     * {@code null}. One pass over the index; used only on rare events such as a hatch.
+     */
+    @Nullable
+    public UUID ownerOfRow(UUID entity) {
+        for (Map.Entry<UUID, List<OwnedCreature>> owner : this.byPlayer.entrySet()) {
+            for (OwnedCreature row : owner.getValue()) {
+                if (row.entity().equals(entity)) {
+                    return owner.getKey();
+                }
+            }
+        }
+        return null;
+    }
+
+    /**
      * Drops one row by its id alone, whoever it belongs to: an Incubator's egg row when the egg hatches,
      * is taken back out or its incubator breaks. The block entity only knows the random incubation id,
      * never the player (decision 004), so it cannot call {@link #remove(UUID, UUID)}. One pass over the

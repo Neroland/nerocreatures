@@ -1,0 +1,7 @@
+{
+  "scope": "player",
+  "requires": [
+    "nerocreatures:bestiary/scanned/lunar_stalker"
+  ],
+  "title": "Lunar Stalker studied"
+}

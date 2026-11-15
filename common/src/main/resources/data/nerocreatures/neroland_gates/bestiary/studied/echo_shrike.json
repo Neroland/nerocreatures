@@ -1,0 +1,7 @@
+{
+  "scope": "player",
+  "requires": [
+    "nerocreatures:bestiary/scanned/echo_shrike"
+  ],
+  "title": "Echo Shrike studied"
+}

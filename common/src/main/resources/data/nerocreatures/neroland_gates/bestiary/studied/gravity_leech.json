@@ -1,0 +1,7 @@
+{
+  "scope": "player",
+  "requires": [
+    "nerocreatures:bestiary/scanned/gravity_leech"
+  ],
+  "title": "Gravity Leech studied"
+}

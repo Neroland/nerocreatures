@@ -1,0 +1,7 @@
+{
+  "scope": "player",
+  "requires": [
+    "nerocreatures:bestiary/scanned/rime_yak"
+  ],
+  "title": "Rime Yak studied"
+}

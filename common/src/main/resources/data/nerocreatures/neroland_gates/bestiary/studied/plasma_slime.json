@@ -1,0 +1,7 @@
+{
+  "scope": "player",
+  "requires": [
+    "nerocreatures:bestiary/scanned/plasma_slime"
+  ],
+  "title": "Plasma Slime studied"
+}

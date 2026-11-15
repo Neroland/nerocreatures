@@ -242,6 +242,11 @@ public class IncubatorBlockEntity extends HabitatBlockEntity implements HabitatD
         }
         level.addFreshEntity(entity);
         ModSounds.INCUBATOR_HATCH.play(level, pos, SoundSource.BLOCKS);
+        if (this.incubation != null) {
+            // Bestiary: the player whose ownership row held the egg hatched it (no identity on the block).
+            za.co.neroland.nerocreatures.bestiary.BestiaryProgress.noteHatch(level.getServer(),
+                    CreatureOwnershipState.get(level.getServer()).ownerOfRow(this.incubation), entity.getType());
+        }
         HatchListener listener = hatchListener;
         if (listener != null && this.incubation != null) {
             try {

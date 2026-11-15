@@ -388,6 +388,12 @@ public final class BossController {
         if (this.fightId != null) {
             shares = BossContributionState.get(level.getServer()).resolve(this.fightId);
             BossRewards.payOut(level, this.boss.position(), shares);
+            // Bestiary: every recorded participant of a summoned fight studies this boss (offline too).
+            for (BossContributionState.Share share : shares) {
+                if (share.fraction() > 0.0F) {
+                    za.co.neroland.nerocreatures.bestiary.BestiaryProgress.noteBossShare(level.getServer(), share.player(), this.boss.getType());
+                }
+            }
         }
         this.fire(level, 0L, this.phases.size(), false);
         // The companion-app side of the same news: a broadcast event carrying no player data, plus

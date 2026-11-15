@@ -1,0 +1,7 @@
+{
+  "scope": "player",
+  "requires": [
+    "nerocreatures:bestiary/scanned/scrap_hulk"
+  ],
+  "title": "Scrap Hulk studied"
+}

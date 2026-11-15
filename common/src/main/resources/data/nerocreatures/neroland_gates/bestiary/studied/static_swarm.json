@@ -1,0 +1,7 @@
+{
+  "scope": "player",
+  "requires": [
+    "nerocreatures:bestiary/scanned/static_swarm"
+  ],
+  "title": "Static Swarm studied"
+}

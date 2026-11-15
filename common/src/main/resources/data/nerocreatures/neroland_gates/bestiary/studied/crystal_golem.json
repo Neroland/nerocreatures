@@ -1,0 +1,7 @@
+{
+  "scope": "player",
+  "requires": [
+    "nerocreatures:bestiary/scanned/crystal_golem"
+  ],
+  "title": "Crystal Golem studied"
+}

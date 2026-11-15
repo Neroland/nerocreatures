@@ -1,0 +1,7 @@
+{
+  "scope": "player",
+  "requires": [
+    "nerocreatures:bestiary/scanned/magnet_crab"
+  ],
+  "title": "Magnet Crab studied"
+}

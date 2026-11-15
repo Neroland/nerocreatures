@@ -106,6 +106,14 @@ public class DustDevil extends NeroCreatureEntity implements Enemy {
         return this.phase;
     }
 
+    /**
+     * Whether it is still spinning up (the closed column). On the client this reads the synced
+     * {@code form}; the Field Scanner treats a forming devil as not there yet.
+     */
+    public boolean isForming() {
+        return this.level().isClientSide() ? this.visuals().form() == FORM_COLUMN : this.phase == Phase.SPIN_UP;
+    }
+
     @Override
     protected void onFirstServerTick(ServerLevel level) {
         super.onFirstServerTick(level);

@@ -1,0 +1,7 @@
+{
+  "scope": "player",
+  "requires": [
+    "nerocreatures:bestiary/scanned/pirate_captain"
+  ],
+  "title": "Pirate Captain studied"
+}

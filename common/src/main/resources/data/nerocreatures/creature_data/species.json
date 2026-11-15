@@ -3,16 +3,16 @@
   "species": {
     "glacite_wisp": {"birth": "live", "studied_threshold": 1},
     "xertz_forager": {"birth": "live", "studied_threshold": 1},
-    "lumen_moth": {"birth": "egg", "studied_threshold": 3},
-    "lode_tortoise": {"birth": "egg", "studied_threshold": 3},
-    "dune_loper": {"birth": "live", "studied_threshold": 3},
-    "strata_hound": {"birth": "live", "studied_threshold": 3},
-    "slag_beetle": {"birth": "egg", "studied_threshold": 3},
-    "rime_yak": {"birth": "live", "studied_threshold": 3},
-    "spore_drifter": {"birth": "egg", "studied_threshold": 3},
-    "mossback": {"birth": "live", "studied_threshold": 3},
+    "lumen_moth": {"birth": "egg", "studied_threshold": 1},
+    "lode_tortoise": {"birth": "egg", "studied_threshold": 1},
+    "dune_loper": {"birth": "live", "studied_threshold": 1},
+    "strata_hound": {"birth": "live", "studied_threshold": 1},
+    "slag_beetle": {"birth": "egg", "studied_threshold": 1},
+    "rime_yak": {"birth": "live", "studied_threshold": 1},
+    "spore_drifter": {"birth": "egg", "studied_threshold": 1},
+    "mossback": {"birth": "live", "studied_threshold": 1},
     "prism_stag": {"birth": "live", "studied_threshold": 1, "product_interval_ticks": 12000},
-    "magnet_crab": {"birth": "egg", "studied_threshold": 3},
-    "void_manta": {"birth": "egg", "studied_threshold": 3}
+    "magnet_crab": {"birth": "egg", "studied_threshold": 1},
+    "void_manta": {"birth": "egg", "studied_threshold": 1}
   }
 }

@@ -4,7 +4,9 @@
     python tools/art/run.py            # rebuild the palette, pack new cubes, paint, write Radiant
     python tools/art/run.py --check    # change nothing; exit 1 if anything is stale or invalid
 
-Order: palette, spec validation, UV packing, every ``paint/<habitat>.py``, then ``radiant.py``.
+Order: palette, spec validation, UV packing, every ``paint/<habitat>.py``, then ``radiant.py``, then the
+non-entity sheets that keep their own entry points: ``paint/gui.py`` (Bestiary and scanner HUD) and
+``paint/particles.py`` (the 16 particle types).
 """
 
 from __future__ import annotations
@@ -42,6 +44,9 @@ def main(argv: list) -> int:
             print("FAIL  %s has a spec but no painter" % entity_id)
             failed = 1
     failed |= radiant.main(flags)
+    # Non-entity sheets with their own main(): the Bestiary/HUD GUI and the particle frames.
+    failed |= importlib.import_module("gui").main(flags)
+    failed |= importlib.import_module("particles").main(flags)
     print("art kit: " + ("FAILED" if failed else "clean"))
     return 1 if failed else 0
 

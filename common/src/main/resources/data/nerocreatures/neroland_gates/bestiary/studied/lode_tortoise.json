@@ -1,0 +1,7 @@
+{
+  "scope": "player",
+  "requires": [
+    "nerocreatures:bestiary/scanned/lode_tortoise"
+  ],
+  "title": "Lode Tortoise studied"
+}

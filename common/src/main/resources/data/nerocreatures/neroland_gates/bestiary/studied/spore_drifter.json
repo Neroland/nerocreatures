@@ -1,0 +1,7 @@
+{
+  "scope": "player",
+  "requires": [
+    "nerocreatures:bestiary/scanned/spore_drifter"
+  ],
+  "title": "Spore Drifter studied"
+}
