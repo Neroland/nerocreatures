@@ -9,7 +9,6 @@ import com.mojang.blaze3d.platform.InputConstants;
 
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Player;
@@ -159,7 +158,7 @@ public final class ClientBestiary {
             default -> {
             }
         }
-        if (mc.screen instanceof BestiaryScreen screen) {
+        if (BestiaryGfx.screen(mc) instanceof BestiaryScreen screen) {
             screen.onEvent();
         }
     }
@@ -226,9 +225,4 @@ public final class ClientBestiary {
         ScannerHud.reset();
     }
 
-    /** True while a screen is open (the HUD hides then). */
-    static boolean screenOpen(Minecraft mc) {
-        Screen screen = mc.screen;
-        return screen != null;
-    }
 }

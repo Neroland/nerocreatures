@@ -7,12 +7,19 @@ import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.client.event.ClientTickEvent;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import net.neoforged.neoforge.client.event.RegisterClientCommandsEvent;
+import net.neoforged.neoforge.client.event.RegisterGuiLayersEvent;
+import net.neoforged.neoforge.client.event.RegisterKeyMappingsEvent;
+import net.neoforged.neoforge.client.event.RegisterParticleProvidersEvent;
 import net.neoforged.neoforge.common.NeoForge;
 
 import za.co.neroland.nerocreatures.client.ApexAltarRenderer;
 import za.co.neroland.nerocreatures.client.HabitatDisplayRenderer;
 import za.co.neroland.nerocreatures.client.ClientEntityRenderers;
 import za.co.neroland.nerocreatures.client.GalleryCaptureHarness;
+import za.co.neroland.nerocreatures.client.bestiary.ClientBestiary;
+import za.co.neroland.nerocreatures.client.bestiary.ScannerHud;
+import za.co.neroland.nerocreatures.client.particle.CreatureParticle;
+import za.co.neroland.nerocreatures.client.particle.CreatureParticles;
 import za.co.neroland.nerocreatures.registry.ModBlockEntities;
 
 /**
@@ -33,6 +40,16 @@ public final class NeoForgeClientSetup {
         NeoForge.EVENT_BUS.addListener((ClientTickEvent.Post event) -> GalleryCaptureHarness.tick());
         NeoForge.EVENT_BUS.addListener((RegisterClientCommandsEvent event) ->
                 GalleryCaptureHarness.registerClientCommands(event.getDispatcher()));
+        // Field Scanner and Bestiary: client seams, the open-Bestiary key (its category registers in
+        // ClientBestiary's static initialiser), its tick, and the scanner HUD layer.
+        ClientBestiary.install();
+        modEventBus.addListener((RegisterKeyMappingsEvent event) -> event.register(ClientBestiary.OPEN_BESTIARY));
+        NeoForge.EVENT_BUS.addListener((ClientTickEvent.Post event) -> ClientBestiary.tick());
+        modEventBus.addListener((RegisterGuiLayersEvent event) ->
+                event.registerAboveAll(ScannerHud.LAYER_ID, (graphics, delta) -> ScannerHud.render(graphics)));
+        // The 16 custom particles: one sprite-set provider per type.
+        modEventBus.addListener((RegisterParticleProvidersEvent event) -> CreatureParticles.registerAll((type, id) ->
+                event.registerSpriteSet(type, sprites -> new CreatureParticle.Provider(sprites, id))));
     }
 
     private static void onRegisterEntityRenderers(EntityRenderersEvent.RegisterRenderers event) {

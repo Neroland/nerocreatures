@@ -39,6 +39,8 @@ ext.legacyRenames = [
     [below: '1.21.5', from: /(\bclass\s+\w+\s+)extends\s+SavedData\b/,
             to: '$1extends za.co.neroland.nerolandcore.data.compat.CodecSavedData'],
     [below: '26.1', from: /\b(g|graphics|guiGraphics)\.text\(/, to: '$1.drawString('],
+    // 26.1 also renamed GuiGraphics.renderItem(stack, x, y) -> item(..); keyed on the same receivers.
+    [below: '26.1', from: /\b(g|graphics|guiGraphics)\.item\(/, to: '$1.renderItem('],
     // 1.21.2 renamed Registry.get(ResourceLocation|ResourceKey) -> getValue(..) (same arguments, same result).
     // Keyed on BuiltInRegistries receivers so Map.Entry/BlockState getValue(..) calls are left alone.
     [below: '1.21.2', from: /\b(BuiltInRegistries\.[A-Z_]+)\.getValue\(/, to: '$1.get('],

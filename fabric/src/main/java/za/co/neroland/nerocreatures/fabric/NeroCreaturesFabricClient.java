@@ -15,6 +15,10 @@ import za.co.neroland.nerocreatures.client.ApexAltarRenderer;
 import za.co.neroland.nerocreatures.client.HabitatDisplayRenderer;
 import za.co.neroland.nerocreatures.client.ClientEntityRenderers;
 import za.co.neroland.nerocreatures.client.GalleryCaptureHarness;
+import za.co.neroland.nerocreatures.client.bestiary.ClientBestiary;
+import za.co.neroland.nerocreatures.client.bestiary.ScannerHud;
+import za.co.neroland.nerocreatures.client.particle.CreatureParticle;
+import za.co.neroland.nerocreatures.client.particle.CreatureParticles;
 import za.co.neroland.nerocreatures.network.CreatureNetwork;
 import za.co.neroland.nerocreatures.registry.ModBlockEntities;
 
@@ -64,6 +68,32 @@ public final class NeroCreaturesFabricClient implements ClientModInitializer {
 
         // The screenshot harness's pump — counterpart to NeoForge's ClientTickEvent.Post.
         ClientTickEvents.END_CLIENT_TICK.register(client -> GalleryCaptureHarness.tick());
+
+        // Field Scanner and Bestiary: client seams, the open-Bestiary key (unbound), its tick, and
+        // the scanner HUD indicator. Fabric API renamed its key and HUD modules over these lines.
+        ClientBestiary.install();
+        //? if >=26.1 {
+        net.fabricmc.fabric.api.client.keymapping.v1.KeyMappingHelper.registerKeyMapping(ClientBestiary.OPEN_BESTIARY);
+        //?} else {
+        /*net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper.registerKeyBinding(ClientBestiary.OPEN_BESTIARY);
+        *///?}
+        ClientTickEvents.END_CLIENT_TICK.register(client -> ClientBestiary.tick());
+        //? if >=1.21.6 {
+        net.fabricmc.fabric.api.client.rendering.v1.hud.HudElementRegistry.addLast(ScannerHud.LAYER_ID,
+                (graphics, delta) -> ScannerHud.render(graphics));
+        //?} else {
+        /*net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback.EVENT.register(
+                (graphics, delta) -> ScannerHud.render(graphics));
+        *///?}
+        // The 16 custom particles: one sprite-set provider per type.
+        CreatureParticles.registerAll((type, id) ->
+                //? if >=26.1 {
+                net.fabricmc.fabric.api.client.particle.v1.ParticleProviderRegistry.getInstance().register(type,
+                        sprites -> new CreatureParticle.Provider(sprites, id)));
+                //?} else {
+                /*net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry.getInstance().register(type,
+                        sprites -> new CreatureParticle.Provider(sprites, id)));
+                *///?}
         // Client-side /ncgallery capture tree. Its own dispatcher, and deliberately NOT rooted at
         // "nerocreatures": a shared root would shadow the server-side /nerocreatures tree.
         ClientCommandRegistrationCallback.EVENT.register((dispatcher, registryAccess) ->

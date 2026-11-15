@@ -483,6 +483,18 @@ def static_jar(c: Canvas, rng: random.Random) -> None:
     c.speckle(rng, 7, (150, 240, 255, 255), (6, 6, 9, 12))
 
 
+def field_scanner(c: Canvas, rng: random.Random) -> None:
+    # Placeholder until the item art pass paints it: a handheld scanner with a teal screen.
+    c.rect(4, 2, 11, 13, (58, 66, 84, 255))
+    c.outline(4, 2, 11, 13, (28, 32, 44, 255))
+    c.rect(5, 3, 10, 8, (20, 40, 52, 255))
+    c.rect(6, 4, 9, 7, (61, 220, 200, 255))
+    c.set(7, 5, (220, 255, 250, 255))
+    c.rect(6, 10, 7, 11, (255, 183, 77, 255))
+    c.rect(9, 10, 9, 11, (82, 217, 242, 255))
+    c.rect(7, 14, 8, 15, (40, 46, 60, 255))
+
+
 def captains_ledger(c: Canvas, rng: random.Random) -> None:
     c.rect(3, 3, 12, 13, (96, 52, 40, 255))
     c.rect(4, 4, 11, 12, (130, 74, 52, 255))
@@ -571,6 +583,7 @@ MOTIFS = {
     "mirror_scale": mirror_scale,
     "graviton_node": graviton_node,
     "static_jar": static_jar,
+    "field_scanner": field_scanner,
     "captains_ledger": captains_ledger,
     "matriarch_frostcore": matriarch_frostcore,
     "sovereign_seed": sovereign_seed,

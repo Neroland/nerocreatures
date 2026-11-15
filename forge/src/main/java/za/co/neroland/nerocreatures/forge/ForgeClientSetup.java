@@ -4,7 +4,10 @@ import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraftforge.client.event.EntityRenderersEvent;
+import net.minecraftforge.client.event.AddGuiOverlayLayersEvent;
 import net.minecraftforge.client.event.RegisterClientCommandsEvent;
+import net.minecraftforge.client.event.RegisterKeyMappingsEvent;
+import net.minecraftforge.client.event.RegisterParticleProvidersEvent;
 import net.minecraftforge.event.TickEvent;
 //? if <1.21.6 {
 /*import net.minecraftforge.common.MinecraftForge;
@@ -15,6 +18,10 @@ import za.co.neroland.nerocreatures.client.ApexAltarRenderer;
 import za.co.neroland.nerocreatures.client.HabitatDisplayRenderer;
 import za.co.neroland.nerocreatures.client.ClientEntityRenderers;
 import za.co.neroland.nerocreatures.client.GalleryCaptureHarness;
+import za.co.neroland.nerocreatures.client.bestiary.ClientBestiary;
+import za.co.neroland.nerocreatures.client.bestiary.ScannerHud;
+import za.co.neroland.nerocreatures.client.particle.CreatureParticle;
+import za.co.neroland.nerocreatures.client.particle.CreatureParticles;
 import za.co.neroland.nerocreatures.registry.ModBlockEntities;
 
 /**
@@ -38,6 +45,10 @@ public final class ForgeClientSetup {
         EntityRenderersEvent.RegisterRenderers.BUS.addListener(ForgeClientSetup::onRegisterEntityRenderers);
         TickEvent.ClientTickEvent.Post.BUS.addListener(ForgeClientSetup::onClientTick);
         RegisterClientCommandsEvent.BUS.addListener(ForgeClientSetup::onRegisterClientCommands);
+        RegisterKeyMappingsEvent.BUS.addListener(event -> event.register(ClientBestiary.OPEN_BESTIARY));
+        AddGuiOverlayLayersEvent.BUS.addListener(ForgeClientSetup::onAddGuiLayers);
+        RegisterParticleProvidersEvent.BUS.addListener(ForgeClientSetup::onRegisterParticles);
+        ClientBestiary.install();
     }
     //?} else if >=1.21.6 {
     /*// Forge 1.21.6 - 1.21.8: renderer registration is still a mod-bus event.
@@ -45,6 +56,10 @@ public final class ForgeClientSetup {
         EntityRenderersEvent.RegisterRenderers.getBus(modBus).addListener(ForgeClientSetup::onRegisterEntityRenderers);
         TickEvent.ClientTickEvent.Post.BUS.addListener(ForgeClientSetup::onClientTick);
         RegisterClientCommandsEvent.BUS.addListener(ForgeClientSetup::onRegisterClientCommands);
+        RegisterKeyMappingsEvent.getBus(modBus).addListener(event -> event.register(ClientBestiary.OPEN_BESTIARY));
+        AddGuiOverlayLayersEvent.getBus(modBus).addListener(ForgeClientSetup::onAddGuiLayers);
+        RegisterParticleProvidersEvent.getBus(modBus).addListener(ForgeClientSetup::onRegisterParticles);
+        ClientBestiary.install();
     }
     *///?} else {
     /*// Forge before 1.21.6 (EventBus 6): renderer registration is a mod-bus event, the rest are on the
@@ -53,11 +68,27 @@ public final class ForgeClientSetup {
         modBus.addListener(ForgeClientSetup::onRegisterEntityRenderers);
         MinecraftForge.EVENT_BUS.addListener(ForgeClientSetup::onClientTick);
         MinecraftForge.EVENT_BUS.addListener(ForgeClientSetup::onRegisterClientCommands);
+        modBus.addListener((RegisterKeyMappingsEvent event) -> event.register(ClientBestiary.OPEN_BESTIARY));
+        modBus.addListener(ForgeClientSetup::onAddGuiLayers);
+        modBus.addListener(ForgeClientSetup::onRegisterParticles);
+        ClientBestiary.install();
     }
     *///?}
 
     private static void onClientTick(TickEvent.ClientTickEvent.Post event) {
         GalleryCaptureHarness.tick();
+        ClientBestiary.tick();
+    }
+
+    /** The Field Scanner HUD indicator, on top of the vanilla HUD. */
+    private static void onAddGuiLayers(AddGuiOverlayLayersEvent event) {
+        event.getLayeredDraw().add(ScannerHud.LAYER_ID, (graphics, delta) -> ScannerHud.render(graphics));
+    }
+
+    /** The 16 custom particles: one sprite-set provider per type. */
+    private static void onRegisterParticles(RegisterParticleProvidersEvent event) {
+        CreatureParticles.registerAll((type, id) ->
+                event.registerSpriteSet(type, sprites -> new CreatureParticle.Provider(sprites, id)));
     }
 
     private static void onRegisterClientCommands(RegisterClientCommandsEvent event) {
