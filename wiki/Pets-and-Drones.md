@@ -125,14 +125,16 @@ changes.
 
 ## Caps
 
-Both caps are server-authoritative config values in `nerocreatures.properties`:
+All four caps are server-authoritative config values in `nerocreatures.properties`:
 
 | Key | Default | Meaning |
 | --- | --- | --- |
 | `maxPetsPerPlayer` | 3 | Tamed pets one player may keep. **0 disables taming entirely.** |
 | `maxDronesPerPlayer` | 2 | Deployed drones one player may have. **0 disables drones entirely.** |
+| `maxMountsPerPlayer` | 2 | Tamed mounts one player may keep, separate from pets. **0 disables mounts.** |
+| `maxIncubatingEggsPerPlayer` | 8 | Eggs one player may have incubating. **0 disables eggs.** |
 
-Both are enforced at the moment of acquisition — tame time and deploy time — because that is the only
+Each is enforced at the moment of acquisition — tame time and deploy time — because that is the only
 moment at which saying no costs the player nothing.
 
 ## What is stored, and how to get rid of it
@@ -141,7 +143,8 @@ NeroCreatures keeps a small server-side index of who owns what, in the world sav
 creature it holds exactly four things:
 
 - the **creature's** entity UUID (a game id, not a player id),
-- whether it is a pet or a drone,
+- whether it is a pet, a mount, a drone or an incubating egg (an egg row holds a random incubation
+  id instead of an entity UUID, plus the game time it hatches),
 - its entity-type id,
 - the id of the dimension it was last registered in,
 
@@ -161,10 +164,12 @@ reads them, nothing else does — and Core's erasure hook removes them with ever
 
 **Erasure.** `/neroland data eraseme` (or an admin's `/neroland data erase <uuid>`) purges you from
 this index *and* frees the creatures: your pets are returned to the wild — owner cleared, order
-reset, ordinary despawnable animals again — and your drones are recalled, dropping their shells where
+reset, ordinary despawnable animals again — your mounts are unsaddled (saddle, panniers and contents
+drop) and released, your egg rows are dropped, and your drones are recalled, dropping their shells where
 they stood. The sweep also checks every loaded level for anything still carrying your UUID, so the
-erase is complete even if the index and the world had drifted apart. Nothing on that path logs who
-was erased.
+erase is complete even if the index and the world had drifted apart. A creature in an unloaded chunk
+is released when it next loads, from a marker the erase leaves (never your UUID; see
+[Data storage](Data-Storage.md)). Nothing on that path logs who was erased.
 
 **Retention.** If the server sets Neroland Core's `dataRetentionDays` above zero, ownership records
 untouched for that long are purged the same way — index row *and* creatures — the first time the

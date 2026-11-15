@@ -23,14 +23,22 @@ import za.co.neroland.nerocreatures.NeroCreaturesCommon;
 import za.co.neroland.nerocreatures.entity.boss.CinderTyrant;
 import za.co.neroland.nerocreatures.entity.hostile.AsteroidWorm;
 import za.co.neroland.nerocreatures.entity.hostile.LunarStalker;
+import za.co.neroland.nerocreatures.entity.hostile.MagmaWader;
 import za.co.neroland.nerocreatures.entity.hostile.PlasmaSlime;
 import za.co.neroland.nerocreatures.entity.hostile.VoidCrawler;
 import za.co.neroland.nerocreatures.entity.humanoid.SpacePirate;
+import za.co.neroland.nerocreatures.entity.luna.EchoShrike;
+import za.co.neroland.nerocreatures.entity.luna.LodeTortoise;
+import za.co.neroland.nerocreatures.entity.luna.LumenMoth;
+import za.co.neroland.nerocreatures.entity.mars.DuneLoper;
+import za.co.neroland.nerocreatures.entity.mars.DustDevil;
+import za.co.neroland.nerocreatures.entity.mars.StrataHound;
 import za.co.neroland.nerocreatures.entity.mechanical.RogueAndroid;
 import za.co.neroland.nerocreatures.entity.mechanical.RogueDrone;
 import za.co.neroland.nerocreatures.entity.mechanical.TerraformingDrone;
 import za.co.neroland.nerocreatures.entity.neutral.CrystalGolem;
 import za.co.neroland.nerocreatures.entity.tame.GlaciteWisp;
+import za.co.neroland.nerocreatures.entity.tame.SlagBeetle;
 import za.co.neroland.nerocreatures.entity.tame.XertzForager;
 
 /**
@@ -156,6 +164,60 @@ public final class ModEntities {
                     key -> EntityType.Builder.of(TerraformingDrone::new, MobCategory.CREATURE)
                             .sized(0.8F, 0.9F).eyeHeight(0.7F).clientTrackingRange(8).build(key));
 
+    // --- 0.5.0 Luna ---------------------------------------------------------------------------
+
+    /** Lumen Moth — Luna's tameable living lantern; flies. Size class S. */
+    public static final RegistryEntry<EntityType<LumenMoth>> LUMEN_MOTH = ENTITY_TYPES.register(
+            "lumen_moth",
+            key -> EntityType.Builder.of(LumenMoth::new, MobCategory.CREATURE)
+                    .sized(0.6F, 0.5F).eyeHeight(0.3F).clientTrackingRange(8).build(key));
+
+    /** Echo Shrike — Luna hostile; blind, hunts by sound. Size class S. */
+    public static final RegistryEntry<EntityType<EchoShrike>> ECHO_SHRIKE = ENTITY_TYPES.register(
+            "echo_shrike",
+            key -> EntityType.Builder.of(EchoShrike::new, MobCategory.MONSTER)
+                    .sized(0.7F, 0.9F).eyeHeight(0.75F).clientTrackingRange(10).build(key));
+
+    /** Lode Tortoise — Luna livestock; grows ore nodules. Size class M. */
+    public static final RegistryEntry<EntityType<LodeTortoise>> LODE_TORTOISE = ENTITY_TYPES.register(
+            "lode_tortoise",
+            key -> EntityType.Builder.of(LodeTortoise::new, MobCategory.CREATURE)
+                    .sized(1.1F, 0.9F).eyeHeight(0.6F).clientTrackingRange(10).build(key));
+
+    // --- 0.5.0 Mars ---------------------------------------------------------------------------
+
+    /** Dune Loper — Mars mount (decision 004). Size class L, biped. */
+    public static final RegistryEntry<EntityType<DuneLoper>> DUNE_LOPER = ENTITY_TYPES.register(
+            "dune_loper",
+            key -> EntityType.Builder.of(DuneLoper::new, MobCategory.CREATURE)
+                    .sized(1.3F, 2.0F).eyeHeight(1.8F).clientTrackingRange(10).build(key));
+
+    /** Strata Hound — Mars prospecting pet. Size class M. */
+    public static final RegistryEntry<EntityType<StrataHound>> STRATA_HOUND = ENTITY_TYPES.register(
+            "strata_hound",
+            key -> EntityType.Builder.of(StrataHound::new, MobCategory.CREATURE)
+                    .sized(0.8F, 0.9F).eyeHeight(0.7F).clientTrackingRange(10).build(key));
+
+    /** Dust Devil — Mars hostile whirlwind. Size class M, headless. */
+    public static final RegistryEntry<EntityType<DustDevil>> DUST_DEVIL = ENTITY_TYPES.register(
+            "dust_devil",
+            key -> EntityType.Builder.of(DustDevil::new, MobCategory.MONSTER)
+                    .sized(1.1F, 2.2F).eyeHeight(1.6F).clientTrackingRange(10).build(key));
+
+    // --- 0.5.0 Cindara ------------------------------------------------------------------------
+
+    /** Slag Beetle — Cindara's living furnace. Fire-immune: it lives on ember plains. */
+    public static final RegistryEntry<EntityType<SlagBeetle>> SLAG_BEETLE = ENTITY_TYPES.register(
+            "slag_beetle",
+            key -> EntityType.Builder.of(SlagBeetle::new, MobCategory.CREATURE)
+                    .sized(0.9F, 0.8F).eyeHeight(0.55F).fireImmune().clientTrackingRange(8).build(key));
+
+    /** Magma Wader — the stilt-legged lava wader that lobs cooling slag. */
+    public static final RegistryEntry<EntityType<MagmaWader>> MAGMA_WADER = ENTITY_TYPES.register(
+            "magma_wader",
+            key -> EntityType.Builder.of(MagmaWader::new, MobCategory.MONSTER)
+                    .sized(1.1F, 2.6F).eyeHeight(2.2F).fireImmune().clientTrackingRange(10).build(key));
+
     /**
      * Every creature type this mod registers, in roster order. Declared once here so anything that
      * has to walk the whole roster — the {@code /nerocreatures list} command, the link module's
@@ -166,7 +228,10 @@ public final class ModEntities {
             List.<RegistryEntry<? extends EntityType<? extends Mob>>>of(
                     VOID_CRAWLER, LUNAR_STALKER, ASTEROID_WORM, PLASMA_SLIME,
                     CRYSTAL_GOLEM, SPACE_PIRATE, ROGUE_DRONE, ROGUE_ANDROID,
-                    GLACITE_WISP, XERTZ_FORAGER, TERRAFORMING_DRONE, CINDER_TYRANT);
+                    GLACITE_WISP, XERTZ_FORAGER, TERRAFORMING_DRONE, CINDER_TYRANT,
+                    LUMEN_MOTH, ECHO_SHRIKE, LODE_TORTOISE,
+                    DUNE_LOPER, STRATA_HOUND, DUST_DEVIL,
+                    SLAG_BEETLE, MAGMA_WADER);
 
     private ModEntities() {
     }
@@ -204,6 +269,14 @@ public final class ModEntities {
         entities.registerAttributes(XERTZ_FORAGER, XertzForager::createAttributes);
         entities.registerAttributes(TERRAFORMING_DRONE, TerraformingDrone::createAttributes);
         entities.registerAttributes(CINDER_TYRANT, CinderTyrant::createAttributes);
+        entities.registerAttributes(LUMEN_MOTH, LumenMoth::createAttributes);
+        entities.registerAttributes(ECHO_SHRIKE, EchoShrike::createAttributes);
+        entities.registerAttributes(LODE_TORTOISE, LodeTortoise::createAttributes);
+        entities.registerAttributes(DUNE_LOPER, DuneLoper::createAttributes);
+        entities.registerAttributes(STRATA_HOUND, StrataHound::createAttributes);
+        entities.registerAttributes(DUST_DEVIL, DustDevil::createAttributes);
+        entities.registerAttributes(SLAG_BEETLE, SlagBeetle::createAttributes);
+        entities.registerAttributes(MAGMA_WADER, MagmaWader::createAttributes);
 
         // Light-shy: crawlers and slimes are creatures of the dark side and the crystal caves.
         entities.registerSpawnPlacement(VOID_CRAWLER, SpawnPlacementTypes.ON_GROUND,
@@ -241,6 +314,40 @@ public final class ModEntities {
         entities.registerSpawnPlacement(CINDER_TYRANT, SpawnPlacementTypes.ON_GROUND,
                 Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, ModEntities::anyLightGround);
         // Deliberately no placement for TERRAFORMING_DRONE: it has no natural spawn to place.
+
+        // 0.5.0 Luna. The moth is a flyer: it may hang in open air (airSpot), and the overworld rule
+        // lifts its candidate 1-4 blocks off the surface. The shrike hunts the dark; the tortoise is
+        // a cave grazer as much as a moon one, so light does not matter to it.
+        entities.registerSpawnPlacement(LUMEN_MOTH, SpawnPlacementTypes.NO_RESTRICTIONS,
+                Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, ModEntities::airSpot);
+        entities.registerSpawnPlacement(ECHO_SHRIKE, SpawnPlacementTypes.ON_GROUND,
+                Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, ModEntities::darkGround);
+        entities.registerSpawnPlacement(LODE_TORTOISE, SpawnPlacementTypes.ON_GROUND,
+                Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, ModEntities::anyLightGround);
+        // 0.5.0 Mars and Cindara: open dunes and glowing ember plains, any hour.
+        entities.registerSpawnPlacement(DUNE_LOPER, SpawnPlacementTypes.ON_GROUND,
+                Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, ModEntities::anyLightGround);
+        entities.registerSpawnPlacement(STRATA_HOUND, SpawnPlacementTypes.ON_GROUND,
+                Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, ModEntities::anyLightGround);
+        entities.registerSpawnPlacement(DUST_DEVIL, SpawnPlacementTypes.ON_GROUND,
+                Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, ModEntities::anyLightGround);
+        entities.registerSpawnPlacement(SLAG_BEETLE, SpawnPlacementTypes.ON_GROUND,
+                Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, ModEntities::anyLightGround);
+        entities.registerSpawnPlacement(MAGMA_WADER, SpawnPlacementTypes.ON_GROUND,
+                Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, ModEntities::anyLightGround);
+    }
+
+    /**
+     * Flyers: the spot and the one above are air, not Peaceful, and a <b>natural</b> spawn also needs
+     * block light at or below {@value #MAX_SPAWN_BLOCK_LIGHT} (a moth is drawn out by the dark, and a
+     * lit base stays clear of wild ones). Shared by every flyer in the roster.
+     */
+    private static <T extends Mob> boolean airSpot(EntityType<T> type, ServerLevelAccessor level,
+            EntitySpawnReason reason, BlockPos pos, RandomSource random) {
+        return level.getDifficulty() != Difficulty.PEACEFUL
+                && level.getBlockState(pos).isAir() && level.getBlockState(pos.above()).isAir()
+                && (reason != EntitySpawnReason.NATURAL
+                        || level.getBrightness(LightLayer.BLOCK, pos) <= MAX_SPAWN_BLOCK_LIGHT);
     }
 
     /** Solid ground below, open air at the position, not Peaceful. */

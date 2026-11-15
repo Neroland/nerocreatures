@@ -1,0 +1,17 @@
+{
+  "replace": false,
+  "values": [
+    {
+      "id": "nerospace:glacira",
+      "required": false
+    },
+    {
+      "id": "nerospace:glacira_methane_shore",
+      "required": false
+    },
+    {
+      "id": "nerospace:glacira_spires",
+      "required": false
+    }
+  ]
+}

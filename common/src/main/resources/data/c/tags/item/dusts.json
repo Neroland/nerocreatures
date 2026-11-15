@@ -4,6 +4,14 @@
     {
       "id": "#c:dusts/ore_slurry",
       "required": false
+    },
+    {
+      "id": "#c:dusts/lumen",
+      "required": false
+    },
+    {
+      "id": "#c:dusts/charged_sand",
+      "required": false
     }
   ]
 }

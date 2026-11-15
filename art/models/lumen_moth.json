@@ -1,0 +1,382 @@
+{
+  "format": 1,
+  "id": "lumen_moth",
+  "name": "Lumen Moth",
+  "habitat": "luna",
+  "size_class": "S",
+  "silhouette": "two broad triangular wings held in a flat V over a single bright lantern abdomen; feathered antennae",
+  "hitbox_guide": [0.7, 0.6],
+  "texture": {"width": 64, "height": 64},
+  "render_type": "cutout",
+  "renderer": {"scale": 1.0, "shadow": 0.3},
+  "materials": ["slate", "umber"],
+  "accent": "accent",
+  "glow_organs": ["lantern abdomen (the light it carries and the reveal pulse)", "eyes"],
+  "radiant": {"slate": "pearl", "umber": "pearl_light"},
+  "parts": [
+    {
+      "name": "body",
+      "parent": null,
+      "pivot": [0, 16, 0],
+      "rotation": [0, 0, 0],
+      "cubes": [
+        {"name": "thorax", "origin": [-1.5, -1.5, -3], "size": [3, 3, 4], "uv": [50, 0]},
+        {"name": "ruff", "origin": [-2, -2, -2.5], "size": [4, 4, 2], "uv": [50, 7]},
+        {"name": "head", "origin": [-1, -1, -5], "size": [2, 2, 2], "uv": [50, 13]}
+      ]
+    },
+    {
+      "name": "abdomen",
+      "parent": "body",
+      "pivot": [0, 0, 1],
+      "rotation": [-24, 0, 0],
+      "cubes": [
+        {"name": "lantern", "origin": [-2.5, -2, 0], "size": [5, 5, 6], "uv": [0, 0]},
+        {"name": "tip", "origin": [-1, -0.5, 6], "size": [2, 2, 1], "uv": [58, 13]}
+      ]
+    },
+    {
+      "name": "antennae",
+      "parent": "body",
+      "pivot": [0, -1, -4.5],
+      "rotation": [35, 0, 0],
+      "cubes": [
+        {"name": "ant_l", "origin": [0.5, -5, -0.5], "size": [2, 5, 1], "uv": [44, 10]},
+        {"name": "ant_r", "origin": [-2.5, -5, -0.5], "size": [2, 5, 1], "uv": [0, 11]}
+      ]
+    },
+    {
+      "name": "wing_l",
+      "parent": "body",
+      "pivot": [1.5, -1, -1],
+      "rotation": [0, 0, -24],
+      "cubes": [
+        {"name": "inner", "origin": [0, -0.5, -4], "size": [5, 1, 9], "uv": [22, 0]}
+      ]
+    },
+    {
+      "name": "wingtip_l",
+      "parent": "wing_l",
+      "pivot": [5, 0, 0],
+      "rotation": [0, 0, 0],
+      "cubes": [
+        {"name": "outer", "origin": [0, -0.5, -5], "size": [4, 1, 7], "uv": [22, 10]},
+        {"name": "point", "origin": [4, -0.5, -5], "size": [3, 1, 4], "uv": [6, 11]}
+      ]
+    },
+    {
+      "name": "wing_r",
+      "parent": "body",
+      "pivot": [-1.5, -1, -1],
+      "rotation": [0, 0, 24],
+      "uv_like": "wing_l",
+      "cubes": [
+        {"name": "inner", "origin": [-5, -0.5, -4], "size": [5, 1, 9], "uv": [22, 0], "mirror": true}
+      ]
+    },
+    {
+      "name": "wingtip_r",
+      "parent": "wing_r",
+      "pivot": [-5, 0, 0],
+      "rotation": [0, 0, 0],
+      "uv_like": "wingtip_l",
+      "cubes": [
+        {"name": "outer", "origin": [-4, -0.5, -5], "size": [4, 1, 7], "uv": [22, 10], "mirror": true},
+        {"name": "point", "origin": [-7, -0.5, -5], "size": [3, 1, 4], "uv": [6, 11], "mirror": true}
+      ]
+    }
+  ],
+  "procedural": {
+    "swing": [],
+    "wave": [
+      {"part": "abdomen", "axis": "x", "frequency": 0.12, "phase": 0, "amplitude": 5, "fade_with_walk": false},
+      {"part": "antennae", "axis": "x", "frequency": 0.2, "phase": 40, "amplitude": 6, "fade_with_walk": false}
+    ],
+    "look": []
+  },
+  "clips": {
+    "idle": {
+      "length": 40,
+      "loop": true,
+      "key_pose": 30,
+      "note": "slow wing beat; the lantern breathes on the glow track",
+      "glow": [
+        {"t": 0, "v": 0.35},
+        {"t": 20, "v": 0.6, "ease": "smooth"},
+        {"t": 40, "v": 0.35, "ease": "smooth"}
+      ],
+      "tracks": {
+        "body": {
+          "pos": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 20, "v": [0, -1, 0], "ease": "smooth"},
+            {"t": 40, "v": [0, 0, 0], "ease": "smooth"}
+          ]
+        },
+        "wing_l": {
+          "rot": [
+            {"t": 0, "v": [0, 0, -12]},
+            {"t": 20, "v": [0, 0, 28], "ease": "smooth"},
+            {"t": 40, "v": [0, 0, -12], "ease": "smooth"}
+          ]
+        },
+        "wing_r": {
+          "rot": [
+            {"t": 0, "v": [0, 0, 12]},
+            {"t": 20, "v": [0, 0, -28], "ease": "smooth"},
+            {"t": 40, "v": [0, 0, 12], "ease": "smooth"}
+          ]
+        },
+        "wingtip_l": {
+          "rot": [
+            {"t": 0, "v": [0, 0, -10]},
+            {"t": 10, "v": [0, 0, -14], "ease": "smooth"},
+            {"t": 20, "v": [0, 0, 14], "ease": "smooth"},
+            {"t": 40, "v": [0, 0, -10], "ease": "smooth"}
+          ]
+        },
+        "wingtip_r": {
+          "rot": [
+            {"t": 0, "v": [0, 0, 10]},
+            {"t": 10, "v": [0, 0, 14], "ease": "smooth"},
+            {"t": 20, "v": [0, 0, -14], "ease": "smooth"},
+            {"t": 40, "v": [0, 0, 10], "ease": "smooth"}
+          ]
+        }
+      }
+    },
+    "move": {
+      "length": 10,
+      "loop": true,
+      "key_pose": 7,
+      "note": "fast flutter, body pitched forward and bobbing, abdomen trailing",
+      "tracks": {
+        "body": {
+          "pos": [
+            {"t": 0, "v": [0, 1, 0]},
+            {"t": 5, "v": [0, -1, 0], "ease": "smooth"},
+            {"t": 10, "v": [0, 1, 0], "ease": "smooth"}
+          ],
+          "rot": [
+            {"t": 0, "v": [14, 0, 0]},
+            {"t": 10, "v": [14, 0, 0]}
+          ]
+        },
+        "abdomen": {
+          "rot": [
+            {"t": 0, "v": [10, 0, 0]},
+            {"t": 5, "v": [18, 0, 0], "ease": "smooth"},
+            {"t": 10, "v": [10, 0, 0], "ease": "smooth"}
+          ]
+        },
+        "wing_l": {
+          "rot": [
+            {"t": 0, "v": [0, 0, -30]},
+            {"t": 5, "v": [0, 0, 45]},
+            {"t": 10, "v": [0, 0, -30]}
+          ]
+        },
+        "wing_r": {
+          "rot": [
+            {"t": 0, "v": [0, 0, 30]},
+            {"t": 5, "v": [0, 0, -45]},
+            {"t": 10, "v": [0, 0, 30]}
+          ]
+        },
+        "wingtip_l": {
+          "rot": [
+            {"t": 0, "v": [0, 0, -16]},
+            {"t": 3, "v": [0, 0, -22]},
+            {"t": 5, "v": [0, 0, 22]},
+            {"t": 10, "v": [0, 0, -16]}
+          ]
+        },
+        "wingtip_r": {
+          "rot": [
+            {"t": 0, "v": [0, 0, 16]},
+            {"t": 3, "v": [0, 0, 22]},
+            {"t": 5, "v": [0, 0, -22]},
+            {"t": 10, "v": [0, 0, 16]}
+          ]
+        }
+      }
+    },
+    "ability": {
+      "length": 30,
+      "loop": false,
+      "key_pose": 18,
+      "telegraph": 10,
+      "damaging": false,
+      "note": "reveal pulse: wings gather up while the lantern ramps, then snap flat and the abdomen flares",
+      "glow": [
+        {"t": 0, "v": 0.35},
+        {"t": 10, "v": 1.0},
+        {"t": 24, "v": 1.0},
+        {"t": 30, "v": 0.35}
+      ],
+      "tracks": {
+        "body": {
+          "pos": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 10, "v": [0, 1, 0], "ease": "smooth"},
+            {"t": 14, "v": [0, -2, 0], "ease": "smooth"},
+            {"t": 24, "v": [0, -2, 0]},
+            {"t": 30, "v": [0, 0, 0], "ease": "smooth"}
+          ]
+        },
+        "abdomen": {
+          "rot": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 10, "v": [-10, 0, 0], "ease": "smooth"},
+            {"t": 14, "v": [22, 0, 0], "ease": "smooth"},
+            {"t": 24, "v": [22, 0, 0]},
+            {"t": 30, "v": [0, 0, 0], "ease": "smooth"}
+          ]
+        },
+        "antennae": {
+          "rot": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 10, "v": [20, 0, 0], "ease": "smooth"},
+            {"t": 14, "v": [-15, 0, 0], "ease": "smooth"},
+            {"t": 24, "v": [-15, 0, 0]},
+            {"t": 30, "v": [0, 0, 0], "ease": "smooth"}
+          ]
+        },
+        "wing_l": {
+          "rot": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 10, "v": [0, 0, -40], "ease": "smooth"},
+            {"t": 14, "v": [0, 0, 25], "ease": "smooth"},
+            {"t": 24, "v": [0, 0, 25]},
+            {"t": 30, "v": [0, 0, 0], "ease": "smooth"}
+          ]
+        },
+        "wing_r": {
+          "rot": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 10, "v": [0, 0, 40], "ease": "smooth"},
+            {"t": 14, "v": [0, 0, -25], "ease": "smooth"},
+            {"t": 24, "v": [0, 0, -25]},
+            {"t": 30, "v": [0, 0, 0], "ease": "smooth"}
+          ]
+        },
+        "wingtip_l": {
+          "rot": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 10, "v": [0, 0, -20], "ease": "smooth"},
+            {"t": 14, "v": [0, 0, 0], "ease": "smooth"},
+            {"t": 24, "v": [0, 0, 0]},
+            {"t": 30, "v": [0, 0, 0]}
+          ]
+        },
+        "wingtip_r": {
+          "rot": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 10, "v": [0, 0, 20], "ease": "smooth"},
+            {"t": 14, "v": [0, 0, 0], "ease": "smooth"},
+            {"t": 24, "v": [0, 0, 0]},
+            {"t": 30, "v": [0, 0, 0]}
+          ]
+        }
+      }
+    },
+    "hurt": {
+      "length": 6,
+      "loop": false,
+      "key_pose": 2,
+      "note": "wings clap shut overhead, body drops 2 px",
+      "tracks": {
+        "body": {
+          "pos": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 2, "v": [0, 2, 0], "ease": "smooth"},
+            {"t": 6, "v": [0, 0, 0], "ease": "smooth"}
+          ]
+        },
+        "wing_l": {
+          "rot": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 2, "v": [0, 0, -52], "ease": "smooth"},
+            {"t": 6, "v": [0, 0, 0], "ease": "smooth"}
+          ]
+        },
+        "wing_r": {
+          "rot": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 2, "v": [0, 0, 52], "ease": "smooth"},
+            {"t": 6, "v": [0, 0, 0], "ease": "smooth"}
+          ]
+        },
+        "wingtip_l": {
+          "rot": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 2, "v": [0, 0, -8], "ease": "smooth"},
+            {"t": 6, "v": [0, 0, 0], "ease": "smooth"}
+          ]
+        },
+        "wingtip_r": {
+          "rot": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 2, "v": [0, 0, 8], "ease": "smooth"},
+            {"t": 6, "v": [0, 0, 0], "ease": "smooth"}
+          ]
+        }
+      }
+    },
+    "rest": {
+      "length": 16,
+      "loop": false,
+      "key_pose": 16,
+      "note": "perch: wings folded down and back into a tent over the lantern, glow dim",
+      "glow": [
+        {"t": 0, "v": 0.35},
+        {"t": 16, "v": 0.15}
+      ],
+      "tracks": {
+        "wing_l": {
+          "rot": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 16, "v": [0, -22, 80], "ease": "smooth"}
+          ]
+        },
+        "wing_r": {
+          "rot": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 16, "v": [0, 22, -80], "ease": "smooth"}
+          ]
+        },
+        "wingtip_l": {
+          "rot": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 16, "v": [0, 0, 12], "ease": "smooth"}
+          ]
+        },
+        "wingtip_r": {
+          "rot": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 16, "v": [0, 0, -12], "ease": "smooth"}
+          ]
+        },
+        "abdomen": {
+          "rot": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 16, "v": [18, 0, 0], "ease": "smooth"}
+          ]
+        },
+        "antennae": {
+          "rot": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 16, "v": [-35, 0, 0], "ease": "smooth"}
+          ]
+        },
+        "body": {
+          "pos": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 16, "v": [0, 3, 0], "ease": "smooth"}
+          ]
+        }
+      }
+    }
+  },
+  "uv_fill": 0.259
+}

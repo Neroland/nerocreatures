@@ -1,9 +1,15 @@
 package za.co.neroland.nerocreatures.entity.base;
 
 import java.util.UUID;
+import java.util.function.BiConsumer;
 
 import net.minecraft.core.Holder;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.DifficultyInstance;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Mob;
@@ -15,12 +21,19 @@ import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
+import net.minecraft.world.level.gameevent.DynamicGameEventListener;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 
 import org.jetbrains.annotations.Nullable;
 
+import za.co.neroland.nerocreatures.budget.CreatureBudget;
+import za.co.neroland.nerocreatures.budget.FarTickGate;
 import za.co.neroland.nerocreatures.config.NeroCreaturesConfig;
+import za.co.neroland.nerocreatures.entity.ai.shared.SoundHearing;
+import za.co.neroland.nerocreatures.entity.alpha.AlphaSystem;
+import za.co.neroland.nerocreatures.entity.visual.CreatureVisuals;
+import za.co.neroland.nerocreatures.entity.visual.CreatureVisualsHolder;
 import za.co.neroland.nerocreatures.spawn.CreatureCensus;
 
 /**
@@ -51,9 +64,35 @@ import za.co.neroland.nerocreatures.spawn.CreatureCensus;
  * stored on the entity (POPIA/GDPR). Ownership, when it arrives, lives in a saved-data store keyed
  * by game UUID rather than in entity NBT.
  */
-public abstract class NeroCreatureEntity extends PathfinderMob {
+public abstract class NeroCreatureEntity extends PathfinderMob implements CreatureVisualsHolder {
+
+    /** Entity contract section 3: the root's visuals ids are this class's first {@code defineId}. */
+    private static final CreatureVisuals.Ids VISUALS_IDS = CreatureVisuals.defineIds(NeroCreatureEntity.class);
+
+    /**
+     * Synced alpha flag (decision 007): the renderer reads it for the crimson accent and darker
+     * body; size comes from the vanilla {@code minecraft:scale} attribute, which syncs itself.
+     */
+    private static final EntityDataAccessor<Boolean> DATA_ALPHA =
+            SynchedEntityData.defineId(NeroCreatureEntity.class, EntityDataSerializers.BOOLEAN);
 
     private final CreatureTier tier;
+
+    /** Pose, phase, stage/variant/form and the four flags (radiant, alpha, saddled, panniers), synced. */
+    private final CreatureVisuals visuals = new CreatureVisuals(this, VISUALS_IDS);
+
+    /** "Far creatures tick slowly" gate for species' own per-tick work (entity contract section 1). */
+    private final FarTickGate farTick = new FarTickGate();
+
+    /** One-shot first-server-tick work ({@link #onFirstServerTick}) has run. Not saved. */
+    private boolean firstTickDone;
+
+    /** Which alpha modifier was rolled ({@code ""} when not an alpha or none). Server-side only. */
+    private String alphaModifier = "";
+
+    /** Optional game-event hearing for sound hunters; null for everything else. */
+    @Nullable
+    private SoundHearing hearing;
 
     /**
      * The event wave this creature was spawned as part of, or {@code null} for everything that was
@@ -67,6 +106,97 @@ public abstract class NeroCreatureEntity extends PathfinderMob {
         super(type, level);
         this.tier = tier;
         this.xpReward = tier.experienceReward();
+    }
+
+    @Override
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+        super.defineSynchedData(builder);
+        CreatureVisuals.define(builder, VISUALS_IDS);
+        builder.define(DATA_ALPHA, false);
+    }
+
+    // --- visuals, budget, far-tick (entity contract sections 1 and 3) ----------
+
+    @Override
+    public CreatureVisuals visuals() {
+        return this.visuals;
+    }
+
+    /** The far-tick gate; expensive goals and timers ask {@code farTick().skip(this)}. */
+    public FarTickGate farTick() {
+        return this.farTick;
+    }
+
+    /**
+     * Times every creature tick for {@code /nerocreatures budget} (one boolean read outside a sample
+     * window) and advances the visuals timer on the server. Species never redefine this wrapping; a
+     * species that overrides {@code tick()} calls {@code super.tick()}.
+     */
+    @Override
+    public void tick() {
+        long budgetStart = CreatureBudget.begin();
+        super.tick();
+        if (!this.level().isClientSide()) {
+            this.visuals.tick();
+        }
+        if (!this.firstTickDone && this.level() instanceof ServerLevel level) {
+            this.firstTickDone = true;
+            this.onFirstServerTick(level);
+        }
+        CreatureBudget.end(this, budgetStart);
+    }
+
+    /**
+     * Runs once, on the first server tick after this creature was created or loaded (NoAI creatures
+     * included). Default: nothing. The Terraforming Drone runs its load-time ownership check here.
+     */
+    protected void onFirstServerTick(ServerLevel level) {
+    }
+
+    // --- alphas (entity/alpha/AlphaSystem) -----------------------------------
+
+    /** True if this creature spawned as an alpha. Synced; safe to read on the client. */
+    public final boolean isAlpha() {
+        return this.entityData.get(DATA_ALPHA);
+    }
+
+    /** The rolled alpha modifier id, or {@code ""}. Server-side only. */
+    public final String alphaModifierId() {
+        return this.alphaModifier;
+    }
+
+    /**
+     * Sets the alpha state. Only {@link AlphaSystem} calls this; it also applies the attribute
+     * modifiers, which vanilla saves with the entity.
+     */
+    public final void setAlphaState(boolean alpha, String modifierId) {
+        this.entityData.set(DATA_ALPHA, alpha);
+        // The visuals bit is the synced mirror the models read; the alpha system stays the source.
+        this.visuals.setAlpha(alpha);
+        this.alphaModifier = alpha && modifierId != null ? modifierId : "";
+    }
+
+    // --- sound hunting hook (entity/ai/shared/SoundHearing) -----------------
+
+    /**
+     * Installs a game-event listener for a sound-hunting creature. Call once from the constructor.
+     * Vanilla then registers it with the level through {@link #updateDynamicGameEventListener}.
+     */
+    protected final void installHearing(SoundHearing soundHearing) {
+        this.hearing = soundHearing;
+    }
+
+    /** The installed hearing, or null. */
+    @Nullable
+    public final SoundHearing hearing() {
+        return this.hearing;
+    }
+
+    @Override
+    public void updateDynamicGameEventListener(BiConsumer<DynamicGameEventListener<?>, ServerLevel> action) {
+        if (this.hearing != null && this.level() instanceof ServerLevel serverLevel) {
+            action.accept(this.hearing.dynamicListener(), serverLevel);
+        }
     }
 
     /** The power band this creature was built for. */
@@ -131,6 +261,7 @@ public abstract class NeroCreatureEntity extends PathfinderMob {
             EntitySpawnReason spawnReason, SpawnGroupData groupData) {
         SpawnGroupData result = super.finalizeSpawn(level, difficulty, spawnReason, groupData);
         this.applyConfigScaling();
+        AlphaSystem.onFinalizeSpawn(this, level.getLevel(), spawnReason);
         if (spawnReason == EntitySpawnReason.STRUCTURE || spawnReason == EntitySpawnReason.EVENT) {
             // Placed deliberately by a structure or an event: it must still be there when a player
             // arrives, so it is never a despawn candidate.
@@ -152,6 +283,15 @@ public abstract class NeroCreatureEntity extends PathfinderMob {
         return !this.isPersistenceRequired() && !this.requiresCustomPersistence();
     }
 
+    /** Alphas add one guaranteed rare drop when a player kills them (see {@link AlphaSystem}). */
+    @Override
+    protected void dropCustomDeathLoot(ServerLevel level, DamageSource source, boolean killedByPlayer) {
+        super.dropCustomDeathLoot(level, source, killedByPlayer);
+        if (killedByPlayer && this.isAlpha()) {
+            AlphaSystem.dropReward(this, level);
+        }
+    }
+
     // --- persistence --------------------------------------------------------
 
     /**
@@ -169,8 +309,13 @@ public abstract class NeroCreatureEntity extends PathfinderMob {
         super.addAdditionalSaveData(nbt);
         ValueOutput output = ValueOutput.of(nbt, this.registryAccess());
     *///?}
+        output.putInt(CreatureVisuals.SAVE_KEY, this.visuals.persistentBits());
         if (this.waveId != null) {
             output.putString("WaveId", this.waveId.toString());
+        }
+        if (this.isAlpha()) {
+            output.putBoolean("Alpha", true);
+            output.putString("AlphaModifier", this.alphaModifier);
         }
     }
 
@@ -184,6 +329,9 @@ public abstract class NeroCreatureEntity extends PathfinderMob {
         super.readAdditionalSaveData(nbt);
         ValueInput input = ValueInput.of(nbt, this.registryAccess());
     *///?}
+        this.visuals.restorePersistentBits(input.getIntOr(CreatureVisuals.SAVE_KEY, 0));
+        // After the visuals bits, so the alpha system re-writes the flag it owns.
+        this.setAlphaState(input.getBooleanOr("Alpha", false), input.getStringOr("AlphaModifier", ""));
         String stored = input.getStringOr("WaveId", "");
         if (stored.isEmpty()) {
             this.waveId = null;

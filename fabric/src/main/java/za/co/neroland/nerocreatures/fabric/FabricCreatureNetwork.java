@@ -20,11 +20,22 @@ import za.co.neroland.nerocreatures.platform.NetworkPlatform;
  */
 public final class FabricCreatureNetwork implements NetworkPlatform {
 
-    /** Mod-init (both sides): payload types only — NeroCreatures has no serverbound payload yet. */
+    /** Mod-init (both sides): payload types, plus the serverbound receivers (server-side API). */
     public static void registerCommon() {
         for (CreatureNetwork.Clientbound<?> cb : CreatureNetwork.clientbound()) {
             registerClientboundType(cb);
         }
+        for (CreatureNetwork.Serverbound<?> sb : CreatureNetwork.serverbound()) {
+            registerServerbound(sb);
+        }
+    }
+
+    private static <T extends CustomPacketPayload> void registerServerbound(CreatureNetwork.Serverbound<T> sb) {
+        PayloadTypeRegistry.serverboundPlay().register(sb.type(), sb.codec());
+        ServerPlayNetworking.registerGlobalReceiver(sb.type(), (payload, context) -> {
+            ServerPlayer player = context.player();
+            player.level().getServer().execute(() -> sb.handler().accept(payload, player));
+        });
     }
 
     /** Client-init: clientbound receivers (client-only API). */

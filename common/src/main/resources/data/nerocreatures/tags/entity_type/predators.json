@@ -1,0 +1,17 @@
+{
+  "replace": false,
+  "values": [
+    {
+      "id": "nerocreatures:lunar_stalker",
+      "required": false
+    },
+    {
+      "id": "nerocreatures:frost_lurker",
+      "required": false
+    },
+    {
+      "id": "nerocreatures:echo_shrike",
+      "required": false
+    }
+  ]
+}

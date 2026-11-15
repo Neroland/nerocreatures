@@ -1,0 +1,17 @@
+{
+  "replace": false,
+  "values": [
+    {
+      "id": "nerospace:cindara",
+      "required": false
+    },
+    {
+      "id": "nerospace:cindara_ember_plains",
+      "required": false
+    },
+    {
+      "id": "nerospace:cindara_sulfur_vents",
+      "required": false
+    }
+  ]
+}

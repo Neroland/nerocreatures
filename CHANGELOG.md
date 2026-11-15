@@ -7,6 +7,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- `/nerocreatures budget`: milliseconds per server tick per species and in total, over a 1 to 60 second sample. Far creatures (no player within `farTickDistance`, default 48) run their own AI work on fewer ticks (`farTickInterval`, default 4).
+- Config keys for every world-changing creature ability (each still respects `mobGriefing`, the loader's place check and, for owned creatures, the owner's own build permission), for mounts and eggs, and for overworld spawns.
+- **Traits.** Every tameable creature carries two traits (Hardy, Swift, Keen, Bountiful, Calm, Thrifty, Stout, or the rare cosmetic Radiant morph). Pets from older saves roll theirs on first load; nothing they already had changes. Babies inherit one trait from each parent. See the wiki page Traits.
+- **Mount base.** Rideable creatures share one base: tamed like pets but capped separately (`maxMountsPerPlayer`, default 2), ridden with a new **Creature Saddle** (crafted from Stalker Hide, Stalker Sinew and iron), steered with WASD, ability on the jump bar with stamina, and chest panniers (9 slots, 18 with Stout). Owner-only riding by default (`mountOwnerOnly`). The mount species themselves arrive with the new creatures.
+- **Alphas.** Hostile creatures can spawn as rare, 30% larger alphas with extra health, damage and one modifier, and drop one extra rare item when a player kills them. Data-driven (`alpha/` in the data pack) and configurable: `alphasEnabled`, `alphaChanceMultiplier`, `alphaMaxPerDimension` (default: at most 4 loaded per dimension).
+- Lunar Stalkers now also hunt wild grazers (never tamed, owned or named animals), resting two minutes after a kill.
+- Every creature now carries a small synced visual state (pose, phase, stage, variant, form and the Radiant, alpha, saddled and panniers flags) for animations, saved with the creature.
+
+### Changed
+
+- The ownership store gains `mount` and `egg` rows (egg rows hold a random incubation id and a hatch time). 0.4.x files load unchanged. See `PRIVACY.md`.
+- Erasure now also reaches pets, mounts and drones in unloaded chunks: the erase leaves a marker (the creature ids it removed, and a salted one-way hash of the player, never the UUID) and such a creature is released silently when it next loads. A creature is released only on such a marker, never because the index merely lacks a row, so pets from older saves or a store restored from backup stay tamed and are re-indexed.
+
 ## [0.4.1-alpha.2] - 2026-10-31
 
 ### Changed

@@ -1,0 +1,587 @@
+{
+  "format": 1,
+  "id": "frost_lurker",
+  "name": "Frost Lurker",
+  "habitat": "glacira",
+  "size_class": "M",
+  "silhouette": "flat diamond body with a row of ice-shard dorsal spines and two eye stalks; only spines and stalks show when buried",
+  "hitbox_guide": [1.1, 0.5],
+  "texture": {"width": 64, "height": 64},
+  "render_type": "cutout",
+  "renderer": {"scale": 1.0, "shadow": 0.0},
+  "materials": ["indigo", "wool"],
+  "accent": "accent",
+  "glow_organs": ["eyes on the stalks", "cryo fangs inside the jaws", "cores of the three tall spines"],
+  "radiant": null,
+  "parts": [
+    {
+      "name": "body",
+      "parent": null,
+      "pivot": [0, 22, 0],
+      "rotation": [0, 0, 0],
+      "cubes": [
+        {"name": "mid", "origin": [-8, -1, -4], "size": [16, 3, 8], "uv": [0, 0]},
+        {"name": "ridge", "origin": [-3, -2, -4.5], "size": [6, 1, 9], "uv": [0, 11]}
+      ]
+    },
+    {
+      "name": "fore",
+      "parent": "body",
+      "pivot": [0, 0, -4],
+      "rotation": [0, 0, 0],
+      "cubes": [
+        {"name": "fore", "origin": [-6, 0, -5], "size": [12, 2, 5], "uv": [0, 33]}
+      ]
+    },
+    {
+      "name": "head",
+      "parent": "fore",
+      "pivot": [0, 1, -5],
+      "rotation": [0, 0, 0],
+      "cubes": [
+        {"name": "upper", "origin": [-4, -2, -6], "size": [8, 2, 6], "uv": [30, 18]}
+      ]
+    },
+    {
+      "name": "jaw",
+      "parent": "fore",
+      "pivot": [0, 1, -5],
+      "rotation": [0, 0, 0],
+      "cubes": [
+        {"name": "jaw", "origin": [-4, 0, -6], "size": [8, 1, 6], "uv": [34, 26]}
+      ]
+    },
+    {
+      "name": "stalk_l",
+      "parent": "fore",
+      "pivot": [4, 0, -2],
+      "rotation": [-8, 0, 14],
+      "cubes": [
+        {"name": "stem", "origin": [-0.5, -6, -0.5], "size": [1, 6, 1], "uv": [30, 11]},
+        {"name": "eye", "origin": [-1.5, -9, -1.5], "size": [3, 3, 3], "uv": [48, 33]}
+      ]
+    },
+    {
+      "name": "stalk_r",
+      "parent": "fore",
+      "pivot": [-4, 0, -2],
+      "rotation": [-8, 0, -14],
+      "uv_like": "stalk_l",
+      "cubes": [
+        {"name": "stem", "origin": [-0.5, -6, -0.5], "size": [1, 6, 1], "uv": [30, 11], "mirror": true},
+        {"name": "eye", "origin": [-1.5, -9, -1.5], "size": [3, 3, 3], "uv": [48, 33], "mirror": true}
+      ]
+    },
+    {
+      "name": "spine_1",
+      "parent": "fore",
+      "pivot": [0, 0, -2],
+      "rotation": [-15, 0, 0],
+      "cubes": [
+        {"name": "shard", "origin": [-1, -4, -1], "size": [2, 4, 2], "uv": [42, 39]}
+      ]
+    },
+    {
+      "name": "spine_2",
+      "parent": "body",
+      "pivot": [0, -2, -2.75],
+      "rotation": [-15, 0, 0],
+      "cubes": [
+        {"name": "shard", "origin": [-1, -7, -1], "size": [2, 7, 2], "uv": [56, 0]}
+      ]
+    },
+    {
+      "name": "spine_3",
+      "parent": "body",
+      "pivot": [0, -2, 0],
+      "rotation": [-15, 0, 0],
+      "cubes": [
+        {"name": "shard", "origin": [-1, -9, -1], "size": [2, 9, 2], "uv": [48, 0]}
+      ]
+    },
+    {
+      "name": "spine_4",
+      "parent": "body",
+      "pivot": [0, -2, 2.75],
+      "rotation": [-15, 0, 0],
+      "cubes": [
+        {"name": "shard", "origin": [-1, -7, -1], "size": [2, 7, 2], "uv": [56, 9]}
+      ]
+    },
+    {
+      "name": "aft",
+      "parent": "body",
+      "pivot": [0, 0, 4],
+      "rotation": [0, 0, 0],
+      "cubes": [
+        {"name": "aft", "origin": [-6, 0, 0], "size": [12, 2, 5], "uv": [0, 26]},
+        {"name": "spine_5", "origin": [-1, -4, 1.5], "size": [2, 4, 2], "uv": [34, 39]}
+      ]
+    },
+    {
+      "name": "tail",
+      "parent": "aft",
+      "pivot": [0, 1, 5],
+      "rotation": [0, 0, 0],
+      "cubes": [
+        {"name": "tail", "origin": [-3, 0, 0], "size": [6, 1, 5], "uv": [34, 11]},
+        {"name": "tip", "origin": [-1, 0, 5], "size": [2, 1, 5], "uv": [34, 33]}
+      ]
+    }
+  ],
+  "procedural": {
+    "swing": [],
+    "wave": [
+      {"part": "tail", "axis": "y", "frequency": 0.05, "phase": 0, "amplitude": 4, "fade_with_walk": true}
+    ],
+    "look": []
+  },
+  "clips": {
+    "idle": {
+      "length": 80,
+      "loop": true,
+      "key_pose": 34,
+      "note": "buried: the whole body is held 4.5 below its rest height so only the spines and stalks stand out of the snow; spines twitch one after another, the stalks rise for a look round and sink again",
+      "tracks": {
+        "body": {
+          "pos": [
+            {"t": 0, "v": [0, 4.5, 0]},
+            {"t": 80, "v": [0, 4.5, 0]}
+          ]
+        },
+        "stalk_l": {
+          "pos": [
+            {"t": 0, "v": [0, 5, 0]},
+            {"t": 22, "v": [0, 5, 0]},
+            {"t": 30, "v": [0, 0, 0], "ease": "smooth"},
+            {"t": 46, "v": [0, 0, 0]},
+            {"t": 54, "v": [0, 5, 0], "ease": "smooth"},
+            {"t": 80, "v": [0, 5, 0]}
+          ],
+          "rot": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 30, "v": [0, 0, 0]},
+            {"t": 36, "v": [0, 30, 0], "ease": "smooth"},
+            {"t": 42, "v": [0, -25, 0], "ease": "smooth"},
+            {"t": 48, "v": [0, 0, 0], "ease": "smooth"},
+            {"t": 80, "v": [0, 0, 0]}
+          ]
+        },
+        "stalk_r": {
+          "pos": [
+            {"t": 0, "v": [0, 5, 0]},
+            {"t": 26, "v": [0, 5, 0]},
+            {"t": 34, "v": [0, 0, 0], "ease": "smooth"},
+            {"t": 48, "v": [0, 0, 0]},
+            {"t": 56, "v": [0, 5, 0], "ease": "smooth"},
+            {"t": 80, "v": [0, 5, 0]}
+          ],
+          "rot": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 34, "v": [0, 0, 0]},
+            {"t": 40, "v": [0, 30, 0], "ease": "smooth"},
+            {"t": 46, "v": [0, -25, 0], "ease": "smooth"},
+            {"t": 50, "v": [0, 0, 0], "ease": "smooth"},
+            {"t": 80, "v": [0, 0, 0]}
+          ]
+        },
+        "spine_2": {
+          "rot": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 8, "v": [0, 0, 0]},
+            {"t": 10, "v": [0, 0, 9], "ease": "smooth"},
+            {"t": 12, "v": [0, 0, -6], "ease": "smooth"},
+            {"t": 14, "v": [0, 0, 0], "ease": "smooth"},
+            {"t": 80, "v": [0, 0, 0]}
+          ]
+        },
+        "spine_3": {
+          "rot": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 12, "v": [0, 0, 0]},
+            {"t": 14, "v": [0, 0, -9], "ease": "smooth"},
+            {"t": 16, "v": [0, 0, 6], "ease": "smooth"},
+            {"t": 18, "v": [0, 0, 0], "ease": "smooth"},
+            {"t": 80, "v": [0, 0, 0]}
+          ]
+        },
+        "spine_4": {
+          "rot": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 16, "v": [0, 0, 0]},
+            {"t": 18, "v": [0, 0, 9], "ease": "smooth"},
+            {"t": 20, "v": [0, 0, -6], "ease": "smooth"},
+            {"t": 22, "v": [0, 0, 0], "ease": "smooth"},
+            {"t": 62, "v": [0, 0, 0]},
+            {"t": 64, "v": [0, 0, 7], "ease": "smooth"},
+            {"t": 80, "v": [0, 0, 0], "ease": "smooth"}
+          ]
+        }
+      }
+    },
+    "move": {
+      "length": 20,
+      "loop": true,
+      "key_pose": 5,
+      "note": "flat slither on the surface (no burial offset, so it rises out of the snow as it speeds up): an S-wave runs head to tail, spines raked back, stalks streamed back",
+      "tracks": {
+        "body": {
+          "rot": [
+            {"t": 0, "v": [0, 5, 0]},
+            {"t": 10, "v": [0, -5, 0], "ease": "smooth"},
+            {"t": 20, "v": [0, 5, 0], "ease": "smooth"}
+          ]
+        },
+        "fore": {
+          "rot": [
+            {"t": 0, "v": [0, -12, 0]},
+            {"t": 10, "v": [0, 12, 0], "ease": "smooth"},
+            {"t": 20, "v": [0, -12, 0], "ease": "smooth"}
+          ]
+        },
+        "head": {
+          "rot": [
+            {"t": 0, "v": [0, -6, 0]},
+            {"t": 10, "v": [0, 6, 0], "ease": "smooth"},
+            {"t": 20, "v": [0, -6, 0], "ease": "smooth"}
+          ]
+        },
+        "aft": {
+          "rot": [
+            {"t": 0, "v": [0, -4, 0]},
+            {"t": 5, "v": [0, -14, 0], "ease": "smooth"},
+            {"t": 15, "v": [0, 14, 0], "ease": "smooth"},
+            {"t": 20, "v": [0, -4, 0], "ease": "smooth"}
+          ]
+        },
+        "tail": {
+          "rot": [
+            {"t": 0, "v": [0, -18, 0]},
+            {"t": 10, "v": [0, 18, 0], "ease": "smooth"},
+            {"t": 20, "v": [0, -18, 0], "ease": "smooth"}
+          ]
+        },
+        "stalk_l": {
+          "rot": [
+            {"t": 0, "v": [-28, 0, 0]},
+            {"t": 20, "v": [-28, 0, 0]}
+          ]
+        },
+        "stalk_r": {
+          "rot": [
+            {"t": 0, "v": [-28, 0, 0]},
+            {"t": 20, "v": [-28, 0, 0]}
+          ]
+        },
+        "spine_1": {
+          "rot": [
+            {"t": 0, "v": [-35, 0, 0]},
+            {"t": 20, "v": [-35, 0, 0]}
+          ]
+        },
+        "spine_2": {
+          "rot": [
+            {"t": 0, "v": [-35, 0, 0]},
+            {"t": 20, "v": [-35, 0, 0]}
+          ]
+        },
+        "spine_3": {
+          "rot": [
+            {"t": 0, "v": [-35, 0, 0]},
+            {"t": 20, "v": [-35, 0, 0]}
+          ]
+        },
+        "spine_4": {
+          "rot": [
+            {"t": 0, "v": [-35, 0, 0]},
+            {"t": 20, "v": [-35, 0, 0]}
+          ]
+        }
+      }
+    },
+    "ability": {
+      "length": 34,
+      "loop": false,
+      "key_pose": 13,
+      "telegraph": 10,
+      "damaging": true,
+      "note": "erupt: 10 ticks buried with the spines rattling, stalks pulled in and the glow climbing; bursts 12 up with jaws wide at tick 13 (the bite lands at 12: start the pose 12 ticks before the hit); slams flat at 20 and sinks back under by 34",
+      "glow": [
+        {"t": 0, "v": 0.35},
+        {"t": 10, "v": 1.0},
+        {"t": 22, "v": 1.0},
+        {"t": 34, "v": 0.35}
+      ],
+      "tracks": {
+        "body": {
+          "pos": [
+            {"t": 0, "v": [0, 4.5, 0]},
+            {"t": 8, "v": [0, 5.5, 1], "ease": "smooth"},
+            {"t": 10, "v": [0, 5.5, 1]},
+            {"t": 13, "v": [0, -12, -3], "ease": "smooth"},
+            {"t": 16, "v": [0, -12, -3]},
+            {"t": 20, "v": [0, 0, -5]},
+            {"t": 26, "v": [0, 0, -5]},
+            {"t": 34, "v": [0, 4.5, 0], "ease": "smooth"}
+          ],
+          "rot": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 10, "v": [4, 0, 0], "ease": "smooth"},
+            {"t": 13, "v": [-42, 0, 0], "ease": "smooth"},
+            {"t": 16, "v": [-38, 0, 0], "ease": "smooth"},
+            {"t": 20, "v": [3, 0, 0]},
+            {"t": 34, "v": [0, 0, 0], "ease": "smooth"}
+          ]
+        },
+        "fore": {
+          "rot": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 10, "v": [0, 0, 0]},
+            {"t": 13, "v": [-18, 0, 0], "ease": "smooth"},
+            {"t": 16, "v": [-14, 0, 0], "ease": "smooth"},
+            {"t": 20, "v": [0, 0, 0]}
+          ]
+        },
+        "head": {
+          "rot": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 10, "v": [0, 0, 0]},
+            {"t": 13, "v": [-26, 0, 0], "ease": "smooth"},
+            {"t": 16, "v": [-26, 0, 0]},
+            {"t": 20, "v": [0, 0, 0]}
+          ]
+        },
+        "jaw": {
+          "rot": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 10, "v": [0, 0, 0]},
+            {"t": 13, "v": [38, 0, 0], "ease": "smooth"},
+            {"t": 16, "v": [38, 0, 0]},
+            {"t": 19, "v": [0, 0, 0]}
+          ]
+        },
+        "aft": {
+          "rot": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 10, "v": [0, 0, 0]},
+            {"t": 13, "v": [24, 0, 0], "ease": "smooth"},
+            {"t": 20, "v": [0, 0, 0]}
+          ]
+        },
+        "tail": {
+          "rot": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 10, "v": [0, 0, 0]},
+            {"t": 13, "v": [22, 0, 0], "ease": "smooth"},
+            {"t": 20, "v": [-10, 0, 0]},
+            {"t": 26, "v": [0, 0, 0], "ease": "smooth"}
+          ]
+        },
+        "stalk_l": {
+          "pos": [
+            {"t": 0, "v": [0, 5, 0]},
+            {"t": 6, "v": [0, 7.5, 0], "ease": "smooth"},
+            {"t": 10, "v": [0, 7.5, 0]},
+            {"t": 13, "v": [0, 0, 0], "ease": "smooth"},
+            {"t": 34, "v": [0, 5, 0], "ease": "smooth"}
+          ],
+          "rot": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 10, "v": [0, 0, 0]},
+            {"t": 13, "v": [0, 0, 22], "ease": "smooth"},
+            {"t": 20, "v": [0, 0, 0], "ease": "smooth"}
+          ]
+        },
+        "stalk_r": {
+          "pos": [
+            {"t": 0, "v": [0, 5, 0]},
+            {"t": 6, "v": [0, 7.5, 0], "ease": "smooth"},
+            {"t": 10, "v": [0, 7.5, 0]},
+            {"t": 13, "v": [0, 0, 0], "ease": "smooth"},
+            {"t": 34, "v": [0, 5, 0], "ease": "smooth"}
+          ],
+          "rot": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 10, "v": [0, 0, 0]},
+            {"t": 13, "v": [0, 0, -22], "ease": "smooth"},
+            {"t": 20, "v": [0, 0, 0], "ease": "smooth"}
+          ]
+        },
+        "spine_1": {
+          "rot": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 3, "v": [0, 0, 10], "ease": "smooth"},
+            {"t": 6, "v": [0, 0, -10], "ease": "smooth"},
+            {"t": 9, "v": [0, 0, 10], "ease": "smooth"},
+            {"t": 13, "v": [22, 0, 0], "ease": "smooth"},
+            {"t": 20, "v": [-20, 0, 0]},
+            {"t": 34, "v": [0, 0, 0], "ease": "smooth"}
+          ]
+        },
+        "spine_2": {
+          "rot": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 3, "v": [0, 0, -12], "ease": "smooth"},
+            {"t": 6, "v": [0, 0, 12], "ease": "smooth"},
+            {"t": 9, "v": [0, 0, -12], "ease": "smooth"},
+            {"t": 13, "v": [18, 0, 24], "ease": "smooth"},
+            {"t": 20, "v": [-20, 0, 0]},
+            {"t": 34, "v": [0, 0, 0], "ease": "smooth"}
+          ]
+        },
+        "spine_3": {
+          "rot": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 3, "v": [0, 0, 12], "ease": "smooth"},
+            {"t": 6, "v": [0, 0, -12], "ease": "smooth"},
+            {"t": 9, "v": [0, 0, 12], "ease": "smooth"},
+            {"t": 13, "v": [10, 0, -24], "ease": "smooth"},
+            {"t": 20, "v": [-20, 0, 0]},
+            {"t": 34, "v": [0, 0, 0], "ease": "smooth"}
+          ]
+        },
+        "spine_4": {
+          "rot": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 3, "v": [0, 0, -12], "ease": "smooth"},
+            {"t": 6, "v": [0, 0, 12], "ease": "smooth"},
+            {"t": 9, "v": [0, 0, -12], "ease": "smooth"},
+            {"t": 13, "v": [-8, 0, 24], "ease": "smooth"},
+            {"t": 20, "v": [-20, 0, 0]},
+            {"t": 34, "v": [0, 0, 0], "ease": "smooth"}
+          ]
+        }
+      }
+    },
+    "hurt": {
+      "length": 6,
+      "loop": false,
+      "key_pose": 2,
+      "note": "spines splay left and right, stalks snap down, the body bucks",
+      "tracks": {
+        "body": {
+          "pos": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 2, "v": [0, -1.5, 1], "ease": "smooth"},
+            {"t": 6, "v": [0, 0, 0], "ease": "smooth"}
+          ],
+          "rot": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 2, "v": [-6, 0, 0], "ease": "smooth"},
+            {"t": 6, "v": [0, 0, 0], "ease": "smooth"}
+          ]
+        },
+        "spine_1": {
+          "rot": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 2, "v": [10, 0, -28], "ease": "smooth"},
+            {"t": 6, "v": [0, 0, 0], "ease": "smooth"}
+          ]
+        },
+        "spine_2": {
+          "rot": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 2, "v": [8, 0, 30], "ease": "smooth"},
+            {"t": 6, "v": [0, 0, 0], "ease": "smooth"}
+          ]
+        },
+        "spine_3": {
+          "rot": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 2, "v": [0, 0, -30], "ease": "smooth"},
+            {"t": 6, "v": [0, 0, 0], "ease": "smooth"}
+          ]
+        },
+        "spine_4": {
+          "rot": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 2, "v": [-8, 0, 30], "ease": "smooth"},
+            {"t": 6, "v": [0, 0, 0], "ease": "smooth"}
+          ]
+        },
+        "stalk_l": {
+          "pos": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 2, "v": [0, 5, 0], "ease": "smooth"},
+            {"t": 6, "v": [0, 0, 0], "ease": "smooth"}
+          ],
+          "rot": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 2, "v": [0, 0, 20], "ease": "smooth"},
+            {"t": 6, "v": [0, 0, 0], "ease": "smooth"}
+          ]
+        },
+        "stalk_r": {
+          "pos": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 2, "v": [0, 5, 0], "ease": "smooth"},
+            {"t": 6, "v": [0, 0, 0], "ease": "smooth"}
+          ],
+          "rot": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 2, "v": [0, 0, -20], "ease": "smooth"},
+            {"t": 6, "v": [0, 0, 0], "ease": "smooth"}
+          ]
+        },
+        "tail": {
+          "rot": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 2, "v": [0, 25, 0], "ease": "smooth"},
+            {"t": 6, "v": [0, 0, 0], "ease": "smooth"}
+          ]
+        }
+      }
+    },
+    "rest": {
+      "length": 12,
+      "loop": false,
+      "key_pose": 12,
+      "note": "dug in deep (5.5 under): spines laid back so only their tips show, stalks fully withdrawn",
+      "tracks": {
+        "body": {
+          "pos": [
+            {"t": 0, "v": [0, 4.5, 0]},
+            {"t": 12, "v": [0, 5.5, 0], "ease": "smooth"}
+          ]
+        },
+        "stalk_l": {
+          "pos": [
+            {"t": 0, "v": [0, 5, 0]},
+            {"t": 12, "v": [0, 7.5, 0], "ease": "smooth"}
+          ]
+        },
+        "stalk_r": {
+          "pos": [
+            {"t": 0, "v": [0, 5, 0]},
+            {"t": 12, "v": [0, 7.5, 0], "ease": "smooth"}
+          ]
+        },
+        "spine_1": {
+          "rot": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 12, "v": [-30, 0, 0], "ease": "smooth"}
+          ]
+        },
+        "spine_2": {
+          "rot": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 12, "v": [-30, 0, 0], "ease": "smooth"}
+          ]
+        },
+        "spine_3": {
+          "rot": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 12, "v": [-30, 0, 0], "ease": "smooth"}
+          ]
+        },
+        "spine_4": {
+          "rot": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 12, "v": [-30, 0, 0], "ease": "smooth"}
+          ]
+        }
+      }
+    }
+  },
+  "uv_fill": 0.578
+}

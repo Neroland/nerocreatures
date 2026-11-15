@@ -37,6 +37,9 @@ public final class ForgeCreatureNetwork implements NetworkPlatform {
         for (CreatureNetwork.Clientbound<?> cb : CreatureNetwork.clientbound()) {
             registerClientbound(play, cb);
         }
+        for (CreatureNetwork.Serverbound<?> sb : CreatureNetwork.serverbound()) {
+            registerServerbound(play, sb);
+        }
         channel = play.build();
     }
 
@@ -45,6 +48,17 @@ public final class ForgeCreatureNetwork implements NetworkPlatform {
             CreatureNetwork.Clientbound<T> cb) {
         play.addMain(cb.type(), registryCodec(cb.codec()),
                 (payload, context) -> cb.handler().accept(payload));
+    }
+
+    private static <T extends CustomPacketPayload> void registerServerbound(
+            PayloadFlow<RegistryFriendlyByteBuf, CustomPacketPayload> play,
+            CreatureNetwork.Serverbound<T> sb) {
+        // addMain: the handler runs on the server thread.
+        play.addMain(sb.type(), registryCodec(sb.codec()), (payload, context) -> {
+            if (context.getSender() instanceof ServerPlayer serverPlayer) {
+                sb.handler().accept(payload, serverPlayer);
+            }
+        });
     }
 
     @SuppressWarnings("unchecked")

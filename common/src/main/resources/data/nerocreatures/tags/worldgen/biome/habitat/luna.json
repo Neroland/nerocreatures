@@ -1,0 +1,17 @@
+{
+  "replace": false,
+  "values": [
+    {
+      "id": "nerospace:luna_highlands",
+      "required": false
+    },
+    {
+      "id": "nerospace:luna_maria",
+      "required": false
+    },
+    {
+      "id": "nerospace:luna_crater_field",
+      "required": false
+    }
+  ]
+}

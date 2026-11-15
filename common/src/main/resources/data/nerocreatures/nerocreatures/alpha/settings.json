@@ -1,0 +1,17 @@
+{
+  "chance": 0.02,
+  "max_per_dimension": 4,
+  "scale_bonus": 0.3,
+  "base_attributes": [
+    {
+      "attribute": "minecraft:max_health",
+      "amount": 0.5,
+      "operation": "add_multiplied_base"
+    },
+    {
+      "attribute": "minecraft:attack_damage",
+      "amount": 0.25,
+      "operation": "add_multiplied_base"
+    }
+  ]
+}

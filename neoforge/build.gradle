@@ -66,6 +66,26 @@ repositories {
 sourceSets.main.java.srcDir rootProject.ext.commonJava
 sourceSets.main.resources.srcDir rootProject.ext.commonResources
 
+// Plain-JVM unit tests (JUnit 5, no game bootstrap). The shared tests live in common/src/test/java,
+// written in the 26.3 source state; non-active nodes get a preprocessed copy via
+// stonecutterProcessCommonTest (stonecutter.gradle). Wired in the NeoForge nodes only, because
+// ModDevGradle exposes the modding classpath to the test source set (addModdingDependenciesTo, below).
+// Tests RUN on the two bracketing cells only (26.3 and 1.21.1, which covers the CompoundTag/legacyRenames
+// branch); the other NeoForge cells still compile them but skip execution. Same pattern as Neroland Core.
+// Run with `gradlew :neoforge:26.3:test :neoforge:1.21.1:test`; `build` on those cells runs them too.
+sourceSets.test.java.srcDir "${rootProject.projectDir}/common/src/test/java"
+
+dependencies {
+    testImplementation platform('org.junit:junit-bom:6.1.3')
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+
+tasks.named('test', Test) {
+    useJUnitPlatform()
+    enabled = (project.name in ['26.3', '1.21.1'])
+}
+
 dependencies {
     // Neroland Core — REQUIRED shared foundation (registration seam, config, creative tab, data
     // erasure, space tags, entity registration seam). Core ships as its own mod and loads BEFORE
@@ -124,6 +144,10 @@ sourceSets.main.resources.srcDir generateModMetadata
 neoForge {
     version = neoVersion
     ideSyncTask generateModMetadata
+
+    // Give the unit-test source set the same (de-obfuscated) Minecraft + NeoForge classpath as main,
+    // so tests can use game types (codecs, NBT, ...) without a running server.
+    addModdingDependenciesTo sourceSets.test
 
     def at = rootProject.file('common/src/main/resources/META-INF/accesstransformer.cfg')
     if (at.exists()) {

@@ -1,0 +1,315 @@
+{
+  "format": 1,
+  "rules": {
+    "ramp_steps": ["deep_shadow", "shadow", "mid", "light", "highlight"],
+    "hue_shift_deg_per_step": 10,
+    "max_material_ramps": 3,
+    "min_ground_contrast": 25,
+    "baked_light": {"up": 1, "down": -2, "north": 0, "south": 0, "west": -1, "east": -1},
+    "glow": {
+      "coverage_cap": {"S": 0.06, "M": 0.06, "L": 0.1, "XL": 0.1, "XXL": 0.1},
+      "coverage_exempt": ["static_swarm", "glacite_wisp", "lumen_moth", "plasma_slime"],
+      "intensity": {"dim": 0.35, "full": 1.0},
+      "telegraph_ticks": 10,
+      "flicker_period_ticks": 4
+    }
+  },
+  "radiant": {
+    "glow_tint": "#FFF6D6",
+    "hue_turn_deg": 165,
+    "glint_interval_ticks": 40,
+    "pearl_ramps": [["pearl_light", 0.84, 0.34], ["pearl", 0.72, 0.32], ["pearl_deep", 0.56, 0.28]],
+    "accent_steps": ["#9F5E1C", "#ED9823", "#FCD37C", "#FFF6D6", "#FEF9E7"],
+    "carriers": [
+      "lumen_moth",
+      "dune_loper",
+      "strata_hound",
+      "slag_beetle",
+      "spore_drifter",
+      "magnet_crab",
+      "void_manta",
+      "lode_tortoise",
+      "rime_yak",
+      "mossback",
+      "prism_stag",
+      "glacite_wisp",
+      "xertz_forager"
+    ]
+  },
+  "alpha": {"scale": 1.3, "glow_tint": "#FF2E4D", "pulse_hz": 1.0, "base_multiply": 0.85, "ember_interval_ticks": 20},
+  "habitats": {
+    "luna": {
+      "ground": "#B7B8BE",
+      "hue": 235,
+      "shadow_hue": 262,
+      "light_hue": 42,
+      "ramps": {
+        "slate": {
+          "seed": "#3B404D",
+          "steps": ["#141418", "#282932", "#3B404D", "#535C68", "#6C7982"],
+          "ground_contrast": 47.2,
+          "main_body": true
+        },
+        "umber": {
+          "seed": "#6A5446",
+          "steps": ["#302524", "#4C3B36", "#6A5446", "#85745E", "#9C927A"],
+          "ground_contrast": 37.4,
+          "main_body": true
+        }
+      },
+      "accents": {"accent": {"seed": "#FFE08A", "steps": ["#864718", "#D37911", "#FAB640", "#FFE08A", "#FDF2D3"]}},
+      "radiant_ramps": {
+        "pearl_light": {"seed": "#E4DBC8", "steps": ["#BDA293", "#D2BFAC", "#E4DBC8", "#EAE7D9", "#F1F0E9"]},
+        "pearl": {"seed": "#CEBFA1", "steps": ["#A38170", "#BAA187", "#CEBFA1", "#DDD8C5", "#EFEDE6"]},
+        "pearl_deep": {"seed": "#AE996F", "steps": ["#745A4E", "#94785B", "#AE996F", "#BDB593", "#CEC9B5"]}
+      },
+      "ground_lightness": 72.3
+    },
+    "mars": {
+      "ground": "#A8573A",
+      "hue": 15,
+      "shadow_hue": 345,
+      "light_hue": 25,
+      "ramps": {
+        "bone": {
+          "seed": "#D9CDB4",
+          "steps": ["#B09181", "#C6B099", "#D9CDB4", "#E4DACF", "#F1ECE9"],
+          "ground_contrast": 38.4,
+          "main_body": true
+        },
+        "sand": {
+          "seed": "#C9B38F",
+          "steps": ["#9D715F", "#B59275", "#C9B38F", "#D7C4B4", "#E7DED7"],
+          "ground_contrast": 28.8,
+          "main_body": true
+        },
+        "umber": {
+          "seed": "#3A2A22",
+          "steps": ["#150F0F", "#271B19", "#3A2A22", "#584537", "#735E4F"],
+          "ground_contrast": 24.3,
+          "main_body": false
+        }
+      },
+      "accents": {"accent": {"seed": "#3DFFC0", "steps": ["#136B34", "#0EAA58", "#06F690", "#3DFFC0", "#B5FBE4"]}},
+      "radiant_ramps": {
+        "pearl_light": {"seed": "#C8E4E4", "steps": ["#93BDAF", "#ACD2CC", "#C8E4E4", "#D9EAE7", "#E9F1EF"]},
+        "pearl": {"seed": "#A1CECE", "steps": ["#70A392", "#87BAB2", "#A1CECE", "#C5DDD9", "#E6EFEC"]},
+        "pearl_deep": {"seed": "#6FAEAE", "steps": ["#4E7467", "#5B948B", "#6FAEAE", "#93BDB6", "#B5CEC6"]}
+      },
+      "ground_lightness": 42.3
+    },
+    "cindara": {
+      "ground": "#1E1A1C",
+      "hue": 15,
+      "shadow_hue": 275,
+      "light_hue": 52,
+      "ramps": {
+        "ash": {
+          "seed": "#8C8A8E",
+          "steps": ["#5E5D5F", "#757377", "#8C8A8E", "#A6A4A7", "#C0BEC0"],
+          "ground_contrast": 43.8,
+          "main_body": true
+        },
+        "clinker": {
+          "seed": "#7A5A46",
+          "steps": ["#3C2A29", "#5A3F38", "#7A5A46", "#967C5D", "#A79C7F"],
+          "ground_contrast": 27.4,
+          "main_body": true
+        }
+      },
+      "accents": {"accent": {"seed": "#FF6A1F", "steps": ["#611411", "#991F0C", "#DF3906", "#FF6A1F", "#FBC5AA"]}},
+      "radiant_ramps": {
+        "pearl_light": {"seed": "#C8E4E4", "steps": ["#93BDAF", "#ACD2CC", "#C8E4E4", "#D9EAE7", "#E9F1EF"]},
+        "pearl": {"seed": "#A1CECE", "steps": ["#70A392", "#87BAB2", "#A1CECE", "#C5DDD9", "#E6EFEC"]},
+        "pearl_deep": {"seed": "#6FAEAE", "steps": ["#4E7467", "#5B948B", "#6FAEAE", "#93BDB6", "#B5CEC6"]}
+      },
+      "ground_lightness": 10.8
+    },
+    "glacira": {
+      "ground": "#DCE8F2",
+      "hue": 210,
+      "shadow_hue": 245,
+      "light_hue": 200,
+      "ramps": {
+        "indigo": {
+          "seed": "#343A5C",
+          "steps": ["#16151F", "#26253D", "#343A5C", "#4A5979", "#637A93"],
+          "ground_contrast": 66.5,
+          "main_body": true
+        },
+        "wool": {
+          "seed": "#C9BFA3",
+          "steps": ["#9E8472", "#B5A28A", "#C9BFA3", "#DAD8C5", "#ECEDE5"],
+          "ground_contrast": 15.2,
+          "main_body": false
+        }
+      },
+      "accents": {"accent": {"seed": "#9FD8FF", "steps": ["#193B8D", "#1262DE", "#51A5FB", "#9FD8FF", "#DBEFFD"]}},
+      "radiant_ramps": {
+        "pearl_light": {"seed": "#E4CFC8", "steps": ["#BD9397", "#D2AFAC", "#E4CFC8", "#EAE0D9", "#F1EEE9"]},
+        "pearl": {"seed": "#CEACA1", "steps": ["#A37074", "#BA8B87", "#CEACA1", "#DDCFC5", "#EFEBE6"]},
+        "pearl_deep": {"seed": "#AE7F6F", "steps": ["#744E51", "#94605B", "#AE7F6F", "#BDA593", "#CEC4B5"]}
+      },
+      "ground_lightness": 90.0
+    },
+    "greenxertz": {
+      "ground": "#3E9A4A",
+      "hue": 130,
+      "shadow_hue": 185,
+      "light_hue": 58,
+      "ramps": {
+        "cream": {
+          "seed": "#E6DDB8",
+          "steps": ["#B8C182", "#D5D49B", "#E6DDB8", "#ECEBD1", "#F3F3E7"],
+          "ground_contrast": 40.0,
+          "main_body": true
+        },
+        "ochre": {
+          "seed": "#B8842C",
+          "steps": ["#615F27", "#8B772B", "#B8842C", "#C8B04F", "#CCC97E"],
+          "ground_contrast": 7.9,
+          "main_body": false
+        },
+        "rose": {
+          "seed": "#C8607A",
+          "steps": ["#89436C", "#B14974", "#C8607A", "#D08B91", "#DAB7B4"],
+          "ground_contrast": 5.0,
+          "main_body": false
+        }
+      },
+      "accents": {"accent": {"seed": "#D9FF4A", "steps": ["#417014", "#6EB10E", "#B0F90E", "#D9FF4A", "#EEFBBA"]}},
+      "radiant_ramps": {
+        "pearl_light": {"seed": "#E2C8E4", "steps": ["#AC93BD", "#C9ACD2", "#E2C8E4", "#EAD9E9", "#F1E9EF"]},
+        "pearl": {"seed": "#CBA1CE", "steps": ["#8F70A3", "#AE87BA", "#CBA1CE", "#DDC5DB", "#EFE6ED"]},
+        "pearl_deep": {"seed": "#A96FAE", "steps": ["#644E74", "#865B94", "#A96FAE", "#BD93B9", "#CEB5C7"]}
+      },
+      "ground_lightness": 46.0
+    },
+    "nyxara": {
+      "ground": "#2A1840",
+      "hue": 275,
+      "shadow_hue": 300,
+      "light_hue": 185,
+      "ramps": {
+        "opal": {
+          "seed": "#D8D4E4",
+          "steps": ["#B0A1BB", "#C3BAD0", "#D8D4E4", "#E0DFEA", "#EAEBF0"],
+          "ground_contrast": 71.0,
+          "main_body": true
+        },
+        "silver": {
+          "seed": "#9AA0B0",
+          "steps": ["#6E6D81", "#82859A", "#9AA0B0", "#B8BEC5", "#D5D9DB"],
+          "ground_contrast": 49.4,
+          "main_body": true
+        },
+        "plum": {
+          "seed": "#6A3460",
+          "steps": ["#291929", "#492848", "#6A3460", "#874A86", "#9764A0"],
+          "ground_contrast": 15.4,
+          "main_body": false
+        }
+      },
+      "accents": {
+        "accent": {"seed": "#FF5AD9", "steps": ["#751575", "#B90FB4", "#F91BDC", "#FF5AD9", "#FCC0EE"]},
+        "accent_b": {"seed": "#5AF0FF", "steps": ["#155075", "#0F88B9", "#1BCFF9", "#5AF0FF", "#C0F6FC"]}
+      },
+      "radiant_ramps": {
+        "pearl_light": {"seed": "#DBE4C8", "steps": ["#BDBC93", "#CCD2AC", "#DBE4C8", "#E8EAD9", "#F1F1E9"]},
+        "pearl": {"seed": "#BFCEA1", "steps": ["#A3A370", "#B2BA87", "#BFCEA1", "#D9DDC5", "#EFEFE6"]},
+        "pearl_deep": {"seed": "#99AE6F", "steps": ["#74744E", "#8B945B", "#99AE6F", "#B6BD93", "#CECEB5"]}
+      },
+      "ground_lightness": 13.3
+    },
+    "asteroid": {
+      "ground": "#3A3A40",
+      "hue": 225,
+      "shadow_hue": 222,
+      "light_hue": 50,
+      "ramps": {
+        "rust": {
+          "seed": "#B0703A",
+          "steps": ["#60342E", "#874D35", "#B0703A", "#BF9B5E", "#C7BA89"],
+          "ground_contrast": 26.0,
+          "main_body": true
+        },
+        "gunmetal": {
+          "seed": "#7A8290",
+          "steps": ["#52555D", "#666B77", "#7A8290", "#979FA6", "#B4BABC"],
+          "ground_contrast": 27.7,
+          "main_body": true
+        }
+      },
+      "accents": {"accent": {"seed": "#4F7BFF", "steps": ["#143072", "#0F40B3", "#1257F9", "#4F7BFF", "#BCCCFB"]}},
+      "radiant_ramps": {
+        "pearl_light": {"seed": "#E4D6C8", "steps": ["#BD9A93", "#D2B9AC", "#E4D6C8", "#EAE4D9", "#F1F0E9"]},
+        "pearl": {"seed": "#CEB8A1", "steps": ["#A37970", "#BA9987", "#CEB8A1", "#DDD5C5", "#EFEDE6"]},
+        "pearl_deep": {"seed": "#AE8F6F", "steps": ["#74544E", "#946E5B", "#AE8F6F", "#BDAF93", "#CEC9B5"]}
+      },
+      "ground_lightness": 23.0
+    },
+    "wrecks": {
+      "ground": "#7C8088",
+      "hue": 220,
+      "shadow_hue": 232,
+      "light_hue": 210,
+      "ramps": {
+        "hazard": {
+          "seed": "#E8BC2A",
+          "steps": ["#8E5428", "#C18223", "#E8BC2A", "#E3DA62", "#E2D096"],
+          "ground_contrast": 22.3,
+          "main_body": false
+        },
+        "oxide": {
+          "seed": "#8A3A2C",
+          "steps": ["#3D1D23", "#622627", "#8A3A2C", "#A86141", "#B78D65"],
+          "ground_contrast": 18.6,
+          "main_body": false
+        },
+        "white": {
+          "seed": "#D6D6D0",
+          "steps": ["#A9A7A1", "#C0BFB8", "#D6D6D0", "#E1E2DE", "#EDEEEC"],
+          "ground_contrast": 33.6,
+          "main_body": true
+        }
+      },
+      "accents": {
+        "accent": {"seed": "#FF4A2E", "steps": ["#661220", "#A10D17", "#EB0E06", "#FF4A2E", "#FBBAB0"]},
+        "accent_owned": {"seed": "#35E0C2", "steps": ["#1B4D54", "#1E8082", "#22BCB0", "#35E0C2", "#B2EFE4"]}
+      },
+      "radiant_ramps": {
+        "pearl_light": {"seed": "#E4D4C8", "steps": ["#BD9793", "#D2B6AC", "#E4D4C8", "#EAE3D9", "#F1EFE9"]},
+        "pearl": {"seed": "#CEB4A1", "steps": ["#A37470", "#BA9487", "#CEB4A1", "#DDD3C5", "#EFEDE6"]},
+        "pearl_deep": {"seed": "#AE8A6F", "steps": ["#74514E", "#946A5B", "#AE8A6F", "#BDAC93", "#CEC8B5"]}
+      },
+      "ground_lightness": 50.1
+    },
+    "deep_space": {
+      "ground": "#08080C",
+      "hue": 255,
+      "shadow_hue": 268,
+      "light_hue": 275,
+      "ramps": {
+        "indigo": {
+          "seed": "#48408A",
+          "steps": ["#352945", "#433567", "#48408A", "#6D57A6", "#957EB2"],
+          "ground_contrast": 26.0,
+          "main_body": true
+        },
+        "navy": {
+          "seed": "#26305A",
+          "steps": ["#0E0D17", "#1B1B37", "#26305A", "#3A3C79", "#5C5294"],
+          "ground_contrast": 16.2,
+          "main_body": false
+        }
+      },
+      "accents": {"accent": {"seed": "#B06BFF", "steps": ["#45167B", "#6310C2", "#8A28F9", "#B06BFF", "#E0C7FC"]}},
+      "radiant_ramps": {
+        "pearl_light": {"seed": "#E4E4C8", "steps": ["#BDAF93", "#D2CCAC", "#E4E4C8", "#EAE7D9", "#F1F0E9"]},
+        "pearl": {"seed": "#CECEA1", "steps": ["#A39270", "#BAB287", "#CECEA1", "#DDD9C5", "#EFEDE6"]},
+        "pearl_deep": {"seed": "#AEAE6F", "steps": ["#74674E", "#948B5B", "#AEAE6F", "#BDB693", "#CEC9B5"]}
+      },
+      "ground_lightness": 3.3
+    }
+  }
+}

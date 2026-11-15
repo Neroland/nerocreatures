@@ -42,7 +42,7 @@ import za.co.neroland.nerocreatures.registry.ModEntities;
  *
  * <p>It exists for two audiences: a builder or pack maker who wants to look at the whole roster
  * without hunting for it, and the release process, which drives the client-side
- * {@code client/GalleryCaptureHarness} over this scene to re-render the Modrinth gallery
+ * {@code client/GalleryCaptureHarness} over this scene to re-render the project gallery
  * reproducibly after an art change.
  *
  * <h2>The scene</h2>
@@ -520,10 +520,10 @@ public final class CreatureGallery {
         }
         mob.setPersistenceRequired();
         //? if >=26.3 {
-        /*mob.setPermanentlyInvulnerable(true);
-        *///?} else {
-        mob.setInvulnerable(true);
-        //?}
+        mob.setPermanentlyInvulnerable(true);
+        //?} else {
+        /*mob.setInvulnerable(true);
+        *///?}
         mob.setTarget(null);
         mob.snapTo(pos.getX() + 0.5D, pos.getY(), pos.getZ() + 0.5D, DISPLAY_YAW, 0.0F);
         mob.setYBodyRot(DISPLAY_YAW);
@@ -557,10 +557,10 @@ public final class CreatureGallery {
         boss.setNoAi(true);
         boss.setSilent(true);
         //? if >=26.3 {
-        /*boss.setPermanentlyInvulnerable(true);
-        *///?} else {
-        boss.setInvulnerable(true);
-        //?}
+        boss.setPermanentlyInvulnerable(true);
+        //?} else {
+        /*boss.setInvulnerable(true);
+        *///?}
         boss.setPersistenceRequired();
         return level.addFreshEntity(boss) ? boss : null;
     }
@@ -573,10 +573,10 @@ public final class CreatureGallery {
         stand.setInvisible(true);
         stand.setNoGravity(true);
         //? if >=26.3 {
-        /*stand.setPermanentlyInvulnerable(true);
-        *///?} else {
-        stand.setInvulnerable(true);
-        //?}
+        stand.setPermanentlyInvulnerable(true);
+        //?} else {
+        /*stand.setInvulnerable(true);
+        *///?}
         stand.setSilent(true);
         stand.addTag(LABEL_TAG);
         level.addFreshEntity(stand);
@@ -593,10 +593,10 @@ public final class CreatureGallery {
         stand.setInvisible(true);
         stand.setNoGravity(true);
         //? if >=26.3 {
-        /*stand.setPermanentlyInvulnerable(true);
-        *///?} else {
-        stand.setInvulnerable(true);
-        //?}
+        stand.setPermanentlyInvulnerable(true);
+        //?} else {
+        /*stand.setInvulnerable(true);
+        *///?}
         stand.setSilent(true);
         level.addFreshEntity(stand);
     }

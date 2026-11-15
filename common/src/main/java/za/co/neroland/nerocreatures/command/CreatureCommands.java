@@ -55,6 +55,7 @@ import za.co.neroland.nerocreatures.telemetry.NeroCreaturesTelemetry;
  * /nerocreatures caps                     population and ownership caps, and what is using them
  * /nerocreatures summon-boss &lt;boss&gt;       start a contribution-tracked fight where you stand
  * /nerocreatures export &lt;player&gt;          one player's stored NeroCreatures data, as JSON
+ * /nerocreatures budget [start|stop]      creature tick cost per species (see BudgetCommand)
  * /nerocreatures telemetry-test           fire one synthetic crash-reporting event
  * /nerocreatures gallery [clear]          build (or wipe) the creative showcase scene
  * </pre>
@@ -129,6 +130,7 @@ public final class CreatureCommands {
                         .then(playerArgument()
                                 .executes(ctx -> runSafely(ctx.getSource(), "export",
                                         () -> export(ctx)))))
+                .then(BudgetCommand.node())
                 .then(Commands.literal("telemetry-test")
                         .executes(ctx -> runSafely(ctx.getSource(), "telemetry-test",
                                 () -> telemetryTest(ctx.getSource()))))
@@ -441,7 +443,7 @@ public final class CreatureCommands {
      * anonymous telemetry event instead of a Brigadier stack trace in chat. The captured context is
      * the subcommand name only — never its arguments, which may name a player.
      */
-    private static int runSafely(CommandSourceStack source, String subcommand, CommandBody body) {
+    static int runSafely(CommandSourceStack source, String subcommand, CommandBody body) {
         try {
             return body.run();
         } catch (RuntimeException e) {
@@ -453,7 +455,7 @@ public final class CreatureCommands {
     }
 
     @FunctionalInterface
-    private interface CommandBody {
+    interface CommandBody {
 
         int run();
     }

@@ -1,20 +1,23 @@
 package za.co.neroland.nerocreatures.network;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.server.level.ServerPlayer;
 
 import za.co.neroland.nerocreatures.platform.Services;
 
 /**
  * The cross-loader payload registry: NeroCreatures declares its payloads here once (type + stream
- * codec + client handler), and each loader module iterates the list and wires it to its own
- * networking API — NeoForge's {@code PayloadRegistrar}, Forge's {@code ChannelBuilder}, Fabric's
- * {@code PayloadTypeRegistry} + {@code ClientPlayNetworking}. Sending goes through the
+ * codec + handler), and each loader module iterates the lists and wires them to its own networking
+ * API — NeoForge's {@code PayloadRegistrar}, Forge's {@code ChannelBuilder}, Fabric's
+ * {@code PayloadTypeRegistry} + {@code Client/ServerPlayNetworking}. Sending goes through the
  * {@link Services#NETWORK} seam. The channel is {@code nerocreatures:main}.
  *
  * <p>This is Neroland Core's {@code CoreNetwork} architecture reproduced on NeroCreatures' own
@@ -23,12 +26,25 @@ import za.co.neroland.nerocreatures.platform.Services;
  * downstream registration would be silently dropped — see
  * {@link za.co.neroland.nerocreatures.platform.NetworkPlatform} for the full reasoning.
  *
- * <p>NeroCreatures is server-authoritative end to end: spawning, AI, drops, taming and boss
- * contribution are all decided server-side and the client only renders. The list is therefore
- * legitimately <b>empty</b> at this stage — the framework exists so that the first client-facing
- * feature (boss bars beyond vanilla, pet status HUD) is a one-line addition rather than a
- * per-loader change. An empty list is a supported state: every loader's registration pass simply
- * iterates nothing.
+ * <h2>Rules for a new payload</h2>
+ *
+ * <ul>
+ *   <li>Declare it in {@link #init()} only, never from a loader module. A payload record lives in
+ *       this package, owns a {@code TYPE} and a {@code STREAM_CODEC}, and gets a round-trip codec
+ *       test (see {@code CreatureActionPayloadCodecTest}).</li>
+ *   <li>Prefer a {@code StreamCodec<ByteBuf, T>} built from {@code ByteBufCodecs}: it needs no
+ *       registry access, so the codec test runs on a plain JVM.</li>
+ *   <li><b>Client &rarr; server:</b> the server trusts nothing in the payload. A handler that acts
+ *       on a creature must resolve it through {@link ServerPayloadGuard} (owner, reach, liveness,
+ *       rate limit) before touching it. The simplest way is not to add a payload at all and to
+ *       register an action on {@link CreatureActionPayload} via {@link CreatureActions}, which does
+ *       the guard call for you.</li>
+ *   <li>No payload carries personal data it does not need: never a player name, UUID, coordinates
+ *       or free text (POPIA/GDPR). Entity network ids are session-local integers and are fine.</li>
+ * </ul>
+ *
+ * <p>Handlers run on the receiving side's main thread on every loader (NeoForge
+ * {@code enqueueWork}, Forge {@code addMain}, Fabric {@code execute}).
  */
 public final class CreatureNetwork {
 
@@ -39,7 +55,18 @@ public final class CreatureNetwork {
             Consumer<T> handler) {
     }
 
+    /**
+     * A client &rarr; server payload plus the server-side handler. The handler gets the sending
+     * player as the network layer identified it, never as the payload claims it.
+     */
+    public record Serverbound<T extends CustomPacketPayload>(
+            CustomPacketPayload.Type<T> type,
+            StreamCodec<? super RegistryFriendlyByteBuf, T> codec,
+            BiConsumer<T, ServerPlayer> handler) {
+    }
+
     private static final List<Clientbound<?>> CLIENTBOUND = new ArrayList<>();
+    private static final List<Serverbound<?>> SERVERBOUND = new ArrayList<>();
 
     private static boolean declared;
 
@@ -53,9 +80,25 @@ public final class CreatureNetwork {
         CLIENTBOUND.add(new Clientbound<>(type, codec, handler));
     }
 
+    /**
+     * Declares a client &rarr; server payload. The handler runs on the server thread; it must
+     * validate everything it reads (see {@link ServerPayloadGuard}).
+     */
+    public static <T extends CustomPacketPayload> void serverbound(
+            CustomPacketPayload.Type<T> type,
+            StreamCodec<? super RegistryFriendlyByteBuf, T> codec,
+            BiConsumer<T, ServerPlayer> handler) {
+        SERVERBOUND.add(new Serverbound<>(type, codec, handler));
+    }
+
     /** Every declared server &rarr; client payload, for each loader's registration pass. */
     public static List<Clientbound<?>> clientbound() {
-        return CLIENTBOUND;
+        return Collections.unmodifiableList(CLIENTBOUND);
+    }
+
+    /** Every declared client &rarr; server payload, for each loader's registration pass. */
+    public static List<Serverbound<?>> serverbound() {
+        return Collections.unmodifiableList(SERVERBOUND);
     }
 
     /**
@@ -67,7 +110,16 @@ public final class CreatureNetwork {
             return; // defensive: a second call must not duplicate registrations
         }
         declared = true;
-        // No payloads yet — see the class Javadoc. Declare them here, never from a loader module.
+        // Client -> server: one generic "owner acts on their creature" payload. Features add an
+        // action id in CreatureActions rather than a new payload; the dispatcher runs the
+        // ServerPayloadGuard before any action handler sees the entity.
+        serverbound(CreatureActionPayload.TYPE, CreatureActionPayload.STREAM_CODEC,
+                CreatureActions::handle);
+    }
+
+    /** Client side: sends a payload to the server (no-op on a server without the channel). */
+    public static void sendToServer(CustomPacketPayload payload) {
+        Services.NETWORK.sendToServer(payload);
     }
 
     /**

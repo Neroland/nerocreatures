@@ -1,0 +1,9 @@
+{
+  "replace": false,
+  "values": [
+    {
+      "id": "nerocreatures:lumen_dust",
+      "required": false
+    }
+  ]
+}

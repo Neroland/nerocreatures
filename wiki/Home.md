@@ -30,11 +30,16 @@ drops are deliberately raw materials that other mods spend.
 - [Pets & Drones](Pets-and-Drones.md) — taming, commands, the Terraforming Drone, the ownership
   caps, what is stored about you and how to erase it, and where NeroCreatures stops and
   NeroCompanion starts.
+- [Traits](Traits.md) — the two traits every tameable carries, inheritance, and the Radiant morph.
+- [Mounts](Mounts.md) — taming, the Creature Saddle, riding, stamina and panniers.
+- [Alphas](Alphas.md) — rare, larger hostiles: how often, how many, what they drop.
+- [Config](Config.md) — the 0.5.0 config keys: mounts, eggs, alphas, overworld spawns, the tick
+  budget and the world-changing abilities.
 - [Bosses](Bosses.md) — the Cinder Tyrant and the boss framework: phases, arenas, the two ways a
   boss turns up, the exact contribution reward split, and the `nerocreatures:boss_pressure` event
   channel other mods can listen to.
 - [Commands](Commands.md) — the `/nerocreatures` operator tree: `list`, `caps`, `summon-boss`,
-  `export`, `telemetry-test` and `gallery`.
+  `export`, `telemetry-test`, `gallery` and `budget`.
 - [Gallery & screenshot capture](Gallery.md) — the creative showcase scene, the `/ncgallery` capture
   harness, the shot list, and where the screenshots are saved.
 - [Link module](Link-Module.md) — what a Neroland companion app can see and do, section by section,

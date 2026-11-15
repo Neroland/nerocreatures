@@ -15,6 +15,7 @@ import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.SpawnGroupData;
 import net.minecraft.world.entity.SpawnPlacements;
 import net.minecraft.world.level.ChunkPos;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.levelgen.Heightmap;
 
 import org.jetbrains.annotations.Nullable;
@@ -24,6 +25,7 @@ import za.co.neroland.nerolandcore.worldgen.SpaceTags;
 import za.co.neroland.nerocreatures.boss.BossFights;
 import za.co.neroland.nerocreatures.boss.BossSpawns;
 import za.co.neroland.nerocreatures.config.NeroCreaturesConfig;
+import za.co.neroland.nerocreatures.entity.luna.LunaSpawnGates;
 import za.co.neroland.nerocreatures.registry.ModEntities;
 
 /**
@@ -89,6 +91,9 @@ public final class CreatureSpawns {
 
     /** Furthest a spawn may be from the anchoring player, in blocks. */
     private static final int MAX_SPAWN_DISTANCE = 48;
+
+    /** An {@link SpawnRule.Candidate#AIR} candidate sits 1 to this many blocks above the surface. */
+    private static final int AIR_LIFT_BLOCKS = 4;
 
     private static final List<SpawnRule> RULES = new ArrayList<>();
 
@@ -186,6 +191,40 @@ public final class CreatureSpawns {
                 SpaceTags.DARK_BIOMES, 1, 1, 1, BossSpawns::maySpawnNaturally));
 
         // The Terraforming Drone has no rule at all, and never will: it is deployed, not spawned.
+
+        // --- 0.5.0 habitats (decision 001 habitat tags; empty without the planet mod) -----------
+
+        // Luna. Moths drift in small clouds; shrikes hunt alone or in pairs; tortoises are rare
+        // grazers, a pair at most so a herd can start.
+        register(SpawnRule.anyDimension("lumen_moth", ModEntities.LUMEN_MOTH, HabitatTags.LUNA, 10, 1, 3));
+        register(SpawnRule.anyDimension("echo_shrike", ModEntities.ECHO_SHRIKE, HabitatTags.LUNA, 14, 1, 2));
+        register(SpawnRule.anyDimension("lode_tortoise", ModEntities.LODE_TORTOISE, HabitatTags.LUNA, 6, 1, 2));
+
+        // Mars. Lopers roam the dunes in pairs; hounds alone or a pair; a Dust Devil is always alone,
+        // because one is a fight-changer and two is an ambush.
+        register(SpawnRule.anyDimension("dune_loper", ModEntities.DUNE_LOPER, HabitatTags.MARS, 8, 1, 2));
+        register(SpawnRule.anyDimension("strata_hound", ModEntities.STRATA_HOUND, HabitatTags.MARS, 10, 1, 2));
+        register(SpawnRule.anyDimension("dust_devil", ModEntities.DUST_DEVIL, HabitatTags.MARS, 12, 1, 1));
+
+        // Cindara. Beetles in small groups so a breeding pair is findable; waders a pair at most.
+        register(SpawnRule.anyDimension("slag_beetle", ModEntities.SLAG_BEETLE, HabitatTags.CINDARA, 10, 1, 3));
+        register(SpawnRule.anyDimension("magma_wader", ModEntities.MAGMA_WADER, HabitatTags.CINDARA, 12, 1, 2));
+
+        // --- Overworld (decision 005): a Core-only server is not empty, and rare stays rare ------
+        // Each rule: overworld only, behind overworldSpawns, a position gate that ends in a chance
+        // roll (moth 15%, tortoise 5%), and overworldSpawnCap counted by the census.
+        register(SpawnRule.gated("lumen_moth", ModEntities.LUMEN_MOTH, HabitatTags.OVERWORLD_DARK_FOREST,
+                6, 1, 3, CreatureSpawns::overworldEnabled, LunaSpawnGates::mothOverworld)
+                .airMode().overworldCapped());
+        register(SpawnRule.gated("lode_tortoise", ModEntities.LODE_TORTOISE, HabitatTags.OVERWORLD,
+                3, 1, 1, CreatureSpawns::overworldEnabled, LunaSpawnGates::tortoiseCave)
+                .caveMode().overworldCapped());
+        // Static Swarm (thunderstorms, decision 005) joins here when its work package lands.
+    }
+
+    /** The cheap per-level half of every overworld rule: the overworld, with overworldSpawns on. */
+    private static boolean overworldEnabled(ServerLevel level) {
+        return level.dimension() == Level.OVERWORLD && NeroCreaturesConfig.OVERWORLD_SPAWNS.get();
     }
 
     /** Adds a rule to the table. Call from {@link #init()} only. */
@@ -265,18 +304,70 @@ public final class CreatureSpawns {
     }
 
     private static boolean trySpawnNear(ServerLevel level, ServerPlayer player, RandomSource random) {
-        BlockPos pos = candidatePosition(level, player, random);
-        if (pos == null) {
+        BlockPos surface = candidatePosition(level, player, random);
+        if (surface == null) {
             return false;
         }
-        SpawnRule rule = pickRule(level, pos, random);
-        if (rule == null) {
+        Candidates candidates = new Candidates(level, surface, random);
+        Pick pick = pickRule(level, candidates, random);
+        if (pick == null) {
             return false;
         }
-        if (!CreatureCensus.chunkHasRoom(level, pos) || !CreatureCensus.dimensionHasRoom(level)) {
+        if (!CreatureCensus.chunkHasRoom(level, pick.pos()) || !CreatureCensus.dimensionHasRoom(level)
+                || !overworldRoom(level, pick.rule())) {
             return false;
         }
-        return placeGroup(level, rule, pos, random) > 0;
+        return placeGroup(level, pick.rule(), pick.pos(), random) > 0;
+    }
+
+    /** Decision 005: an overworld-capped rule needs room under {@code overworldSpawnCap} in the overworld. */
+    private static boolean overworldRoom(ServerLevel level, SpawnRule rule) {
+        return !rule.overworldCapped() || CreatureCensus.overworldHasRoom(level);
+    }
+
+    /** A rule chosen for one attempt, and the position it was tested at. */
+    private record Pick(SpawnRule rule, BlockPos pos) {
+    }
+
+    /**
+     * The candidate positions of one attempt, one per {@link SpawnRule.Candidate} mode, each worked out
+     * at most once and only when a rule of that mode has already passed its cheap per-level checks.
+     * The cave search is the only one that reads blocks, so a level with no cave rule never pays it.
+     */
+    private static final class Candidates {
+        private final ServerLevel level;
+        private final BlockPos surface;
+        private final RandomSource random;
+        @Nullable
+        private BlockPos air;
+        @Nullable
+        private BlockPos cave;
+        private boolean caveSearched;
+
+        Candidates(ServerLevel level, BlockPos surface, RandomSource random) {
+            this.level = level;
+            this.surface = surface;
+            this.random = random;
+        }
+
+        @Nullable
+        BlockPos forMode(SpawnRule.Candidate mode) {
+            switch (mode) {
+                case AIR:
+                    if (this.air == null) {
+                        this.air = this.surface.above(1 + this.random.nextInt(AIR_LIFT_BLOCKS));
+                    }
+                    return this.air;
+                case CAVE:
+                    if (!this.caveSearched) {
+                        this.caveSearched = true;
+                        this.cave = LunaSpawnGates.caveCandidate(this.level, this.surface, this.random);
+                    }
+                    return this.cave;
+                default:
+                    return this.surface;
+            }
+        }
     }
 
     /**
@@ -303,16 +394,21 @@ public final class CreatureSpawns {
      * {@code globalSpawnWeightMultiplier}; a total of zero (multiplier 0, or no matching rule)
      * yields {@code null} and the attempt is abandoned.
      */
-    private static SpawnRule pickRule(ServerLevel level, BlockPos pos, RandomSource random) {
+    @Nullable
+    private static Pick pickRule(ServerLevel level, Candidates candidates, RandomSource random) {
         double multiplier = NeroCreaturesConfig.GLOBAL_SPAWN_WEIGHT_MULTIPLIER.get();
         if (multiplier <= 0.0D) {
             return null;
         }
         double total = 0.0D;
-        List<SpawnRule> eligible = new ArrayList<>(RULES.size());
+        List<Pick> eligible = new ArrayList<>(RULES.size());
         for (SpawnRule rule : RULES) {
-            if (rule.weight() > 0 && rule.matches(level, pos)) {
-                eligible.add(rule);
+            if (rule.weight() <= 0 || !rule.matchesLevel(level)) {
+                continue;
+            }
+            BlockPos pos = candidates.forMode(rule.candidate());
+            if (pos != null && rule.matches(level, pos, random)) {
+                eligible.add(new Pick(rule, pos));
                 total += rule.weight() * multiplier;
             }
         }
@@ -320,10 +416,10 @@ public final class CreatureSpawns {
             return null;
         }
         double roll = random.nextDouble() * total;
-        for (SpawnRule rule : eligible) {
-            roll -= rule.weight() * multiplier;
+        for (Pick pick : eligible) {
+            roll -= pick.rule().weight() * multiplier;
             if (roll <= 0.0D) {
-                return rule;
+                return pick;
             }
         }
         return eligible.get(eligible.size() - 1);
@@ -345,7 +441,8 @@ public final class CreatureSpawns {
         SpawnGroupData groupData = null;
         int spawned = 0;
         for (int i = 0; i < groupSize; i++) {
-            if (!CreatureCensus.chunkHasRoom(level, origin) || !CreatureCensus.dimensionHasRoom(level)) {
+            if (!CreatureCensus.chunkHasRoom(level, origin) || !CreatureCensus.dimensionHasRoom(level)
+                    || !overworldRoom(level, rule)) {
                 break;
             }
             BlockPos pos = i == 0 ? origin : scatter(origin, random);
@@ -362,6 +459,7 @@ public final class CreatureSpawns {
                     EntitySpawnReason.NATURAL, groupData);
             if (level.addFreshEntity(mob)) {
                 spawned++;
+                CreatureCensus.noteSpawned(level, rule.overworldCapped());
             }
         }
         return spawned;

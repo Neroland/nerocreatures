@@ -1,0 +1,425 @@
+{
+  "format": 1,
+  "id": "crystal_golem",
+  "name": "Crystal Golem",
+  "habitat": "nyxara",
+  "size_class": "L",
+  "silhouette": "top-heavy biped with one shoulder carrying a crystal cluster much taller than the other, a small head and long hanging arms",
+  "hitbox_guide": [1.4, 2.2],
+  "texture": {"width": 128, "height": 128},
+  "render_type": "cutout",
+  "renderer": {"scale": 1.0, "shadow": 1.0},
+  "materials": ["silver", "opal", "plum"],
+  "accent": "accent",
+  "accent_2": "accent_b",
+  "glow_organs": [
+    "left shoulder cluster (the smash; one gradient up the tall shard, magenta root to cyan tip)",
+    "eyes"
+  ],
+  "radiant": null,
+  "parts": [
+    {
+      "name": "hips",
+      "parent": null,
+      "pivot": [0, 14, 0],
+      "rotation": [0, 0, 0],
+      "cubes": [
+        {"name": "pelvis", "origin": [-4, -2, -3], "size": [8, 5, 6], "uv": [80, 46]}
+      ]
+    },
+    {
+      "name": "body",
+      "parent": null,
+      "pivot": [0, 13, 0],
+      "rotation": [4, 0, 0],
+      "cubes": [
+        {"name": "abdomen", "origin": [-5, -6, -3.5], "size": [10, 7, 7], "uv": [28, 23]},
+        {"name": "chest", "origin": [-10, -18, -5.5], "size": [20, 12, 11], "uv": [0, 0]},
+        {"name": "backplate", "origin": [-6, -16, 5.5], "size": [12, 9, 2], "uv": [52, 46]},
+        {"name": "vein", "origin": [-2, -13, -6.5], "size": [4, 6, 1], "uv": [62, 20]}
+      ]
+    },
+    {
+      "name": "head",
+      "parent": "body",
+      "pivot": [0, -15, -5.5],
+      "rotation": [-4, 0, 0],
+      "cubes": [
+        {"name": "skull", "origin": [-3, -5, -5], "size": [6, 6, 6], "uv": [28, 37]},
+        {"name": "jaw", "origin": [-2, 1, -5], "size": [4, 2, 4], "uv": [62, 27]}
+      ]
+    },
+    {
+      "name": "cluster",
+      "parent": "body",
+      "pivot": [10, -18, 0],
+      "rotation": [0, 0, 0],
+      "cubes": [
+        {"name": "base", "origin": [-4, -4, -5], "size": [9, 6, 10], "uv": [78, 17]},
+        {"name": "lump", "origin": [-2, -7, -3], "size": [6, 3, 6], "uv": [50, 57]}
+      ]
+    },
+    {
+      "name": "shard_a",
+      "parent": "cluster",
+      "pivot": [1, -5, 0],
+      "rotation": [-6, 0, 10],
+      "cubes": [
+        {"name": "shard", "origin": [-2, -15, -2], "size": [4, 16, 4], "uv": [62, 0]}
+      ]
+    },
+    {
+      "name": "shard_b",
+      "parent": "cluster",
+      "pivot": [-2, -5, 2],
+      "rotation": [12, 0, -16],
+      "cubes": [
+        {"name": "shard", "origin": [-1.5, -9, -1.5], "size": [3, 10, 3], "uv": [102, 0]}
+      ]
+    },
+    {
+      "name": "shard_c",
+      "parent": "cluster",
+      "pivot": [4, -3, -2],
+      "rotation": [-16, 0, 24],
+      "cubes": [
+        {"name": "shard", "origin": [-1.5, -8, -1.5], "size": [3, 9, 3], "uv": [114, 0]}
+      ]
+    },
+    {
+      "name": "shard_d",
+      "parent": "cluster",
+      "pivot": [2, -4, 3],
+      "rotation": [22, 0, 12],
+      "cubes": [
+        {"name": "shard", "origin": [-1, -6, -1], "size": [2, 7, 2], "uv": [116, 12]}
+      ]
+    },
+    {
+      "name": "pauldron_r",
+      "parent": "body",
+      "pivot": [-10, -18, 0],
+      "rotation": [0, 0, 0],
+      "cubes": [
+        {"name": "stub", "origin": [-5, -3, -4], "size": [8, 5, 8], "uv": [94, 33]},
+        {"name": "nub", "origin": [-3, -5, -2], "size": [3, 2, 3], "uv": [116, 28]}
+      ]
+    },
+    {
+      "name": "shard_r",
+      "parent": "pauldron_r",
+      "pivot": [-2, -4, 0],
+      "rotation": [0, 0, -18],
+      "cubes": [
+        {"name": "shard", "origin": [-1, -4, -1], "size": [2, 5, 2], "uv": [116, 21]}
+      ]
+    },
+    {
+      "name": "arm_l",
+      "parent": "body",
+      "pivot": [13.5, -13, 0],
+      "rotation": [0, 0, -3],
+      "cubes": [
+        {"name": "upper", "origin": [-3, 0, -3], "size": [6, 11, 6], "uv": [78, 0]}
+      ]
+    },
+    {
+      "name": "forearm_l",
+      "parent": "arm_l",
+      "pivot": [0, 10, 0],
+      "rotation": [-6, 0, 0],
+      "cubes": [
+        {"name": "forearm", "origin": [-3.5, 0, -3.5], "size": [7, 9, 7], "uv": [0, 23]},
+        {"name": "fist", "origin": [-4, 8, -4], "size": [8, 5, 8], "uv": [62, 33]},
+        {"name": "stud", "origin": [3, 2, -1], "size": [2, 4, 2], "uv": [52, 37]}
+      ]
+    },
+    {
+      "name": "arm_r",
+      "parent": "body",
+      "pivot": [-13.5, -13, 0],
+      "rotation": [0, 0, 3],
+      "uv_like": "arm_l",
+      "cubes": [
+        {"name": "upper", "origin": [-3, 0, -3], "size": [6, 11, 6], "uv": [78, 0], "mirror": true}
+      ]
+    },
+    {
+      "name": "forearm_r",
+      "parent": "arm_r",
+      "pivot": [0, 10, 0],
+      "rotation": [-6, 0, 0],
+      "uv_like": "forearm_l",
+      "cubes": [
+        {"name": "forearm", "origin": [-3.5, 0, -3.5], "size": [7, 9, 7], "uv": [0, 23], "mirror": true},
+        {"name": "fist", "origin": [-4, 8, -4], "size": [8, 5, 8], "uv": [62, 33], "mirror": true},
+        {"name": "stud", "origin": [-5, 2, -1], "size": [2, 4, 2], "uv": [52, 37], "mirror": true}
+      ]
+    },
+    {
+      "name": "leg_l",
+      "parent": null,
+      "pivot": [3, 16, 0],
+      "rotation": [0, 0, 0],
+      "cubes": [
+        {"name": "leg", "origin": [-2.5, 0, -3], "size": [5, 6, 6], "uv": [0, 39]},
+        {"name": "foot", "origin": [-3, 5, -4.5], "size": [6, 3, 8], "uv": [22, 49]}
+      ]
+    },
+    {
+      "name": "leg_r",
+      "parent": null,
+      "pivot": [-3, 16, 0],
+      "rotation": [0, 0, 0],
+      "uv_like": "leg_l",
+      "cubes": [
+        {"name": "leg", "origin": [-2.5, 0, -3], "size": [5, 6, 6], "uv": [0, 39], "mirror": true},
+        {"name": "foot", "origin": [-3, 5, -4.5], "size": [6, 3, 8], "uv": [22, 49], "mirror": true}
+      ]
+    }
+  ],
+  "procedural": {
+    "swing": [
+      {"part": "leg_l", "phase": 0, "amplitude": 22},
+      {"part": "leg_r", "phase": 180, "amplitude": 22},
+      {"part": "arm_l", "phase": 180, "amplitude": 15},
+      {"part": "arm_r", "phase": 0, "amplitude": 15}
+    ],
+    "wave": [],
+    "look": [
+      {"part": "head", "yaw": 0.6, "pitch": 0.5, "limit": 35}
+    ]
+  },
+  "clips": {
+    "idle": {
+      "length": 100,
+      "loop": true,
+      "key_pose": 25,
+      "note": "slow heave; the head sways; the shoulder cluster shimmers (glow rises twice per cycle)",
+      "glow": [
+        {"t": 0, "v": 0.35},
+        {"t": 25, "v": 0.6, "ease": "smooth"},
+        {"t": 50, "v": 0.35, "ease": "smooth"},
+        {"t": 75, "v": 0.55, "ease": "smooth"},
+        {"t": 100, "v": 0.35, "ease": "smooth"}
+      ],
+      "tracks": {
+        "body": {
+          "rot": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 50, "v": [1.5, 0, 0], "ease": "smooth"},
+            {"t": 100, "v": [0, 0, 0], "ease": "smooth"}
+          ],
+          "pos": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 50, "v": [0, -0.5, 0], "ease": "smooth"},
+            {"t": 100, "v": [0, 0, 0], "ease": "smooth"}
+          ]
+        },
+        "head": {
+          "rot": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 30, "v": [0, 9, 0], "ease": "smooth"},
+            {"t": 70, "v": [2, -9, 0], "ease": "smooth"},
+            {"t": 100, "v": [0, 0, 0], "ease": "smooth"}
+          ]
+        },
+        "cluster": {
+          "rot": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 50, "v": [0, 0, 2], "ease": "smooth"},
+            {"t": 100, "v": [0, 0, 0], "ease": "smooth"}
+          ]
+        },
+        "forearm_l": {
+          "rot": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 50, "v": [-3, 0, 0], "ease": "smooth"},
+            {"t": 100, "v": [0, 0, 0], "ease": "smooth"}
+          ]
+        },
+        "forearm_r": {
+          "rot": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 50, "v": [-3, 0, 0], "ease": "smooth"},
+            {"t": 100, "v": [0, 0, 0], "ease": "smooth"}
+          ]
+        }
+      }
+    },
+    "move": {
+      "length": 30,
+      "loop": true,
+      "key_pose": 7,
+      "note": "narrow slow stride: legs and counter-swinging arms are the swing; the torso rolls over the planted leg and drops on each footfall",
+      "tracks": {
+        "body": {
+          "rot": [
+            {"t": 0, "v": [2, 0, 3]},
+            {"t": 15, "v": [2, 0, -3], "ease": "smooth"},
+            {"t": 30, "v": [2, 0, 3], "ease": "smooth"}
+          ],
+          "pos": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 7, "v": [0, 1, 0], "ease": "smooth"},
+            {"t": 15, "v": [0, 0, 0], "ease": "smooth"},
+            {"t": 22, "v": [0, 1, 0], "ease": "smooth"},
+            {"t": 30, "v": [0, 0, 0], "ease": "smooth"}
+          ]
+        },
+        "hips": {
+          "rot": [
+            {"t": 0, "v": [0, 5, 0]},
+            {"t": 15, "v": [0, -5, 0], "ease": "smooth"},
+            {"t": 30, "v": [0, 5, 0], "ease": "smooth"}
+          ]
+        },
+        "head": {
+          "rot": [
+            {"t": 0, "v": [0, 0, -3]},
+            {"t": 15, "v": [0, 0, 3], "ease": "smooth"},
+            {"t": 30, "v": [0, 0, -3], "ease": "smooth"}
+          ]
+        },
+        "forearm_l": {
+          "rot": [
+            {"t": 0, "v": [-10, 0, 0]},
+            {"t": 30, "v": [-10, 0, 0]}
+          ]
+        },
+        "forearm_r": {
+          "rot": [
+            {"t": 0, "v": [-10, 0, 0]},
+            {"t": 30, "v": [-10, 0, 0]}
+          ]
+        }
+      }
+    },
+    "ability": {
+      "length": 30,
+      "loop": false,
+      "key_pose": 9,
+      "telegraph": 12,
+      "damaging": true,
+      "note": "overhead smash with the heavy (left) shoulder: arm up and torso wound back by tick 9 with the cluster glow climbing, lands at tick 12 (start the pose 12 ticks before the hit), fist planted until 20",
+      "glow": [
+        {"t": 0, "v": 0.35},
+        {"t": 10, "v": 1.0},
+        {"t": 14, "v": 1.0},
+        {"t": 30, "v": 0.35}
+      ],
+      "tracks": {
+        "body": {
+          "rot": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 9, "v": [-12, -14, 0], "ease": "smooth"},
+            {"t": 12, "v": [22, 10, 0]},
+            {"t": 20, "v": [22, 10, 0]},
+            {"t": 30, "v": [0, 0, 0], "ease": "smooth"}
+          ],
+          "pos": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 9, "v": [0, -1, 1], "ease": "smooth"},
+            {"t": 12, "v": [0, 1, -1]},
+            {"t": 20, "v": [0, 1, -1]},
+            {"t": 30, "v": [0, 0, 0], "ease": "smooth"}
+          ]
+        },
+        "head": {
+          "rot": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 9, "v": [-10, 10, 0], "ease": "smooth"},
+            {"t": 12, "v": [-18, 0, 0]},
+            {"t": 20, "v": [-18, 0, 0]},
+            {"t": 30, "v": [0, 0, 0], "ease": "smooth"}
+          ]
+        },
+        "arm_l": {
+          "rot": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 9, "v": [-168, 0, -8], "ease": "smooth"},
+            {"t": 12, "v": [-50, 0, 0]},
+            {"t": 20, "v": [-50, 0, 0]},
+            {"t": 30, "v": [0, 0, 0], "ease": "smooth"}
+          ]
+        },
+        "forearm_l": {
+          "rot": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 9, "v": [-18, 0, 0], "ease": "smooth"},
+            {"t": 12, "v": [-24, 0, 0]},
+            {"t": 20, "v": [-24, 0, 0]},
+            {"t": 30, "v": [0, 0, 0], "ease": "smooth"}
+          ]
+        },
+        "arm_r": {
+          "rot": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 9, "v": [24, 0, 6], "ease": "smooth"},
+            {"t": 12, "v": [-14, 0, 0]},
+            {"t": 20, "v": [-14, 0, 0]},
+            {"t": 30, "v": [0, 0, 0], "ease": "smooth"}
+          ]
+        },
+        "cluster": {
+          "rot": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 9, "v": [0, 0, -4], "ease": "smooth"},
+            {"t": 12, "v": [0, 0, 3]},
+            {"t": 30, "v": [0, 0, 0], "ease": "smooth"}
+          ]
+        }
+      }
+    },
+    "hurt": {
+      "length": 6,
+      "loop": false,
+      "key_pose": 2,
+      "note": "recoils off the heavy shoulder; the cluster cracks and glints (glow spike)",
+      "glow": [
+        {"t": 0, "v": 0.35},
+        {"t": 2, "v": 1.0},
+        {"t": 6, "v": 0.35}
+      ],
+      "tracks": {
+        "body": {
+          "rot": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 2, "v": [-6, 0, -5], "ease": "smooth"},
+            {"t": 6, "v": [0, 0, 0], "ease": "smooth"}
+          ]
+        },
+        "head": {
+          "rot": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 2, "v": [-8, -10, 0], "ease": "smooth"},
+            {"t": 6, "v": [0, 0, 0], "ease": "smooth"}
+          ]
+        },
+        "cluster": {
+          "rot": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 2, "v": [0, 0, 7], "ease": "smooth"},
+            {"t": 4, "v": [0, 0, -3], "ease": "smooth"},
+            {"t": 6, "v": [0, 0, 0], "ease": "smooth"}
+          ]
+        },
+        "arm_l": {
+          "rot": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 2, "v": [0, 0, -10], "ease": "smooth"},
+            {"t": 6, "v": [0, 0, 0], "ease": "smooth"}
+          ]
+        },
+        "arm_r": {
+          "rot": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 2, "v": [10, 0, 0], "ease": "smooth"},
+            {"t": 6, "v": [0, 0, 0], "ease": "smooth"}
+          ]
+        }
+      }
+    }
+  },
+  "uv_fill": 0.422
+}

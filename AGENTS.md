@@ -11,14 +11,16 @@
   companions and planet bosses; its drops are raw materials the rest of the ecosystem spends.
 - Mod id: **`nerocreatures`** (matches the registry namespace + every loader manifest). Package
   root: `za.co.neroland.nerocreatures`. Author: **Neroland**.
-- Version: **0.4.1-alpha.2**.
-- Targets **MC 26.1.2, 26.2 AND 26.3** on **NeoForge, MinecraftForge/Forge, and Fabric** → the **"9 cells"**.
-  **Java 25.** Mappings = official Mojang names (26.x ships de-obfuscated; no Parchment).
+- Version: **0.4.1-alpha.2** (in progress toward **0.5.0-beta.1**).
+- Targets **MC 1.21.1, 1.21.4, 1.21.5, 1.21.8, 1.21.10, 1.21.11, 26.1.2, 26.2 AND 26.3** on **NeoForge,
+  MinecraftForge/Forge, and Fabric** → the **"27 cells"** (1.21.8 also covers 1.21.7, 1.21.10 also covers 1.21.9).
+  **Java 25** for 26.x cells, **Java 21** for 1.21.x cells. Mappings = official Mojang names (26.x ships
+  de-obfuscated; 1.21.x Fabric cells remap via Loom; no Parchment).
 
 ## Dependencies
 
 - **Neroland Core is the ONLY hard dependency** (`nerolandcore_version` in `gradle.properties`,
-  currently `1.15.0`). Declared in all three manifests as required with `ordering = "AFTER"`, with
+  currently `1.17.5`). Declared in all three manifests as required with `ordering = "AFTER"`, with
   the version range floored at the compiled Core version.
 - **No other Nero mod may appear in any manifest.** Cross-mod integration is soft: tag entries use
   `"required": false` and runtime checks go through `isModLoaded(...)`. Everything must degrade
@@ -50,9 +52,9 @@
   `stonecutter.gradle` (the REAL root build script — Stonecutter repoints `buildFileName` here; the root
   `build.gradle` is inert), `gradle.properties`, `gradlew`, `gradle/`.
 - **Version/loader axis = Stonecutter.** Each loader×MC is a real node `:<loader>:<mc>`
-  (`:fabric:26.1.2 :fabric:26.2 :fabric:26.3 :neoforge:26.1.2 :neoforge:26.2 :neoforge:26.3 :forge:26.1.2 :forge:26.2 :forge:26.3`). `common` is
+  (`:<loader>:<mc>` for loader in fabric/neoforge/forge × the nine MC versions, e.g. `:fabric:1.21.1`, `:forge:26.3`). `common` is
   NOT a node — its source is spliced via `rootProject.ext.commonJava` / `commonResources`. Dependency pins
-  live in `gradle.properties` as `*_version_<mc>` keys; `mc_versions=26.1.2,26.2,26.3`.
+  live in `gradle.properties` as `*_version_<mc>` keys; `mc_versions=1.21.1,1.21.4,1.21.5,1.21.8,1.21.10,1.21.11,26.1.2,26.2,26.3`.
 - **Version-specific code in `common/`.** Non-active nodes run `common/` through Stonecutter (`stonecutterProcessCommon`), so shared code uses the same `//? if >=26.3 {` blocks as the loader `src/` trees. Keep the files in the vcsVersion state, and never put a `*/` inside a disabled block. Datapack files whose format differs by version go in `common/src/main/resources-<mc>/`, which is merged over `common/src/main/resources` for every node at or above `<mc>` (`mergeCommonResources`).
 
 ## Code map (`common/src/main/java/za/co/neroland/nerocreatures/`)
@@ -224,8 +226,16 @@
   is named; each loader passes its own sink (NeoForge/Forge `EntityRenderersEvent.RegisterRenderers`,
   Fabric `EntityRendererRegistry`). Models are **baked directly** (`createBodyLayer().bakeRoot()`) —
   no model-layer registry, which is what keeps the three loaders identical. `CreatureModel` is the
-  shared model base (walk swing + idle/constant waves), `CreatureRenderer` the single renderer, and
-  one `*Model` class per creature. Loader wiring: `NeroCreaturesFabricClient`, plus
+  shared model base, `CreatureRenderer` the single renderer (glow layer `CreatureGlowLayer`, Radiant
+  texture switch, alpha scale and tint, all read from the synced `CreatureVisuals`), and one `*Model`
+  class per creature. **Art pipeline:** a creature with a spec (`art/models/<id>.json`, format in
+  `art/models/README.md`) has a *generated* model: `python tools/gen_entity_models.py [<id>]` writes
+  its `ART`, `RIG` and `createBodyLayer()` between `// gen:begin` / `// gen:end` (never hand-edit
+  that block; `--check` fails if stale, `--adopt <id>` replaces a hand-written model once). `RIG` is
+  played by `CreatureRig.evaluate`, a port of `tools/art/spec.py` `evaluate()` pinned by
+  `CreatureRigTest`. Register it with `new CreatureRenderer(ctx, model, <Id>Model.ART)`; models
+  without a spec use `CreatureArt.legacy(..)` and the old `swingLimb`/`idleWave`. Gradle:
+  `syncModels` (models only) and `genAssets` (art kit, models, placeholders); `-PmodelSyncArgs=--check`. Loader wiring: `NeroCreaturesFabricClient`, plus
   `NeoForgeClientSetup`/`ForgeClientSetup`, gated on `FMLEnvironment` so client classes never load
   on a dedicated server.
   `client/GalleryCaptureHarness` is the screenshot pass over the `/nerocreatures gallery` scene:
@@ -237,15 +247,16 @@
   client-dispatcher root that shares a name with a server command SHADOWS the server subtree** — the
   client parser matches the root, fails on the server-only child and never forwards. The HUD-hide
   flag and the main render target diverge across 26.1.2 ↔ 26.2 and are resolved reflectively.
-  Output is `screenshots/nerocreatures/<shot>.png`, under the NeoForge 26.2 run directory.
+  Output is `screenshots/nerocreatures/<shot>.png`, under the NeoForge 26.3 run directory.
 
 ## Build & verify
 
-- Build the cells with the Gradle wrapper, e.g. `./gradlew :fabric:26.2:build` or all nine:
-  `:neoforge:26.1.2:build :neoforge:26.2:build :neoforge:26.3:build :forge:26.1.2:build :forge:26.2:build :forge:26.3:build
-  :fabric:26.1.2:build :fabric:26.2:build :fabric:26.3:build`.
-- Static analysis: `./gradlew :fabric:26.2:ecjCheck` (the VS Code Problems panel, via `tools/ecj.prefs`).
+- Build the cells with the Gradle wrapper, e.g. `./gradlew :fabric:26.3:build` or all 27
+  (`:<loader>:<mc>:build` for each loader × MC version, as in `.github/workflows/publish.yml`). Never run a
+  plain root `build`.
+- Static analysis: `./gradlew :fabric:26.3:ecjCheck` (the VS Code Problems panel, via `tools/ecj.prefs`).
   The task only FAILS on errors.
+- Tests: `./gradlew :neoforge:26.3:test :neoforge:1.21.1:test` (JUnit, sources in `common/src/test/java`; other cells compile but skip them). The checked-in stonecutter state is 26.3 — write 26.3 code live and wrap older behaviour in `//? if <26.3`.
 - A Cowork agent sandbox cannot decompile Minecraft — run builds natively (or via the local gradle MCP)
   on the developer's machine.
 - **Verify the cells build before marking a task done.** Never sign off on an uncompiled change.
@@ -264,9 +275,10 @@
 - 26.x gotchas: `Item.Properties.setId(key)` is mandatory; `ItemStack.is(TagKey)` is gone (use
   `typeHolder().is(...)`); `ResourceKey.location()` is now `identifier()`; item assets use the
   `assets/<ns>/items/<name>.json` + `models/item/<name>.json` pair.
-- Textures: `tools/gen_textures.py` writes the 16×16 item/spawn-egg placeholders **and** the 64×64
-  entity sheets (matching the models' `LayerDefinition.create(mesh, 64, 64)`). It is **additive** —
-  it never overwrites an existing file, so hand-drawn replacements survive reruns.
+- Textures: entity sheets for creatures with a spec are painted by `tools/art/run.py` (UV-aware
+  painters, `<id>_glow.png`, `<id>_radiant.png`; `--check` to verify). `tools/gen_textures.py` writes
+  the 16×16 item/spawn-egg placeholders and the remaining placeholder entity sheets. It is
+  **additive** — it never overwrites an existing file, so painted or hand-drawn art survives reruns.
 - Sounds are **mapped to vanilla `SoundEvents`**, not shipped. Note 26.x moved the wolf set behind
   the per-variant wolf sound registry, so `SoundEvents.WOLF_*` no longer resolves.
 - Loader entry points: `NeroCreaturesFabric` (+ `NeroCreaturesFabricClient`), `NeroCreaturesForge`,

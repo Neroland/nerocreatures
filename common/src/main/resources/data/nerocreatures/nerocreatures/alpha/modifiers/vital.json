@@ -1,0 +1,10 @@
+{
+  "weight": 8,
+  "attributes": [
+    {
+      "attribute": "minecraft:max_health",
+      "amount": 0.75,
+      "operation": "add_multiplied_base"
+    }
+  ]
+}

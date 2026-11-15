@@ -1,6 +1,7 @@
 package za.co.neroland.nerocreatures.entity.hostile;
 
 import java.util.EnumSet;
+import java.util.List;
 
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.Identifier;
@@ -9,6 +10,8 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -22,6 +25,7 @@ import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
 import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
 import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
 import net.minecraft.world.entity.ai.goal.WaterAvoidingRandomStrollGoal;
+import net.minecraft.world.entity.ai.util.DefaultRandomPos;
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.monster.Enemy;
@@ -34,6 +38,9 @@ import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
 import za.co.neroland.nerocreatures.entity.ai.PackCoordination;
+import za.co.neroland.nerocreatures.entity.ai.PackRules;
+import za.co.neroland.nerocreatures.entity.ai.shared.EcosystemTags;
+import za.co.neroland.nerocreatures.entity.ai.shared.PredatorHuntGoal;
 import za.co.neroland.nerocreatures.entity.base.CreatureTier;
 import za.co.neroland.nerocreatures.entity.base.NeroCreatureEntity;
 
@@ -105,6 +112,8 @@ public class LunarStalker extends NeroCreatureEntity implements Enemy {
     @Override
     protected void registerGoals() {
         this.goalSelector.addGoal(0, new FloatGoal(this));
+        // The last survivor of a pack breaks off when badly hurt (0.5.0 polish).
+        this.goalSelector.addGoal(1, new LastSurvivorFleeGoal(this));
         // Flanking outranks melee: while the target is further than the flank hand-over distance the
         // stalker circles to its own side, and only then closes.
         this.goalSelector.addGoal(2, new FlankApproachGoal(this));
@@ -117,6 +126,9 @@ public class LunarStalker extends NeroCreatureEntity implements Enemy {
         // exclude, not classes to alert.
         this.targetSelector.addGoal(1, new HurtByTargetGoal(this).setAlertOthers());
         this.targetSelector.addGoal(2, new NightBoldTargetGoal(this));
+        // Below player targeting: hunts wild grazers (never tamed, owned or named ones) on a slow
+        // cadence, then rests two minutes after a kill.
+        this.targetSelector.addGoal(3, new PredatorHuntGoal(this, EcosystemTags.PREY_GRAZERS, 16.0D, 60, 2400, 400));
     }
 
     /**
@@ -132,9 +144,28 @@ public class LunarStalker extends NeroCreatureEntity implements Enemy {
         }
         this.broadcasting = true;
         try {
-            PackCoordination.broadcastTarget(this, LunarStalker.class, PACK_RADIUS, target);
+            int recruited = PackCoordination.broadcastTarget(this, LunarStalker.class, PACK_RADIUS, target);
+            if (PackRules.howls(recruited)) {
+                this.howl(target);
+            }
         } finally {
             this.broadcasting = false;
+        }
+    }
+
+    /**
+     * The pack howl (0.5.0 polish): one sound from the leader, and a brief glow on the mates that took
+     * up the same target, so the player sees the pack turn. Once per acquisition, bounded query.
+     */
+    private void howl(LivingEntity target) {
+        this.playSound(SoundEvents.POLAR_BEAR_WARNING, 1.6F, 0.8F + this.getRandom().nextFloat() * 0.2F);
+        List<LunarStalker> mates = this.level().getEntitiesOfClass(LunarStalker.class,
+                this.getBoundingBox().inflate(PACK_RADIUS),
+                mate -> mate != this && mate.isAlive() && mate.getTarget() == target);
+        int glows = PackRules.glowCount(mates.size());
+        for (int i = 0; i < glows; i++) {
+            mates.get(i).addEffect(new MobEffectInstance(MobEffects.GLOWING, PackRules.HOWL_GLOW_TICKS, 0,
+                    false, false));
         }
     }
 
@@ -196,6 +227,68 @@ public class LunarStalker extends NeroCreatureEntity implements Enemy {
         @Override
         protected double getFollowDistance() {
             return super.getFollowDistance() * PackCoordination.nightBoldness(this.mob.level());
+        }
+    }
+
+    /**
+     * The last stalker standing runs when badly hurt (0.5.0 polish): below
+     * {@link PackRules#FLEE_HEALTH_FRACTION} of its health with no living pack-mate within
+     * {@link #PACK_RADIUS}, it paths away from its target. Checked every
+     * {@value PackRules#FLEE_CHECK_TICKS} ticks; one bounded entity query per check.
+     */
+    private static final class LastSurvivorFleeGoal extends Goal {
+
+        private static final double FLEE_SPEED = 1.3D;
+
+        private final LunarStalker stalker;
+        private int checkCooldown;
+        @Nullable
+        private Vec3 fleeTo;
+
+        LastSurvivorFleeGoal(LunarStalker stalker) {
+            this.stalker = stalker;
+            this.setFlags(EnumSet.of(Goal.Flag.MOVE));
+        }
+
+        @Override
+        public boolean canUse() {
+            if (--this.checkCooldown > 0) {
+                return false;
+            }
+            this.checkCooldown = PackRules.FLEE_CHECK_TICKS;
+            LivingEntity threat = this.stalker.getTarget() != null ? this.stalker.getTarget()
+                    : this.stalker.getLastHurtByMob();
+            if (threat == null
+                    || this.stalker.getHealth() >= this.stalker.getMaxHealth() * PackRules.FLEE_HEALTH_FRACTION) {
+                return false;
+            }
+            int mates = this.stalker.level().getEntitiesOfClass(LunarStalker.class,
+                    this.stalker.getBoundingBox().inflate(PACK_RADIUS),
+                    mate -> mate != this.stalker && mate.isAlive()).size();
+            if (!PackRules.shouldFlee(this.stalker.getHealth(), this.stalker.getMaxHealth(), mates)) {
+                return false;
+            }
+            this.fleeTo = DefaultRandomPos.getPosAway(this.stalker, 16, 7, threat.position());
+            return this.fleeTo != null;
+        }
+
+        @Override
+        public boolean canContinueToUse() {
+            return this.fleeTo != null && !this.stalker.getNavigation().isDone();
+        }
+
+        @Override
+        public void start() {
+            if (this.fleeTo != null) {
+                this.stalker.setTarget(null);
+                this.stalker.getNavigation().moveTo(this.fleeTo.x(), this.fleeTo.y(), this.fleeTo.z(),
+                        FLEE_SPEED);
+            }
+        }
+
+        @Override
+        public void stop() {
+            this.fleeTo = null;
         }
     }
 

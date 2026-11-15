@@ -1,0 +1,425 @@
+{
+  "format": 1,
+  "id": "slag_beetle",
+  "name": "Slag Beetle",
+  "habitat": "cindara",
+  "size_class": "S",
+  "silhouette": "tall half-dome carapace, glowing rear abdomen, two short crushing mandibles, six stub legs",
+  "hitbox_guide": [0.7, 0.85],
+  "texture": {"width": 64, "height": 64},
+  "render_type": "cutout",
+  "renderer": {"scale": 1.0, "shadow": 0.4},
+  "materials": ["ash", "clinker"],
+  "accent": "accent",
+  "glow_organs": ["rear abdomen (smelting gut; four digestion stages, dull to white-hot)", "eyes"],
+  "radiant": {"ash": "pearl", "clinker": "pearl_deep"},
+  "parts": [
+    {
+      "name": "body",
+      "parent": null,
+      "pivot": [0, 20, 0],
+      "rotation": [0, 0, 0],
+      "cubes": [
+        {"name": "skirt", "origin": [-5, -4, -5], "size": [10, 6, 10], "uv": [0, 0]},
+        {"name": "mid", "origin": [-4, -7, -4], "size": [8, 3, 8], "uv": [26, 16]},
+        {"name": "top", "origin": [-3, -9, -3], "size": [6, 2, 6], "uv": [26, 27]},
+        {"name": "cap", "origin": [-2, -10, -2], "size": [4, 1, 4], "uv": [0, 36]}
+      ]
+    },
+    {
+      "name": "head",
+      "parent": "body",
+      "pivot": [0, 0, -5],
+      "rotation": [0, 0, 0],
+      "cubes": [
+        {"name": "head", "origin": [-3, -2, -3], "size": [6, 4, 3], "uv": [18, 35]}
+      ]
+    },
+    {
+      "name": "mandible_l",
+      "parent": "head",
+      "pivot": [2, 1, -3],
+      "rotation": [0, -12, 0],
+      "cubes": [
+        {"name": "jaw", "origin": [-1, -1, -3], "size": [2, 2, 3], "uv": [52, 10]}
+      ]
+    },
+    {
+      "name": "mandible_r",
+      "parent": "head",
+      "pivot": [-2, 1, -3],
+      "rotation": [0, 12, 0],
+      "uv_like": "mandible_l",
+      "cubes": [
+        {"name": "jaw", "origin": [-1, -1, -3], "size": [2, 2, 3], "uv": [52, 10], "mirror": true}
+      ]
+    },
+    {
+      "name": "abdomen",
+      "parent": "body",
+      "pivot": [0, 0, 5],
+      "rotation": [0, 0, 0],
+      "cubes": [
+        {"name": "collar", "origin": [-3, -3, -1], "size": [6, 5, 2], "uv": [36, 35]}
+      ]
+    },
+    {
+      "name": "gut_0",
+      "parent": "abdomen",
+      "pivot": [0, 0, 1],
+      "rotation": [0, 0, 0],
+      "visible_when": {"stage": [0]},
+      "cubes": [
+        {"name": "sack", "origin": [-2, -2, 0], "size": [4, 4, 2], "uv": [40, 10]}
+      ]
+    },
+    {
+      "name": "gut_1",
+      "parent": "abdomen",
+      "pivot": [0, 0, 1],
+      "rotation": [0, 0, 0],
+      "visible_when": {"stage": [1]},
+      "cubes": [
+        {"name": "sack", "origin": [-3, -3, 0], "size": [6, 5, 3], "uv": [0, 28]}
+      ]
+    },
+    {
+      "name": "gut_2",
+      "parent": "abdomen",
+      "pivot": [0, 0, 1],
+      "rotation": [0, 0, 0],
+      "visible_when": {"stage": [2]},
+      "cubes": [
+        {"name": "sack", "origin": [-3.5, -4, 0], "size": [7, 6, 4], "uv": [40, 0]}
+      ]
+    },
+    {
+      "name": "gut_3",
+      "parent": "abdomen",
+      "pivot": [0, 0, 1],
+      "rotation": [0, 0, 0],
+      "visible_when": {"stage": [3]},
+      "cubes": [
+        {"name": "sack", "origin": [-4, -5, 0], "size": [8, 7, 5], "uv": [0, 16]}
+      ]
+    },
+    {
+      "name": "legs_a",
+      "parent": null,
+      "pivot": [0, 21, 0],
+      "rotation": [0, 0, 0],
+      "cubes": [
+        {"name": "front", "origin": [4, 0, -4], "size": [2, 3, 2], "uv": [50, 27]},
+        {"name": "mid", "origin": [-6, 0, -1], "size": [2, 3, 2], "uv": [18, 28]},
+        {"name": "rear", "origin": [4, 0, 2], "size": [2, 3, 2], "uv": [52, 32]}
+      ]
+    },
+    {
+      "name": "legs_b",
+      "parent": null,
+      "pivot": [0, 21, 0],
+      "rotation": [0, 0, 0],
+      "uv_like": "legs_a",
+      "cubes": [
+        {"name": "front", "origin": [-6, 0, -4], "size": [2, 3, 2], "uv": [50, 27], "mirror": true},
+        {"name": "mid", "origin": [4, 0, -1], "size": [2, 3, 2], "uv": [18, 28], "mirror": true},
+        {"name": "rear", "origin": [-6, 0, 2], "size": [2, 3, 2], "uv": [52, 32], "mirror": true}
+      ]
+    }
+  ],
+  "procedural": {
+    "wave": [
+      {"part": "abdomen", "axis": "x", "frequency": 0.1, "phase": 0, "amplitude": 3, "fade_with_walk": true}
+    ],
+    "look": [
+      {"part": "head", "yaw": 0.5, "pitch": 0.4, "limit": 25}
+    ]
+  },
+  "clips": {
+    "idle": {
+      "length": 70,
+      "loop": true,
+      "key_pose": 6,
+      "note": "mandibles click twice, abdomen pulses with the breathing glow",
+      "glow": [
+        {"t": 0, "v": 0.35},
+        {"t": 35, "v": 0.5, "ease": "smooth"},
+        {"t": 70, "v": 0.35, "ease": "smooth"}
+      ],
+      "tracks": {
+        "mandible_l": {
+          "rot": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 6, "v": [0, 14, 0], "ease": "smooth"},
+            {"t": 10, "v": [0, -4, 0], "ease": "smooth"},
+            {"t": 16, "v": [0, 14, 0], "ease": "smooth"},
+            {"t": 20, "v": [0, -4, 0], "ease": "smooth"},
+            {"t": 26, "v": [0, 0, 0], "ease": "smooth"},
+            {"t": 70, "v": [0, 0, 0]}
+          ]
+        },
+        "mandible_r": {
+          "rot": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 6, "v": [0, -14, 0], "ease": "smooth"},
+            {"t": 10, "v": [0, 4, 0], "ease": "smooth"},
+            {"t": 16, "v": [0, -14, 0], "ease": "smooth"},
+            {"t": 20, "v": [0, 4, 0], "ease": "smooth"},
+            {"t": 26, "v": [0, 0, 0], "ease": "smooth"},
+            {"t": 70, "v": [0, 0, 0]}
+          ]
+        },
+        "abdomen": {
+          "pos": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 35, "v": [0, -0.5, 0.5], "ease": "smooth"},
+            {"t": 70, "v": [0, 0, 0], "ease": "smooth"}
+          ]
+        }
+      }
+    },
+    "move": {
+      "length": 10,
+      "loop": true,
+      "key_pose": 2,
+      "note": "tripod scuttle: each leg set lifts and reaches forward while the other pushes back",
+      "tracks": {
+        "legs_a": {
+          "pos": [
+            {"t": 0, "v": [0, 0, 1.5]},
+            {"t": 2, "v": [0, -1, 0.3], "ease": "smooth"},
+            {"t": 5, "v": [0, 0, -1.5], "ease": "smooth"},
+            {"t": 10, "v": [0, 0, 1.5]}
+          ]
+        },
+        "legs_b": {
+          "pos": [
+            {"t": 0, "v": [0, 0, -1.5]},
+            {"t": 5, "v": [0, 0, 1.5]},
+            {"t": 7, "v": [0, -1, 0.3], "ease": "smooth"},
+            {"t": 10, "v": [0, 0, -1.5], "ease": "smooth"}
+          ]
+        },
+        "body": {
+          "rot": [
+            {"t": 0, "v": [0, 0, 2]},
+            {"t": 5, "v": [0, 0, -2], "ease": "smooth"},
+            {"t": 10, "v": [0, 0, 2], "ease": "smooth"}
+          ]
+        },
+        "abdomen": {
+          "rot": [
+            {"t": 0, "v": [-3, 0, 0]},
+            {"t": 5, "v": [3, 0, 0], "ease": "smooth"},
+            {"t": 10, "v": [-3, 0, 0], "ease": "smooth"}
+          ]
+        }
+      }
+    },
+    "ability": {
+      "length": 10,
+      "loop": false,
+      "key_pose": 2,
+      "damaging": false,
+      "note": "eat (10-tick timed pose per item): head dips to the ore, mandibles open wide and gather it in two bites; gut warms",
+      "glow": [
+        {"t": 0, "v": 0.35},
+        {"t": 4, "v": 0.6},
+        {"t": 10, "v": 0.5}
+      ],
+      "tracks": {
+        "body": {
+          "rot": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 3, "v": [7, 0, 0], "ease": "smooth"},
+            {"t": 8, "v": [7, 0, 0]},
+            {"t": 10, "v": [0, 0, 0], "ease": "smooth"}
+          ]
+        },
+        "head": {
+          "rot": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 3, "v": [12, 0, 0], "ease": "smooth"},
+            {"t": 8, "v": [12, 0, 0]},
+            {"t": 10, "v": [0, 0, 0], "ease": "smooth"}
+          ],
+          "pos": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 2, "v": [0, 0, -1], "ease": "smooth"},
+            {"t": 5, "v": [0, 0, 0], "ease": "smooth"},
+            {"t": 7, "v": [0, 0, -1], "ease": "smooth"},
+            {"t": 10, "v": [0, 0, 0], "ease": "smooth"}
+          ]
+        },
+        "mandible_l": {
+          "rot": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 2, "v": [0, -16, 0], "ease": "smooth"},
+            {"t": 4, "v": [0, 16, 0], "ease": "smooth"},
+            {"t": 6, "v": [0, -10, 0], "ease": "smooth"},
+            {"t": 8, "v": [0, 16, 0], "ease": "smooth"},
+            {"t": 10, "v": [0, 0, 0], "ease": "smooth"}
+          ]
+        },
+        "mandible_r": {
+          "rot": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 2, "v": [0, 16, 0], "ease": "smooth"},
+            {"t": 4, "v": [0, -16, 0], "ease": "smooth"},
+            {"t": 6, "v": [0, 10, 0], "ease": "smooth"},
+            {"t": 8, "v": [0, -16, 0], "ease": "smooth"},
+            {"t": 10, "v": [0, 0, 0], "ease": "smooth"}
+          ]
+        }
+      }
+    },
+    "ability_2": {
+      "length": 20,
+      "loop": false,
+      "key_pose": 5,
+      "damaging": false,
+      "note": "cough (20-tick timed pose, starts as the smelted drop leaves): rear kicks up with the gut at full glow, holds, settles",
+      "glow": [
+        {"t": 0, "v": 1.0},
+        {"t": 8, "v": 1.0},
+        {"t": 20, "v": 0.35}
+      ],
+      "tracks": {
+        "body": {
+          "pos": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 3, "v": [0, -1, -1], "ease": "smooth"},
+            {"t": 8, "v": [0, -1, -1]},
+            {"t": 20, "v": [0, 0, 0], "ease": "smooth"}
+          ],
+          "rot": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 3, "v": [20, 0, 0], "ease": "smooth"},
+            {"t": 8, "v": [20, 0, 0]},
+            {"t": 20, "v": [0, 0, 0], "ease": "smooth"}
+          ]
+        },
+        "abdomen": {
+          "rot": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 3, "v": [-18, 0, 0], "ease": "smooth"},
+            {"t": 8, "v": [-10, 0, 0], "ease": "smooth"},
+            {"t": 20, "v": [0, 0, 0], "ease": "smooth"}
+          ],
+          "pos": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 3, "v": [0, 0, 1], "ease": "smooth"},
+            {"t": 20, "v": [0, 0, 0], "ease": "smooth"}
+          ]
+        },
+        "head": {
+          "rot": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 3, "v": [-14, 0, 0], "ease": "smooth"},
+            {"t": 8, "v": [-14, 0, 0]},
+            {"t": 20, "v": [0, 0, 0], "ease": "smooth"}
+          ]
+        },
+        "mandible_l": {
+          "rot": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 3, "v": [0, -14, 0], "ease": "smooth"},
+            {"t": 20, "v": [0, 0, 0], "ease": "smooth"}
+          ]
+        },
+        "mandible_r": {
+          "rot": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 3, "v": [0, 14, 0], "ease": "smooth"},
+            {"t": 20, "v": [0, 0, 0], "ease": "smooth"}
+          ]
+        }
+      }
+    },
+    "hurt": {
+      "length": 6,
+      "loop": false,
+      "key_pose": 2,
+      "note": "carapace ducks down over the legs, head pulls in",
+      "tracks": {
+        "body": {
+          "pos": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 2, "v": [0, 2, 0], "ease": "smooth"},
+            {"t": 6, "v": [0, 0, 0], "ease": "smooth"}
+          ]
+        },
+        "head": {
+          "pos": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 2, "v": [0, 0, 2], "ease": "smooth"},
+            {"t": 6, "v": [0, 0, 0], "ease": "smooth"}
+          ]
+        },
+        "legs_a": {
+          "pos": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 2, "v": [0, -1, 0], "ease": "smooth"},
+            {"t": 6, "v": [0, 0, 0], "ease": "smooth"}
+          ]
+        },
+        "legs_b": {
+          "pos": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 2, "v": [0, -1, 0], "ease": "smooth"},
+            {"t": 6, "v": [0, 0, 0], "ease": "smooth"}
+          ]
+        }
+      }
+    },
+    "rest": {
+      "length": 80,
+      "loop": true,
+      "key_pose": 40,
+      "note": "perch: legs tucked under the skirt, head drawn in, glow low and slow",
+      "glow": [
+        {"t": 0, "v": 0.15},
+        {"t": 40, "v": 0.25, "ease": "smooth"},
+        {"t": 80, "v": 0.15, "ease": "smooth"}
+      ],
+      "tracks": {
+        "body": {
+          "pos": [
+            {"t": 0, "v": [0, 2, 0]},
+            {"t": 80, "v": [0, 2, 0]}
+          ]
+        },
+        "head": {
+          "pos": [
+            {"t": 0, "v": [0, 0, 2]},
+            {"t": 80, "v": [0, 0, 2]}
+          ],
+          "rot": [
+            {"t": 0, "v": [8, 0, 0]},
+            {"t": 80, "v": [8, 0, 0]}
+          ]
+        },
+        "legs_a": {
+          "pos": [
+            {"t": 0, "v": [0, -1, 0]},
+            {"t": 80, "v": [0, -1, 0]}
+          ]
+        },
+        "legs_b": {
+          "pos": [
+            {"t": 0, "v": [0, -1, 0]},
+            {"t": 80, "v": [0, -1, 0]}
+          ]
+        },
+        "abdomen": {
+          "pos": [
+            {"t": 0, "v": [0, 0, -1]},
+            {"t": 40, "v": [0, 0, -0.5], "ease": "smooth"},
+            {"t": 80, "v": [0, 0, -1], "ease": "smooth"}
+          ]
+        }
+      }
+    }
+  },
+  "uv_fill": 0.591
+}

@@ -25,10 +25,10 @@ import net.minecraft.world.phys.Vec3;
  * {@code /nerocreatures gallery} scene.
  *
  * <p>{@code /nerocreatures gallery} builds the scene server-side; this harness drives the camera,
- * hides every overlay and writes one PNG per shot via {@link Screenshot#grab}, so the Modrinth
+ * hides every overlay and writes one PNG per shot via {@link Screenshot#grab}, so the project
  * gallery can be re-rendered identically after a model or texture change instead of hand-framing
- * twelve shots. The PNGs land in {@code <run dir>/screenshots/nerocreatures/}, which is exactly the
- * folder {@code .github/workflows/modrinth-gallery.yml} mirrors.
+ * twelve shots. The PNGs land in {@code <run dir>/screenshots/nerocreatures/}, the folder the
+ * published gallery images are refreshed from.
  *
  * <p><b>Cross-loader.</b> Loader-agnostic — it touches vanilla client classes only. Each loader wires
  * it from its own client setup: {@link #registerClientCommands(CommandDispatcher)} from the loader's

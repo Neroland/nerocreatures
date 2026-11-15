@@ -12,6 +12,14 @@
     {
       "id": "nerocreatures:worm_chitin",
       "required": false
+    },
+    {
+      "id": "nerocreatures:resonant_membrane",
+      "required": false
+    },
+    {
+      "id": "nerocreatures:heat_gland",
+      "required": false
     }
   ]
 }

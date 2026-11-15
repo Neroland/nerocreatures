@@ -1,9 +1,17 @@
 package za.co.neroland.nerocreatures.data;
 
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
 import java.util.ArrayList;
+import java.util.HexFormat;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 
 import com.google.gson.JsonArray;
@@ -54,7 +62,9 @@ import za.co.neroland.nerocreatures.NeroCreaturesCommon;
  *       removed so {@link CreatureData} can free the creatures themselves. It is wired into Core's
  *       shared {@code PlayerDataErasure} hook from {@link CreatureData#init()}, which then calls
  *       {@link #backupNow} so the purge also reaches Core's backup copy. Erasure never logs player
- *       identity.</li>
+ *       identity. Erasure also leaves two markers that name nobody, so a creature in an unloaded
+ *       chunk is released when it next loads: a salted one-way hash of the erased owner and the
+ *       entity UUIDs of the rows it removed (see {@link #loadVerdict}).</li>
  *   <li><b>Retention</b> — when Core's {@code dataRetentionDays} is above zero, rows whose stamp is
  *       older than that are pruned on the first access per server session; only the number pruned is
  *       logged.</li>
@@ -88,6 +98,30 @@ public final class CreatureOwnershipState extends SavedData {
     private static final long MILLIS_PER_DAY = 86_400_000L;
 
     /**
+     * Upper bound on each erasure-marker set. Oldest markers go first; a creature whose marker was
+     * evicted is re-indexed on load rather than released, which never costs a world anything.
+     */
+    static final int MAX_ERASURE_MARKERS = 16_384;
+
+    /** What the load-time ownership check does with one tamed creature. */
+    public enum LoadVerdict {
+        /** The row is there; nothing to do. */
+        INDEXED,
+        /** No row and no erasure record: the entity wins, the row is re-added (an index gap). */
+        REINDEX,
+        /** Erasure (or retention) positively recorded this creature or its owner: release it. */
+        RELEASE
+    }
+
+    /**
+     * Root schema written by this version. 0.4.x files have no {@code schema} key and read as 1; the
+     * row shape is unchanged between 1 and 2 (2 adds the {@code mount} and {@code egg} kinds and the
+     * optional {@code hatch_at} field, all read leniently), so nothing is migrated on load and nothing
+     * is rewritten until the next ordinary save (decision 004).
+     */
+    public static final int SCHEMA = 2;
+
+    /**
      * The server whose retention sweep has already run, so the lazy check in {@link #get} fires at
      * most once per server instance. Written on the server thread; {@code volatile} only so an
      * integrated-server restart in the same JVM is seen promptly.
@@ -96,6 +130,16 @@ public final class CreatureOwnershipState extends SavedData {
 
     private final Map<UUID, List<OwnedCreature>> byPlayer = new LinkedHashMap<>();
     private final Map<UUID, Long> lastUpdated = new LinkedHashMap<>();
+
+    /**
+     * Erasure markers (load-time half of erasure). {@code erasedOwners} holds a salted one-way hash
+     * of each erased owner, never the UUID itself; {@code erasedCreatures} holds the entity UUIDs of
+     * the rows erasure removed and could not free because they were not loaded. Neither names a
+     * player. The salt is random per world and lives only in this file.
+     */
+    private String erasureSalt = "";
+    private final Set<String> erasedOwners = new LinkedHashSet<>();
+    private final Set<UUID> erasedCreatures = new LinkedHashSet<>();
 
     public CreatureOwnershipState() {
     }
@@ -149,6 +193,41 @@ public final class CreatureOwnershipState extends SavedData {
         return rows == null || rows.isEmpty() ? List.of() : List.copyOf(rows);
     }
 
+    /**
+     * Whether the store holds anything at all for this player (rows or a retention stamp). Not used by
+     * the load-time check: "unknown" is not "erased" (see {@link #loadVerdict}).
+     */
+    public boolean knowsPlayer(UUID player) {
+        return this.byPlayer.containsKey(player) || this.lastUpdated.containsKey(player);
+    }
+
+    /**
+     * The load-time ownership check for one tamed creature (decision 004). Release happens only when
+     * erasure or retention <b>positively recorded</b> this creature or its owner; an owner the index
+     * merely does not know (a 0.4.x pet tamed before its row existed, a store that recovered empty,
+     * an owner whose other rows were all removed) is re-indexed instead, so no world loses a pet to
+     * an index gap.
+     */
+    public LoadVerdict loadVerdict(UUID owner, UUID entity) {
+        if (this.contains(owner, entity)) {
+            return LoadVerdict.INDEXED;
+        }
+        if (this.erasedCreatures.contains(entity)) {
+            return LoadVerdict.RELEASE;
+        }
+        if (!this.erasureSalt.isEmpty() && this.erasedOwners.contains(this.ownerMarker(owner))) {
+            return LoadVerdict.RELEASE;
+        }
+        return LoadVerdict.REINDEX;
+    }
+
+    /** A creature erasure pointed at has now been freed; its marker is no longer needed. */
+    public void creatureFreed(UUID entity) {
+        if (this.erasedCreatures.remove(entity)) {
+            this.setDirty();
+        }
+    }
+
     /** Whether this exact creature is already indexed for this player. */
     public boolean contains(UUID player, UUID entity) {
         List<OwnedCreature> rows = this.byPlayer.get(player);
@@ -170,6 +249,11 @@ public final class CreatureOwnershipState extends SavedData {
      * the existing row (which is how a drone that changed dimension gets its dimension id fixed).
      */
     public void add(UUID player, OwnedCreature owned) {
+        // A new row supersedes any erasure marker: the player is back, or the creature was re-tamed.
+        this.erasedCreatures.remove(owned.entity());
+        if (!this.erasureSalt.isEmpty()) {
+            this.erasedOwners.remove(this.ownerMarker(player));
+        }
         List<OwnedCreature> rows = this.byPlayer.computeIfAbsent(player, key -> new ArrayList<>());
         rows.removeIf(row -> row.entity().equals(owned.entity()));
         if (rows.size() >= MAX_ROWS_PER_PLAYER) {
@@ -180,6 +264,26 @@ public final class CreatureOwnershipState extends SavedData {
         }
         rows.add(owned);
         this.touch(player);
+    }
+
+    /**
+     * Cap-checked insert: adds the row only if the player owns fewer than {@code cap} rows of its
+     * kind (a cap of 0 or less refuses everything). Re-registering an entity that is already indexed
+     * always succeeds, because it does not raise the count.
+     *
+     * @return {@code true} if the row is now indexed
+     */
+    public boolean tryAdd(UUID player, OwnedCreature owned, int cap) {
+        if (this.contains(player, owned.entity())) {
+            this.add(player, owned);
+            return true;
+        }
+        if (cap <= 0 || this.count(player, owned.kind()) >= cap) {
+            return false;
+        }
+        int before = this.owned(player).size();
+        this.add(player, owned);
+        return this.owned(player).size() > before;
     }
 
     /**
@@ -209,11 +313,22 @@ public final class CreatureOwnershipState extends SavedData {
      */
     public List<OwnedCreature> forgetPlayer(UUID player) {
         List<OwnedCreature> removed = this.byPlayer.remove(player);
-        boolean changed = removed != null;
-        changed |= this.lastUpdated.remove(player) != null;
-        if (changed) {
-            this.setDirty();
+        this.lastUpdated.remove(player);
+        // Positive erasure record for the load-time check: a salted hash of the owner (covers
+        // creatures the index never knew about) and the entity UUIDs of the removed rows. The caller
+        // clears an entity marker again once it frees that creature.
+        if (this.erasureSalt.isEmpty()) {
+            this.erasureSalt = newSalt();
         }
+        addBounded(this.erasedOwners, this.ownerMarker(player));
+        if (removed != null) {
+            for (OwnedCreature row : removed) {
+                if (row.kind() != OwnedCreature.Kind.EGG) {
+                    addBounded(this.erasedCreatures, row.entity());
+                }
+            }
+        }
+        this.setDirty();
         return removed == null ? List.of() : List.copyOf(removed);
     }
 
@@ -258,6 +373,9 @@ public final class CreatureOwnershipState extends SavedData {
             entry.addProperty("kind", row.kind().key());
             entry.addProperty("type", row.type().toString());
             entry.addProperty("dimension", row.dimension().toString());
+            if (row.kind() == OwnedCreature.Kind.EGG) {
+                entry.addProperty("hatch_at", row.hatchAt());
+            }
             owned.add(entry);
         }
         root.add("owned", owned);
@@ -265,6 +383,35 @@ public final class CreatureOwnershipState extends SavedData {
     }
 
     // --- internals ----------------------------------------------------------
+
+    /** Salted SHA-256 of the owner UUID, first 16 bytes, hex. One-way; never logged or exported. */
+    String ownerMarker(UUID owner) {
+        try {
+            MessageDigest digest = MessageDigest.getInstance("SHA-256");
+            digest.update(this.erasureSalt.getBytes(StandardCharsets.UTF_8));
+            digest.update(owner.toString().getBytes(StandardCharsets.UTF_8));
+            byte[] hash = digest.digest();
+            return HexFormat.of().formatHex(hash, 0, 16);
+        } catch (NoSuchAlgorithmException impossible) {
+            throw new IllegalStateException("SHA-256 is a required JVM algorithm", impossible);
+        }
+    }
+
+    private static String newSalt() {
+        byte[] salt = new byte[16];
+        new SecureRandom().nextBytes(salt);
+        return HexFormat.of().formatHex(salt);
+    }
+
+    private static <T> void addBounded(Set<T> set, T value) {
+        set.remove(value);
+        set.add(value);
+        Iterator<T> oldest = set.iterator();
+        while (set.size() > MAX_ERASURE_MARKERS && oldest.hasNext()) {
+            oldest.next();
+            oldest.remove();
+        }
+    }
 
     /** Stamps a player's row as just-changed (retention input) and marks the store dirty. */
     private void touch(UUID player) {
@@ -288,9 +435,22 @@ public final class CreatureOwnershipState extends SavedData {
 
     private static Codec<CreatureOwnershipState> codec() {
         return RecordCodecBuilder.create(instance -> instance.group(
+                // Absent in 0.4.x files (reads as 1). Always written as SCHEMA from 0.5.0 on.
+                Codec.INT.optionalFieldOf("schema", 1).forGetter(state -> SCHEMA),
                 PlayerRow.CODEC.listOf().optionalFieldOf("players", List.of())
-                        .forGetter(CreatureOwnershipState::playerRows)
+                        .forGetter(CreatureOwnershipState::playerRows),
+                // Erasure markers (0.5.0). Absent in 0.4.x files: no markers, nothing is released.
+                Codec.STRING.optionalFieldOf("erasure_salt", "").forGetter(state -> state.erasureSalt),
+                Codec.STRING.listOf().optionalFieldOf("erased_owners", List.of())
+                        .forGetter(state -> List.copyOf(state.erasedOwners)),
+                Codec.STRING.listOf().optionalFieldOf("erased_creatures", List.of())
+                        .forGetter(state -> state.erasedCreatures.stream().map(UUID::toString).toList())
         ).apply(instance, CreatureOwnershipState::fromRows));
+    }
+
+    /** The store codec, exposed to the package for the migration tests. */
+    static Codec<CreatureOwnershipState> storeCodec() {
+        return codec();
     }
 
     private List<PlayerRow> playerRows() {
@@ -301,7 +461,10 @@ public final class CreatureOwnershipState extends SavedData {
         return out;
     }
 
-    private static CreatureOwnershipState fromRows(List<PlayerRow> players) {
+    private static CreatureOwnershipState fromRows(int schema, List<PlayerRow> players, String salt,
+            List<String> erasedOwners, List<String> erasedCreatures) {
+        // Schema 1 (0.4.x) and 2 share the row shape; a future schema is read leniently the same way
+        // (unknown fields are ignored by the codecs, unknown kinds read as pet).
         CreatureOwnershipState state = new CreatureOwnershipState();
         for (PlayerRow row : players) {
             UUID player;
@@ -312,6 +475,17 @@ public final class CreatureOwnershipState extends SavedData {
             }
             state.byPlayer.put(player, new ArrayList<>(row.owned()));
             state.lastUpdated.put(player, row.updatedAt());
+        }
+        state.erasureSalt = salt;
+        if (!salt.isEmpty()) {
+            erasedOwners.forEach(marker -> addBounded(state.erasedOwners, marker));
+        }
+        for (String raw : erasedCreatures) {
+            try {
+                addBounded(state.erasedCreatures, UUID.fromString(raw));
+            } catch (IllegalArgumentException ignored) {
+                // A malformed marker is dropped; the creature is then re-indexed, never lost.
+            }
         }
         return state;
     }

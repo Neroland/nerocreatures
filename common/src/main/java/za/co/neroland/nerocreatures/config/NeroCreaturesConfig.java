@@ -95,6 +95,145 @@ public final class NeroCreaturesConfig {
             "maxDronesPerPlayer", 2, 0, 64, true,
             "How many terraforming drones one player may have deployed at once. 0 disables drones.");
 
+    // --- World-changing abilities (server-authoritative) ----------------------
+    // Every key is still subject to the mobGriefing rule, the loader's place check and, for owned
+    // creatures, the owner's own build permission (world/CreatureGriefing). Default true.
+    public static final ConfigValue<Boolean> LUMEN_MOTH_LIGHT = SCHEMA.bool(
+            "lumenMothLight", true, true,
+            "Tamed Lumen Moths place a moving light block (air only). false = glow particles and Night Vision for the owner instead.");
+
+    public static final ConfigValue<Boolean> LODE_TORTOISE_NODULES = SCHEMA.bool(
+            "lodeTortoiseNodules", true, true,
+            "Lode Tortoises grow ore nodules (entity state; never breaks a block). Balance switch.");
+
+    public static final ConfigValue<Integer> LODE_TORTOISE_NODULE_TICKS = SCHEMA.intRange(
+            "lodeTortoiseNoduleTicks", 24000, 1200, 240000, true,
+            "Ticks of grazing for a Lode Tortoise to grow ready nodules of a common ore (rare ores take "
+                    + "4x). New tortoises use the new value.");
+
+    public static final ConfigValue<Integer> MAX_NODULES_PER_HARVEST = SCHEMA.intRange(
+            "maxNodulesPerHarvest", 4, 0, 16, true,
+            "Most items one Lode Tortoise nodule harvest yields after the Bountiful roll. 0 = nodules "
+                    + "yield nothing.");
+
+    public static final ConfigValue<Boolean> DUST_DEVIL_THROWS_ITEMS = SCHEMA.bool(
+            "dustDevilThrowsItems", true, true,
+            "Dust Devils fling ground items. false = they throw players only.");
+
+    public static final ConfigValue<Boolean> MAGMA_WADER_SLAG = SCHEMA.bool(
+            "magmaWaderSlag", true, true,
+            "Magma Waders leave temporary slag crust. false = fire damage, no block.");
+
+    public static final ConfigValue<Boolean> RIME_YAK_FREEZES_WATER = SCHEMA.bool(
+            "rimeYakFreezesWater", true, true,
+            "Rime Yaks turn still surface water into frosted ice that melts back. false = the aura only slows and cools.");
+
+    public static final ConfigValue<Boolean> MOSSBACK_FERTILISES = SCHEMA.bool(
+            "mossbackFertilises", true, true,
+            "Mossbacks bone-meal the grass they graze. false = they graze with no effect.");
+
+    public static final ConfigValue<Boolean> SPORE_DRIFTER_GROWTH = SCHEMA.bool(
+            "sporeDrifterGrowth", true, true,
+            "Spore Drifters give extra growth ticks to crops below them. false = particles only.");
+
+    public static final ConfigValue<Boolean> BLOOM_HOST_SPORELINGS = SCHEMA.bool(
+            "bloomHostSporelings", true, true,
+            "Bloom Hosts raise sporelings from mobs they kill (hard caps always apply). false = no sporelings.");
+
+    public static final ConfigValue<Boolean> MAGNET_CRAB_STEALS = SCHEMA.bool(
+            "magnetCrabSteals", true, true,
+            "Wild Magnet Crabs pick up metal items and return them on death. false = they ignore items.");
+
+    public static final ConfigValue<Boolean> MAGNET_CRAB_COLLECTS = SCHEMA.bool(
+            "magnetCrabCollects", true, true,
+            "Tamed Magnet Crabs pull items their owner dropped back to the owner. false = off.");
+
+    public static final ConfigValue<Boolean> SLAG_BEETLE_SMELTING = SCHEMA.bool(
+            "slagBeetleSmelting", true, true,
+            "Slag Beetles eat raw ore thrown by their owner and return it smelted. false = they ignore items.");
+
+    public static final ConfigValue<Boolean> SCRAP_HULK_ASSEMBLY = SCHEMA.bool(
+            "scrapHulkAssembly", true, true,
+            "Scrap Hulks assemble from nearby mechanical deaths (hard caps always apply). false = no hulk.");
+
+    public static final ConfigValue<Boolean> BOSS_ARENA_BLOCKS = SCHEMA.bool(
+            "bossArenaBlocks", true, true,
+            "Bosses raise temporary arena blocks (air only, removed at fight end). false = entity-only fallbacks.");
+
+    public static final ConfigValue<Boolean> TERRAFORMING_DRONE_WORK = SCHEMA.bool(
+            "terraformingDroneWork", true, true,
+            "Terraforming Drones grow crops in their work area. false = they idle.");
+
+    public static final ConfigValue<Boolean> CACHE_MIMIC_SPAWNS = SCHEMA.bool(
+            "cacheMimicSpawns", true, true,
+            "Cache Mimics appear in wrecks.");
+
+    public static final ConfigValue<Boolean> STATIC_SWARM_DRAIN = SCHEMA.bool(
+            "staticSwarmDrain", true, true,
+            "Static Swarms drain energy from items and entities.");
+
+    public static final ConfigValue<Integer> STRATA_HOUND_RANGE = SCHEMA.intRange(
+            "strataHoundRange", 24, 4, 48, true,
+            "How far (blocks) a Strata Hound scans for ore. Read-only scan, cached.");
+
+    // --- Mounts and eggs (server-authoritative) -------------------------------
+    public static final ConfigValue<Boolean> MOUNT_OWNER_ONLY = SCHEMA.bool(
+            "mountOwnerOnly", true, true,
+            "Only a mount's owner may ride it. false = anyone may ride; only the owner may open "
+                    + "panniers, unsaddle or command it.");
+
+    public static final ConfigValue<Integer> MAX_MOUNTS_PER_PLAYER = SCHEMA.intRange(
+            "maxMountsPerPlayer", 2, 0, 16, true,
+            "How many mounts one player may own at once. Mounts do not count against maxPetsPerPlayer.");
+
+    public static final ConfigValue<Integer> MAX_INCUBATING_EGGS_PER_PLAYER = SCHEMA.intRange(
+            "maxIncubatingEggsPerPlayer", 8, 0, 64, true,
+            "How many creature eggs one player may have incubating at once.");
+
+    public static final ConfigValue<Integer> MOUNT_STAMINA_REGEN_TICKS = SCHEMA.intRange(
+            "mountStaminaRegenTicks", 10, 1, 200, true,
+            "Ticks per point of mount stamina regained (stamina is 0-100).");
+
+    public static final ConfigValue<Integer> MOUNT_ABILITY_COST = SCHEMA.intRange(
+            "mountAbilityCost", 35, 0, 100, true,
+            "Stamina a mount's leap or blink costs.");
+
+    // --- Overworld spawns (server-authoritative) -------------------------------
+    public static final ConfigValue<Boolean> OVERWORLD_SPAWNS = SCHEMA.bool(
+            "overworldSpawns", true, true,
+            "Lumen Moths, Lode Tortoises and Static Swarms also spawn in the overworld. Nerospace is "
+                    + "not needed for these three.");
+
+    public static final ConfigValue<Integer> OVERWORLD_SPAWN_CAP = SCHEMA.intRange(
+            "overworldSpawnCap", 12, 0, 64, true,
+            "The most Lumen Moths, Lode Tortoises and Static Swarms alive in the overworld at once.");
+
+    // --- Tick budget (server-authoritative) ------------------------------------
+    public static final ConfigValue<Integer> FAR_TICK_DISTANCE = SCHEMA.intRange(
+            "farTickDistance", 48, 16, 256, true,
+            "A creature with no player within this many blocks is 'far' and runs its own AI work "
+                    + "on fewer ticks. Movement and physics are not slowed.");
+
+    public static final ConfigValue<Integer> FAR_TICK_INTERVAL = SCHEMA.intRange(
+            "farTickInterval", 4, 1, 20, true,
+            "A far creature runs its own AI work on one tick in this many. 1 = never slow down.");
+
+    // --- Alphas (server-authoritative) -------------------------------------------
+    public static final ConfigValue<Boolean> ALPHAS_ENABLED = SCHEMA.bool(
+            "alphasEnabled", true, true,
+            "Rare, larger 'alpha' versions of hostile creatures can spawn. false = no new alphas "
+                    + "(existing ones keep their state).");
+
+    public static final ConfigValue<Double> ALPHA_CHANCE_MULTIPLIER = SCHEMA.doubleRange(
+            "alphaChanceMultiplier", 1.0D, 0.0D, 10.0D, true,
+            "Multiplies the alpha spawn chance from the data pack (alpha/settings.json). 0 = no new "
+                    + "alphas, 2.0 = twice as likely.");
+
+    public static final ConfigValue<Integer> ALPHA_MAX_PER_DIMENSION = SCHEMA.intRange(
+            "alphaMaxPerDimension", -1, -1, 64, true,
+            "The most alphas loaded in one dimension. -1 = use the data pack value "
+                    + "(alpha/settings.json, 4 by default); 0 = no new alphas.");
+
     private NeroCreaturesConfig() {
     }
 

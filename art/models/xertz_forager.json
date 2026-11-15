@@ -1,0 +1,414 @@
+{
+  "format": 1,
+  "id": "xertz_forager",
+  "name": "Xertz Forager",
+  "habitat": "greenxertz",
+  "size_class": "S",
+  "silhouette": "small round rooter with a blunt snout and a sawtooth quartz crest along the spine",
+  "hitbox_guide": [0.9, 0.8],
+  "texture": {"width": 64, "height": 64},
+  "render_type": "cutout",
+  "renderer": {"scale": 1.0, "shadow": 0.45},
+  "materials": ["cream", "ochre", "rose"],
+  "accent": "accent",
+  "glow_organs": ["eyes", "quartz crest teeth (the night-sight organ)"],
+  "radiant": {"cream": "pearl", "ochre": "pearl_deep", "rose": "pearl_light"},
+  "parts": [
+    {
+      "name": "body",
+      "parent": null,
+      "pivot": [0, 17, 0],
+      "rotation": [0, 0, 0],
+      "cubes": [
+        {"name": "barrel", "origin": [-4, -4, -6], "size": [8, 7, 12], "uv": [0, 0]},
+        {"name": "back", "origin": [-3, -5, -5], "size": [6, 1, 10], "uv": [0, 19]},
+        {"name": "belly", "origin": [-3, 3, -4], "size": [6, 1, 8], "uv": [32, 19]}
+      ]
+    },
+    {
+      "name": "crest",
+      "parent": "body",
+      "pivot": [0, -5, 0],
+      "rotation": [0, 0, 0],
+      "cubes": [
+        {"name": "tooth_a", "origin": [-1, -3, -5], "size": [2, 3, 2], "uv": [56, 28]},
+        {"name": "tooth_b", "origin": [-1, -5, -2], "size": [2, 5, 2], "uv": [40, 10]},
+        {"name": "tooth_c", "origin": [-1, -4, 1], "size": [2, 4, 2], "uv": [32, 28]},
+        {"name": "tooth_d", "origin": [-1, -2, 4], "size": [2, 2, 2], "uv": [10, 30]}
+      ]
+    },
+    {
+      "name": "head",
+      "parent": "body",
+      "pivot": [0, -1, -6],
+      "rotation": [0, 0, 0],
+      "cubes": [
+        {"name": "skull", "origin": [-3, -3, -4], "size": [6, 6, 4], "uv": [40, 0]},
+        {"name": "snout", "origin": [-2, 0, -7], "size": [4, 3, 3], "uv": [48, 10]},
+        {"name": "ear_l", "origin": [2, -5, -2], "size": [2, 2, 1], "uv": [48, 16]},
+        {"name": "ear_r", "origin": [-4, -5, -2], "size": [2, 2, 1], "uv": [54, 16]}
+      ]
+    },
+    {
+      "name": "tail",
+      "parent": "body",
+      "pivot": [0, -2, 6],
+      "rotation": [30, 0, 0],
+      "cubes": [
+        {"name": "tail", "origin": [-1, -1, 0], "size": [2, 2, 3], "uv": [0, 30]}
+      ]
+    },
+    {
+      "name": "leg_fl",
+      "parent": null,
+      "pivot": [3, 20, -4],
+      "rotation": [0, 0, 0],
+      "cubes": [
+        {"name": "leg", "origin": [-1, 0, -1], "size": [2, 4, 2], "uv": [40, 28]}
+      ]
+    },
+    {
+      "name": "leg_fr",
+      "parent": null,
+      "pivot": [-3, 20, -4],
+      "rotation": [0, 0, 0],
+      "uv_like": "leg_fl",
+      "cubes": [
+        {"name": "leg", "origin": [-1, 0, -1], "size": [2, 4, 2], "uv": [40, 28], "mirror": true}
+      ]
+    },
+    {
+      "name": "leg_rl",
+      "parent": null,
+      "pivot": [3, 20, 4],
+      "rotation": [0, 0, 0],
+      "cubes": [
+        {"name": "leg", "origin": [-1, 0, -1], "size": [2, 4, 2], "uv": [48, 28]}
+      ]
+    },
+    {
+      "name": "leg_rr",
+      "parent": null,
+      "pivot": [-3, 20, 4],
+      "rotation": [0, 0, 0],
+      "uv_like": "leg_rl",
+      "cubes": [
+        {"name": "leg", "origin": [-1, 0, -1], "size": [2, 4, 2], "uv": [48, 28], "mirror": true}
+      ]
+    }
+  ],
+  "procedural": {
+    "swing": [
+      {"part": "leg_fl", "phase": 0, "amplitude": 48},
+      {"part": "leg_rr", "phase": 0, "amplitude": 48},
+      {"part": "leg_fr", "phase": 180, "amplitude": 48},
+      {"part": "leg_rl", "phase": 180, "amplitude": 48}
+    ],
+    "wave": [
+      {"part": "tail", "axis": "y", "frequency": 0.12, "phase": 0, "amplitude": 16, "fade_with_walk": true}
+    ],
+    "look": [
+      {"part": "head", "yaw": 0.8, "pitch": 0.7, "limit": 40}
+    ]
+  },
+  "clips": {
+    "idle": {
+      "length": 80,
+      "loop": true,
+      "key_pose": 36,
+      "note": "crest shimmers (a small roll and a glow breath), snout twitches twice",
+      "glow": [
+        {"t": 0, "v": 0.35},
+        {"t": 20, "v": 0.6, "ease": "smooth"},
+        {"t": 40, "v": 0.35, "ease": "smooth"},
+        {"t": 60, "v": 0.6, "ease": "smooth"},
+        {"t": 80, "v": 0.35, "ease": "smooth"}
+      ],
+      "tracks": {
+        "crest": {
+          "rot": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 20, "v": [0, 0, 5], "ease": "smooth"},
+            {"t": 40, "v": [0, 0, 0], "ease": "smooth"},
+            {"t": 60, "v": [0, 0, -5], "ease": "smooth"},
+            {"t": 80, "v": [0, 0, 0], "ease": "smooth"}
+          ]
+        },
+        "head": {
+          "rot": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 30, "v": [0, 0, 0]},
+            {"t": 33, "v": [7, 0, 0]},
+            {"t": 36, "v": [-3, 0, 0]},
+            {"t": 39, "v": [7, 0, 0]},
+            {"t": 43, "v": [0, 0, 0], "ease": "smooth"},
+            {"t": 80, "v": [0, 0, 0]}
+          ]
+        }
+      }
+    },
+    "move": {
+      "length": 12,
+      "loop": true,
+      "key_pose": 3,
+      "note": "quick trot: legs are the swing; body bounces twice a cycle",
+      "tracks": {
+        "body": {
+          "pos": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 3, "v": [0, -1, 0], "ease": "smooth"},
+            {"t": 6, "v": [0, 0, 0], "ease": "smooth"},
+            {"t": 9, "v": [0, -1, 0], "ease": "smooth"},
+            {"t": 12, "v": [0, 0, 0], "ease": "smooth"}
+          ]
+        },
+        "head": {
+          "rot": [
+            {"t": 0, "v": [5, 0, 0]},
+            {"t": 6, "v": [9, 0, 0], "ease": "smooth"},
+            {"t": 12, "v": [5, 0, 0], "ease": "smooth"}
+          ]
+        },
+        "tail": {
+          "rot": [
+            {"t": 0, "v": [10, 0, 0]},
+            {"t": 6, "v": [22, 0, 0], "ease": "smooth"},
+            {"t": 12, "v": [10, 0, 0], "ease": "smooth"}
+          ]
+        }
+      }
+    },
+    "ability": {
+      "length": 40,
+      "loop": false,
+      "key_pose": 20,
+      "damaging": false,
+      "note": "dig: nose down into the ground, forepaws scrabble in turn, crest flares",
+      "glow": [
+        {"t": 0, "v": 0.35},
+        {"t": 10, "v": 1.0},
+        {"t": 32, "v": 1.0},
+        {"t": 40, "v": 0.35}
+      ],
+      "tracks": {
+        "body": {
+          "rot": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 8, "v": [14, 0, 0], "ease": "smooth"},
+            {"t": 32, "v": [14, 0, 0]},
+            {"t": 40, "v": [0, 0, 0], "ease": "smooth"}
+          ],
+          "pos": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 8, "v": [0, 1, -1], "ease": "smooth"},
+            {"t": 32, "v": [0, 1, -1]},
+            {"t": 40, "v": [0, 0, 0], "ease": "smooth"}
+          ]
+        },
+        "head": {
+          "rot": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 8, "v": [32, 0, 0], "ease": "smooth"},
+            {"t": 14, "v": [26, 6, 0]},
+            {"t": 20, "v": [32, -6, 0]},
+            {"t": 26, "v": [26, 6, 0]},
+            {"t": 32, "v": [32, 0, 0]},
+            {"t": 40, "v": [0, 0, 0], "ease": "smooth"}
+          ]
+        },
+        "leg_fl": {
+          "rot": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 8, "v": [-40, 0, 0]},
+            {"t": 12, "v": [25, 0, 0]},
+            {"t": 16, "v": [-40, 0, 0]},
+            {"t": 20, "v": [25, 0, 0]},
+            {"t": 24, "v": [-40, 0, 0]},
+            {"t": 28, "v": [25, 0, 0]},
+            {"t": 40, "v": [0, 0, 0], "ease": "smooth"}
+          ]
+        },
+        "leg_fr": {
+          "rot": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 8, "v": [25, 0, 0]},
+            {"t": 12, "v": [-40, 0, 0]},
+            {"t": 16, "v": [25, 0, 0]},
+            {"t": 20, "v": [-40, 0, 0]},
+            {"t": 24, "v": [25, 0, 0]},
+            {"t": 28, "v": [-40, 0, 0]},
+            {"t": 40, "v": [0, 0, 0], "ease": "smooth"}
+          ]
+        },
+        "tail": {
+          "rot": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 8, "v": [25, 0, 0], "ease": "smooth"},
+            {"t": 32, "v": [25, 0, 0]},
+            {"t": 40, "v": [0, 0, 0], "ease": "smooth"}
+          ]
+        }
+      }
+    },
+    "hurt": {
+      "length": 6,
+      "loop": false,
+      "key_pose": 2,
+      "note": "squeal hop",
+      "tracks": {
+        "body": {
+          "pos": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 2, "v": [0, -3, 1], "ease": "smooth"},
+            {"t": 6, "v": [0, 0, 0], "ease": "smooth"}
+          ],
+          "rot": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 2, "v": [-10, 0, 0], "ease": "smooth"},
+            {"t": 6, "v": [0, 0, 0], "ease": "smooth"}
+          ]
+        },
+        "head": {
+          "rot": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 2, "v": [-22, 0, 0], "ease": "smooth"},
+            {"t": 6, "v": [0, 0, 0], "ease": "smooth"}
+          ]
+        },
+        "crest": {
+          "rot": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 2, "v": [-12, 0, 0]},
+            {"t": 6, "v": [0, 0, 0], "ease": "smooth"}
+          ]
+        },
+        "leg_fl": {
+          "pos": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 2, "v": [0, -3, 0], "ease": "smooth"},
+            {"t": 6, "v": [0, 0, 0], "ease": "smooth"}
+          ],
+          "rot": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 2, "v": [-25, 0, 0], "ease": "smooth"},
+            {"t": 6, "v": [0, 0, 0], "ease": "smooth"}
+          ]
+        },
+        "leg_fr": {
+          "pos": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 2, "v": [0, -3, 0], "ease": "smooth"},
+            {"t": 6, "v": [0, 0, 0], "ease": "smooth"}
+          ],
+          "rot": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 2, "v": [-25, 0, 0], "ease": "smooth"},
+            {"t": 6, "v": [0, 0, 0], "ease": "smooth"}
+          ]
+        },
+        "leg_rl": {
+          "pos": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 2, "v": [0, -2, 0], "ease": "smooth"},
+            {"t": 6, "v": [0, 0, 0], "ease": "smooth"}
+          ],
+          "rot": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 2, "v": [25, 0, 0], "ease": "smooth"},
+            {"t": 6, "v": [0, 0, 0], "ease": "smooth"}
+          ]
+        },
+        "leg_rr": {
+          "pos": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 2, "v": [0, -2, 0], "ease": "smooth"},
+            {"t": 6, "v": [0, 0, 0], "ease": "smooth"}
+          ],
+          "rot": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 2, "v": [25, 0, 0], "ease": "smooth"},
+            {"t": 6, "v": [0, 0, 0], "ease": "smooth"}
+          ]
+        }
+      }
+    },
+    "rest": {
+      "length": 30,
+      "loop": false,
+      "key_pose": 30,
+      "note": "sit (ticks 0-12), then curl: nose tucked to the flank, tail wrapped",
+      "tracks": {
+        "body": {
+          "pos": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 12, "v": [0, 3, 0], "ease": "smooth"}
+          ],
+          "rot": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 12, "v": [-8, 0, 0], "ease": "smooth"},
+            {"t": 30, "v": [0, 0, 0], "ease": "smooth"}
+          ]
+        },
+        "leg_fl": {
+          "rot": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 12, "v": [-30, 0, 0], "ease": "smooth"},
+            {"t": 30, "v": [-75, 0, 0], "ease": "smooth"}
+          ],
+          "pos": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 12, "v": [0, 1, 0], "ease": "smooth"},
+            {"t": 30, "v": [0, 2, 0], "ease": "smooth"}
+          ]
+        },
+        "leg_fr": {
+          "rot": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 12, "v": [-30, 0, 0], "ease": "smooth"},
+            {"t": 30, "v": [-75, 0, 0], "ease": "smooth"}
+          ],
+          "pos": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 12, "v": [0, 1, 0], "ease": "smooth"},
+            {"t": 30, "v": [0, 2, 0], "ease": "smooth"}
+          ]
+        },
+        "leg_rl": {
+          "rot": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 12, "v": [-75, 0, 0], "ease": "smooth"}
+          ],
+          "pos": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 12, "v": [0, 2, 0], "ease": "smooth"}
+          ]
+        },
+        "leg_rr": {
+          "rot": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 12, "v": [-75, 0, 0], "ease": "smooth"}
+          ],
+          "pos": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 12, "v": [0, 2, 0], "ease": "smooth"}
+          ]
+        },
+        "head": {
+          "rot": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 12, "v": [-6, 0, 0], "ease": "smooth"},
+            {"t": 30, "v": [22, 48, 0], "ease": "smooth"}
+          ]
+        },
+        "tail": {
+          "rot": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 12, "v": [-20, 0, 0], "ease": "smooth"},
+            {"t": 30, "v": [-25, 50, 0], "ease": "smooth"}
+          ]
+        }
+      }
+    }
+  },
+  "uv_fill": 0.49
+}

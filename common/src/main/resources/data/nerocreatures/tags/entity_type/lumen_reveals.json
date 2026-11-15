@@ -1,0 +1,9 @@
+{
+  "replace": false,
+  "values": [
+    {
+      "id": "nerocreatures:cache_mimic",
+      "required": false
+    }
+  ]
+}

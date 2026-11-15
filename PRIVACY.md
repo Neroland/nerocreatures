@@ -11,11 +11,14 @@ saved with the world like any other mob and carry no player information at all.
 **Two player-keyed stores exist**, both world-save scoped and both keyed by the player's existing
 Minecraft game UUID:
 
-- **Pet and drone ownership** (`nerocreatures:ownership`) — for each creature a player owns:
-  the *creature's* entity UUID (a game-internal id, not a player id), whether it is a pet or a
-  drone, its entity-type id (for example `nerocreatures:glacite_wisp`), and the id of the
-  dimension it was last registered in. Plus one "last updated" timestamp per player, used only
-  for retention.
+- **Pet, mount, drone and egg ownership** (`nerocreatures:ownership`) — for each creature a player
+  owns: the *creature's* entity UUID (a game-internal id, not a player id), its kind (`pet`,
+  `mount`, `drone` or `egg`), its entity-type id (for example `nerocreatures:glacite_wisp`), and the
+  id of the dimension it was last registered in. An **egg** row is an egg the player has incubating:
+  instead of an entity UUID it holds a random incubation id, plus the game time it hatches
+  (`hatch_at`). Mounts and eggs exist so the per-player caps (`maxMountsPerPlayer`,
+  `maxIncubatingEggsPerPlayer`) can be enforced; they carry nothing a pet row does not. Plus one
+  "last updated" timestamp per player, used only for retention.
 - **Boss contribution** (`nerocreatures:boss_contribution`) — while a **summoned** boss fight is
   running, how much damage each participating UUID has done to it, so the fight's rewards can be
   split fairly. Per fight it holds a random fight id, the boss's id, a timestamp, and a list of
@@ -72,10 +75,12 @@ request purges the player across all Nero mods, including NeroCreatures:
 
 For NeroCreatures the request does four things:
 
-1. removes every ownership row for that UUID;
+1. removes every ownership row for that UUID (pets, mounts, drones and eggs);
 2. follows each row to its creature and frees it — **tamed pets are returned to the wild** (owner
-   cleared, standing order reset, ordinary despawnable animals again) and **deployed drones are
-   recalled**, dropping their shell where they stood;
+   cleared, standing order reset, ordinary despawnable animals again), **mounts are unsaddled**
+   (saddle, panniers and their contents dropped where the mount stands) and returned to the wild,
+   **deployed drones are recalled**, dropping their shell where they stood, and **egg rows are
+   dropped** (the egg still hatches, owned by nobody);
 3. sweeps every loaded level for any pet or drone still carrying that UUID and frees those too,
    so the erase is complete even if the index and the world had drifted apart;
 4. removes that UUID from every boss fight it appears in, and drops any fight it was the last
@@ -84,6 +89,16 @@ For NeroCreatures the request does four things:
    in the backup copy. Retention purges do the same.
 
 Erasure never logs player identity — only a count of how many creatures were released.
+
+**Creatures in unloaded chunks.** A pet, mount or drone whose chunk is not loaded at the time of the
+request cannot be reached then. So the request leaves two markers in the ownership store: the
+creature UUIDs of the rows it removed, and a **salted one-way hash** of the erased player's UUID (a
+random salt per world, kept only in that file). Neither is the player's UUID, and neither can be
+turned back into it. When such a creature next loads, it finds its marker and is released (or, for a
+drone, recalled) silently, with no message to anyone. A creature's marker is removed once it is
+freed; the hash is removed if that player tames or deploys something again. Each marker set is capped
+(oldest first). A creature is only ever released on such a marker: an owner the store simply does not
+know (an older save, a store restored from backup) keeps their creature, which is re-indexed.
 
 The hook is registered at mod construction, before the store it purges is ever loaded, precisely
 so that a later store can never be added without being covered by it.
@@ -110,7 +125,7 @@ is dropped after six hours regardless of the setting.
 
 NeroCreatures can produce an admin-safe JSON export of **a single player's own records and no one
 else's**: their last-updated timestamp and their list of owned creatures (entity UUID, kind, type,
-dimension), and their own contribution to any boss fight currently running (fight id, boss id,
+dimension, and for an incubating egg its hatch time), and their own contribution to any boss fight currently running (fight id, boss id,
 damage) — never another participant's totals in the same fight.
 
 The operator command is **`/nerocreatures export <player>`** (permission level 2). A player is
@@ -150,6 +165,24 @@ coordinates.
 The full contract, section by section, is published at
 [`wiki/Link-Module.md`](wiki/Link-Module.md).
 
+## Neighbours, claims and requests from the client
+
+- **Creatures never change another player's world for anyone.** Every creature ability that places,
+  replaces or advances a block, moves a ground item, or spawns a helper entity asks one check first:
+  its own config key, the `mobGriefing` game rule (through the loader's mob-griefing event on NeoForge
+  and Forge, which claim mods hook), the loader's block-place event (NeoForge and Forge), and, for an
+  owned creature, whether its owner could do the same thing in person (online in that dimension,
+  allowed to build there, not under spawn protection). With the owner offline, owned creatures make no
+  world changes. A refused check falls back to a harmless variant and logs nothing.
+- **Fabric gap:** Fabric has no standard claim event. On Fabric a claim mod that does not hook the
+  `mobGriefing` rule is not consulted for **wild** creatures. Owned creatures are still limited to what
+  their owner may do. Turn the ability keys off, or `mobGriefing` off, if this matters on your server.
+- **Requests from the client** (for example "open my mount's panniers") carry only the creature's
+  session network id and an action number. The server checks that the sender owns the creature, is
+  close to it and is not flooding requests. The flood counter lives in memory only, is keyed by the
+  connected player object, is never saved, and disappears when the player leaves.
+- **`/nerocreatures budget`** reports creature species and timings only, to the operator who ran it.
+
 ## Telemetry
 
 NeroCreatures ships anonymous crash reporting via **Sentry** (EU ingest servers), matching the
@@ -178,7 +211,7 @@ Sentry user object is cleared on every event, and file paths are scrubbed of you
 name before sending. Volume is bounded: events are de-duplicated per session and capped at 10
 per game session.
 
-### CurseForge / Modrinth telemetry blurb
+### CurseForge telemetry blurb
 
 Keep the following (or equivalent) in the project description while telemetry is enabled, as
 required by CurseForge moderation policy:

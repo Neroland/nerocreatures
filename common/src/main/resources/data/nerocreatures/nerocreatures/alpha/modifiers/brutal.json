@@ -1,0 +1,15 @@
+{
+  "weight": 10,
+  "attributes": [
+    {
+      "attribute": "minecraft:attack_damage",
+      "amount": 0.5,
+      "operation": "add_multiplied_base"
+    },
+    {
+      "attribute": "minecraft:attack_knockback",
+      "amount": 0.5,
+      "operation": "add_value"
+    }
+  ]
+}

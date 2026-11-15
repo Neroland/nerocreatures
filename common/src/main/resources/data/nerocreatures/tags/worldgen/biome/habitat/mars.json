@@ -1,0 +1,17 @@
+{
+  "replace": false,
+  "values": [
+    {
+      "id": "nerospace:mars_dunes",
+      "required": false
+    },
+    {
+      "id": "nerospace:mars_canyons",
+      "required": false
+    },
+    {
+      "id": "nerospace:mars_polar",
+      "required": false
+    }
+  ]
+}

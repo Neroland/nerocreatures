@@ -1,10 +1,14 @@
 package za.co.neroland.nerocreatures.entity.tame;
 
+import java.util.Objects;
 import java.util.UUID;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
@@ -14,12 +18,15 @@ import net.minecraft.world.entity.AgeableMob;
 //? if >=1.21.5 {
 import net.minecraft.world.entity.EntityReference;
 //?}
+import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
+import net.minecraft.world.entity.ai.goal.BreedGoal;
 import net.minecraft.world.entity.ai.goal.FloatGoal;
 import net.minecraft.world.entity.ai.goal.FollowOwnerGoal;
+import net.minecraft.world.entity.ai.goal.FollowParentGoal;
 import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
 import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
 import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
@@ -28,24 +35,39 @@ import net.minecraft.world.entity.ai.goal.WaterAvoidingRandomStrollGoal;
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.OwnerHurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.OwnerHurtTargetGoal;
+import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 
 import org.jetbrains.annotations.Nullable;
 
+import za.co.neroland.nerocreatures.breeding.BirthMode;
+import za.co.neroland.nerocreatures.budget.CreatureBudget;
+import za.co.neroland.nerocreatures.budget.FarTickGate;
+import za.co.neroland.nerocreatures.breeding.BreedingHooks;
+import za.co.neroland.nerocreatures.breeding.ProductSource;
+import za.co.neroland.nerocreatures.breeding.SpeciesProfile;
+import za.co.neroland.nerocreatures.breeding.SpeciesProfiles;
 import za.co.neroland.nerocreatures.compat.CompanionBridge;
-import za.co.neroland.nerocreatures.config.NeroCreaturesConfig;
 import za.co.neroland.nerocreatures.data.CreatureOwnershipState;
 import za.co.neroland.nerocreatures.data.OwnedCreature;
+import za.co.neroland.nerocreatures.data.OwnershipCaps;
 import za.co.neroland.nerocreatures.entity.ai.HoldAreaGoal;
 import za.co.neroland.nerocreatures.entity.base.CreatureTier;
 import za.co.neroland.nerocreatures.entity.base.NeroCreatureEntity;
+import za.co.neroland.nerocreatures.entity.visual.CreatureVisuals;
+import za.co.neroland.nerocreatures.entity.visual.CreatureVisualsHolder;
 import za.co.neroland.nerocreatures.link.CreatureLinkEvents;
 import za.co.neroland.nerocreatures.progression.CreatureMilestones;
+import za.co.neroland.nerocreatures.trait.Inheritance;
+import za.co.neroland.nerocreatures.trait.TraitEffects;
+import za.co.neroland.nerocreatures.trait.TraitPool;
+import za.co.neroland.nerocreatures.trait.TraitSet;
 
 /**
  * Shared base for NeroCreatures' tameable alien pets — everything the two species have in common,
@@ -88,8 +110,32 @@ import za.co.neroland.nerocreatures.progression.CreatureMilestones;
  * NeroCreatures adds no further player data to the entity — no names, no coordinates, no history —
  * and its own index ({@link CreatureOwnershipState}) is erasable and export-able. Nothing on this
  * class logs player identity.
+ *
+ * <h2>0.5.0 additions (decisions 003 and 004)</h2>
+ *
+ * <ul>
+ *   <li><b>Traits.</b> Every individual carries a {@link TraitSet} under {@value TraitSet#NBT_KEY}. A
+ *       creature with none (a wild spawn, or any pet from an older save) rolls two on its first server
+ *       tick; nothing it already had changes. Traits are creature data, never player data.</li>
+ *   <li><b>Breeding</b> is opt-in per species through {@link #breedable()} (default {@code false}, so
+ *       existing species behave exactly as before). Food is the species tag
+ *       {@code nerocreatures:food/<species>} or the taming food; birth mode comes from
+ *       {@code species.json}. A baby of a tamed pair is born tamed to the parents' owner through the
+ *       cap-checked index, and is born wild over the cap.</li>
+ *   <li><b>Livestock</b> ({@link LivestockCreature}) switch taming off with {@link #isTameable()}.</li>
+ *   <li><b>Ownership kinds.</b> {@link #ownershipKind()} decides which cap and index kind a tame uses
+ *       ({@code MountCreature} answers {@code MOUNT}).</li>
+ *   <li><b>Load-time ownership check.</b> On its first server tick a tamed creature is released
+ *       silently only when the ownership index positively recorded its erasure (its row was removed
+ *       by erasure or retention, or its owner was erased); any other missing row is re-indexed (the
+ *       entity wins). This closes the unloaded-chunk erasure gap without ever releasing a pet to an
+ *       index gap, an older save or a store that recovered empty.</li>
+ * </ul>
  */
-public abstract class TameableCreature extends TamableAnimal {
+public abstract class TameableCreature extends TamableAnimal implements ProductSource, CreatureVisualsHolder {
+
+    /** Entity contract section 3: the root's visuals ids are this class's first {@code defineId}. */
+    private static final CreatureVisuals.Ids VISUALS_IDS = CreatureVisuals.defineIds(TameableCreature.class);
 
     /** One in this many feeds tames — the vanilla wolf's odds. */
     private static final int TAME_CHANCE_DENOMINATOR = 3;
@@ -106,7 +152,29 @@ public abstract class TameableCreature extends TamableAnimal {
     /** How far a guarding pet may stray from its post before it walks back, in blocks. */
     private static final double GUARD_RADIUS = 8.0D;
 
+    private static final String HATCHLING_KEY = "nerocreatures:hatchling";
+
+    /** This individual's traits; {@code null} until rolled (first server tick) or inherited. */
+    @Nullable
+    private TraitSet traits;
+
+    /** A hatchling's first feed tames at 100% (decision 003). Saved. */
+    private boolean hatchling;
+
+    /** One-shot first-server-tick work (trait roll, ownership check) has run. Not saved. */
+    private boolean firstTickDone;
+
+    /** Resolved once: tempt goals ask every tick. */
+    @Nullable
+    private TagKey<Item> cachedFoodTag;
+
     private final CreatureTier tier;
+
+    /** Pose, stage/variant/form and the four flags (radiant, alpha, saddled, panniers), synced. */
+    private final CreatureVisuals visuals = new CreatureVisuals(this, VISUALS_IDS);
+
+    /** "Far creatures tick slowly" gate for species' own per-tick work (entity contract section 1). */
+    private final FarTickGate farTick = new FarTickGate();
 
     private PetCommand command = PetCommand.FOLLOW;
 
@@ -144,6 +212,121 @@ public abstract class TameableCreature extends TamableAnimal {
      */
     protected abstract void applyOwnerPerk(ServerLevel level, Player owner);
 
+    // --- 0.5.0 species hooks --------------------------------------------------
+
+    /**
+     * Whether players can tame this species. {@code false} for {@link LivestockCreature}: then
+     * {@code mobInteract} never tames, never writes an owner and never adds an ownership row.
+     */
+    public boolean isTameable() {
+        return true;
+    }
+
+    /**
+     * Whether this species breeds (decision 003). Default {@code false}: existing species are
+     * unchanged until they opt in. Must be a per-class constant (goals are registered from the
+     * constructor).
+     */
+    public boolean breedable() {
+        return false;
+    }
+
+    /** Which ownership-index kind (and so which cap) a tame of this species uses. */
+    public OwnedCreature.Kind ownershipKind() {
+        return OwnedCreature.Kind.PET;
+    }
+
+    /** This species' {@code species.json} row (defaults when it has none). */
+    public SpeciesProfile speciesProfile() {
+        return SpeciesProfiles.of(EntityType.getKey(this.getType()).getPath());
+    }
+
+    /** Egg or live birth, from {@code species.json}. */
+    public BirthMode birthMode() {
+        return this.speciesProfile().birth();
+    }
+
+    /** The species breeding/taming food tag, {@code nerocreatures:food/<species>} by convention. */
+    public TagKey<Item> foodTag() {
+        if (this.cachedFoodTag != null) {
+            return this.cachedFoodTag;
+        }
+        String path = EntityType.getKey(this.getType()).getPath();
+        Identifier id = Identifier.tryParse(this.speciesProfile().foodTagId(path));
+        if (id == null) {
+            id = Identifier.fromNamespaceAndPath("nerocreatures", "food/" + path);
+        }
+        this.cachedFoodTag = TagKey.create(Registries.ITEM, id);
+        return this.cachedFoodTag;
+    }
+
+    /** Whether a stack is this species' food: its tag, or (for tameables) its taming food item. */
+    public boolean isSpeciesFood(ItemStack stack) {
+        if (stack.isEmpty()) {
+            return false;
+        }
+        return stack.is(this.foodTag()) || (this.isTameable() && stack.getItem() == this.tamingFood());
+    }
+
+    // --- traits ----------------------------------------------------------------
+
+    /** This individual's traits, or {@code null} before the first server tick has rolled them. */
+    @Nullable
+    public TraitSet traits() {
+        return this.traits;
+    }
+
+    /** Sets the traits (birth, hatch, capture-pod release) and applies their attribute effects. */
+    public void setTraits(@Nullable TraitSet traits) {
+        this.traits = traits;
+        if (!this.level().isClientSide()) {
+            // The visuals bit is the synced copy; the trait set is the source of truth.
+            this.visuals.setRadiant(traits != null && traits.isRadiant());
+            TraitEffects.applyAttributes(this, traits, TraitPool.get());
+        }
+    }
+
+    /** Client-safe: whether this individual is the Radiant colour morph (cosmetic only). */
+    public boolean isRadiant() {
+        return this.visuals.radiant();
+    }
+
+    @Override
+    public CreatureVisuals visuals() {
+        return this.visuals;
+    }
+
+    /** The far-tick gate; expensive goals and timers ask {@code farTick().skip(this)}. */
+    public FarTickGate farTick() {
+        return this.farTick;
+    }
+
+    /** Marks a freshly hatched baby: its first feed by any player tames it at 100% (Stage 4). */
+    public void setHatchling(boolean hatchling) {
+        this.hatchling = hatchling;
+    }
+
+    public boolean isHatchling() {
+        return this.hatchling;
+    }
+
+    // --- product timer hook (ticked by the shared product-timer goal) -----------
+
+    @Override
+    public int productIntervalTicks() {
+        return this.speciesProfile().productIntervalTicks();
+    }
+
+    @Override
+    public boolean canProduce() {
+        return this.isAlive() && !this.isBaby() && this.productIntervalTicks() > 0;
+    }
+
+    /** Default: no product. Species with a {@code product_interval_ticks} override this. */
+    @Override
+    public void produce(ServerLevel level, int rolls) {
+    }
+
     /** The standard attribute block for a pet tier. Pets are built from the shared bands. */
     public static AttributeSupplier.Builder createPetAttributes(CreatureTier tier) {
         return NeroCreatureEntity.createCreatureAttributes(tier);
@@ -154,6 +337,10 @@ public abstract class TameableCreature extends TamableAnimal {
         this.goalSelector.addGoal(0, new FloatGoal(this));
         this.goalSelector.addGoal(1, new SitWhenOrderedToGoal(this));
         this.goalSelector.addGoal(2, new MeleeAttackGoal(this, 1.2D, true));
+        if (this.breedable()) {
+            this.goalSelector.addGoal(3, new BreedGoal(this, 1.0D));
+            this.goalSelector.addGoal(6, new FollowParentGoal(this, 1.1D));
+        }
         this.goalSelector.addGoal(5, new CommandedFollowOwnerGoal(this, 1.1D, 9.0F, 3.0F));
         this.goalSelector.addGoal(6, new HoldAreaGoal(this, () -> this.guardAnchor, GUARD_RADIUS, 1.0D,
                 () -> this.command == PetCommand.GUARD));
@@ -211,7 +398,15 @@ public abstract class TameableCreature extends TamableAnimal {
      * representation — the synced value is an {@code Optional}.
      */
     public void releaseToWild() {
-        UUID formerOwner = this.ownerId();
+        this.releaseToWild(true);
+    }
+
+    /**
+     * {@link #releaseToWild()} with control over the companion-app event. The load-time ownership
+     * check passes {@code false}: the former owner was erased, so nothing may be published to them.
+     */
+    protected void releaseToWild(boolean notifyOwner) {
+        UUID formerOwner = notifyOwner ? this.ownerId() : null;
         this.setCommand(PetCommand.FOLLOW);
         this.setTame(false, false);
         //? if >=1.21.5 {
@@ -220,8 +415,8 @@ public abstract class TameableCreature extends TamableAnimal {
         /*this.setOwnerUUID(null);
         *///?}
         CompanionBridge.hooks().onPetReleased(this);
-        if (this.level() instanceof ServerLevel level) {
-            CreatureLinkEvents.petStateChanged(level, formerOwner, this, OwnedCreature.Kind.PET,
+        if (formerOwner != null && this.level() instanceof ServerLevel level) {
+            CreatureLinkEvents.petStateChanged(level, formerOwner, this, this.ownershipKind(),
                     CreatureLinkEvents.STATE_RELEASED);
         }
     }
@@ -236,7 +431,11 @@ public abstract class TameableCreature extends TamableAnimal {
         if (this.isTame()) {
             return this.interactWhileTame(player, hand, held);
         }
-        if (held.getItem() != this.tamingFood()) {
+        if (!this.isTameable()) {
+            // Livestock: vanilla Animal handles love mode and feeding babies; anything else passes.
+            return this.breedable() && this.isFood(held) ? super.mobInteract(player, hand) : InteractionResult.PASS;
+        }
+        if (!this.isSpeciesFood(held)) {
             return InteractionResult.PASS;
         }
         if (!(this.level() instanceof ServerLevel level)) {
@@ -252,14 +451,14 @@ public abstract class TameableCreature extends TamableAnimal {
         }
         if (!(this.level() instanceof ServerLevel level)) {
             boolean handled = player.isSecondaryUseActive()
-                    || (held.getItem() == this.tamingFood() && this.getHealth() < this.getMaxHealth());
+                    || (this.isSpeciesFood(held) && this.getHealth() < this.getMaxHealth());
             return handled ? InteractionResult.SUCCESS : InteractionResult.PASS;
         }
         if (player.isSecondaryUseActive()) {
             this.cycleCommand(player);
             return InteractionResult.SUCCESS_SERVER;
         }
-        if (held.getItem() == this.tamingFood() && this.getHealth() < this.getMaxHealth()) {
+        if (this.isSpeciesFood(held) && this.getHealth() < this.getMaxHealth()) {
             if (!player.getAbilities().instabuild) {
                 held.shrink(1);
             }
@@ -267,6 +466,10 @@ public abstract class TameableCreature extends TamableAnimal {
             level.sendParticles(ParticleTypes.HEART, this.getX(), this.getY() + this.getBbHeight(),
                     this.getZ(), 3, 0.3D, 0.3D, 0.3D, 0.0D);
             return InteractionResult.SUCCESS_SERVER;
+        }
+        if (this.breedable() && this.isFood(held)) {
+            // Healthy and fed by its owner: vanilla love mode (or growing a baby up).
+            return super.mobInteract(player, hand);
         }
         return InteractionResult.PASS;
     }
@@ -277,30 +480,33 @@ public abstract class TameableCreature extends TamableAnimal {
      */
     private InteractionResult tryTame(ServerLevel level, Player player, ItemStack held) {
         UUID owner = player.getUUID();
+        OwnedCreature.Kind kind = this.ownershipKind();
         CreatureOwnershipState state = CreatureOwnershipState.get(level.getServer());
-        int cap = NeroCreaturesConfig.MAX_PETS_PER_PLAYER.get();
-        if (cap <= 0 || state.count(owner, OwnedCreature.Kind.PET) >= cap) {
-            notifyOwner(player, Component.translatable("message.nerocreatures.pet_cap", cap));
+        int cap = OwnershipCaps.capFor(kind);
+        if (cap <= 0 || state.count(owner, kind) >= cap) {
+            // message.nerocreatures.pet_cap / mount_cap
+            notifyOwner(player, Component.translatable("message.nerocreatures." + kind.key() + "_cap", cap));
             this.level().broadcastEntityEvent(this, (byte) 6); // vanilla "taming failed" smoke
             return InteractionResult.SUCCESS_SERVER;
         }
         if (!player.getAbilities().instabuild) {
             held.shrink(1);
         }
-        if (this.random.nextInt(TAME_CHANCE_DENOMINATOR) != 0) {
+        if (!this.hatchling && this.random.nextInt(TAME_CHANCE_DENOMINATOR) != 0) {
             this.level().broadcastEntityEvent(this, (byte) 6);
             return InteractionResult.SUCCESS_SERVER;
         }
         this.tame(player);
+        this.hatchling = false;
         CreatureMilestones.record(player, CreatureMilestones.FIRST_TAME); // record gate, never a lock
         this.setCommand(PetCommand.FOLLOW);
         this.setTarget(null);
-        state.add(owner, OwnedCreature.of(this, OwnedCreature.Kind.PET));
+        state.add(owner, OwnedCreature.of(this, kind));
         this.level().broadcastEntityEvent(this, (byte) 7); // vanilla "taming succeeded" hearts
         notifyOwner(player, Component.translatable("message.nerocreatures.pet_tamed",
                 this.getType().getDescription()));
         CompanionBridge.hooks().onPetTamed(this, player);
-        CreatureLinkEvents.petStateChanged(level, owner, this, OwnedCreature.Kind.PET,
+        CreatureLinkEvents.petStateChanged(level, owner, this, kind,
                 CreatureLinkEvents.STATE_TAMED);
         return InteractionResult.SUCCESS_SERVER;
     }
@@ -320,6 +526,56 @@ public abstract class TameableCreature extends TamableAnimal {
     }
 
     // --- lifecycle ----------------------------------------------------------
+
+    @Override
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+        super.defineSynchedData(builder);
+        CreatureVisuals.define(builder, VISUALS_IDS);
+    }
+
+    /**
+     * First server tick: roll traits for a creature that has none (existing saves included), then the
+     * load-time ownership check. Runs in {@code tick} rather than the AI step so a NoAI creature is
+     * covered too. One map lookup per owned creature per load.
+     */
+    @Override
+    public void tick() {
+        long budgetStart = CreatureBudget.begin();
+        super.tick();
+        if (!this.level().isClientSide()) {
+            this.visuals.tick();
+        }
+        if (!this.firstTickDone && this.level() instanceof ServerLevel level) {
+            this.firstTickDone = true;
+            if (this.traits == null) {
+                this.setTraits(Inheritance.fresh(TraitPool.get(), this.random));
+            }
+            this.verifyOwnership(level);
+        }
+        CreatureBudget.end(this, budgetStart);
+    }
+
+    /**
+     * The load-time half of erasure (decision 004). Released silently (clearing the UUID from entity
+     * data, no app event) only on a positive erasure record; any other missing row is re-added, so a
+     * pet from an older save or a recovered-empty store stays tamed.
+     */
+    private void verifyOwnership(ServerLevel level) {
+        UUID owner = this.isTame() ? this.ownerId() : null;
+        if (owner == null) {
+            return;
+        }
+        CreatureOwnershipState state = CreatureOwnershipState.get(level.getServer());
+        switch (state.loadVerdict(owner, this.getUUID())) {
+            case INDEXED -> {
+            }
+            case REINDEX -> state.add(owner, OwnedCreature.of(this, this.ownershipKind()));
+            case RELEASE -> {
+                this.releaseToWild(false);
+                state.creatureFreed(this.getUUID());
+            }
+        }
+    }
 
     /**
      * Ticks the species perk. Everything about it is throttled and bounded: one owner lookup and one
@@ -361,7 +617,7 @@ public abstract class TameableCreature extends TamableAnimal {
             CompanionBridge.hooks().onPetReleased(this);
             // The owner's companion app is told what died and nothing else — never what killed it,
             // and never anybody else's pet (POPIA/GDPR).
-            CreatureLinkEvents.petDied(level, owner, this, OwnedCreature.Kind.PET);
+            CreatureLinkEvents.petDied(level, owner, this, this.ownershipKind());
         }
         super.die(source);
     }
@@ -377,21 +633,92 @@ public abstract class TameableCreature extends TamableAnimal {
         return !this.isPersistenceRequired() && !this.requiresCustomPersistence();
     }
 
-    /** These are alien fauna, not livestock: they tame, they do not breed. */
+    // --- breeding (decision 003) ---------------------------------------------
+
+    /** Only species that opted in through {@link #breedable()} can enter love mode. */
     @Override
     public boolean canFallInLove() {
-        return false;
+        return this.breedable() && super.canFallInLove();
     }
 
+    /**
+     * Same species, both in love, and the same standing: two tamed creatures of one owner, or (for
+     * livestock) any two. Wild tameables never breed; neither do a sitting pet or two owners' pets.
+     */
+    @Override
+    public boolean canMate(Animal partner) {
+        if (!this.breedable() || !(partner instanceof TameableCreature other) || !super.canMate(partner)) {
+            return false;
+        }
+        if (!this.isTameable()) {
+            return true;
+        }
+        return this.isTame() && other.isTame() && !this.isOrderedToSit() && !other.isOrderedToSit()
+                && Objects.equals(this.ownerId(), other.ownerId());
+    }
+
+    /** A same-species baby carrying inherited traits (one slot from each parent, plus mutation). */
     @Override
     @Nullable
     public AgeableMob getBreedOffspring(ServerLevel level, AgeableMob partner) {
-        return null;
+        if (!this.breedable()) {
+            return null;
+        }
+        if (!(this.getType().create(level, EntitySpawnReason.BREEDING) instanceof TameableCreature child)) {
+            return null;
+        }
+        TraitSet other = partner instanceof TameableCreature mate ? mate.traits() : null;
+        child.setTraits(Inheritance.inherit(TraitPool.get(), this.traits, other, this.random));
+        return child;
+    }
+
+    /**
+     * Egg species lay an egg instead of a baby when Stage 4's egg layer is bound; otherwise (and for
+     * live-birth species) this is vanilla's path, including the loaders' baby-spawn events.
+     */
+    @Override
+    public void spawnChildFromBreeding(ServerLevel level, Animal partner) {
+        BreedingHooks.EggLayer layer = BreedingHooks.eggLayer();
+        if (this.breedable() && this.birthMode() == BirthMode.EGG && layer != null
+                && partner instanceof TameableCreature mate) {
+            TraitSet eggTraits = Inheritance.inherit(TraitPool.get(), this.traits, mate.traits(), this.random);
+            if (layer.layEgg(level, this, mate, eggTraits)) {
+                this.finalizeSpawnChildFromBreeding(level, partner, null);
+                return;
+            }
+        }
+        super.spawnChildFromBreeding(level, partner);
+    }
+
+    /**
+     * A baby of a tamed pair is born tamed to the parents' owner, through the cap-checked index.
+     * Over the cap it is born wild. The owner may be offline: the reference is copied from the
+     * parent, never looked up by proximity.
+     */
+    @Override
+    public void finalizeSpawnChildFromBreeding(ServerLevel level, Animal partner, @Nullable AgeableMob offspring) {
+        if (offspring instanceof TameableCreature child && child.isTameable() && this.isTame()) {
+            UUID owner = this.ownerId();
+            if (owner != null) {
+                OwnedCreature.Kind kind = child.ownershipKind();
+                CreatureOwnershipState state = CreatureOwnershipState.get(level.getServer());
+                if (state.tryAdd(owner, OwnedCreature.of(child, kind), OwnershipCaps.capFor(kind))) {
+                    //? if >=1.21.5 {
+                    child.setOwnerReference(this.getOwnerReference());
+                    //?} else {
+                    /*child.setOwnerUUID(this.getOwnerUUID());
+                    *///?}
+                    child.setTame(true, true);
+                    child.setCommand(PetCommand.FOLLOW);
+                }
+            }
+        }
+        super.finalizeSpawnChildFromBreeding(level, partner, offspring);
     }
 
     @Override
     public boolean isFood(ItemStack stack) {
-        return stack.getItem() == this.tamingFood();
+        return this.isSpeciesFood(stack);
     }
 
     // --- persistence --------------------------------------------------------
@@ -407,6 +734,13 @@ public abstract class TameableCreature extends TamableAnimal {
         ValueOutput output = ValueOutput.of(nbt, this.registryAccess());
     *///?}
         output.putString("Command", this.command.key());
+        output.putInt(CreatureVisuals.SAVE_KEY, this.visuals.persistentBits());
+        if (this.traits != null) {
+            output.store(TraitSet.NBT_KEY, TraitSet.CODEC, this.traits);
+        }
+        if (this.hatchling) {
+            output.putBoolean(HATCHLING_KEY, true);
+        }
     }
 
     //? if >=1.21.6 {
@@ -422,6 +756,11 @@ public abstract class TameableCreature extends TamableAnimal {
         // setCommand rather than a bare assignment: it also restores the sitting flags the client
         // renders, and re-anchors a guarding pet where it woke up.
         this.setCommand(PetCommand.fromKey(input.getStringOr("Command", PetCommand.FOLLOW.key())));
+        this.visuals.restorePersistentBits(input.getIntOr(CreatureVisuals.SAVE_KEY, 0));
+        // Absent on every pre-0.5.0 save: left null, rolled on the first server tick. Read after the
+        // visuals bits so the trait set re-writes the radiant flag it owns.
+        input.read(TraitSet.NBT_KEY, TraitSet.CODEC).ifPresent(this::setTraits);
+        this.hatchling = input.getBooleanOr(HATCHLING_KEY, false);
     }
 
     /**

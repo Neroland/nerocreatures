@@ -8,6 +8,18 @@
     {
       "id": "nerocreatures:refined_crystal",
       "required": false
+    },
+    {
+      "id": "nerocreatures:lode_scute",
+      "required": false
+    },
+    {
+      "id": "nerocreatures:charged_sand",
+      "required": false
+    },
+    {
+      "id": "nerocreatures:slag_carapace",
+      "required": false
     }
   ]
 }

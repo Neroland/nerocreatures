@@ -2,6 +2,16 @@ package za.co.neroland.nerocreatures.platform;
 
 import java.util.List;
 
+import org.jetbrains.annotations.Nullable;
+
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.common.util.BlockSnapshot;
+import net.minecraftforge.event.ForgeEventFactory;
+
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.loading.FMLEnvironment;
@@ -47,5 +57,21 @@ public final class ForgePlatformInfo implements PlatformInfo {
                 .map(m -> m.getModId() + " " + m.getVersion())
                 .sorted()
                 .toList();
+    }
+
+    /** Fires Forge's mob-griefing event (defaults to the {@code mobGriefing} game rule). */
+    @Override
+    public boolean canMobGrief(ServerLevel level, Mob actor) {
+        return ForgeEventFactory.getMobGriefingEvent(level, actor);
+    }
+
+    /**
+     * Fires Forge's {@code EntityPlaceEvent} for the position as a pre-check (claim mods cancel it).
+     * Only called for loaded positions, so the snapshot never loads a chunk.
+     */
+    @Override
+    public boolean mayPlace(ServerLevel level, Mob actor, BlockPos pos, @Nullable BlockState newState) {
+        BlockSnapshot snapshot = BlockSnapshot.create(level.dimension(), level, pos);
+        return !ForgeEventFactory.onBlockPlace(actor, snapshot, Direction.UP);
     }
 }

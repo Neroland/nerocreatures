@@ -35,6 +35,19 @@ public final class NeoForgeCreatureNetwork implements NetworkPlatform {
         for (CreatureNetwork.Clientbound<?> cb : CreatureNetwork.clientbound()) {
             registerClientbound(registrar, cb);
         }
+        for (CreatureNetwork.Serverbound<?> sb : CreatureNetwork.serverbound()) {
+            registerServerbound(registrar, sb);
+        }
+    }
+
+    private static <T extends CustomPacketPayload> void registerServerbound(
+            PayloadRegistrar registrar, CreatureNetwork.Serverbound<T> sb) {
+        registrar.playToServer(sb.type(), sb.codec(),
+                (payload, context) -> context.enqueueWork(() -> {
+                    if (context.player() instanceof ServerPlayer serverPlayer) {
+                        sb.handler().accept(payload, serverPlayer);
+                    }
+                }));
     }
 
     private static <T extends CustomPacketPayload> void registerClientbound(

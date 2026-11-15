@@ -12,6 +12,15 @@
     "nerocreatures:glacite_wisp_spawn_egg",
     "nerocreatures:xertz_forager_spawn_egg",
     "nerocreatures:cinder_tyrant_spawn_egg",
-    "nerocreatures:drone_shell"
+    "nerocreatures:lumen_moth_spawn_egg",
+    "nerocreatures:echo_shrike_spawn_egg",
+    "nerocreatures:lode_tortoise_spawn_egg",
+    "nerocreatures:dune_loper_spawn_egg",
+    "nerocreatures:strata_hound_spawn_egg",
+    "nerocreatures:dust_devil_spawn_egg",
+    "nerocreatures:slag_beetle_spawn_egg",
+    "nerocreatures:magma_wader_spawn_egg",
+    "nerocreatures:drone_shell",
+    "nerocreatures:creature_saddle"
   ]
 }

@@ -206,6 +206,22 @@ def drone_shell(c: Canvas, rng: random.Random) -> None:
     c.speckle(rng, 6, (140, 156, 140, 255), (4, 5, 11, 11))
 
 
+def creature_saddle(c: Canvas, rng: random.Random) -> None:
+    """The mount saddle: a stalker-hide seat on a sinew girth, iron rings either side."""
+    # Seat, pale regolith hide like the Lunar Stalker drop it is made from.
+    c.rect(3, 5, 12, 9, (150, 132, 112, 255))
+    c.outline(3, 5, 12, 9, (84, 70, 58, 255))
+    # Raised pommel and cantle.
+    c.rect(3, 3, 4, 5, (120, 104, 88, 255))
+    c.rect(11, 3, 12, 5, (120, 104, 88, 255))
+    # Sinew girth hanging down.
+    c.rect(5, 10, 5, 13, (196, 92, 74, 255))
+    c.rect(10, 10, 10, 13, (196, 92, 74, 255))
+    # Iron stirrup rings.
+    c.rect(4, 13, 6, 14, (176, 182, 190, 255))
+    c.rect(9, 13, 11, 14, (176, 182, 190, 255))
+    c.speckle(rng, 6, (182, 166, 146, 255), (4, 6, 11, 8))
+
 def apex_trophy(c: Canvas, rng: random.Random) -> None:
     """The planet-boss token: a scorched horn-crown mounted on a slag plinth, ember-lit."""
     # Plinth.
@@ -295,7 +311,60 @@ PALETTES = {
     # Cinder Tyrant — cooled slag with the ember glow still in the cracks. Cindara's palette:
     # near-black basalt, hot orange, ash outline.
     "cinder_tyrant": ((62, 44, 40, 255), (240, 128, 44, 255), (24, 16, 14, 255)),
+    # 0.5.0 Luna: moonlit moth, ink-dark shrike, ore-flecked tortoise.
+    "lumen_moth": ((206, 214, 168, 255), (250, 246, 170, 255), (96, 100, 72, 255)),
+    "echo_shrike": ((54, 58, 74, 255), (150, 200, 230, 255), (22, 24, 32, 255)),
+    "lode_tortoise": ((112, 108, 100, 255), (210, 160, 70, 255), (56, 52, 48, 255)),
+    # 0.5.0 Mars: rust-red dune runners and a pale sand column.
+    "dune_loper": ((176, 98, 62, 255), (232, 190, 140, 255), (88, 44, 28, 255)),
+    "strata_hound": ((134, 84, 64, 255), (120, 220, 200, 255), (62, 36, 28, 255)),
+    "dust_devil": ((206, 150, 110, 255), (250, 226, 190, 255), (128, 80, 56, 255)),
+    # 0.5.0 Cindara: basalt shell with a furnace glow, and an ash-grey wader with ember legs.
+    "slag_beetle": ((60, 50, 48, 255), (250, 150, 50, 255), (26, 20, 18, 255)),
+    "magma_wader": ((96, 82, 78, 255), (255, 96, 32, 255), (40, 30, 28, 255)),
 }
+
+
+def lumen_dust(c: Canvas, rng: random.Random) -> None:
+    c.disc(7.5, 9.0, 4.6, (176, 168, 96, 255))
+    c.disc(7.5, 9.0, 3.2, (236, 230, 140, 255))
+    c.speckle(rng, 14, (255, 255, 214, 255), (2, 3, 13, 13))
+
+
+def resonant_membrane(c: Canvas, rng: random.Random) -> None:
+    c.disc(7.5, 7.5, 5.8, (70, 88, 120, 255))
+    c.disc(7.5, 7.5, 4.6, (120, 160, 200, 255))
+    c.disc(7.5, 7.5, 2.6, (70, 88, 120, 255))
+    c.disc(7.5, 7.5, 1.4, (190, 226, 250, 255))
+
+
+def lode_scute(c: Canvas, rng: random.Random) -> None:
+    c.diamond(7, 8, 6, (84, 80, 74, 255))
+    c.diamond(7, 8, 4, (126, 120, 110, 255))
+    c.speckle(rng, 6, (214, 164, 72, 255), (3, 4, 11, 12))
+    c.speckle(rng, 3, (110, 210, 220, 255), (4, 5, 10, 11))
+
+
+def charged_sand(c: Canvas, rng: random.Random) -> None:
+    c.rect(3, 9, 12, 13, (176, 92, 56, 255))
+    c.rect(5, 7, 10, 8, (176, 92, 56, 255))
+    c.speckle(rng, 12, (222, 140, 92, 255), (3, 7, 12, 13))
+    for x, y in ((4, 4), (5, 5), (6, 4), (7, 3), (9, 5), (10, 4), (11, 5)):
+        c.set(x, y, (170, 220, 255, 255))
+
+
+def slag_carapace(c: Canvas, rng: random.Random) -> None:
+    c.disc(7.5, 8.5, 5.8, (40, 32, 30, 255))
+    c.disc(7.5, 8.5, 4.4, (66, 54, 50, 255))
+    c.rect(7, 3, 8, 14, (40, 32, 30, 255))
+    c.speckle(rng, 10, (244, 140, 48, 255), (3, 4, 12, 13))
+
+
+def heat_gland(c: Canvas, rng: random.Random) -> None:
+    c.disc(7.5, 8.5, 5.0, (150, 40, 24, 255))
+    c.disc(7.0, 8.0, 3.4, (232, 96, 36, 255))
+    c.disc(6.5, 7.0, 1.6, (255, 210, 110, 255))
+    c.rect(7, 2, 8, 3, (110, 30, 20, 255))
 
 
 MOTIFS = {
@@ -310,7 +379,14 @@ MOTIFS = {
     "salvaged_circuitry": salvaged_circuitry,
     "android_core": android_core,
     "drone_shell": drone_shell,
+    "creature_saddle": creature_saddle,
     "apex_trophy": apex_trophy,
+    "lumen_dust": lumen_dust,
+    "resonant_membrane": resonant_membrane,
+    "lode_scute": lode_scute,
+    "charged_sand": charged_sand,
+    "slag_carapace": slag_carapace,
+    "heat_gland": heat_gland,
 }
 
 # Creatures that have a palette (and therefore an entity sheet) but deliberately no spawn egg. The

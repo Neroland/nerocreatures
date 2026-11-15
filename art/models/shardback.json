@@ -1,0 +1,414 @@
+{
+  "format": 1,
+  "id": "shardback",
+  "name": "Shardback",
+  "habitat": "nyxara",
+  "size_class": "M",
+  "silhouette": "low charging quadruped behind a fan of five mirror plates that hides its head from the front; bare dark hindquarters",
+  "hitbox_guide": [1.3, 1.3],
+  "texture": {"width": 64, "height": 64},
+  "render_type": "cutout",
+  "renderer": {"scale": 1.0, "shadow": 0.7},
+  "materials": ["silver", "opal", "plum"],
+  "accent": "accent",
+  "accent_2": "accent_b",
+  "glow_organs": ["back seam (weak point; one gradient, magenta at the shoulders to cyan at the tail)", "eyes"],
+  "radiant": null,
+  "parts": [
+    {
+      "name": "body",
+      "parent": null,
+      "pivot": [0, 13, 0],
+      "rotation": [0, 0, 0],
+      "cubes": [
+        {"name": "chest", "origin": [-4.5, -4, -8], "size": [9, 8, 8], "uv": [0, 0]},
+        {"name": "rump", "origin": [-4, -3, 0], "size": [8, 7, 8], "uv": [0, 16]},
+        {"name": "hump", "origin": [-3.5, -6, -7], "size": [7, 2, 6], "uv": [32, 27]},
+        {"name": "seam", "origin": [-1, -4, 1], "size": [2, 1, 6], "uv": [16, 31]},
+        {"name": "tail", "origin": [-1, -2, 8], "size": [2, 2, 3], "uv": [0, 39]}
+      ]
+    },
+    {
+      "name": "head",
+      "parent": "body",
+      "pivot": [0, 0, -8],
+      "rotation": [8, 0, 0],
+      "cubes": [
+        {"name": "skull", "origin": [-2, -2, -4], "size": [4, 4, 4], "uv": [0, 31]},
+        {"name": "snout", "origin": [-1.5, 0, -5], "size": [3, 2, 1], "uv": [46, 41]}
+      ]
+    },
+    {
+      "name": "collar",
+      "parent": "body",
+      "pivot": [0, -1, -13.5],
+      "rotation": [0, 0, 0],
+      "cubes": [
+        {"name": "hub", "origin": [-3, -3, -1], "size": [6, 6, 1], "uv": [32, 35]},
+        {"name": "yoke", "origin": [-1.5, -5, 0], "size": [3, 2, 6], "uv": [44, 18]}
+      ]
+    },
+    {
+      "name": "plate_c",
+      "parent": "collar",
+      "pivot": [0, 0, 0],
+      "rotation": [0, 0, 0],
+      "cubes": [
+        {"name": "plate", "origin": [-2.5, -11, -2], "size": [5, 8, 1], "uv": [34, 9]},
+        {"name": "tip", "origin": [-1.5, -13, -2], "size": [3, 2, 1], "uv": [54, 41]}
+      ]
+    },
+    {
+      "name": "plate_li",
+      "parent": "collar",
+      "pivot": [0, 0, 0],
+      "rotation": [0, 0, 40],
+      "cubes": [
+        {"name": "plate", "origin": [-2.5, -11, -1.75], "size": [5, 8, 1], "uv": [46, 9]},
+        {"name": "tip", "origin": [-1.5, -13, -1.75], "size": [3, 2, 1], "uv": [30, 42]}
+      ]
+    },
+    {
+      "name": "plate_lo",
+      "parent": "collar",
+      "pivot": [0, 0, 0],
+      "rotation": [0, 0, 80],
+      "cubes": [
+        {"name": "plate", "origin": [-2.5, -11, -1.5], "size": [5, 8, 1], "uv": [32, 18]},
+        {"name": "tip", "origin": [-1.5, -13, -1.5], "size": [3, 2, 1], "uv": [38, 42]}
+      ]
+    },
+    {
+      "name": "plate_ri",
+      "parent": "collar",
+      "pivot": [0, 0, 0],
+      "rotation": [0, 0, -40],
+      "uv_like": "plate_li",
+      "cubes": [
+        {"name": "plate", "origin": [-2.5, -11, -1.75], "size": [5, 8, 1], "uv": [46, 9], "mirror": true},
+        {"name": "tip", "origin": [-1.5, -13, -1.75], "size": [3, 2, 1], "uv": [30, 42], "mirror": true}
+      ]
+    },
+    {
+      "name": "plate_ro",
+      "parent": "collar",
+      "pivot": [0, 0, 0],
+      "rotation": [0, 0, -80],
+      "uv_like": "plate_lo",
+      "cubes": [
+        {"name": "plate", "origin": [-2.5, -11, -1.5], "size": [5, 8, 1], "uv": [32, 18], "mirror": true},
+        {"name": "tip", "origin": [-1.5, -13, -1.5], "size": [3, 2, 1], "uv": [38, 42], "mirror": true}
+      ]
+    },
+    {
+      "name": "leg_fl",
+      "parent": null,
+      "pivot": [3, 17, -5],
+      "rotation": [0, 0, 0],
+      "cubes": [
+        {"name": "leg", "origin": [-1.5, 0, -1.5], "size": [3, 6, 3], "uv": [34, 0]},
+        {"name": "foot", "origin": [-1.5, 5, -2.5], "size": [3, 2, 4], "uv": [46, 35]}
+      ]
+    },
+    {
+      "name": "leg_fr",
+      "parent": null,
+      "pivot": [-3, 17, -5],
+      "rotation": [0, 0, 0],
+      "uv_like": "leg_fl",
+      "cubes": [
+        {"name": "leg", "origin": [-1.5, 0, -1.5], "size": [3, 6, 3], "uv": [34, 0], "mirror": true},
+        {"name": "foot", "origin": [-1.5, 5, -2.5], "size": [3, 2, 4], "uv": [46, 35], "mirror": true}
+      ]
+    },
+    {
+      "name": "leg_rl",
+      "parent": null,
+      "pivot": [3, 17, 5],
+      "rotation": [0, 0, 0],
+      "cubes": [
+        {"name": "leg", "origin": [-1.5, 0, -1.5], "size": [3, 6, 3], "uv": [46, 0]},
+        {"name": "foot", "origin": [-1.5, 5, -2.5], "size": [3, 2, 4], "uv": [16, 38]}
+      ]
+    },
+    {
+      "name": "leg_rr",
+      "parent": null,
+      "pivot": [-3, 17, 5],
+      "rotation": [0, 0, 0],
+      "uv_like": "leg_rl",
+      "cubes": [
+        {"name": "leg", "origin": [-1.5, 0, -1.5], "size": [3, 6, 3], "uv": [46, 0], "mirror": true},
+        {"name": "foot", "origin": [-1.5, 5, -2.5], "size": [3, 2, 4], "uv": [16, 38], "mirror": true}
+      ]
+    }
+  ],
+  "procedural": {
+    "swing": [
+      {"part": "leg_fl", "phase": 0, "amplitude": 34},
+      {"part": "leg_rr", "phase": 0, "amplitude": 34},
+      {"part": "leg_fr", "phase": 180, "amplitude": 34},
+      {"part": "leg_rl", "phase": 180, "amplitude": 34}
+    ],
+    "wave": [],
+    "look": [
+      {"part": "head", "yaw": 0.4, "pitch": 0.3, "limit": 20}
+    ]
+  },
+  "clips": {
+    "idle": {
+      "length": 80,
+      "loop": true,
+      "key_pose": 23,
+      "note": "plates ripple one after another, left to right; slow breathing",
+      "tracks": {
+        "body": {
+          "pos": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 40, "v": [0, -0.5, 0], "ease": "smooth"},
+            {"t": 80, "v": [0, 0, 0], "ease": "smooth"}
+          ]
+        },
+        "head": {
+          "rot": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 30, "v": [0, 8, 0], "ease": "smooth"},
+            {"t": 60, "v": [0, -8, 0], "ease": "smooth"},
+            {"t": 80, "v": [0, 0, 0], "ease": "smooth"}
+          ]
+        },
+        "plate_lo": {
+          "rot": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 5, "v": [-16, 0, 0], "ease": "smooth"},
+            {"t": 13, "v": [0, 0, 0], "ease": "smooth"},
+            {"t": 80, "v": [0, 0, 0]}
+          ]
+        },
+        "plate_li": {
+          "rot": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 9, "v": [0, 0, 0]},
+            {"t": 14, "v": [-16, 0, 0], "ease": "smooth"},
+            {"t": 22, "v": [0, 0, 0], "ease": "smooth"},
+            {"t": 80, "v": [0, 0, 0]}
+          ]
+        },
+        "plate_c": {
+          "rot": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 18, "v": [0, 0, 0]},
+            {"t": 23, "v": [-16, 0, 0], "ease": "smooth"},
+            {"t": 31, "v": [0, 0, 0], "ease": "smooth"},
+            {"t": 80, "v": [0, 0, 0]}
+          ]
+        },
+        "plate_ri": {
+          "rot": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 27, "v": [0, 0, 0]},
+            {"t": 32, "v": [-16, 0, 0], "ease": "smooth"},
+            {"t": 40, "v": [0, 0, 0], "ease": "smooth"},
+            {"t": 80, "v": [0, 0, 0]}
+          ]
+        },
+        "plate_ro": {
+          "rot": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 36, "v": [0, 0, 0]},
+            {"t": 41, "v": [-16, 0, 0], "ease": "smooth"},
+            {"t": 49, "v": [0, 0, 0], "ease": "smooth"},
+            {"t": 80, "v": [0, 0, 0]}
+          ]
+        }
+      }
+    },
+    "move": {
+      "length": 20,
+      "loop": true,
+      "key_pose": 5,
+      "note": "plates forward, head hidden: the fan tips ahead of the chest and bobs with the trot",
+      "tracks": {
+        "collar": {
+          "rot": [
+            {"t": 0, "v": [14, 0, 0]},
+            {"t": 10, "v": [10, 0, 0], "ease": "smooth"},
+            {"t": 20, "v": [14, 0, 0], "ease": "smooth"}
+          ]
+        },
+        "head": {
+          "rot": [
+            {"t": 0, "v": [8, 0, 0]},
+            {"t": 20, "v": [8, 0, 0]}
+          ]
+        },
+        "body": {
+          "pos": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 5, "v": [0, -1, 0], "ease": "smooth"},
+            {"t": 10, "v": [0, 0, 0], "ease": "smooth"},
+            {"t": 15, "v": [0, -1, 0], "ease": "smooth"},
+            {"t": 20, "v": [0, 0, 0], "ease": "smooth"}
+          ]
+        }
+      }
+    },
+    "ability": {
+      "length": 40,
+      "loop": false,
+      "key_pose": 15,
+      "telegraph": 20,
+      "damaging": true,
+      "note": "charge: plates fold flat over the shoulders by tick 6 (head and back seam exposed), two paws of the ground, run from tick 20; the last tick is the run stance and holds while the charge lasts",
+      "glow": [
+        {"t": 0, "v": 0.35},
+        {"t": 10, "v": 0.35},
+        {"t": 20, "v": 1.0},
+        {"t": 24, "v": 0.7},
+        {"t": 28, "v": 1.0},
+        {"t": 32, "v": 0.7},
+        {"t": 36, "v": 1.0},
+        {"t": 40, "v": 1.0}
+      ],
+      "tracks": {
+        "collar": {
+          "pos": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 6, "v": [0, -6, 2], "ease": "smooth"},
+            {"t": 40, "v": [0, -6, 2]}
+          ]
+        },
+        "head": {
+          "rot": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 6, "v": [16, 0, 0], "ease": "smooth"},
+            {"t": 20, "v": [22, 0, 0], "ease": "smooth"},
+            {"t": 40, "v": [22, 0, 0]}
+          ]
+        },
+        "body": {
+          "rot": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 6, "v": [3, 0, 0], "ease": "smooth"},
+            {"t": 20, "v": [8, 0, 0], "ease": "smooth"},
+            {"t": 40, "v": [8, 0, 0]}
+          ],
+          "pos": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 20, "v": [0, 1, -1], "ease": "smooth"},
+            {"t": 40, "v": [0, 1, -1]}
+          ]
+        },
+        "leg_fl": {
+          "rot": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 6, "v": [0, 0, 0]},
+            {"t": 9, "v": [-38, 0, 0], "ease": "smooth"},
+            {"t": 12, "v": [22, 0, 0]},
+            {"t": 15, "v": [-38, 0, 0], "ease": "smooth"},
+            {"t": 18, "v": [22, 0, 0]},
+            {"t": 20, "v": [0, 0, 0], "ease": "smooth"}
+          ]
+        },
+        "plate_c": {
+          "rot": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 6, "v": [-82, 0, 0], "ease": "smooth"},
+            {"t": 40, "v": [-82, 0, 0]}
+          ]
+        },
+        "plate_li": {
+          "rot": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 6, "v": [-82, 0, -14], "ease": "smooth"},
+            {"t": 40, "v": [-82, 0, -14]}
+          ]
+        },
+        "plate_lo": {
+          "rot": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 6, "v": [-82, 0, -30], "ease": "smooth"},
+            {"t": 40, "v": [-82, 0, -30]}
+          ]
+        },
+        "plate_ri": {
+          "rot": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 6, "v": [-82, 0, 14], "ease": "smooth"},
+            {"t": 40, "v": [-82, 0, 14]}
+          ]
+        },
+        "plate_ro": {
+          "rot": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 6, "v": [-82, 0, 30], "ease": "smooth"},
+            {"t": 40, "v": [-82, 0, 30]}
+          ]
+        }
+      }
+    },
+    "hurt": {
+      "length": 6,
+      "loop": false,
+      "key_pose": 2,
+      "note": "plates clatter out of line",
+      "tracks": {
+        "collar": {
+          "rot": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 2, "v": [-8, 0, 0], "ease": "smooth"},
+            {"t": 6, "v": [0, 0, 0], "ease": "smooth"}
+          ]
+        },
+        "body": {
+          "pos": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 2, "v": [0, 0, 1], "ease": "smooth"},
+            {"t": 6, "v": [0, 0, 0], "ease": "smooth"}
+          ]
+        },
+        "plate_c": {
+          "rot": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 2, "v": [-12, 0, 0], "ease": "smooth"},
+            {"t": 4, "v": [6.0, 0, 0.0], "ease": "smooth"},
+            {"t": 6, "v": [0, 0, 0], "ease": "smooth"}
+          ]
+        },
+        "plate_li": {
+          "rot": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 2, "v": [-22, 0, 6], "ease": "smooth"},
+            {"t": 4, "v": [11.0, 0, -3.0], "ease": "smooth"},
+            {"t": 6, "v": [0, 0, 0], "ease": "smooth"}
+          ]
+        },
+        "plate_lo": {
+          "rot": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 2, "v": [9, 0, -8], "ease": "smooth"},
+            {"t": 4, "v": [-4.5, 0, 4.0], "ease": "smooth"},
+            {"t": 6, "v": [0, 0, 0], "ease": "smooth"}
+          ]
+        },
+        "plate_ri": {
+          "rot": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 2, "v": [11, 0, 5], "ease": "smooth"},
+            {"t": 4, "v": [-5.5, 0, -2.5], "ease": "smooth"},
+            {"t": 6, "v": [0, 0, 0], "ease": "smooth"}
+          ]
+        },
+        "plate_ro": {
+          "rot": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 2, "v": [-20, 0, 7], "ease": "smooth"},
+            {"t": 4, "v": [10.0, 0, -3.5], "ease": "smooth"},
+            {"t": 6, "v": [0, 0, 0], "ease": "smooth"}
+          ]
+        }
+      }
+    }
+  },
+  "uv_fill": 0.627
+}

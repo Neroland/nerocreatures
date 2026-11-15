@@ -1,0 +1,328 @@
+{
+  "format": 1,
+  "id": "dust_devil",
+  "name": "Dust Devil",
+  "habitat": "mars",
+  "size_class": "M",
+  "silhouette": "inverted cone of three sand rings, widest at the top, around one bright core; no head",
+  "hitbox_guide": [0.9, 1.7],
+  "texture": {"width": 64, "height": 64},
+  "render_type": "translucent",
+  "renderer": {"scale": 1.0, "shadow": 0.3},
+  "materials": ["sand", "bone", "umber"],
+  "accent": "accent",
+  "glow_organs": [
+    "charged core and its spindle",
+    "stage 1 (whirl, vulnerable): the arc cage round the bared core"
+  ],
+  "radiant": null,
+  "parts": [
+    {
+      "name": "funnel",
+      "parent": null,
+      "pivot": [0, 24, 0],
+      "rotation": [0, 0, 0],
+      "cubes": [
+        {"name": "wisp_tip", "origin": [-1, -4, -1], "size": [2, 4, 2], "uv": [56, 20]},
+        {"name": "wisp", "origin": [-2, -8, -2], "size": [4, 5, 4], "uv": [48, 31]}
+      ]
+    },
+    {
+      "name": "ring_low",
+      "parent": "funnel",
+      "pivot": [0, -9, 0],
+      "rotation": [0, 0, 0],
+      "visible_when": {"form": [0]},
+      "cubes": [
+        {"name": "ring", "origin": [-4, -2, -4], "size": [8, 4, 8], "uv": [0, 51]}
+      ]
+    },
+    {
+      "name": "ring_mid",
+      "parent": "funnel",
+      "pivot": [0, -17, 0],
+      "rotation": [0, 0, 0],
+      "visible_when": {"form": [0]},
+      "cubes": [
+        {"name": "ring", "origin": [-6, -2, -6], "size": [12, 4, 12], "uv": [0, 20]}
+      ]
+    },
+    {
+      "name": "ring_top",
+      "parent": "funnel",
+      "pivot": [0, -25, 0],
+      "rotation": [0, 0, 0],
+      "visible_when": {"form": [0]},
+      "cubes": [
+        {"name": "ring", "origin": [-8, -2, -8], "size": [16, 4, 16], "uv": [0, 0]}
+      ]
+    },
+    {
+      "name": "core",
+      "parent": "funnel",
+      "pivot": [0, -13, 0],
+      "rotation": [0, 45, 0],
+      "visible_when": {"form": [0]},
+      "cubes": [
+        {"name": "core", "origin": [-2, -2, -2], "size": [4, 4, 4], "uv": [48, 40]},
+        {"name": "spindle", "origin": [-1, -11, -1], "size": [2, 9, 2], "uv": [48, 20]}
+      ]
+    },
+    {
+      "name": "column",
+      "parent": "funnel",
+      "pivot": [0, -16, 0],
+      "rotation": [0, 0, 0],
+      "visible_when": {"form": [1]},
+      "cubes": [
+        {"name": "col_low", "origin": [-3, 0, -3], "size": [6, 9, 6], "uv": [0, 36]},
+        {"name": "col_top", "origin": [-3, -9, -3], "size": [6, 9, 6], "inflate": 0.5, "uv": [24, 36]}
+      ]
+    },
+    {
+      "name": "halo",
+      "parent": "funnel",
+      "pivot": [0, -13, 0],
+      "rotation": [0, 0, 0],
+      "visible_when": {"stage": [1], "form": [0]},
+      "cubes": [
+        {"name": "arcs", "origin": [-3, -3, -3], "size": [6, 6, 6], "uv": [32, 51]}
+      ]
+    }
+  ],
+  "procedural": {
+    "wave": [
+      {"part": "ring_top", "axis": "x", "frequency": 0.16, "phase": 0, "amplitude": 7, "fade_with_walk": false},
+      {"part": "ring_top", "axis": "z", "frequency": 0.16, "phase": 90, "amplitude": 7, "fade_with_walk": false},
+      {"part": "ring_mid", "axis": "x", "frequency": 0.21, "phase": 0, "amplitude": 9, "fade_with_walk": false},
+      {"part": "ring_mid", "axis": "z", "frequency": 0.21, "phase": -90, "amplitude": 9, "fade_with_walk": false},
+      {"part": "ring_low", "axis": "x", "frequency": 0.27, "phase": 0, "amplitude": 11, "fade_with_walk": false},
+      {"part": "ring_low", "axis": "z", "frequency": 0.27, "phase": 90, "amplitude": 11, "fade_with_walk": false},
+      {"part": "column", "axis": "x", "frequency": 0.5, "phase": 0, "amplitude": 3, "fade_with_walk": false},
+      {"part": "column", "axis": "z", "frequency": 0.5, "phase": 90, "amplitude": 3, "fade_with_walk": false},
+      {"part": "halo", "axis": "x", "frequency": 0.4, "phase": 0, "amplitude": 14, "fade_with_walk": false},
+      {"part": "halo", "axis": "z", "frequency": 0.4, "phase": -90, "amplitude": 14, "fade_with_walk": false}
+    ]
+  },
+  "clips": {
+    "idle": {
+      "length": 40,
+      "loop": true,
+      "key_pose": 10,
+      "note": "rings breathe apart and together and the core bobs; the turning is the per-ring precession waves (top and low one way, mid the other)",
+      "tracks": {
+        "ring_top": {
+          "pos": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 20, "v": [0, -1, 0], "ease": "smooth"},
+            {"t": 40, "v": [0, 0, 0], "ease": "smooth"}
+          ]
+        },
+        "ring_low": {
+          "pos": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 20, "v": [0, 1, 0], "ease": "smooth"},
+            {"t": 40, "v": [0, 0, 0], "ease": "smooth"}
+          ]
+        },
+        "core": {
+          "pos": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 10, "v": [0, -1, 0], "ease": "smooth"},
+            {"t": 30, "v": [0, 1, 0], "ease": "smooth"},
+            {"t": 40, "v": [0, 0, 0], "ease": "smooth"}
+          ]
+        }
+      }
+    },
+    "move": {
+      "length": 20,
+      "loop": true,
+      "key_pose": 5,
+      "note": "whole cone leans into travel from its foot; the wide top ring trails",
+      "tracks": {
+        "funnel": {
+          "rot": [
+            {"t": 0, "v": [17, 0, -3]},
+            {"t": 10, "v": [17, 0, 3], "ease": "smooth"},
+            {"t": 20, "v": [17, 0, -3], "ease": "smooth"}
+          ]
+        },
+        "ring_top": {
+          "pos": [
+            {"t": 0, "v": [0, 0, 2]},
+            {"t": 20, "v": [0, 0, 2]}
+          ]
+        },
+        "ring_mid": {
+          "pos": [
+            {"t": 0, "v": [0, 0, 1]},
+            {"t": 20, "v": [0, 0, 1]}
+          ]
+        }
+      }
+    },
+    "ability": {
+      "length": 30,
+      "loop": false,
+      "key_pose": 16,
+      "damaging": false,
+      "telegraph": 30,
+      "note": "spin-up (invulnerable, the 30-tick telegraph of the throw): rings close up and rise into one tight stack that hides the core, glow drops. Setting form 1 for the same window swaps the rings for the pale column instead",
+      "glow": [
+        {"t": 0, "v": 0.35},
+        {"t": 12, "v": 0.1},
+        {"t": 30, "v": 0.1}
+      ],
+      "tracks": {
+        "ring_low": {
+          "pos": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 12, "v": [0, -7, 0], "ease": "smooth"},
+            {"t": 30, "v": [0, -8, 0], "ease": "smooth"}
+          ]
+        },
+        "ring_mid": {
+          "pos": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 12, "v": [0, -3, 0], "ease": "smooth"},
+            {"t": 30, "v": [0, -4, 0], "ease": "smooth"}
+          ]
+        },
+        "ring_top": {
+          "pos": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 12, "v": [0, 1, 0], "ease": "smooth"},
+            {"t": 30, "v": [0, 0, 0], "ease": "smooth"}
+          ]
+        },
+        "core": {
+          "pos": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 12, "v": [0, -3, 0], "ease": "smooth"},
+            {"t": 30, "v": [0, -4, 0], "ease": "smooth"}
+          ]
+        },
+        "column": {
+          "pos": [
+            {"t": 0, "v": [0, 3, 0]},
+            {"t": 12, "v": [0, 0, 0], "ease": "smooth"},
+            {"t": 30, "v": [0, -1, 0], "ease": "smooth"}
+          ]
+        }
+      }
+    },
+    "ability_2": {
+      "length": 10,
+      "loop": false,
+      "key_pose": 4,
+      "damaging": false,
+      "note": "throw, timed to the 10-tick pose: the hit lands on tick 0 (its telegraph is the 30-tick spin-up and the whirl before it), so the rings are flung apart and tilted open by tick 3 with the core bared and flickering, and reform by 10",
+      "glow": [
+        {"t": 0, "v": 1.0},
+        {"t": 2, "v": 0.6},
+        {"t": 4, "v": 1.0},
+        {"t": 6, "v": 0.6},
+        {"t": 8, "v": 1.0},
+        {"t": 10, "v": 0.35}
+      ],
+      "tracks": {
+        "funnel": {
+          "rot": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 3, "v": [16, 0, 0], "ease": "smooth"},
+            {"t": 7, "v": [12, 0, 0], "ease": "smooth"},
+            {"t": 10, "v": [0, 0, 0], "ease": "smooth"}
+          ]
+        },
+        "ring_top": {
+          "pos": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 3, "v": [0, -5, -2], "ease": "smooth"},
+            {"t": 7, "v": [0, -5, -2]},
+            {"t": 10, "v": [0, 0, 0], "ease": "smooth"}
+          ],
+          "rot": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 3, "v": [-26, 0, 0], "ease": "smooth"},
+            {"t": 7, "v": [-22, 0, 0], "ease": "smooth"},
+            {"t": 10, "v": [0, 0, 0], "ease": "smooth"}
+          ]
+        },
+        "ring_mid": {
+          "pos": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 3, "v": [0, -2, 0], "ease": "smooth"},
+            {"t": 7, "v": [0, -2, 0]},
+            {"t": 10, "v": [0, 0, 0], "ease": "smooth"}
+          ],
+          "rot": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 3, "v": [0, 0, 24], "ease": "smooth"},
+            {"t": 7, "v": [0, 0, 20], "ease": "smooth"},
+            {"t": 10, "v": [0, 0, 0], "ease": "smooth"}
+          ]
+        },
+        "ring_low": {
+          "pos": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 3, "v": [0, 3, 0], "ease": "smooth"},
+            {"t": 7, "v": [0, 3, 0]},
+            {"t": 10, "v": [0, 0, 0], "ease": "smooth"}
+          ],
+          "rot": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 3, "v": [22, 0, 0], "ease": "smooth"},
+            {"t": 7, "v": [18, 0, 0], "ease": "smooth"},
+            {"t": 10, "v": [0, 0, 0], "ease": "smooth"}
+          ]
+        },
+        "core": {
+          "pos": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 3, "v": [0, -4, 0], "ease": "smooth"},
+            {"t": 7, "v": [0, -4, 0]},
+            {"t": 10, "v": [0, 0, 0], "ease": "smooth"}
+          ]
+        }
+      }
+    },
+    "hurt": {
+      "length": 6,
+      "loop": false,
+      "key_pose": 2,
+      "note": "rings scatter 2 px in three directions and reform",
+      "tracks": {
+        "ring_top": {
+          "pos": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 2, "v": [2, 0, -1], "ease": "smooth"},
+            {"t": 6, "v": [0, 0, 0], "ease": "smooth"}
+          ]
+        },
+        "ring_mid": {
+          "pos": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 2, "v": [-2, 0, 1], "ease": "smooth"},
+            {"t": 6, "v": [0, 0, 0], "ease": "smooth"}
+          ]
+        },
+        "ring_low": {
+          "pos": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 2, "v": [1, 0, 2], "ease": "smooth"},
+            {"t": 6, "v": [0, 0, 0], "ease": "smooth"}
+          ]
+        },
+        "column": {
+          "pos": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 2, "v": [-1, 0, 0], "ease": "smooth"},
+            {"t": 6, "v": [0, 0, 0], "ease": "smooth"}
+          ]
+        }
+      }
+    }
+  },
+  "uv_fill": 0.939
+}

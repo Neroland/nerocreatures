@@ -1,0 +1,10 @@
+{
+  "replace": false,
+  "values": [
+    {
+      "id": "#neroland:space/dark_biomes",
+      "required": false
+    },
+    "minecraft:the_void"
+  ]
+}

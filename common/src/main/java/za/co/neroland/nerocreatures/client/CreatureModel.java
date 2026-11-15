@@ -3,37 +3,38 @@ package za.co.neroland.nerocreatures.client;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.minecraft.client.model.EntityModel;
-import net.minecraft.client.model.geom.ModelPart;
+import org.jetbrains.annotations.Nullable;
+
 //? if >=1.21.2 {
-import net.minecraft.client.renderer.entity.state.LivingEntityRenderState;
+import net.minecraft.client.model.EntityModel;
 //?}
+import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.util.Mth;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+
+import za.co.neroland.nerocreatures.entity.base.NeroCreatureEntity;
+import za.co.neroland.nerocreatures.entity.visual.CreatureVisualsHolder;
+import za.co.neroland.nerocreatures.entity.visual.VisualsSnapshot;
 
 /**
- * Shared base for the NeroCreatures programmer-art models.
+ * Shared base for every NeroCreatures model.
  *
- * <p>The art pass is deliberately deferred (see the roadmap), so these models are cube geometry with
- * exactly two kinds of motion, both driven from the render state and both cheap:
+ * <p><b>Generated models</b> ({@code tools/gen_entity_models.py}, from {@code art/models/<id>.json})
+ * pass a {@link CreatureRig}. Each frame the rig is evaluated from the {@link AnimInput} (walk cycle,
+ * age, head angles, and the synced {@code CreatureVisuals}: pose, ability ticks, phase, stage, variant,
+ * form, flags) and the result is added to every part's rest pose; parts with {@code visible_when}
+ * rules are shown or hidden. Parts are looked up through the tree, so nested parts animate too.
  *
- * <ul>
- *   <li><b>Walk swing</b> — {@link #swingLimb} registers a hip-pivoted part (pivot at the joint,
- *       cubes hanging below it) that rotates fore/aft with {@code walkAnimationPos}, scaled by
- *       {@code walkAnimationSpeed}. A registered limb's {@code xRot} is owned by the walk cycle.</li>
- *   <li><b>Idle wave</b> — {@link #idleWave} registers a sine on one part's chosen axis driven by
- *       {@code ageInTicks}, faded out as walk speed rises so it never fights the stride.</li>
- * </ul>
+ * <p><b>Pre-pipeline models</b> (the hand-written ones whose art has not landed) keep the two original
+ * motions: {@link #swingLimb} (walk swing on a top-level part's x axis) and {@link #idleWave} /
+ * {@link #wave} (an age sine on one axis, faded by walk speed). They are replaced, not extended, when a
+ * creature's spec lands.
  *
- * <p>This is a much smaller surface than a full animation system on purpose: a model that only ever
- * writes rotations it registered up front cannot drift out of sync with its geometry, and the real
- * art pass will replace all of it.
- *
- * <p>Client-only in effect — models are never touched on a dedicated server — but the class lives in
- * {@code common/} like every other shared class, since {@code common/} is the only source set spliced
- * into all six cells.
+ * <p>Client-only in effect, but it lives in {@code common/} like every shared class.
  */
 //? if >=1.21.2 {
-public abstract class CreatureModel extends EntityModel<LivingEntityRenderState> {
+public abstract class CreatureModel extends EntityModel<CreatureRenderState> {
 //?} else {
 /*// 1.21.1 models are driven by the entity itself (no render state); HierarchicalModel supplies the
 // root-part rendering that EntityModel(ModelPart) provides from 1.21.2 on.
@@ -55,16 +56,40 @@ public abstract class CreatureModel extends net.minecraft.client.model.Hierarchi
     private final List<Swing> swings = new ArrayList<>();
     private final List<Wave> waves = new ArrayList<>();
 
+    @Nullable
+    private final CreatureRig rig;
+    private final ModelPart[] rigParts;
+    private final double[] rot;
+    private final double[] pos;
+
     //? if <1.21.2 {
     /*private final ModelPart rootPart;
+    private final AnimInput input = new AnimInput();
     *///?}
 
+    /** A pre-pipeline model: register motion with {@link #swingLimb} and {@link #idleWave}. */
     protected CreatureModel(ModelPart root) {
+        this(root, null);
+    }
+
+    /** A generated model driven by {@code rig}. */
+    protected CreatureModel(ModelPart root, @Nullable CreatureRig rig) {
         //? if >=1.21.2 {
         super(root);
         //?} else {
         /*this.rootPart = root;
         *///?}
+        this.rig = rig;
+        int count = rig == null ? 0 : rig.partCount();
+        this.rigParts = new ModelPart[count];
+        if (rig != null) {
+            for (int i = 0; i < count; i++) {
+                int parent = rig.parentOf(i);
+                this.rigParts[i] = (parent < 0 ? root : this.rigParts[parent]).getChild(rig.partName(i));
+            }
+        }
+        this.rot = new double[count * 3];
+        this.pos = new double[count * 3];
     }
 
     //? if <1.21.2 {
@@ -74,8 +99,23 @@ public abstract class CreatureModel extends net.minecraft.client.model.Hierarchi
     }
     *///?}
 
+    /** The rig, or null for a pre-pipeline model. */
+    @Nullable
+    public CreatureRig rig() {
+        return this.rig;
+    }
+
+    /** A part of a generated model by name, wherever it sits in the tree. */
+    protected final ModelPart part(String name) {
+        int index = this.rig == null ? -1 : this.rig.indexOf(name);
+        if (index < 0) {
+            throw new IllegalArgumentException("no rig part " + name);
+        }
+        return this.rigParts[index];
+    }
+
     /**
-     * Registers a hip-pivoted limb to swing with the walk cycle.
+     * Registers a hip-pivoted limb to swing with the walk cycle (pre-pipeline models).
      *
      * @param name      child part name from {@code createBodyLayer}
      * @param phase     phase offset in radians ({@link Mth#PI} to oppose another limb)
@@ -87,7 +127,7 @@ public abstract class CreatureModel extends net.minecraft.client.model.Hierarchi
     }
 
     /**
-     * Registers an idle sine on one axis of a part.
+     * Registers an idle sine on one axis of a part (pre-pipeline models).
      *
      * @param name      child part name from {@code createBodyLayer}
      * @param axis      rotation axis to drive
@@ -116,21 +156,76 @@ public abstract class CreatureModel extends net.minecraft.client.model.Hierarchi
         this.waves.add(new Wave(part, axis, base, frequency, phase, amplitude, swung, fadeWithWalk));
     }
 
+    /**
+     * Copies the entity's synced visuals, hurt flinch and alpha state into {@code in}. Clocks, walk
+     * and head angles are the caller's. Shared by the renderer (1.21.2+), the model and the glow
+     * layer (1.21.1).
+     */
+    public static void fillVisuals(AnimInput in, Entity entity, float partialTick) {
+        VisualsSnapshot visuals = entity instanceof CreatureVisualsHolder holder
+                ? holder.visuals().snapshot(partialTick) : VisualsSnapshot.EMPTY;
+        in.pose = visuals.pose().ordinal();
+        in.poseTicks = visuals.abilityTicks();
+        in.phase = visuals.phase();
+        in.stage = visuals.stage();
+        in.variant = visuals.variant();
+        in.form = visuals.form();
+        boolean alpha = visuals.alpha() || (entity instanceof NeroCreatureEntity creature && creature.isAlpha());
+        in.flags = (visuals.saddled() ? AnimInput.FLAG_SADDLED : 0)
+                | (visuals.panniers() ? AnimInput.FLAG_PANNIERS : 0)
+                | (visuals.radiant() ? AnimInput.FLAG_RADIANT : 0)
+                | (alpha ? AnimInput.FLAG_ALPHA : 0);
+        in.hurtTicks = -1.0;
+        if (entity instanceof LivingEntity living && living.hurtTime > 0) {
+            in.hurtTicks = Math.max(0.0F, living.hurtDuration - living.hurtTime + partialTick);
+        }
+    }
+
     @Override
     //? if >=1.21.2 {
-    public void setupAnim(LivingEntityRenderState state) {
+    public void setupAnim(CreatureRenderState state) {
         super.setupAnim(state);
-        float walkPos = state.walkAnimationPos;
-        float walkSpeed = Math.min(1.0F, state.walkAnimationSpeed);
-        float ageInTicks = state.ageInTicks;
+        AnimInput in = state.anim;
     //?} else {
     /*public void setupAnim(net.minecraft.world.entity.Mob entity, float limbSwing, float limbSwingAmount,
             float ageInTicks, float netHeadYaw, float headPitch) {
         // 1.21.2+ EntityModel.setupAnim resets every part to its baked pose first; do the same here.
         this.root().getAllParts().forEach(ModelPart::resetPose);
-        float walkPos = limbSwing;
-        float walkSpeed = Math.min(1.0F, limbSwingAmount);
+        AnimInput in = this.input.reset();
+        in.age = ageInTicks;
+        in.walkPos = limbSwing;
+        in.walkSpeed = limbSwingAmount;
+        in.headYaw = netHeadYaw;
+        in.headPitch = headPitch;
+        fillVisuals(in, entity, ageInTicks - entity.tickCount);
     *///?}
+        animateLegacy((float) in.walkPos, Math.min(1.0F, (float) in.walkSpeed), (float) in.age);
+        animateRig(in);
+    }
+
+    private void animateRig(AnimInput in) {
+        CreatureRig r = this.rig;
+        if (r == null) {
+            return;
+        }
+        r.evaluate(in, this.rot, this.pos);
+        boolean visibility = r.hasVisibilityRules();
+        for (int i = 0; i < this.rigParts.length; i++) {
+            ModelPart part = this.rigParts[i];
+            int b = i * 3;
+            part.xRot += (float) Math.toRadians(this.rot[b]);
+            part.yRot += (float) Math.toRadians(this.rot[b + 1]);
+            part.zRot += (float) Math.toRadians(this.rot[b + 2]);
+            part.x += (float) this.pos[b];
+            part.y += (float) this.pos[b + 1];
+            part.z += (float) this.pos[b + 2];
+            if (visibility) {
+                part.visible = r.visible(i, in);
+            }
+        }
+    }
+
+    private void animateLegacy(float walkPos, float walkSpeed, float ageInTicks) {
         for (Swing swing : this.swings) {
             swing.part().xRot = swing.baseXRot()
                     + Mth.cos(walkPos * 0.6662F + swing.phase()) * swing.amplitude() * walkSpeed;

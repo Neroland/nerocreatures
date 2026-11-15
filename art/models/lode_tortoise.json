@@ -1,0 +1,362 @@
+{
+  "format": 1,
+  "id": "lode_tortoise",
+  "name": "Lode Tortoise",
+  "habitat": "luna",
+  "size_class": "M",
+  "silhouette": "high dome shell studded with three to five blocky nodules, four pillar legs, small low head",
+  "hitbox_guide": [1.0, 1.1],
+  "texture": {"width": 64, "height": 64},
+  "render_type": "cutout",
+  "renderer": {"scale": 1.0, "shadow": 0.7},
+  "materials": ["umber", "slate"],
+  "accent": "accent",
+  "glow_organs": ["ore glints in the shell nodules (stage 1-3 growth)", "eyes"],
+  "radiant": {"umber": "pearl", "slate": "pearl_deep"},
+  "parts": [
+    {
+      "name": "shell",
+      "parent": null,
+      "pivot": [0, 16, 0],
+      "rotation": [0, 0, 0],
+      "cubes": [
+        {"name": "skirt", "origin": [-7, -1, -8], "size": [14, 3, 16], "uv": [0, 0]},
+        {"name": "dome", "origin": [-6, -5, -7], "size": [12, 4, 14], "uv": [0, 19]},
+        {"name": "crown", "origin": [-4, -8, -5], "size": [8, 3, 10], "uv": [0, 37]}
+      ]
+    },
+    {
+      "name": "head",
+      "parent": "shell",
+      "pivot": [0, 0, -7],
+      "rotation": [0, 0, 0],
+      "cubes": [
+        {"name": "neck", "origin": [-1.5, -1.5, -4], "size": [3, 3, 7], "uv": [36, 48]},
+        {"name": "skull", "origin": [-2, -2, -8], "size": [4, 4, 4], "uv": [0, 50]}
+      ]
+    },
+    {
+      "name": "jaw",
+      "parent": "head",
+      "pivot": [0, 2, -4.5],
+      "rotation": [0, 0, 0],
+      "cubes": [
+        {"name": "jaw", "origin": [-1.5, -0.5, -3], "size": [3, 1, 3], "uv": [16, 55]}
+      ]
+    },
+    {
+      "name": "tail",
+      "parent": "shell",
+      "pivot": [0, 0.5, 8],
+      "rotation": [-25, 0, 0],
+      "cubes": [
+        {"name": "tail", "origin": [-1, -1, -0.5], "size": [2, 2, 3], "uv": [16, 50]}
+      ]
+    },
+    {
+      "name": "nodules_1",
+      "parent": "shell",
+      "pivot": [0, -8, 0],
+      "rotation": [0, 0, 0],
+      "visible_when": {"stage": [1, 2, 3]},
+      "cubes": [
+        {"name": "nod_a", "origin": [0.5, -1.5, -3.5], "size": [3, 2, 3], "uv": [52, 37]},
+        {"name": "nod_b", "origin": [-3.5, -1.5, 0.5], "size": [3, 2, 3], "uv": [52, 42]},
+        {"name": "nod_c", "origin": [3.5, 0.5, -1], "size": [3, 3, 3], "uv": [52, 19]}
+      ]
+    },
+    {
+      "name": "nodules_2",
+      "parent": "shell",
+      "pivot": [0, -8, 0],
+      "rotation": [0, 0, 0],
+      "visible_when": {"stage": [2, 3]},
+      "cubes": [
+        {"name": "cap_a", "origin": [1, -3.5, -3], "size": [2, 2, 2], "uv": [56, 47]},
+        {"name": "cap_b", "origin": [-3, -3.5, 1], "size": [2, 2, 2], "uv": [26, 50]},
+        {"name": "nod_d", "origin": [-6.5, 0.5, -3.5], "size": [3, 3, 3], "uv": [52, 25]}
+      ]
+    },
+    {
+      "name": "nodules_3",
+      "parent": "shell",
+      "pivot": [0, -8, 0],
+      "rotation": [0, 0, 0],
+      "visible_when": {"stage": [3]},
+      "cubes": [
+        {"name": "cap_d", "origin": [-6, -1.5, -3], "size": [2, 2, 2], "uv": [28, 54]},
+        {"name": "cap_c", "origin": [4, -1.5, -0.5], "size": [2, 2, 2], "uv": [56, 51]},
+        {"name": "nod_e", "origin": [-1.5, 0.5, 3.5], "size": [3, 3, 3], "uv": [52, 31]}
+      ]
+    },
+    {
+      "name": "leg_fl",
+      "parent": null,
+      "pivot": [5, 17, -5],
+      "rotation": [0, 0, 0],
+      "cubes": [
+        {"name": "pillar", "origin": [-2, 0, -2], "size": [4, 7, 4], "uv": [36, 37]},
+        {"name": "toes", "origin": [-2, 6, -3], "size": [4, 1, 1], "uv": [0, 58]}
+      ]
+    },
+    {
+      "name": "leg_fr",
+      "parent": null,
+      "pivot": [-5, 17, -5],
+      "rotation": [0, 0, 0],
+      "uv_like": "leg_fl",
+      "cubes": [
+        {"name": "pillar", "origin": [-2, 0, -2], "size": [4, 7, 4], "uv": [36, 37], "mirror": true},
+        {"name": "toes", "origin": [-2, 6, -3], "size": [4, 1, 1], "uv": [0, 58], "mirror": true}
+      ]
+    },
+    {
+      "name": "leg_rl",
+      "parent": null,
+      "pivot": [5, 17, 5],
+      "rotation": [0, 0, 0],
+      "uv_like": "leg_fl",
+      "cubes": [
+        {"name": "pillar", "origin": [-2, 0, -2], "size": [4, 7, 4], "uv": [36, 37], "mirror": true},
+        {"name": "toes", "origin": [-2, 6, -3], "size": [4, 1, 1], "uv": [0, 58], "mirror": true}
+      ]
+    },
+    {
+      "name": "leg_rr",
+      "parent": null,
+      "pivot": [-5, 17, 5],
+      "rotation": [0, 0, 0],
+      "uv_like": "leg_fl",
+      "cubes": [
+        {"name": "pillar", "origin": [-2, 0, -2], "size": [4, 7, 4], "uv": [36, 37], "mirror": true},
+        {"name": "toes", "origin": [-2, 6, -3], "size": [4, 1, 1], "uv": [0, 58], "mirror": true}
+      ]
+    }
+  ],
+  "procedural": {
+    "swing": [
+      {"part": "leg_fl", "phase": 0, "amplitude": 20},
+      {"part": "leg_rr", "phase": 90, "amplitude": 20},
+      {"part": "leg_fr", "phase": 180, "amplitude": 20},
+      {"part": "leg_rl", "phase": 270, "amplitude": 20}
+    ],
+    "wave": [
+      {"part": "tail", "axis": "y", "frequency": 0.05, "phase": 0, "amplitude": 8, "fade_with_walk": true}
+    ],
+    "look": [
+      {"part": "head", "yaw": 0.5, "pitch": 0.4, "limit": 25}
+    ]
+  },
+  "clips": {
+    "idle": {
+      "length": 160,
+      "loop": true,
+      "key_pose": 40,
+      "note": "head sways slowly and eases in and out of the shell; the jaw gives one slow chew",
+      "tracks": {
+        "head": {
+          "rot": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 40, "v": [3, 12, 0], "ease": "smooth"},
+            {"t": 80, "v": [0, 0, 0], "ease": "smooth"},
+            {"t": 120, "v": [-2, -12, 0], "ease": "smooth"},
+            {"t": 160, "v": [0, 0, 0], "ease": "smooth"}
+          ],
+          "pos": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 80, "v": [0, 0, -1], "ease": "smooth"},
+            {"t": 160, "v": [0, 0, 0], "ease": "smooth"}
+          ]
+        },
+        "jaw": {
+          "rot": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 96, "v": [0, 0, 0]},
+            {"t": 104, "v": [14, 0, 0], "ease": "smooth"},
+            {"t": 112, "v": [0, 0, 0], "ease": "smooth"},
+            {"t": 160, "v": [0, 0, 0]}
+          ]
+        }
+      }
+    },
+    "move": {
+      "length": 40,
+      "loop": true,
+      "key_pose": 10,
+      "note": "heavy four-beat plod: legs are the procedural swing a quarter cycle apart; the shell rocks",
+      "tracks": {
+        "shell": {
+          "rot": [
+            {"t": 0, "v": [0, 0, 2.5]},
+            {"t": 20, "v": [0, 0, -2.5], "ease": "smooth"},
+            {"t": 40, "v": [0, 0, 2.5], "ease": "smooth"}
+          ],
+          "pos": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 10, "v": [0, -1, 0], "ease": "smooth"},
+            {"t": 20, "v": [0, 0, 0], "ease": "smooth"},
+            {"t": 30, "v": [0, -1, 0], "ease": "smooth"},
+            {"t": 40, "v": [0, 0, 0], "ease": "smooth"}
+          ]
+        },
+        "head": {
+          "rot": [
+            {"t": 0, "v": [4, 0, 0]},
+            {"t": 20, "v": [-3, 0, 0], "ease": "smooth"},
+            {"t": 40, "v": [4, 0, 0], "ease": "smooth"}
+          ]
+        },
+        "tail": {
+          "rot": [
+            {"t": 0, "v": [0, 8, 0]},
+            {"t": 20, "v": [0, -8, 0], "ease": "smooth"},
+            {"t": 40, "v": [0, 8, 0], "ease": "smooth"}
+          ]
+        }
+      }
+    },
+    "ability": {
+      "length": 48,
+      "loop": false,
+      "key_pose": 24,
+      "telegraph": 10,
+      "damaging": false,
+      "note": "graze: neck stretches out and down, jaw works three times; nodule glints brighten as it feeds",
+      "glow": [
+        {"t": 0, "v": 0.35},
+        {"t": 10, "v": 0.7},
+        {"t": 40, "v": 0.7},
+        {"t": 48, "v": 0.35}
+      ],
+      "tracks": {
+        "head": {
+          "pos": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 10, "v": [0, 2, -3], "ease": "smooth"},
+            {"t": 40, "v": [0, 2, -3]},
+            {"t": 48, "v": [0, 0, 0], "ease": "smooth"}
+          ],
+          "rot": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 10, "v": [26, 0, 0], "ease": "smooth"},
+            {"t": 40, "v": [26, 0, 0]},
+            {"t": 48, "v": [0, 0, 0], "ease": "smooth"}
+          ]
+        },
+        "jaw": {
+          "rot": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 12, "v": [0, 0, 0]},
+            {"t": 16, "v": [26, 0, 0]},
+            {"t": 20, "v": [0, 0, 0]},
+            {"t": 24, "v": [26, 0, 0]},
+            {"t": 28, "v": [0, 0, 0]},
+            {"t": 32, "v": [26, 0, 0]},
+            {"t": 36, "v": [0, 0, 0]}
+          ]
+        },
+        "shell": {
+          "rot": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 10, "v": [3, 0, 0], "ease": "smooth"},
+            {"t": 40, "v": [3, 0, 0]},
+            {"t": 48, "v": [0, 0, 0], "ease": "smooth"}
+          ]
+        }
+      }
+    },
+    "hurt": {
+      "length": 6,
+      "loop": false,
+      "key_pose": 2,
+      "note": "head pulls halfway in and the shell drops over the legs",
+      "tracks": {
+        "shell": {
+          "pos": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 2, "v": [0, 3, 0], "ease": "smooth"},
+            {"t": 6, "v": [0, 0, 0], "ease": "smooth"}
+          ]
+        },
+        "head": {
+          "pos": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 2, "v": [0, 0, 4], "ease": "smooth"},
+            {"t": 6, "v": [0, 0, 0], "ease": "smooth"}
+          ]
+        },
+        "tail": {
+          "pos": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 2, "v": [0, 0, -2], "ease": "smooth"},
+            {"t": 6, "v": [0, 0, 0], "ease": "smooth"}
+          ]
+        }
+      }
+    },
+    "rest": {
+      "length": 18,
+      "loop": false,
+      "key_pose": 18,
+      "note": "sleep: head and tail withdrawn, shell settled on the ground over the legs",
+      "glow": [
+        {"t": 0, "v": 0.35},
+        {"t": 18, "v": 0.2}
+      ],
+      "tracks": {
+        "shell": {
+          "pos": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 6, "v": [0, 0, 0]},
+            {"t": 18, "v": [0, 6, 0], "ease": "smooth"}
+          ]
+        },
+        "head": {
+          "pos": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 10, "v": [0, 0, 8], "ease": "smooth"}
+          ],
+          "rot": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 10, "v": [0, 0, 0]}
+          ]
+        },
+        "tail": {
+          "pos": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 10, "v": [0, 0, -3], "ease": "smooth"}
+          ]
+        },
+        "leg_fl": {
+          "pos": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 6, "v": [0, 0, 0]},
+            {"t": 18, "v": [-1, 1, 1], "ease": "smooth"}
+          ]
+        },
+        "leg_fr": {
+          "pos": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 6, "v": [0, 0, 0]},
+            {"t": 18, "v": [1, 1, 1], "ease": "smooth"}
+          ]
+        },
+        "leg_rl": {
+          "pos": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 6, "v": [0, 0, 0]},
+            {"t": 18, "v": [-1, 1, -1], "ease": "smooth"}
+          ]
+        },
+        "leg_rr": {
+          "pos": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 6, "v": [0, 0, 0]},
+            {"t": 18, "v": [1, 1, -1], "ease": "smooth"}
+          ]
+        }
+      }
+    }
+  },
+  "uv_fill": 0.886
+}

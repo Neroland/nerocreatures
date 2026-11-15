@@ -1,0 +1,10 @@
+{
+  "weight": 8,
+  "attributes": [
+    {
+      "attribute": "minecraft:follow_range",
+      "amount": 0.5,
+      "operation": "add_multiplied_base"
+    }
+  ]
+}

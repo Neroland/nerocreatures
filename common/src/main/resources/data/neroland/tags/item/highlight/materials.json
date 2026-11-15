@@ -44,6 +44,30 @@
     {
       "id": "nerocreatures:apex_trophy",
       "required": false
+    },
+    {
+      "id": "nerocreatures:lumen_dust",
+      "required": false
+    },
+    {
+      "id": "nerocreatures:resonant_membrane",
+      "required": false
+    },
+    {
+      "id": "nerocreatures:lode_scute",
+      "required": false
+    },
+    {
+      "id": "nerocreatures:charged_sand",
+      "required": false
+    },
+    {
+      "id": "nerocreatures:slag_carapace",
+      "required": false
+    },
+    {
+      "id": "nerocreatures:heat_gland",
+      "required": false
     }
   ]
 }

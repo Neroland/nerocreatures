@@ -22,7 +22,8 @@ The index of who owns which pet or drone. Per creature it holds:
 | Field | Example | Why |
 | --- | --- | --- |
 | the *creature's* entity UUID | `4f3c…` | a game-internal id, not a player id |
-| kind | `pet` / `drone` | the two things capped and erased differently |
+| kind | `pet` / `mount` / `drone` / `egg` | each kind has its own cap and is erased its own way |
+| hatch time (eggs only) | `123456` | game time an incubating egg hatches; an egg row holds a random incubation id instead of an entity UUID |
 | entity type id | `nerocreatures:glacite_wisp` | so an app or an export can name it |
 | dimension id | `nerospace:glacira` | **only** so an erase request knows which level to look in |
 
@@ -77,14 +78,20 @@ For NeroCreatures, that request does four things in order:
 1. takes your rows out of the ownership index;
 2. follows each row to its creature — in the dimension the row names, which is the only reason that
    dimension id is stored — and **frees it**: a **pet is returned to the wild** (owner cleared, order
-   reset, despawnable again) and a **drone is recalled**, dropping its shell where it stood;
+   reset, despawnable again), a **mount** is unsaddled (saddle, panniers and contents drop) and
+   released, a **drone is recalled**, dropping its shell where it stood, and an **egg row** is simply
+   dropped (the egg hatches owned by nobody);
 3. sweeps every **loaded** level for any pet or drone still carrying your UUID and frees those too,
    so the erase is complete even if the index and the world had drifted apart;
 4. removes you from every live boss fight, dropping any fight that leaves empty.
 
-A creature in an unloaded chunk that the index did not know about is the one gap, and it closes
-itself: such a creature is unreachable until its chunk loads, its owner row is already gone, and it
-can never be counted, recalled or attributed to anyone again.
+A creature in an unloaded chunk cannot be reached at the time of the request. So the erase leaves two
+markers in the ownership store: the creature ids of the rows it removed, and a **salted one-way hash**
+of your UUID (never the UUID itself; the salt is random per world). When such a creature next loads it
+finds its marker and is released (a drone is recalled), silently. A creature is only ever released on
+such a marker: a pet whose owner the index simply does not know (an older save, a store restored from
+backup) stays tamed and is re-indexed. Markers are capped, oldest first; a creature's marker is
+removed once it is freed, and the hash once that player tames or deploys something again.
 
 **Nothing on the erasure path logs who was erased** — only a count of creatures released.
 

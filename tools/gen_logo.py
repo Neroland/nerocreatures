@@ -9,7 +9,7 @@ the mobs/fauna mod, so the core-prism is ringed by bio-GREEN paw prints with a c
 
 Outputs:
   art/logo/nerocreatures_logo.png       (1024x1024 master)
-  art/logo/nerocreatures_logo_400.png   (CurseForge/Modrinth-ready)
+  art/logo/nerocreatures_logo_400.png   (CurseForge-ready)
   common/src/main/resources/nerocreatures_logo.png  (256x256 in-game mods-list icon)
 """
 SEED = 67

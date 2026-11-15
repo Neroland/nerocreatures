@@ -1,0 +1,14 @@
+{
+  "schema": 1,
+  "mutation_chance": 0.05,
+  "traits": [
+    {"id": "hardy",     "weight": 100, "effect": {"type": "attribute", "attribute": "minecraft:max_health", "operation": "add_multiplied_base", "amount": 0.20}},
+    {"id": "swift",     "weight": 100, "effect": {"type": "attribute", "attribute": "minecraft:movement_speed", "operation": "add_multiplied_base", "amount": 0.15}},
+    {"id": "keen",      "weight": 100, "effect": {"type": "ability_range", "multiplier": 1.25}},
+    {"id": "bountiful", "weight": 100, "effect": {"type": "product_yield", "extra_roll_chance": 0.5}},
+    {"id": "calm",      "weight": 100, "effect": {"type": "temperament", "panic_multiplier": 0.5, "never_buck": true}},
+    {"id": "thrifty",   "weight": 100, "effect": {"type": "cooldown", "multiplier": 0.8}},
+    {"id": "stout",     "weight": 100, "effect": {"type": "carry_slots", "slots": 18}},
+    {"id": "radiant",   "weight": 7,   "effect": {"type": "cosmetic"}}
+  ]
+}

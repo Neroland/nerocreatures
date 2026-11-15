@@ -53,6 +53,6 @@ stonecutter {
         branch('fabric')   { versions(*mcVersions) }
         branch('neoforge') { versions(*mcVersions) }
         branch('forge')    { versions(*mcVersions) }
-        vcsVersion = '26.2'   // reset point for commits / default checkout
+        vcsVersion = '26.3'   // reset point for commits / default checkout
     }
 }

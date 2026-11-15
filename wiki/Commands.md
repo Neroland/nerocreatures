@@ -104,6 +104,23 @@ which purges the player across every Nero mod at once — see [Data storage](Dat
 
 Long exports are truncated at 32,000 characters with a note; chat is not a file transfer.
 
+## `/nerocreatures budget`
+
+Measures how much server tick time NeroCreatures' creatures cost, per species and in total.
+
+| Form | Does |
+|---|---|
+| `/nerocreatures budget` | starts a 10-second sample; run it again for progress, then the result |
+| `/nerocreatures budget start [seconds]` | starts a fresh sample of 1 to 60 seconds |
+| `/nerocreatures budget stop` | ends the sample now and shows the result |
+
+The result lists each species id with its milliseconds per server tick and how many were ticking on
+average, most expensive first, then the total. Outside a sample the measurement costs one check per
+creature tick. The output goes to you alone and names species, never players or places.
+
+Far creatures (no player within `farTickDistance`, default 48 blocks) run their own AI work on one
+tick in `farTickInterval` (default 4). Owned, leashed, ridden and fighting creatures never slow down.
+
 ## `/nerocreatures telemetry-test`
 
 Fires one synthetic crash-reporting event, to confirm end-to-end reporting on a real jar.

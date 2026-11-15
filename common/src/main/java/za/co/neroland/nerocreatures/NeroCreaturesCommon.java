@@ -3,12 +3,19 @@ package za.co.neroland.nerocreatures;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import net.minecraft.world.item.ItemStack;
+
 import za.co.neroland.nerocreatures.boss.BossSummons;
 import za.co.neroland.nerocreatures.compat.CompanionBridge;
 import za.co.neroland.nerocreatures.config.NeroCreaturesConfig;
 import za.co.neroland.nerocreatures.data.CreatureData;
+import za.co.neroland.nerocreatures.entity.alpha.AlphaSystem;
+import za.co.neroland.nerocreatures.entity.luna.LodeTortoise;
+import za.co.neroland.nerocreatures.entity.mount.MountCreature;
+import za.co.neroland.nerocreatures.entity.mount.MountHooks;
 import za.co.neroland.nerocreatures.link.CreatureLinkModule;
 import za.co.neroland.nerocreatures.network.CreatureNetwork;
+import za.co.neroland.nerocreatures.registry.ModBlocks;
 import za.co.neroland.nerocreatures.registry.ModCreativeTab;
 import za.co.neroland.nerocreatures.registry.ModEntities;
 import za.co.neroland.nerocreatures.registry.ModItems;
@@ -46,6 +53,7 @@ public final class NeroCreaturesCommon {
         //    event bus with RegistrationProvider.attach(...).
         //    Entity types come first: the spawn eggs and the spawn table both name them, and on
         //    Fabric "first" is literal.
+        ModBlocks.init();
         ModEntities.init();
         ModItems.init();
         ModSpawnEggs.init();
@@ -65,6 +73,19 @@ public final class NeroCreaturesCommon {
         // 8. Declare the payloads before any loader registers them: every loader entry point runs
         //    this method first, then wires its own networking.
         CreatureNetwork.init();
+        // 8b. Owned-creature actions on that channel (entity contract section 6) and the mount's
+        //     saddle item. The predicate and stack supplier resolve the item lazily, so this is safe
+        //     before the NeoForge/Forge registries fire.
+        MountCreature.registerActions();
+        MountHooks.bindSaddle(stack -> stack.is(ModItems.CREATURE_SADDLE.get()),
+                () -> new ItemStack(ModItems.CREATURE_SADDLE.get()));
+        // 8c. Alpha tuning from the config (negative cap = keep the data pack's cap).
+        AlphaSystem.configure(() -> NeroCreaturesConfig.ALPHAS_ENABLED.get(),
+                () -> NeroCreaturesConfig.ALPHA_CHANCE_MULTIPLIER.get(),
+                () -> NeroCreaturesConfig.ALPHA_MAX_PER_DIMENSION.get());
+        // 8d. Species tuning read live from the config (new tortoises pick up a changed value).
+        LodeTortoise.configure(() -> NeroCreaturesConfig.LODE_TORTOISE_NODULE_TICKS.get(),
+                () -> NeroCreaturesConfig.MAX_NODULES_PER_HARVEST.get());
         // 9. Spawn rules last of the content steps — they reference entity types, which on Fabric
         //    must already have been registered by the step above, and Core's entity seam applies
         //    Fabric registrations eagerly too.

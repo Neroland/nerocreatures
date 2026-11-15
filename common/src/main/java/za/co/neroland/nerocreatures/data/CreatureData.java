@@ -43,16 +43,18 @@ import za.co.neroland.nerocreatures.entity.tame.TameableCreature;
  *   <li>takes the player's rows out of {@link CreatureOwnershipState} and keeps them;</li>
  *   <li>follows each row to its creature — in the dimension the row names, which is the only reason
  *       the dimension id is stored at all — and frees it: <b>pets are returned to the wild</b>
- *       (owner cleared, order reset, despawnable again) and <b>drones are recalled</b>, dropping
- *       their shell where they stood;</li>
+ *       (owner cleared, order reset, despawnable again), <b>mounts are unsaddled</b> (saddle,
+ *       panniers and their contents dropped where the mount stands) and returned to the wild,
+ *       <b>drones are recalled</b>, dropping their shell where they stood, and <b>egg rows are
+ *       simply dropped</b> (the egg hatches unattributed);</li>
  *   <li>sweeps every <em>loaded</em> level for any pet or drone still carrying that UUID and frees
  *       those too. The index is only an index; if it and the world ever disagree, this is the step
  *       that makes sure erasure is complete anyway.</li>
  * </ol>
  *
- * <p>Creatures in unloaded chunks that the index did not know about are the one gap, and it closes
- * itself: such a creature is unreachable until its chunk loads, and its owner row is already gone,
- * so it can never be counted, recalled or attributed to anyone again.
+ * <p>Creatures in unloaded chunks are released when their chunk next loads: erasure leaves a marker
+ * for each removed row and a salted one-way hash of the owner in the store, and the load-time check
+ * ({@link CreatureOwnershipState#loadVerdict}) releases a creature only on such a positive record.
  *
  * <p><b>Privacy (POPIA/GDPR):</b> nothing on this path logs the player's identity — the summary logs
  * counts only. See {@code PRIVACY.md} for the full statement of what is stored and why.
@@ -92,12 +94,19 @@ public final class CreatureData {
     static void erasePlayer(MinecraftServer server, UUID player, CreatureOwnershipState state) {
         int freed = 0;
         for (OwnedCreature row : state.forgetPlayer(player)) {
+            if (row.kind() == OwnedCreature.Kind.EGG) {
+                // An egg row points at an incubation id, not an entity. Dropping the row is the whole
+                // erasure: the egg still hatches, unattributed (decision 004).
+                continue;
+            }
             ServerLevel level = server.getLevel(row.dimensionKey());
             if (level == null) {
                 continue;
             }
             if (free(level, level.getEntity(row.entity()))) {
                 freed++;
+                // Freed now, so the load-time marker for this creature is not needed.
+                state.creatureFreed(row.entity());
             }
         }
         freed += sweepLoadedLevels(server, player);

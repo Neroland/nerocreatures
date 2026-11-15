@@ -1,0 +1,17 @@
+{
+  "replace": false,
+  "values": [
+    {
+      "id": "nerospace:greenxertz",
+      "required": false
+    },
+    {
+      "id": "nerospace:greenxertz_fungal_depths",
+      "required": false
+    },
+    {
+      "id": "nerospace:greenxertz_spore_marsh",
+      "required": false
+    }
+  ]
+}

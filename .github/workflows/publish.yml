@@ -111,6 +111,16 @@ jobs:
       # See USING-CORE.md.
       # --- end Neroland Core dependency ---
 
+      # Static analysis + unit tests first, so a failure is obvious and stops the publish before any
+      # build. ecjCheck is the VS Code Problems-panel analyzer (tools/ecj.prefs); it resolves
+      # org.eclipse.jdt:ecj from Maven Central. Tests run on the two bracketing NeoForge cells (they also
+      # run inside those cells' build below). Privacy: logs only build output, no personal data.
+      - name: Static analysis and unit tests
+        env:
+          GITHUB_ACTOR: ${{ github.actor }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: ./gradlew :fabric:26.3:ecjCheck :neoforge:26.3:test :neoforge:1.21.1:test --no-daemon --stacktrace
+
       # Build all six cells (loader x MC version). Each produces a distinctly named jar under
       # <loader>/versions/<mc>/build/libs. Forge's distributable is the jarJar output
       # ("*-all.jar", with embedded Sentry); the plain Forge jar is not shipped.

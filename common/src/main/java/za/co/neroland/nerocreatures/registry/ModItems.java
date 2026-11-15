@@ -75,6 +75,32 @@ public final class ModItems {
     public static final RegistryEntry<Item> ANDROID_CORE = ITEMS.register("android_core",
             key -> new Item(new Item.Properties().stacksTo(16).setId(key)));
 
+    // --- 0.5.0 habitat drops (decision 001) ----------------------------------------------------
+
+    /** Lumen Moth drop — luminous wing-scale dust; light source input ({@code c:dusts/lumen}). */
+    public static final RegistryEntry<Item> LUMEN_DUST = ITEMS.register("lumen_dust",
+            key -> new Item(new Item.Properties().setId(key)));
+
+    /** Echo Shrike drop — the ear membrane; resonates with sound. Acoustic and instrument input. */
+    public static final RegistryEntry<Item> RESONANT_MEMBRANE = ITEMS.register("resonant_membrane",
+            key -> new Item(new Item.Properties().setId(key)));
+
+    /** Lode Tortoise drop — a mineral-laced shell plate; machine and suit plating input. */
+    public static final RegistryEntry<Item> LODE_SCUTE = ITEMS.register("lode_scute",
+            key -> new Item(new Item.Properties().setId(key)));
+
+    /** Dust Devil drop — static-charged red sand; sensor and energy reagent ({@code c:dusts/charged_sand}). */
+    public static final RegistryEntry<Item> CHARGED_SAND = ITEMS.register("charged_sand",
+            key -> new Item(new Item.Properties().setId(key)));
+
+    /** Slag Beetle drop — a heat-proof carapace plate; shield facing and furnace lining input. */
+    public static final RegistryEntry<Item> SLAG_CARAPACE = ITEMS.register("slag_carapace",
+            key -> new Item(new Item.Properties().setId(key)));
+
+    /** Magma Wader drop — a thermal organ; heat-exchanger and lava-walking gear reagent. */
+    public static final RegistryEntry<Item> HEAT_GLAND = ITEMS.register("heat_gland",
+            key -> new Item(new Item.Properties().setId(key)));
+
     /**
      * Planet-boss drop — the proof you killed one, and the ecosystem's top-tier reagent.
      *
@@ -98,13 +124,22 @@ public final class ModItems {
     public static final RegistryEntry<Item> DRONE_SHELL = ITEMS.register("drone_shell",
             key -> new DroneShellItem(new Item.Properties().stacksTo(4).setId(key)));
 
+    /**
+     * Mount saddle (decision 004): the owner uses it on a tamed mount. Its own item, never the
+     * vanilla saddle, so there is one code path on every Minecraft line. Crafted, not a drop.
+     */
+    public static final RegistryEntry<Item> CREATURE_SADDLE = ITEMS.register("creature_saddle",
+            key -> new Item(new Item.Properties().stacksTo(1).setId(key)));
+
     /** Every drop, in Drop-Map order — used for the creative tab and by the wiki check. */
     private static final List<RegistryEntry<Item>> DROPS = List.of(
             VOID_ESSENCE, STALKER_HIDE, STALKER_SINEW, REFINED_CRYSTAL, WORM_CHITIN,
-            ORE_SLURRY, PLASMA_CELL, CONTRABAND, SALVAGED_CIRCUITRY, ANDROID_CORE, APEX_TROPHY);
+            ORE_SLURRY, PLASMA_CELL, CONTRABAND, SALVAGED_CIRCUITRY, ANDROID_CORE,
+            LUMEN_DUST, RESONANT_MEMBRANE, LODE_SCUTE, CHARGED_SAND, SLAG_CARAPACE, HEAT_GLAND,
+            APEX_TROPHY);
 
     /** Crafted deployables — shown in the creative tab after the drops. */
-    private static final List<RegistryEntry<Item>> DEPLOYABLES = List.of(DRONE_SHELL);
+    private static final List<RegistryEntry<Item>> DEPLOYABLES = List.of(DRONE_SHELL, CREATURE_SADDLE);
 
     private ModItems() {
     }

@@ -1,0 +1,601 @@
+{
+  "format": 1,
+  "id": "facet_colossus",
+  "name": "Facet Colossus",
+  "habitat": "nyxara",
+  "size_class": "XL",
+  "silhouette": "a standing monolith: a tall core inside a tilted ring of six facet plates on a three-point base",
+  "hitbox_guide": [2.8, 4.4],
+  "texture": {"width": 128, "height": 128},
+  "render_type": "cutout",
+  "renderer": {"scale": 1.0, "shadow": 1.8},
+  "materials": ["silver", "opal", "plum"],
+  "accent": "accent",
+  "accent_2": "accent_b",
+  "glow_organs": [
+    "the lit facet panel (beam emitter and the vulnerable facet; one gradient, magenta top to cyan bottom)",
+    "core seams and cap"
+  ],
+  "radiant": null,
+  "parts": [
+    {
+      "name": "core",
+      "parent": null,
+      "pivot": [0, 12, 0],
+      "rotation": [0, 0, 0],
+      "cubes": [
+        {"name": "plinth", "origin": [-7, -3, -7], "size": [14, 7, 14], "uv": [48, 30]},
+        {"name": "column", "origin": [-6, -25, -6], "size": [12, 22, 12], "uv": [0, 0]}
+      ]
+    },
+    {
+      "name": "crown",
+      "parent": "core",
+      "pivot": [0, -25, 0],
+      "rotation": [0, 45, 0],
+      "cubes": [
+        {"name": "upper", "origin": [-5, -20, -5], "size": [10, 20, 10], "uv": [48, 0]},
+        {"name": "tip", "origin": [-3, -29, -3], "size": [6, 9, 6], "uv": [0, 34]},
+        {"name": "cap", "origin": [-1.5, -34, -1.5], "size": [3, 5, 3], "uv": [116, 0]}
+      ]
+    },
+    {
+      "name": "foot_a",
+      "parent": null,
+      "pivot": [0, 13, 0],
+      "rotation": [0, 0, 0],
+      "cubes": [
+        {"name": "hip", "origin": [-3, -3, -12], "size": [6, 6, 7], "uv": [0, 49]},
+        {"name": "shin", "origin": [-2.5, -1, -17], "size": [5, 10, 6], "uv": [104, 18]},
+        {"name": "pad", "origin": [-4, 9, -20], "size": [8, 2, 10], "uv": [26, 51]}
+      ]
+    },
+    {
+      "name": "foot_b",
+      "parent": null,
+      "pivot": [0, 13, 0],
+      "rotation": [0, 120, 0],
+      "uv_like": "foot_a",
+      "cubes": [
+        {"name": "hip", "origin": [-3, -3, -12], "size": [6, 6, 7], "uv": [0, 49], "mirror": true},
+        {"name": "shin", "origin": [-2.5, -1, -17], "size": [5, 10, 6], "uv": [104, 18], "mirror": true},
+        {"name": "pad", "origin": [-4, 9, -20], "size": [8, 2, 10], "uv": [26, 51], "mirror": true}
+      ]
+    },
+    {
+      "name": "foot_c",
+      "parent": null,
+      "pivot": [0, 13, 0],
+      "rotation": [0, -120, 0],
+      "uv_like": "foot_a",
+      "cubes": [
+        {"name": "hip", "origin": [-3, -3, -12], "size": [6, 6, 7], "uv": [0, 49], "mirror": true},
+        {"name": "shin", "origin": [-2.5, -1, -17], "size": [5, 10, 6], "uv": [104, 18], "mirror": true},
+        {"name": "pad", "origin": [-4, 9, -20], "size": [8, 2, 10], "uv": [26, 51], "mirror": true}
+      ]
+    },
+    {"name": "ring", "parent": null, "pivot": [0, -8, 0], "rotation": [0, 0, 18], "cubes": []},
+    {
+      "name": "plate_0",
+      "parent": "ring",
+      "pivot": [0, 0, 0],
+      "rotation": [0, 0, 0],
+      "cubes": [
+        {"name": "main", "origin": [-6, -8, -21], "size": [12, 16, 2], "uv": [88, 0]},
+        {"name": "top", "origin": [-4, -13, -21], "size": [8, 5, 2], "uv": [104, 41]},
+        {"name": "bottom", "origin": [-4, 8, -21], "size": [8, 5, 2], "uv": [104, 34]},
+        {"name": "tip_top", "origin": [-2, -16, -21], "size": [4, 3, 2], "uv": [116, 13]},
+        {"name": "tip_bottom", "origin": [-2, 13, -21], "size": [4, 3, 2], "uv": [116, 8]}
+      ]
+    },
+    {
+      "name": "lit_0",
+      "parent": "plate_0",
+      "pivot": [0, 0, -21],
+      "rotation": [0, 0, 0],
+      "visible_when": {"variant": [0]},
+      "cubes": [
+        {"name": "panel", "origin": [-4, -6, -1], "size": [8, 12, 1], "uv": [24, 34]}
+      ]
+    },
+    {
+      "name": "plate_1",
+      "parent": "ring",
+      "pivot": [0, 0, 0],
+      "rotation": [0, 60, 0],
+      "uv_like": "plate_0",
+      "cubes": [
+        {"name": "main", "origin": [-6, -8, -21], "size": [12, 16, 2], "uv": [88, 0], "mirror": true},
+        {"name": "top", "origin": [-4, -13, -21], "size": [8, 5, 2], "uv": [104, 41], "mirror": true},
+        {"name": "bottom", "origin": [-4, 8, -21], "size": [8, 5, 2], "uv": [104, 34], "mirror": true},
+        {"name": "tip_top", "origin": [-2, -16, -21], "size": [4, 3, 2], "uv": [116, 13], "mirror": true},
+        {"name": "tip_bottom", "origin": [-2, 13, -21], "size": [4, 3, 2], "uv": [116, 8], "mirror": true}
+      ]
+    },
+    {
+      "name": "lit_1",
+      "parent": "plate_1",
+      "pivot": [0, 0, -21],
+      "rotation": [0, 0, 0],
+      "uv_like": "lit_0",
+      "visible_when": {"variant": [1]},
+      "cubes": [
+        {"name": "panel", "origin": [-4, -6, -1], "size": [8, 12, 1], "uv": [24, 34], "mirror": true}
+      ]
+    },
+    {
+      "name": "plate_2",
+      "parent": "ring",
+      "pivot": [0, 0, 0],
+      "rotation": [0, 120, 0],
+      "uv_like": "plate_0",
+      "cubes": [
+        {"name": "main", "origin": [-6, -8, -21], "size": [12, 16, 2], "uv": [88, 0], "mirror": true},
+        {"name": "top", "origin": [-4, -13, -21], "size": [8, 5, 2], "uv": [104, 41], "mirror": true},
+        {"name": "bottom", "origin": [-4, 8, -21], "size": [8, 5, 2], "uv": [104, 34], "mirror": true},
+        {"name": "tip_top", "origin": [-2, -16, -21], "size": [4, 3, 2], "uv": [116, 13], "mirror": true},
+        {"name": "tip_bottom", "origin": [-2, 13, -21], "size": [4, 3, 2], "uv": [116, 8], "mirror": true}
+      ]
+    },
+    {
+      "name": "lit_2",
+      "parent": "plate_2",
+      "pivot": [0, 0, -21],
+      "rotation": [0, 0, 0],
+      "uv_like": "lit_0",
+      "visible_when": {"variant": [2]},
+      "cubes": [
+        {"name": "panel", "origin": [-4, -6, -1], "size": [8, 12, 1], "uv": [24, 34], "mirror": true}
+      ]
+    },
+    {
+      "name": "plate_3",
+      "parent": "ring",
+      "pivot": [0, 0, 0],
+      "rotation": [0, 180, 0],
+      "uv_like": "plate_0",
+      "cubes": [
+        {"name": "main", "origin": [-6, -8, -21], "size": [12, 16, 2], "uv": [88, 0], "mirror": true},
+        {"name": "top", "origin": [-4, -13, -21], "size": [8, 5, 2], "uv": [104, 41], "mirror": true},
+        {"name": "bottom", "origin": [-4, 8, -21], "size": [8, 5, 2], "uv": [104, 34], "mirror": true},
+        {"name": "tip_top", "origin": [-2, -16, -21], "size": [4, 3, 2], "uv": [116, 13], "mirror": true},
+        {"name": "tip_bottom", "origin": [-2, 13, -21], "size": [4, 3, 2], "uv": [116, 8], "mirror": true}
+      ]
+    },
+    {
+      "name": "lit_3",
+      "parent": "plate_3",
+      "pivot": [0, 0, -21],
+      "rotation": [0, 0, 0],
+      "uv_like": "lit_0",
+      "visible_when": {"variant": [3]},
+      "cubes": [
+        {"name": "panel", "origin": [-4, -6, -1], "size": [8, 12, 1], "uv": [24, 34], "mirror": true}
+      ]
+    },
+    {
+      "name": "plate_4",
+      "parent": "ring",
+      "pivot": [0, 0, 0],
+      "rotation": [0, 240, 0],
+      "uv_like": "plate_0",
+      "cubes": [
+        {"name": "main", "origin": [-6, -8, -21], "size": [12, 16, 2], "uv": [88, 0], "mirror": true},
+        {"name": "top", "origin": [-4, -13, -21], "size": [8, 5, 2], "uv": [104, 41], "mirror": true},
+        {"name": "bottom", "origin": [-4, 8, -21], "size": [8, 5, 2], "uv": [104, 34], "mirror": true},
+        {"name": "tip_top", "origin": [-2, -16, -21], "size": [4, 3, 2], "uv": [116, 13], "mirror": true},
+        {"name": "tip_bottom", "origin": [-2, 13, -21], "size": [4, 3, 2], "uv": [116, 8], "mirror": true}
+      ]
+    },
+    {
+      "name": "lit_4",
+      "parent": "plate_4",
+      "pivot": [0, 0, -21],
+      "rotation": [0, 0, 0],
+      "uv_like": "lit_0",
+      "visible_when": {"variant": [4]},
+      "cubes": [
+        {"name": "panel", "origin": [-4, -6, -1], "size": [8, 12, 1], "uv": [24, 34], "mirror": true}
+      ]
+    },
+    {
+      "name": "plate_5",
+      "parent": "ring",
+      "pivot": [0, 0, 0],
+      "rotation": [0, 300, 0],
+      "uv_like": "plate_0",
+      "cubes": [
+        {"name": "main", "origin": [-6, -8, -21], "size": [12, 16, 2], "uv": [88, 0], "mirror": true},
+        {"name": "top", "origin": [-4, -13, -21], "size": [8, 5, 2], "uv": [104, 41], "mirror": true},
+        {"name": "bottom", "origin": [-4, 8, -21], "size": [8, 5, 2], "uv": [104, 34], "mirror": true},
+        {"name": "tip_top", "origin": [-2, -16, -21], "size": [4, 3, 2], "uv": [116, 13], "mirror": true},
+        {"name": "tip_bottom", "origin": [-2, 13, -21], "size": [4, 3, 2], "uv": [116, 8], "mirror": true}
+      ]
+    },
+    {
+      "name": "lit_5",
+      "parent": "plate_5",
+      "pivot": [0, 0, -21],
+      "rotation": [0, 0, 0],
+      "uv_like": "lit_0",
+      "visible_when": {"variant": [5]},
+      "cubes": [
+        {"name": "panel", "origin": [-4, -6, -1], "size": [8, 12, 1], "uv": [24, 34], "mirror": true}
+      ]
+    }
+  ],
+  "procedural": {"swing": [], "wave": [], "look": []},
+  "clips": {
+    "idle": {
+      "length": 240,
+      "loop": true,
+      "key_pose": 30,
+      "note": "ring turns slowly in its tilted plane (a third of a turn out and back each way); the core hums (crown bobs)",
+      "glow": [
+        {"t": 0, "v": 0.35},
+        {"t": 120, "v": 0.5, "ease": "smooth"},
+        {"t": 240, "v": 0.35, "ease": "smooth"}
+      ],
+      "tracks": {
+        "ring": {
+          "rot": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 60, "v": [0, 120, 0], "ease": "smooth"},
+            {"t": 120, "v": [0, 0, 0], "ease": "smooth"},
+            {"t": 180, "v": [0, -120, 0], "ease": "smooth"},
+            {"t": 240, "v": [0, 0, 0], "ease": "smooth"}
+          ]
+        },
+        "crown": {
+          "pos": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 40, "v": [0, -1, 0], "ease": "smooth"},
+            {"t": 80, "v": [0, 0, 0], "ease": "smooth"},
+            {"t": 120, "v": [0, -1, 0], "ease": "smooth"},
+            {"t": 160, "v": [0, 0, 0], "ease": "smooth"},
+            {"t": 200, "v": [0, -1, 0], "ease": "smooth"},
+            {"t": 240, "v": [0, 0, 0], "ease": "smooth"}
+          ]
+        }
+      }
+    },
+    "move": {
+      "length": 30,
+      "loop": true,
+      "key_pose": 5,
+      "note": "base steps one point at a time (front, rear left, rear right); the core leans away from the lifted foot",
+      "tracks": {
+        "foot_a": {
+          "pos": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 5, "v": [0, -4, 0], "ease": "smooth"},
+            {"t": 10, "v": [0, 0, 0], "ease": "smooth"},
+            {"t": 30, "v": [0, 0, 0]}
+          ]
+        },
+        "foot_b": {
+          "pos": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 10, "v": [0, 0, 0]},
+            {"t": 15, "v": [0, -4, 0], "ease": "smooth"},
+            {"t": 20, "v": [0, 0, 0], "ease": "smooth"},
+            {"t": 30, "v": [0, 0, 0]}
+          ]
+        },
+        "foot_c": {
+          "pos": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 20, "v": [0, 0, 0]},
+            {"t": 25, "v": [0, -4, 0], "ease": "smooth"},
+            {"t": 30, "v": [0, 0, 0], "ease": "smooth"}
+          ]
+        },
+        "core": {
+          "rot": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 5, "v": [-3, 0, 0], "ease": "smooth"},
+            {"t": 10, "v": [0, 0, 0], "ease": "smooth"},
+            {"t": 15, "v": [2, 0, 3], "ease": "smooth"},
+            {"t": 20, "v": [0, 0, 0], "ease": "smooth"},
+            {"t": 25, "v": [2, 0, -3], "ease": "smooth"},
+            {"t": 30, "v": [0, 0, 0], "ease": "smooth"}
+          ]
+        },
+        "ring": {
+          "rot": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 5, "v": [-4, 0, 0], "ease": "smooth"},
+            {"t": 10, "v": [0, 0, 0], "ease": "smooth"},
+            {"t": 15, "v": [3, 0, 4], "ease": "smooth"},
+            {"t": 20, "v": [0, 0, 0], "ease": "smooth"},
+            {"t": 25, "v": [3, 0, -4], "ease": "smooth"},
+            {"t": 30, "v": [0, 0, 0], "ease": "smooth"}
+          ]
+        }
+      }
+    },
+    "ability": {
+      "length": 50,
+      "loop": false,
+      "key_pose": 20,
+      "telegraph": 20,
+      "damaging": true,
+      "note": "beam: the ring stops and levels with facet 0 square to the front (set variant 0), the other five plates peel open, the crown rises as the glow climbs for 20 ticks; fires at tick 20, recoil, closes by 50",
+      "glow": [
+        {"t": 0, "v": 0.35},
+        {"t": 20, "v": 1.0},
+        {"t": 40, "v": 1.0},
+        {"t": 50, "v": 0.35}
+      ],
+      "tracks": {
+        "ring": {
+          "rot": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 8, "v": [0, 0, -18], "ease": "smooth"},
+            {"t": 50, "v": [0, 0, -18]}
+          ]
+        },
+        "crown": {
+          "pos": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 20, "v": [0, -3, 0], "ease": "smooth"},
+            {"t": 23, "v": [0, 1, 0]},
+            {"t": 30, "v": [0, 0, 0], "ease": "smooth"},
+            {"t": 50, "v": [0, 0, 0]}
+          ]
+        },
+        "core": {
+          "rot": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 20, "v": [-3, 0, 0], "ease": "smooth"},
+            {"t": 23, "v": [4, 0, 0]},
+            {"t": 32, "v": [0, 0, 0], "ease": "smooth"},
+            {"t": 50, "v": [0, 0, 0]}
+          ]
+        },
+        "plate_1": {
+          "rot": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 20, "v": [22, 0, 0], "ease": "smooth"},
+            {"t": 40, "v": [22, 0, 0]},
+            {"t": 50, "v": [0, 0, 0], "ease": "smooth"}
+          ]
+        },
+        "plate_2": {
+          "rot": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 20, "v": [-22, 0, 0], "ease": "smooth"},
+            {"t": 40, "v": [-22, 0, 0]},
+            {"t": 50, "v": [0, 0, 0], "ease": "smooth"}
+          ]
+        },
+        "plate_3": {
+          "rot": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 20, "v": [22, 0, 0], "ease": "smooth"},
+            {"t": 40, "v": [22, 0, 0]},
+            {"t": 50, "v": [0, 0, 0], "ease": "smooth"}
+          ]
+        },
+        "plate_4": {
+          "rot": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 20, "v": [-22, 0, 0], "ease": "smooth"},
+            {"t": 40, "v": [-22, 0, 0]},
+            {"t": 50, "v": [0, 0, 0], "ease": "smooth"}
+          ]
+        },
+        "plate_5": {
+          "rot": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 20, "v": [22, 0, 0], "ease": "smooth"},
+            {"t": 40, "v": [22, 0, 0]},
+            {"t": 50, "v": [0, 0, 0], "ease": "smooth"}
+          ]
+        }
+      }
+    },
+    "hurt": {
+      "length": 6,
+      "loop": false,
+      "key_pose": 2,
+      "note": "ring wobbles off-axis",
+      "tracks": {
+        "ring": {
+          "rot": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 2, "v": [9, 0, -10], "ease": "smooth"},
+            {"t": 4, "v": [-5, 0, 6], "ease": "smooth"},
+            {"t": 6, "v": [0, 0, 0], "ease": "smooth"}
+          ]
+        },
+        "crown": {
+          "rot": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 2, "v": [0, 0, 3], "ease": "smooth"},
+            {"t": 6, "v": [0, 0, 0], "ease": "smooth"}
+          ]
+        }
+      }
+    },
+    "phase_1": {
+      "length": 240,
+      "loop": true,
+      "key_pose": 30,
+      "note": "ring level, turning slowly; one facet lit (variant = facet index)",
+      "glow": [
+        {"t": 0, "v": 0.35},
+        {"t": 120, "v": 0.5, "ease": "smooth"},
+        {"t": 240, "v": 0.35, "ease": "smooth"}
+      ],
+      "tracks": {
+        "ring": {
+          "rot": [
+            {"t": 0, "v": [0, 0, -18]},
+            {"t": 60, "v": [0, 120, -18], "ease": "smooth"},
+            {"t": 120, "v": [0, 0, -18], "ease": "smooth"},
+            {"t": 180, "v": [0, -120, -18], "ease": "smooth"},
+            {"t": 240, "v": [0, 0, -18], "ease": "smooth"}
+          ]
+        },
+        "crown": {
+          "pos": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 40, "v": [0, -1, 0], "ease": "smooth"},
+            {"t": 80, "v": [0, 0, 0], "ease": "smooth"},
+            {"t": 120, "v": [0, -1, 0], "ease": "smooth"},
+            {"t": 160, "v": [0, 0, 0], "ease": "smooth"},
+            {"t": 200, "v": [0, -1, 0], "ease": "smooth"},
+            {"t": 240, "v": [0, 0, 0], "ease": "smooth"}
+          ]
+        }
+      }
+    },
+    "phase_2": {
+      "length": 120,
+      "loop": true,
+      "key_pose": 15,
+      "note": "ring tilted hard and turning at twice the rate; the lit facet is the vulnerable one",
+      "glow": [
+        {"t": 0, "v": 0.6},
+        {"t": 60, "v": 0.85, "ease": "smooth"},
+        {"t": 120, "v": 0.6, "ease": "smooth"}
+      ],
+      "tracks": {
+        "ring": {
+          "rot": [
+            {"t": 0, "v": [0, 0, 10]},
+            {"t": 30, "v": [0, 120, 10], "ease": "smooth"},
+            {"t": 60, "v": [0, 0, 10], "ease": "smooth"},
+            {"t": 90, "v": [0, -120, 10], "ease": "smooth"},
+            {"t": 120, "v": [0, 0, 10], "ease": "smooth"}
+          ]
+        },
+        "crown": {
+          "pos": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 30, "v": [0, -2, 0], "ease": "smooth"},
+            {"t": 60, "v": [0, 0, 0], "ease": "smooth"},
+            {"t": 90, "v": [0, -2, 0], "ease": "smooth"},
+            {"t": 120, "v": [0, 0, 0], "ease": "smooth"}
+          ]
+        }
+      }
+    },
+    "phase_3": {
+      "length": 160,
+      "loop": true,
+      "key_pose": 40,
+      "note": "ring broken: the six plates float free at different heights and tilts and drift, the crown lifts off the column, the core shows between them",
+      "glow": [
+        {"t": 0, "v": 1.0},
+        {"t": 4, "v": 0.8},
+        {"t": 8, "v": 1.0},
+        {"t": 80, "v": 1.0},
+        {"t": 84, "v": 0.8},
+        {"t": 88, "v": 1.0},
+        {"t": 160, "v": 1.0}
+      ],
+      "tracks": {
+        "ring": {
+          "rot": [
+            {"t": 0, "v": [0, 0, -6]},
+            {"t": 40, "v": [0, 60, -6], "ease": "smooth"},
+            {"t": 80, "v": [0, 0, -6], "ease": "smooth"},
+            {"t": 120, "v": [0, -60, -6], "ease": "smooth"},
+            {"t": 160, "v": [0, 0, -6], "ease": "smooth"}
+          ]
+        },
+        "crown": {
+          "pos": [
+            {"t": 0, "v": [0, -4, 0]},
+            {"t": 40, "v": [0, -5, 0], "ease": "smooth"},
+            {"t": 80, "v": [0, -4, 0], "ease": "smooth"},
+            {"t": 120, "v": [0, -5, 0], "ease": "smooth"},
+            {"t": 160, "v": [0, -4, 0], "ease": "smooth"}
+          ]
+        },
+        "core": {
+          "rot": [
+            {"t": 0, "v": [0, 0, 0]},
+            {"t": 80, "v": [0, 0, 2], "ease": "smooth"},
+            {"t": 160, "v": [0, 0, 0], "ease": "smooth"}
+          ]
+        },
+        "plate_0": {
+          "rot": [
+            {"t": 0, "v": [14, 10, 0]},
+            {"t": 80, "v": [8.4, 10, 0], "ease": "smooth"},
+            {"t": 160, "v": [14, 10, 0], "ease": "smooth"}
+          ],
+          "pos": [
+            {"t": 0, "v": [0, -9, 0]},
+            {"t": 80, "v": [0, -12, 0], "ease": "smooth"},
+            {"t": 160, "v": [0, -9, 0], "ease": "smooth"}
+          ]
+        },
+        "plate_1": {
+          "rot": [
+            {"t": 0, "v": [-10, -8, 0]},
+            {"t": 80, "v": [-6.0, -8, 0], "ease": "smooth"},
+            {"t": 160, "v": [-10, -8, 0], "ease": "smooth"}
+          ],
+          "pos": [
+            {"t": 0, "v": [0, 8, 0]},
+            {"t": 80, "v": [0, 11, 0], "ease": "smooth"},
+            {"t": 160, "v": [0, 8, 0], "ease": "smooth"}
+          ]
+        },
+        "plate_2": {
+          "rot": [
+            {"t": 0, "v": [-16, 6, 0]},
+            {"t": 80, "v": [-9.6, 6, 0], "ease": "smooth"},
+            {"t": 160, "v": [-16, 6, 0], "ease": "smooth"}
+          ],
+          "pos": [
+            {"t": 0, "v": [0, -5, 0]},
+            {"t": 80, "v": [0, -8, 0], "ease": "smooth"},
+            {"t": 160, "v": [0, -5, 0], "ease": "smooth"}
+          ]
+        },
+        "plate_3": {
+          "rot": [
+            {"t": 0, "v": [12, -12, 0]},
+            {"t": 80, "v": [7.199999999999999, -12, 0], "ease": "smooth"},
+            {"t": 160, "v": [12, -12, 0], "ease": "smooth"}
+          ],
+          "pos": [
+            {"t": 0, "v": [0, 10, 0]},
+            {"t": 80, "v": [0, 13, 0], "ease": "smooth"},
+            {"t": 160, "v": [0, 10, 0], "ease": "smooth"}
+          ]
+        },
+        "plate_4": {
+          "rot": [
+            {"t": 0, "v": [-8, 14, 0]},
+            {"t": 80, "v": [-4.8, 14, 0], "ease": "smooth"},
+            {"t": 160, "v": [-8, 14, 0], "ease": "smooth"}
+          ],
+          "pos": [
+            {"t": 0, "v": [0, -12, 0]},
+            {"t": 80, "v": [0, -15, 0], "ease": "smooth"},
+            {"t": 160, "v": [0, -12, 0], "ease": "smooth"}
+          ]
+        },
+        "plate_5": {
+          "rot": [
+            {"t": 0, "v": [16, -6, 0]},
+            {"t": 80, "v": [9.6, -6, 0], "ease": "smooth"},
+            {"t": 160, "v": [16, -6, 0], "ease": "smooth"}
+          ],
+          "pos": [
+            {"t": 0, "v": [0, 6, 0]},
+            {"t": 80, "v": [0, 9, 0], "ease": "smooth"},
+            {"t": 160, "v": [0, 6, 0], "ease": "smooth"}
+          ]
+        }
+      }
+    }
+  },
+  "uv_fill": 0.41
+}

@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "variant=slag": {
+      "model": "nerocreatures:block/ephemeral_crust_slag"
+    },
+    "variant=rime": {
+      "model": "nerocreatures:block/ephemeral_crust_rime"
+    },
+    "variant=prism": {
+      "model": "nerocreatures:block/ephemeral_crust_prism"
+    }
+  }
+}

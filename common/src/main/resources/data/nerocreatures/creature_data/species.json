@@ -1,0 +1,12 @@
+{
+  "schema": 1,
+  "species": {
+    "glacite_wisp": {"birth": "live", "studied_threshold": 1},
+    "xertz_forager": {"birth": "live", "studied_threshold": 1},
+    "lumen_moth": {"birth": "egg", "studied_threshold": 3},
+    "lode_tortoise": {"birth": "egg", "studied_threshold": 3},
+    "dune_loper": {"birth": "live", "studied_threshold": 3},
+    "strata_hound": {"birth": "live", "studied_threshold": 3},
+    "slag_beetle": {"birth": "egg", "studied_threshold": 3}
+  }
+}

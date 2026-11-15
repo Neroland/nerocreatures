@@ -8,6 +8,10 @@
     {
       "id": "nerocreatures:void_essence",
       "required": false
+    },
+    {
+      "id": "nerocreatures:lumen_dust",
+      "required": false
     }
   ]
 }

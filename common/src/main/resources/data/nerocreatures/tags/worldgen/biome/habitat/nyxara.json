@@ -1,0 +1,17 @@
+{
+  "replace": false,
+  "values": [
+    {
+      "id": "nerospace:nyxara_dayside",
+      "required": false
+    },
+    {
+      "id": "nerospace:nyxara_twilight_band",
+      "required": false
+    },
+    {
+      "id": "nerospace:nyxara_nightside",
+      "required": false
+    }
+  ]
+}

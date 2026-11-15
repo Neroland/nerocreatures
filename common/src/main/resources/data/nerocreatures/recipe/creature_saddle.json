@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "key": {
+    "H": "nerocreatures:stalker_hide",
+    "I": "#c:ingots/iron",
+    "S": "nerocreatures:stalker_sinew"
+  },
+  "pattern": [
+    "HHH",
+    "S S",
+    "I I"
+  ],
+  "result": {
+    "count": 1,
+    "id": "nerocreatures:creature_saddle"
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "weight": 10,
+  "attributes": [
+    {
+      "attribute": "minecraft:armor",
+      "amount": 6.0,
+      "operation": "add_value"
+    },
+    {
+      "attribute": "minecraft:knockback_resistance",
+      "amount": 0.5,
+      "operation": "add_value"
+    }
+  ]
+}

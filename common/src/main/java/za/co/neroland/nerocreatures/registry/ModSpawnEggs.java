@@ -73,6 +73,32 @@ public final class ModSpawnEggs {
     public static final RegistryEntry<Item> CINDER_TYRANT_SPAWN_EGG =
             egg("cinder_tyrant_spawn_egg", ModEntities.CINDER_TYRANT);
 
+    // --- 0.5.0 -----------------------------------------------------------------------------------
+
+    public static final RegistryEntry<Item> LUMEN_MOTH_SPAWN_EGG =
+            egg("lumen_moth_spawn_egg", ModEntities.LUMEN_MOTH);
+
+    public static final RegistryEntry<Item> ECHO_SHRIKE_SPAWN_EGG =
+            egg("echo_shrike_spawn_egg", ModEntities.ECHO_SHRIKE);
+
+    public static final RegistryEntry<Item> LODE_TORTOISE_SPAWN_EGG =
+            egg("lode_tortoise_spawn_egg", ModEntities.LODE_TORTOISE);
+
+    public static final RegistryEntry<Item> DUNE_LOPER_SPAWN_EGG =
+            egg("dune_loper_spawn_egg", ModEntities.DUNE_LOPER);
+
+    public static final RegistryEntry<Item> STRATA_HOUND_SPAWN_EGG =
+            egg("strata_hound_spawn_egg", ModEntities.STRATA_HOUND);
+
+    public static final RegistryEntry<Item> DUST_DEVIL_SPAWN_EGG =
+            egg("dust_devil_spawn_egg", ModEntities.DUST_DEVIL);
+
+    public static final RegistryEntry<Item> SLAG_BEETLE_SPAWN_EGG =
+            egg("slag_beetle_spawn_egg", ModEntities.SLAG_BEETLE);
+
+    public static final RegistryEntry<Item> MAGMA_WADER_SPAWN_EGG =
+            egg("magma_wader_spawn_egg", ModEntities.MAGMA_WADER);
+
     /**
      * Every egg, in roster order — used for the creative tab.
      *
@@ -85,7 +111,10 @@ public final class ModSpawnEggs {
             VOID_CRAWLER_SPAWN_EGG, LUNAR_STALKER_SPAWN_EGG, ASTEROID_WORM_SPAWN_EGG,
             PLASMA_SLIME_SPAWN_EGG, CRYSTAL_GOLEM_SPAWN_EGG, SPACE_PIRATE_SPAWN_EGG,
             ROGUE_DRONE_SPAWN_EGG, ROGUE_ANDROID_SPAWN_EGG,
-            GLACITE_WISP_SPAWN_EGG, XERTZ_FORAGER_SPAWN_EGG, CINDER_TYRANT_SPAWN_EGG);
+            GLACITE_WISP_SPAWN_EGG, XERTZ_FORAGER_SPAWN_EGG, CINDER_TYRANT_SPAWN_EGG,
+            LUMEN_MOTH_SPAWN_EGG, ECHO_SHRIKE_SPAWN_EGG, LODE_TORTOISE_SPAWN_EGG,
+            DUNE_LOPER_SPAWN_EGG, STRATA_HOUND_SPAWN_EGG, DUST_DEVIL_SPAWN_EGG,
+            SLAG_BEETLE_SPAWN_EGG, MAGMA_WADER_SPAWN_EGG);
 
     private ModSpawnEggs() {
     }

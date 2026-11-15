@@ -1,0 +1,21 @@
+{
+  "replace": false,
+  "values": [
+    {
+      "id": "nerocreatures:mossback",
+      "required": false
+    },
+    {
+      "id": "nerocreatures:rime_yak",
+      "required": false
+    },
+    {
+      "id": "nerocreatures:prism_stag",
+      "required": false
+    },
+    {
+      "id": "nerocreatures:lode_tortoise",
+      "required": false
+    }
+  ]
+}

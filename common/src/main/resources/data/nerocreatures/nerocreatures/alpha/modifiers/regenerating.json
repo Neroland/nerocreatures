@@ -1,0 +1,9 @@
+{
+  "weight": 6,
+  "effects": [
+    {
+      "effect": "minecraft:regeneration",
+      "amplifier": 0
+    }
+  ]
+}

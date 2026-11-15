@@ -25,12 +25,25 @@ import net.minecraft.world.level.Level;
  * (POPIA/GDPR). The dimension id is stored purely so erasure knows which level to look in rather
  * than having to walk every level in the save.
  *
- * @param entity    the owned creature's entity UUID (a game-internal id, not a player id)
- * @param kind      pet or drone — the two things that are capped and erased differently
+ * <p><b>Egg rows</b> ({@link Kind#EGG}, decision 004) reuse the same shape: {@code entity} is a random
+ * incubation id (not an entity), {@code type} the species that will hatch, {@code dimension} the
+ * incubator's dimension, and {@code hatchAt} the game time it hatches. No position is stored for
+ * eggs either; the incubator block entity holds the incubation id, never the player.
+ *
+ * @param entity    the owned creature's entity UUID (a game-internal id, not a player id), or an
+ *                  egg row's random incubation id
+ * @param kind      pet, drone, mount or egg: what is capped and erased differently
  * @param type      the entity-type id, e.g. {@code nerocreatures:glacite_wisp}
  * @param dimension the dimension id the creature was last registered in
+ * @param hatchAt   egg rows only: game time the egg hatches; {@code 0} for every other kind (and
+ *                  then not written to disk, so pet and drone rows encode exactly as in 0.4.x)
  */
-public record OwnedCreature(UUID entity, Kind kind, Identifier type, Identifier dimension) {
+public record OwnedCreature(UUID entity, Kind kind, Identifier type, Identifier dimension, long hatchAt) {
+
+    /** A row with no hatch time: every kind except {@link Kind#EGG}. */
+    public OwnedCreature(UUID entity, Kind kind, Identifier type, Identifier dimension) {
+        this(entity, kind, type, dimension, 0L);
+    }
 
     /** What an owned creature is, which decides both its cap and what erasure does to it. */
     public enum Kind {
@@ -39,7 +52,19 @@ public record OwnedCreature(UUID entity, Kind kind, Identifier type, Identifier 
         PET,
 
         /** A deployed terraforming drone — capped by {@code maxDronesPerPlayer}; erasure recalls it. */
-        DRONE;
+        DRONE,
+
+        /**
+         * A tamed mount (0.5.0) — capped by {@code maxMountsPerPlayer} and not by the pet cap; erasure
+         * unsaddles it, drops its gear and returns it to the wild. Append-only: never remove.
+         */
+        MOUNT,
+
+        /**
+         * An egg incubating for a player (0.5.0) — capped by {@code maxIncubatingEggsPerPlayer};
+         * erasure simply drops the row and the egg hatches unattributed. Append-only: never remove.
+         */
+        EGG;
 
         /** Lenient string codec: an unrecognised value reads back as {@link #PET}. */
         public static final Codec<Kind> CODEC = Codec.STRING.xmap(Kind::fromKey, Kind::key);
@@ -76,13 +101,21 @@ public record OwnedCreature(UUID entity, Kind kind, Identifier type, Identifier 
             UUID_CODEC.fieldOf("entity").forGetter(OwnedCreature::entity),
             Kind.CODEC.optionalFieldOf("kind", Kind.PET).forGetter(OwnedCreature::kind),
             Identifier.CODEC.fieldOf("type").forGetter(OwnedCreature::type),
-            Identifier.CODEC.fieldOf("dimension").forGetter(OwnedCreature::dimension)
+            Identifier.CODEC.fieldOf("dimension").forGetter(OwnedCreature::dimension),
+            // Optional with a 0 default: absent in every 0.4.x row, and omitted again on encode for
+            // every non-egg row, so old saves load and re-save byte-for-byte the same shape.
+            Codec.LONG.optionalFieldOf("hatch_at", 0L).forGetter(OwnedCreature::hatchAt)
     ).apply(instance, OwnedCreature::new));
 
     /** Describes a live entity as a store row. */
     public static OwnedCreature of(Entity entity, Kind kind) {
         return new OwnedCreature(entity.getUUID(), kind,
                 EntityType.getKey(entity.getType()), entity.level().dimension().identifier());
+    }
+
+    /** An egg row: a fresh random incubation id, the species that will hatch and its hatch time. */
+    public static OwnedCreature egg(Identifier species, Identifier dimension, long hatchAt) {
+        return new OwnedCreature(UUID.randomUUID(), Kind.EGG, species, dimension, hatchAt);
     }
 
     /** The dimension this row points at, as a level key. */

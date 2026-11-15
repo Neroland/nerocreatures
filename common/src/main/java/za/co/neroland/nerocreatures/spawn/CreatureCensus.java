@@ -1,13 +1,20 @@
 package za.co.neroland.nerocreatures.spawn;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Predicate;
+
+import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
@@ -59,8 +66,16 @@ public final class CreatureCensus {
     /** How long a per-dimension count stays fresh, in ticks. */
     private static final int CACHE_TTL_TICKS = 20;
 
-    private record Snapshot(long gameTime, int count) {
+    /**
+     * One cached census: every creature (up to the dimension cap) and, in the overworld, how many of
+     * those belong to an {@linkplain SpawnRule#overworldCapped() overworld-capped} species.
+     */
+    private record Snapshot(long gameTime, int count, int overworldCapped) {
     }
+
+    /** The overworld-capped entity types, resolved from the spawn table on first use. */
+    @Nullable
+    private static volatile Set<EntityType<?>> overworldCappedTypes;
 
     private static final Map<ResourceKey<Level>, Snapshot> PER_DIMENSION = new ConcurrentHashMap<>();
 
@@ -74,24 +89,89 @@ public final class CreatureCensus {
      * question anyone asks of it is "is there room?".
      */
     public static int inDimension(ServerLevel level) {
+        return snapshot(level).count();
+    }
+
+    /**
+     * How many overworld-capped creatures (decision 005: Lumen Moth, Lode Tortoise, Static Swarm) are
+     * loaded in the overworld. Counted inside the same cached query as {@link #inDimension}, so it
+     * costs no extra entity scan; 0 in every other dimension. If the dimension cap stops the query
+     * early the tally may be short, but then nothing spawns anyway.
+     */
+    public static int overworldCappedInDimension(ServerLevel level) {
+        return snapshot(level).overworldCapped();
+    }
+
+    /**
+     * Whether another overworld-capped creature may spawn here: always true outside the overworld,
+     * and below {@code overworldSpawnCap} inside it. A cap of 0 means none.
+     */
+    public static boolean overworldHasRoom(ServerLevel level) {
+        if (level.dimension() != Level.OVERWORLD) {
+            return true;
+        }
+        return OverworldSpawnRules.hasRoom(overworldCappedInDimension(level),
+                NeroCreaturesConfig.OVERWORLD_SPAWN_CAP.get());
+    }
+
+    /**
+     * Records one creature the spawner just placed, so the cached counts stay honest until the next
+     * refresh (a group of three must not slip past a cap that the cached count says has room for one).
+     */
+    public static void noteSpawned(ServerLevel level, boolean overworldCapped) {
+        PER_DIMENSION.computeIfPresent(level.dimension(), (key, s) -> new Snapshot(s.gameTime(),
+                s.count() + 1,
+                s.overworldCapped() + (overworldCapped && level.dimension() == Level.OVERWORLD ? 1 : 0)));
+    }
+
+    private static Snapshot snapshot(ServerLevel level) {
         int cap = NeroCreaturesConfig.MAX_CREATURES_PER_DIMENSION.get();
         long now = level.getGameTime();
         Snapshot cached = PER_DIMENSION.get(level.dimension());
         if (cached != null && now >= cached.gameTime() && now - cached.gameTime() < CACHE_TTL_TICKS) {
-            return cached.count();
+            return cached;
         }
+        boolean overworld = level.dimension() == Level.OVERWORLD;
+        Set<EntityType<?>> capped = overworld ? overworldCappedTypes() : Set.of();
+        int[] cappedCount = new int[1];
+        Predicate<Entity> tally = entity -> {
+            if (!capped.isEmpty() && capped.contains(entity.getType())) {
+                cappedCount[0]++;
+            }
+            return true;
+        };
         int limit = cap + 1;
         List<NeroCreatureEntity> found = new ArrayList<>();
-        level.getEntities(EntityTypeTest.forClass(NeroCreatureEntity.class), entity -> true, found, limit);
+        level.getEntities(EntityTypeTest.forClass(NeroCreatureEntity.class), tally::test, found, limit);
         int total = found.size();
         if (total < limit) {
             List<TameableCreature> pets = new ArrayList<>();
-            level.getEntities(EntityTypeTest.forClass(TameableCreature.class), entity -> true, pets,
+            level.getEntities(EntityTypeTest.forClass(TameableCreature.class), tally::test, pets,
                     limit - total);
             total += pets.size();
         }
-        PER_DIMENSION.put(level.dimension(), new Snapshot(now, total));
-        return total;
+        Snapshot fresh = new Snapshot(now, total, cappedCount[0]);
+        PER_DIMENSION.put(level.dimension(), fresh);
+        return fresh;
+    }
+
+    private static Set<EntityType<?>> overworldCappedTypes() {
+        Set<EntityType<?>> cached = overworldCappedTypes;
+        if (cached != null) {
+            return cached;
+        }
+        Set<EntityType<?>> types = new HashSet<>();
+        for (SpawnRule rule : CreatureSpawns.rules()) {
+            if (rule.overworldCapped()) {
+                EntityType<?> type = rule.type().get();
+                if (type != null) {
+                    types.add(type);
+                }
+            }
+        }
+        Set<EntityType<?>> resolved = Set.copyOf(types);
+        overworldCappedTypes = resolved;
+        return resolved;
     }
 
     /**

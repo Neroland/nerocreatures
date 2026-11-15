@@ -227,8 +227,18 @@ public class TerraformingDrone extends NeroCreatureEntity implements OwnableEnti
 
     /** Hands the shell back and removes the drone. */
     public void recall(ServerLevel level) {
-        CreatureLinkEvents.petStateChanged(level, this.ownerId(), this, OwnedCreature.Kind.DRONE,
-                CreatureLinkEvents.STATE_RECALLED);
+        this.recall(level, true);
+    }
+
+    /**
+     * {@link #recall(ServerLevel)} with control over the companion-app event. The load-time ownership
+     * check passes {@code false}: the former owner was erased, so nothing may be published to them.
+     */
+    private void recall(ServerLevel level, boolean notifyOwner) {
+        if (notifyOwner) {
+            CreatureLinkEvents.petStateChanged(level, this.ownerId(), this, OwnedCreature.Kind.DRONE,
+                    CreatureLinkEvents.STATE_RECALLED);
+        }
         this.unregisterOwnership(level);
         this.spawnAtLocation(level, new ItemStack(ModItems.DRONE_SHELL.get()));
         level.sendParticles(ParticleTypes.ELECTRIC_SPARK, this.getX(), this.getY() + 0.5D, this.getZ(),
@@ -333,6 +343,30 @@ public class TerraformingDrone extends NeroCreatureEntity implements OwnableEnti
     }
 
     // --- lifecycle ----------------------------------------------------------
+
+    /**
+     * The load-time half of erasure, the same rule as pets (decision 004): a drone whose erasure the
+     * ownership index positively recorded is recalled silently (its shell drops where it stands, as
+     * erasure does for a loaded drone); any other missing row is re-added, so no drone is lost to an
+     * index gap.
+     */
+    @Override
+    protected void onFirstServerTick(ServerLevel level) {
+        UUID id = this.ownerId();
+        if (id == null) {
+            return;
+        }
+        CreatureOwnershipState state = CreatureOwnershipState.get(level.getServer());
+        switch (state.loadVerdict(id, this.getUUID())) {
+            case INDEXED -> {
+            }
+            case REINDEX -> state.add(id, OwnedCreature.of(this, OwnedCreature.Kind.DRONE));
+            case RELEASE -> {
+                state.creatureFreed(this.getUUID());
+                this.recall(level, false);
+            }
+        }
+    }
 
     /** A deployed drone belongs to somebody and must still be there when they come back. */
     @Override
