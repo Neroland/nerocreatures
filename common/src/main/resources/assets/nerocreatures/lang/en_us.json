@@ -1003,5 +1003,9 @@
   "gallery.nerocreatures.tour.paddock_loper": "Mount paddock. Ride a Dune Loper; jump to leap.",
   "gallery.nerocreatures.tour.paddock_manta": "Ride a Void Manta; jump to blink forward.",
   "gallery.nerocreatures.tour.end": "End of the tour. /nerocreatures gallery clear removes everything.",
-  "command.nerocreatures.gallery.busy": "The gallery is still being built or cleared. Try again in a moment."
+  "command.nerocreatures.gallery.busy": "The gallery is still being built or cleared. Try again in a moment.",
+  "map.layer.nerocreatures.my_creatures": "My creatures",
+  "map.nerocreatures.kind.pet": "Pet",
+  "map.nerocreatures.kind.mount": "Mount",
+  "map.nerocreatures.kind.drone": "Drone"
 }

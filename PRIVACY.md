@@ -235,6 +235,10 @@ bridge installed, nothing is exposed.
   and boss fights (boss, phase, participant **count** and the player's **own** damage share, and
   cooldowns of the player's own altars). Never another player's records or names, and **never
   coordinates**: at most a dimension id.
+- **Map layer.** Through Neroland Core's map API a map mod can show the asking player where their own
+  loaded pets, mounts and drones are, read live from the creature on each request and never stored. It is
+  the one surface that carries a position, and only of the asking player's own creatures. A creature is
+  not shown while another player is riding it (or riding with it), because its position is then theirs.
 - **The link module saves nothing new.** Every read goes to the stores above, Core's gates or vanilla's
   kill statistics, so an erased player immediately reads as owning nothing. Its only own state is the
   in-memory altar list and rate-limit times described above.

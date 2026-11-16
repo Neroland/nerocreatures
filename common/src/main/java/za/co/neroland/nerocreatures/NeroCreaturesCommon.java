@@ -148,5 +148,7 @@ public final class NeroCreaturesCommon {
         //     mod itself has finished reacting to it, and its own init swallows any failure — a
         //     broken link module must never take the creature layer down with it.
         CreatureLinkModule.init();
+        // 12. Map layers for a Neroland map consumer (Core map API): the viewer's own loaded creatures only.
+        za.co.neroland.nerocreatures.map.CreatureMapLayers.register();
     }
 }

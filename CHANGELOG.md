@@ -7,6 +7,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.5.1-beta.1] - 2026-11-16
+
+Your own creatures on a Neroland map. Requires **Neroland Core 1.19.0**.
+
+### Added
+
+- A `nerocreatures:my_creatures` map layer through Neroland Core's map API: your own pets, mounts and drones
+  that are loaded right now, read from the live creature on each request. Only you see them. Eggs, parked
+  pets and unloaded creatures are not shown, and NeroCreatures still stores no coordinates.
+
+### Changed
+
+- Fabric now declares the same Neroland Core ceiling as NeoForge and Forge (`<2.0.0`).
+
+### Dependencies
+
+- Updated Neroland Core from 1.17.6 to 1.19.0 (map API).
+
 ## [0.5.0-beta.1] - 2026-11-16
 
 **"Menagerie."** 23 new creatures across every habitat, three new altar-summoned bosses, mounts,

@@ -56,6 +56,8 @@ your own** Bestiary progress, pets, mounts, eggs, altar cooldowns and boss share
 player's records or names, and never a coordinate. Pushes are off by default and name the species
 only. See [Link module](Link-Module.md).
 
+With a Neroland map mod installed, your own loaded pets, mounts and drones also appear on your own map (read live, never stored, never shown to anyone else).
+
 ## Logs and crash reports
 
 Logs at INFO and above carry counts and exception types, never a UUID, name, coordinate or free text.
