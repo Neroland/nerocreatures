@@ -107,6 +107,8 @@ public final class BudgetProbe {
     private static final int B_TICKS = 1200;
     private static final int HARD_TIMEOUT = 20_000;
     private static final String CRUST_ID = "nerocreatures:ephemeral_crust";
+    /** Skip probes A and B and run only the gallery check (-PgalleryOnly). */
+    private static final boolean GALLERY_ONLY = Boolean.getBoolean("nerocreatures.budgetProbe.galleryOnly");
 
     private static Run run;
 
@@ -141,7 +143,8 @@ public final class BudgetProbe {
 
     // -----------------------------------------------------------------------------------------
 
-    private enum Phase { LOAD, A_SPAWN, A_WARM, A_MEASURE, CLEAR, B_SPAWN, B_WARM, B_NEAR, B_FAR, DONE }
+    private enum Phase { LOAD, A_SPAWN, A_WARM, A_MEASURE, CLEAR, B_SPAWN, B_WARM, B_NEAR, B_FAR,
+        G_BUILD, DONE }
 
     /** Per-entity movement anchor (runtime id keyed, memory only). */
     private static final class Track {
@@ -218,6 +221,22 @@ public final class BudgetProbe {
         int livestock;
         boolean stimulus;
         boolean anyCapFail;
+        final GalleryCheck gallery = new GalleryCheck(new GalleryCheck.Host() {
+            @Override
+            public ServerLevel level() {
+                return Run.this.level;
+            }
+
+            @Override
+            public StringBuilder out() {
+                return Run.this.out;
+            }
+
+            @Override
+            public void fail() {
+                Run.this.anyCapFail = true;
+            }
+        });
 
         Run(MinecraftServer server) {
             this.server = server;
@@ -261,7 +280,7 @@ public final class BudgetProbe {
                 window.serverNanos += endNanos - preNanos;
                 window.serverTicks++;
             }
-            if (phase.ordinal() > Phase.A_SPAWN.ordinal() && phase != Phase.DONE) {
+            if (phase.ordinal() > Phase.A_SPAWN.ordinal() && phase.ordinal() < Phase.G_BUILD.ordinal()) {
                 if (t % AWAKE_EVERY == 0) {
                     keepAwake();
                 }
@@ -272,8 +291,12 @@ public final class BudgetProbe {
             switch (phase) {
                 case LOAD -> {
                     if (age >= 60 && chunksLoaded()) {
-                        buildWall();
-                        to(Phase.A_SPAWN);
+                        if (GALLERY_ONLY) {
+                            to(Phase.G_BUILD);
+                        } else {
+                            buildWall();
+                            to(Phase.A_SPAWN);
+                        }
                     }
                 }
                 case A_SPAWN -> {
@@ -324,6 +347,12 @@ public final class BudgetProbe {
                     sample(t);
                     if (age >= B_TICKS) {
                         closeWindow();
+                        clearArea();
+                        to(Phase.G_BUILD);
+                    }
+                }
+                case G_BUILD -> {
+                    if (age >= 20 && gallery.tick()) {
                         finish();
                     }
                 }
@@ -800,7 +829,7 @@ public final class BudgetProbe {
                 return;
             }
             phase = Phase.DONE;
-            out.append("\nRESULT: ").append(anyCapFail ? "FAIL (a hard cap was exceeded)" : "caps held").append('\n');
+            out.append("\nRESULT: ").append(anyCapFail ? "FAIL (a hard cap or a gallery check failed)" : "caps held").append('\n');
             String text = out.toString();
             try {
                 Files.writeString(Path.of("budget-probe-" + MC + ".txt"), text, StandardCharsets.UTF_8);

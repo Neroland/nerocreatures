@@ -157,7 +157,7 @@ look in.
 
 A tamed pet also carries its owner's UUID in its own entity data. That is vanilla's design for every
 tameable animal and is inherent to being tameable; it is declared in
-[`../PRIVACY.md`](../PRIVACY.md).
+[`PRIVACY.md`](https://github.com/Neroland/nerocreatures/blob/main/PRIVACY.md).
 
 Two **milestone records** are kept outside this mod, as player-scope progression gates in Neroland
 Core's store: `nerocreatures:first_tame` opens the moment you tame your first pet and
@@ -212,4 +212,4 @@ mod erases on its own. A perched pet behaves as if sitting, but keeps its specie
 - [Data storage](Data-Storage.md) — the ownership store in practical terms: erasure, retention,
   export
 - [Link module](Link-Module.md) — seeing your pets in a companion app, and recalling them
-- [`../PRIVACY.md`](../PRIVACY.md) — the full data-protection statement
+- [`PRIVACY.md`](https://github.com/Neroland/nerocreatures/blob/main/PRIVACY.md) — the full data-protection statement

@@ -11,7 +11,7 @@
   companions and planet bosses; its drops are raw materials the rest of the ecosystem spends.
 - Mod id: **`nerocreatures`** (matches the registry namespace + every loader manifest). Package
   root: `za.co.neroland.nerocreatures`. Author: **Neroland**.
-- Version: **0.4.1-alpha.2** (in progress toward **0.5.0-beta.1**).
+- Version: **0.5.0-beta.1**.
 - Targets **MC 1.21.1, 1.21.4, 1.21.5, 1.21.8, 1.21.10, 1.21.11, 26.1.2, 26.2 AND 26.3** on **NeoForge,
   MinecraftForge/Forge, and Fabric** → the **"27 cells"** (1.21.8 also covers 1.21.7, 1.21.10 also covers 1.21.9).
   **Java 25** for 26.x cells, **Java 21** for 1.21.x cells. Mappings = official Mojang names (26.x ships

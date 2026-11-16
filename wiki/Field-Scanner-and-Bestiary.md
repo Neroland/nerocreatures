@@ -55,7 +55,7 @@ you are offline, after a hatch or a boss fight, opens without it).
 
 Tiers are Neroland Core record gates (`nerocreatures:bestiary/scanned/<id>` and
 `nerocreatures:bestiary/studied/<id>`), so quest packs can use them and Core erases them with the rest
-of your progression. Nothing new is stored about you; see [Privacy](../PRIVACY.md).
+of your progression. Nothing new is stored about you; see [Privacy](Privacy.md).
 
 ## The Bestiary screen
 

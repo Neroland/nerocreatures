@@ -103,6 +103,24 @@ public class TerrariumBlockEntity extends HabitatBlockEntity implements HabitatD
         }
     }
 
+    @Override
+    public void emptyForGallery() {
+        this.captured = null;
+        this.species = "";
+        this.changed();
+    }
+
+    /** Gallery build: holds the creature of a filled Capture Pod (built with no owner). */
+    @Override
+    public void showForGallery(ItemStack pod) {
+        Optional<CapturedCreature> capture = CapturedCreature.read(pod);
+        if (capture.isPresent() && capture.get().understood() && fits(capture.get().species())) {
+            this.captured = capture.get().toTag();
+            this.species = capture.get().species();
+            this.changed();
+        }
+    }
+
     /** Empty-hand use: what is inside. */
     void describe(Player player) {
         if (!this.occupied()) {

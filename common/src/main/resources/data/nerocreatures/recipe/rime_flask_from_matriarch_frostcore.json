@@ -3,13 +3,10 @@
   "category": "equipment",
   "ingredients": [
     "nerocreatures:matriarch_frostcore",
-    "minecraft:glass_bottle",
-    "minecraft:glass_bottle",
-    "minecraft:glass_bottle",
     "minecraft:glass_bottle"
   ],
   "result": {
-    "count": 4,
+    "count": 1,
     "id": "nerocreatures:rime_flask"
   }
 }

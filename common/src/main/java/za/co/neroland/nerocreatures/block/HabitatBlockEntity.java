@@ -79,6 +79,19 @@ public abstract class HabitatBlockEntity extends BlockEntity {
         return this.syncsToClient() ? this.saveCustomOnly(registries) : new CompoundTag();
     }
 
+    // --- gallery hooks (the Menagerie's working rows) ------------------------------------------
+
+    /**
+     * Gallery {@code clear}: empty this block so removing it drops nothing and releases nothing a
+     * player would miss. Default: nothing to empty.
+     */
+    public void emptyForGallery() {
+    }
+
+    /** Gallery build: show {@code stack} (a trophy, or a filled Capture Pod's creature). Default: no-op. */
+    public void showForGallery(net.minecraft.world.item.ItemStack stack) {
+    }
+
     /** Saves and, for a syncing block, pushes the new data to watching clients. */
     protected void changed() {
         this.setChanged();

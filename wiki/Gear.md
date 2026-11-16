@@ -10,7 +10,7 @@ is not enchantable and keeps its effect on a vanilla item cooldown (never shorte
 | Mirror Shield | Mirror Scale + Shield (or Colossus Facet + Shield) | held | Reflects one incoming projectile per cooldown. | `mirrorShieldCooldownTicks` 200 |
 | Lurker Cloak | Cryo Fang + Rime Wool | chest | Silent to sound hunters (Echo Shrikes) while walking, landing and mining; sprinting is still heard. | `lurkerCloakSilences` true |
 | Blink Charm | Charged Sand + Void Essence + Ender Pearl | use | Short look-direction teleport. A blink with no room costs no cooldown. | `blinkCharmCooldownTicks` 100, `blinkCharmRange` 8 |
-| Rime Flask | Coolant Milk + Glass Bottle + Snowball (or 4 from one Matriarch Frostcore) | use | 10 s Fire Resistance and puts you out. Reusable. | `rimeFlaskCooldownTicks` 1200 |
+| Rime Flask | Coolant Milk + Glass Bottle + Snowball (or Matriarch Frostcore + Glass Bottle) | use | 10 s Fire Resistance and puts you out. Reusable. | `rimeFlaskCooldownTicks` 1200 |
 | Heat-gland Greaves | Heat Gland x2 + Leather Leggings + Magma Cream (or one Tyrant Ember + Leather Leggings) | legs | Walk on lava for a few seconds, then recharge. | `heatGlandGreavesLavaTicks` 100, `heatGlandGreavesCooldownTicks` 600 |
 | Graviton Boots | Graviton Node x2 + Leather Boots + Feather | feet | Lower gravity (sneak for normal) and 4 extra blocks of safe fall. | `gravitonBootsGravityPercent` 50 |
 | Resonant Whistle | Resonant Membrane x2 + Copper | use | Calls up to 8 of your own loaded pets and mounts in this dimension within range; ones on Sit or Stay stay put. | `resonantWhistleCooldownTicks` 600, `resonantWhistleRange` 48 |

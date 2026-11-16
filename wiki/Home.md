@@ -4,19 +4,15 @@ Player- and contributor-facing documentation for **NeroCreatures**, the creature
 Neroland sci-fi ecosystem. Built on **Neroland Core**.
 
 NeroCreatures populates the worlds other mods build: hostile fauna on the planets, neutral
-resource creatures, humanoid raiders, tameable companions and, eventually, planet bosses. Its
-drops are deliberately raw materials that other mods spend.
+resource creatures, humanoid raiders, tameable companions, mounts, livestock and planet bosses. Its
+drops are deliberately raw materials that other mods spend, and every drop also has a use inside the
+mod.
 
-> **Status:** feature-complete for 0.1.0 — the entity base, AI goal library, spawn engine, and
-> twelve creatures with their loot and programmer-art models: the four **hostile fauna** (Void
-> Crawler, Lunar Stalker, Asteroid Worm, Plasma Slime), the **neutrals and humanoids** (Crystal
-> Golem, Space Pirate, Rogue Drone, Rogue Android), the **tameables** (Glacite Wisp, Xertz Forager
-> and the deployable Terraforming Drone), the **boss framework plus the first planet boss** (the
-> Cinder Tyrant), and now the **companion-app link module**, the `/nerocreatures` command tree and
-> the invasion seam for event mods. All eleven creature drops are obtainable in survival, and four
-> of them have an in-mod sink.
-> Pages grow alongside the code — a feature is not done until its page here is updated (see
-> [`../AGENTS.md`](../AGENTS.md) / [`../CLAUDE.md`](../CLAUDE.md)).
+> **Status: 0.5.0-beta.1 "Menagerie".** 38 creatures across nine habitats, including four bosses
+> (the Cinder Tyrant and the altar-summoned Rime Matriarch, Bloom Sovereign and Facet Colossus);
+> mounts, husbanded livestock, traits and breeding; habitat blocks and creature gear; the Field
+> Scanner and Bestiary; alphas; a companion-app link (schema 2); and the walkable Menagerie gallery.
+> See the [Changelog](https://github.com/Neroland/nerocreatures/blob/main/CHANGELOG.md).
 
 ## Contents
 
@@ -43,17 +39,21 @@ drops are deliberately raw materials that other mods spend.
 - [Livestock and Breeding](Livestock-and-Breeding.md) — breeding foods, eggs and hatchlings.
 - [Gear](Gear.md) — the creature gear and the Capture Pod.
 - [Alphas](Alphas.md) — rare, larger hostiles: how often, how many, what they drop.
-- [Config](Config.md) — the 0.5.0 config keys: mounts, eggs, alphas, overworld spawns, the tick
-  budget and the world-changing abilities.
-- [Bosses](Bosses.md) — the Cinder Tyrant and the boss framework: phases, arenas, the two ways a
-  boss turns up, the exact contribution reward split, and the `nerocreatures:boss_pressure` event
+- [Config](Config.md) — every config key: spawning, caps, bosses, mounts, eggs, alphas, overworld
+  spawns, the tick budget, the world-changing abilities, habitat blocks and gear.
+- [Bosses and the Apex Altar](Bosses.md) — the four bosses, their phases and arenas, the Apex Altar
+  and its sigils, the exact contribution reward split, and the `nerocreatures:boss_pressure` event
   channel other mods can listen to.
 - [Commands](Commands.md) — the `/nerocreatures` operator tree: `list`, `caps`, `summon-boss`,
-  `export`, `telemetry-test`, `gallery` and `budget`.
-- [Gallery & screenshot capture](Gallery.md) — the creative showcase scene, the `/ncgallery` capture
-  harness, the shot list, and where the screenshots are saved.
-- [Link module](Link-Module.md) — what a Neroland companion app can see and do, section by section,
-  and the own-data-only rule behind it.
+  `export`, `budget`, `telemetry-test` and `gallery` (`grid`, `tour`, `demo`, `clear`).
+- [Menagerie](Menagerie.md) — the creative showcase: every creature with a sign and a demo plate,
+  the boss hall, the paddock, the Trait Wall, the tour and `gallery clear`.
+- [Gallery & screenshot capture](Gallery.md) — the `/ncgallery` capture harness, the shot list, and
+  where the screenshots are saved.
+- [Link module (schema 2)](Link-Module.md) — what a Neroland companion app can see and do, section by
+  section, and the own-data-only rule behind it.
+- [Privacy](Privacy.md) — what is stored about players, erasure, export, retention and the
+  companion app, in short.
 - [Data storage](Data-Storage.md) — the two player-keyed stores, erasure, retention and export, in
   practical terms.
 - [Telemetry](Telemetry.md) — opt-out crash reporting: what it sends, what it never sends, and how
@@ -72,16 +72,14 @@ drops are deliberately raw materials that other mods spend.
 
 ## Privacy
 
-NeroCreatures stores two small, world-save-scoped, player-keyed records and nothing else: who owns
-which tamed pet or deployed drone, and — only while a **summoned** boss fight is actually running —
-how much damage each participant has done to it. No names, no coordinates. Both are erasable through
-Neroland Core's shared request, retained only as long as the server configures, and exportable on
-request; see [Data storage](Data-Storage.md) for the practical version and
-[`../PRIVACY.md`](../PRIVACY.md) for the full statement. Anything a companion app can read is scoped
-to the asking player and nobody else ([Link module](Link-Module.md)). Crash reporting is on by default, opt-out, PII-free and
-covers this mod's own crashes only ([Telemetry](Telemetry.md)).
+NeroCreatures keeps a small, world-save-scoped record of who owns which pet, mount, drone or egg, and
+(only while a **summoned** boss fight is running) each participant's damage. No names, no position
+history. Everything is erasable through Neroland Core's shared request, retained only as long as the
+server configures, and exportable on request; see [Privacy](Privacy.md) and
+[Data storage](Data-Storage.md). A companion app sees only the asking player's own data
+([Link module](Link-Module.md)). Crash reporting is opt-out, anonymous and covers this mod's own
+crashes only ([Telemetry](Telemetry.md)).
 
 ## See also
 
-- [Build & contributor context](../AGENTS.md)
-- [Changelog](../CHANGELOG.md)
+- [Changelog](https://github.com/Neroland/nerocreatures/blob/main/CHANGELOG.md)

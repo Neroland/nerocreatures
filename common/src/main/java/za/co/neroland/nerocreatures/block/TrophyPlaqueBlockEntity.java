@@ -74,6 +74,20 @@ public class TrophyPlaqueBlockEntity extends HabitatBlockEntity implements Habit
     }
 
     @Override
+    public void emptyForGallery() {
+        this.trophy = ItemStack.EMPTY;
+        this.changed();
+    }
+
+    @Override
+    public void showForGallery(ItemStack stack) {
+        if (!stack.isEmpty() && stack.is(TROPHIES)) {
+            this.trophy = stack.copyWithCount(1);
+            this.changed();
+        }
+    }
+
+    @Override
     protected void onBlockRemoved(ServerLevel level, BlockPos pos) {
         if (!this.trophy.isEmpty()) {
             Containers.dropItemStack(level, pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D, this.trophy);

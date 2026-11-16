@@ -322,6 +322,15 @@ public class IncubatorBlockEntity extends HabitatBlockEntity implements HabitatD
     }
 
     @Override
+    public void emptyForGallery() {
+        if (this.occupied() && this.level instanceof ServerLevel server) {
+            this.releaseRow(server);
+            this.egg = ItemStack.EMPTY;
+            this.changed();
+        }
+    }
+
+    @Override
     protected void onBlockRemoved(ServerLevel level, BlockPos pos) {
         if (this.occupied()) {
             Containers.dropItemStack(level, pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D, this.egg);

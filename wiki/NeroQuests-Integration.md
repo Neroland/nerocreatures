@@ -56,7 +56,7 @@ off-world quest is hidden behind `nerolandcore:reached_orbit` like the Bestiary 
 They are **records, not locks**: they have no requirements, NeroCreatures never checks them for
 access to anything, and a quest reads them with a read-only `gate_open` objective. The rows live in
 Core's progression store, covered by Core's privacy statement and removed by the shared erasure hook
-([Pets & Drones](Pets-and-Drones.md), [`../PRIVACY.md`](../PRIVACY.md)).
+([Pets & Drones](Pets-and-Drones.md), [`PRIVACY.md`](https://github.com/Neroland/nerocreatures/blob/main/PRIVACY.md)).
 
 ## Family tags
 

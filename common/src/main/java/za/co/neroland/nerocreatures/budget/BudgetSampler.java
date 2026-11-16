@@ -47,6 +47,14 @@ public final class BudgetSampler<K> {
      * @param namer turns a key into its printed name (a registry id; never anything about a player)
      */
     public Report report(long ticks, Function<K, String> namer) {
+        return report(ticks, namer, key -> false);
+    }
+
+    /**
+     * As {@link #report(long, Function)}, but keys matching {@code outsideTotal} keep their own row and
+     * are left out of the total (the gallery's displays, which are not part of the creature budget).
+     */
+    public Report report(long ticks, Function<K, String> namer, java.util.function.Predicate<K> outsideTotal) {
         long t = Math.max(1L, ticks);
         List<Row> rows = new ArrayList<>(totals.size());
         long totalNanos = 0L;
@@ -54,8 +62,10 @@ public final class BudgetSampler<K> {
         for (Map.Entry<K, long[]> e : totals.entrySet()) {
             long nanos = e.getValue()[0];
             long calls = e.getValue()[1];
-            totalNanos += nanos;
-            totalCalls += calls;
+            if (!outsideTotal.test(e.getKey())) {
+                totalNanos += nanos;
+                totalCalls += calls;
+            }
             rows.add(new Row(namer.apply(e.getKey()), nanos / 1.0e6D / t, calls / (double) t, calls));
         }
         rows.sort(Comparator.comparingDouble(Row::msPerTick).reversed().thenComparing(Row::name));

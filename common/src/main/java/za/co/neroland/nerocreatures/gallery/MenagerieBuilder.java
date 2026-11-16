@@ -1,10 +1,13 @@
 package za.co.neroland.nerocreatures.gallery;
 
+import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Deque;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.Consumer;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -59,17 +62,120 @@ public final class MenagerieBuilder {
 
     private static final int FLAGS = 2 | 16;
 
+    /** Columns of x per bulldoze or floor step. */
+    private static final int SLAB = 10;
+
+    /** Work per server tick for a build or a clear; the rest waits for the next tick. */
+    private static final long TICK_BUDGET_NANOS = 25_000_000L;
+
+    private static final List<Job> JOBS = new ArrayList<>();
+
     private MenagerieBuilder() {
     }
 
-    /** What a build placed, for the chat line, the budget check and the probe. */
+    /**
+     * What a build placed, for the chat line, the budget check and the probe.
+     *
+     * @param micros      total build work, microseconds
+     * @param maxTickMicros the longest single tick of build work
+     * @param ticks       server ticks the build was spread over
+     */
     public record Stats(int creatures, int bossPoses, int items, int blocks, int mobs, int entities,
-            List<String> missing, long micros) {
+            List<String> missing, long micros, long maxTickMicros, int ticks, int slowestStep,
+            long slowestStepMicros) {
 
         public boolean overBudget() {
             return this.mobs > MenagerieLayout.MAX_MOBS || this.entities > MenagerieLayout.MAX_ENTITIES
                     || this.blocks > MenagerieLayout.MAX_BLOCKS;
         }
+    }
+
+    // --- tick-sliced jobs ------------------------------------------------------------------------
+
+    /**
+     * A build or clear split into steps (one floor slab, one bay, one row of slots, ...) and spread
+     * over server ticks: each tick runs steps until {@value #TICK_BUDGET_NANOS} ns of work is done.
+     */
+    private static final class Job {
+        final ServerLevel level;
+        final W w;
+        final Deque<Runnable> steps = new ArrayDeque<>();
+        final Consumer<Stats> done;
+        int creatures;
+        int poses;
+        long busyNanos;
+        long maxTickNanos;
+        int ticks;
+        int stepIndex;
+        int slowestStep;
+        long slowestStepNanos;
+
+        Job(ServerLevel level, W w, Consumer<Stats> done) {
+            this.level = level;
+            this.w = w;
+            this.done = done;
+        }
+
+        void runStep() {
+            long t0 = System.nanoTime();
+            this.steps.poll().run();
+            long spent = System.nanoTime() - t0;
+            if (spent > this.slowestStepNanos) {
+                this.slowestStepNanos = spent;
+                this.slowestStep = this.stepIndex;
+            }
+            this.stepIndex++;
+        }
+
+        Stats stats() {
+            return new Stats(this.creatures, this.poses, this.w.items, this.w.writes, this.w.mobs, this.w.entities,
+                    List.copyOf(this.w.missing), this.busyNanos / 1000L, this.maxTickNanos / 1000L, this.ticks,
+                    this.slowestStep, this.slowestStepNanos / 1000L);
+        }
+    }
+
+    /** Runs pending build and clear steps. Called once per server tick. */
+    public static void tick() {
+        if (JOBS.isEmpty()) {
+            return;
+        }
+        Job job = JOBS.get(0);
+        long start = System.nanoTime();
+        do {
+            job.runStep();
+        } while (!job.steps.isEmpty() && System.nanoTime() - start < TICK_BUDGET_NANOS);
+        long spent = System.nanoTime() - start;
+        job.busyNanos += spent;
+        job.maxTickNanos = Math.max(job.maxTickNanos, spent);
+        job.ticks++;
+        if (job.steps.isEmpty()) {
+            JOBS.remove(0);
+            GalleryDisplays.forgetAnchors(job.level);
+            job.done.accept(job.stats());
+        }
+    }
+
+    /** Whether a build or clear is still running. */
+    public static boolean busy() {
+        return !JOBS.isEmpty();
+    }
+
+    /** Forgets every pending job (server stop). */
+    public static void reset() {
+        JOBS.clear();
+    }
+
+    /** Runs a job to the end at once (tests and fallbacks). */
+    private static Stats runNow(Job job) {
+        long start = System.nanoTime();
+        while (!job.steps.isEmpty()) {
+            job.runStep();
+        }
+        job.busyNanos = System.nanoTime() - start;
+        job.maxTickNanos = job.busyNanos;
+        job.ticks = 1;
+        GalleryDisplays.forgetAnchors(job.level);
+        return job.stats();
     }
 
     // --- block-state strings ---------------------------------------------------------------------
@@ -179,47 +285,74 @@ public final class MenagerieBuilder {
 
     // --- build -----------------------------------------------------------------------------------
 
-    /** Builds the Menagerie with its floor at {@code origin.y}. */
-    public static Stats build(ServerLevel level, BlockPos origin) {
-        long started = System.nanoTime();
-        bulldoze(level, origin, MenagerieLayout.BUILD_BOX);
+    /**
+     * Starts building the Menagerie with its floor at {@code origin.y}. The work is spread over server
+     * ticks; {@code done} gets the stats when the last step has run.
+     */
+    public static void startMenagerie(ServerLevel level, BlockPos origin, Consumer<Stats> done) {
         W w = new W(level, origin);
-        streets(w);
-        for (MenagerieLayout.Bay bay : MenagerieLayout.BAYS) {
-            bay(w, bay);
-        }
-        int creatures = 0;
-        for (MenagerieLayout.Slot slot : MenagerieLayout.SLOTS) {
-            if (slot(w, slot) && !slot.isAlpha()) {
-                creatures++;
-            }
-        }
-        utilityBays(w);
-        int poses = bossHall(w);
-        paddock(w);
-        traitWall(w);
-        extraItems(w);
-        for (MenagerieLayout.Label label : MenagerieLayout.labels()) {
-            GalleryDisplays.label(level, w.ex(label.x() + 0.5), w.ey(7), w.ez(label.z() + 0.5),
-                    Component.translatable(label.key()));
+        Job job = new Job(level, w, done);
+        bulldozeSteps(job.steps, level, origin, MenagerieLayout.BUILD_BOX, new int[2]);
+        job.steps.add(() -> {
+            GalleryDisplays.anchor(level, origin, false); // first, so a second build nearby is refused
             w.entities++;
+        });
+        for (int x0 = -55; x0 <= 55; x0 += SLAB) {
+            final int a = x0;
+            final int b = Math.min(55, x0 + SLAB - 1);
+            job.steps.add(() -> w.fill(a, 0, -52, b, 0, 52, GalleryPalette.STREET));
         }
-        GalleryDisplays.anchor(level, origin, false);
-        w.entities++;
-        selfCheck(w);
-        return new Stats(creatures, poses, w.items, w.writes, w.mobs, w.entities, List.copyOf(w.missing),
-                (System.nanoTime() - started) / 1000L);
+        job.steps.add(() -> streets(w));
+        for (MenagerieLayout.Bay bay : MenagerieLayout.BAYS) {
+            job.steps.add(() -> bay(w, bay));
+        }
+        for (MenagerieLayout.Bay bay : MenagerieLayout.BAYS) {
+            job.steps.add(() -> {
+                for (MenagerieLayout.Slot slot : MenagerieLayout.SLOTS) {
+                    if (slot.bay().equals(bay.id()) && slot(w, slot) && !slot.isAlpha()) {
+                        job.creatures++;
+                    }
+                }
+            });
+        }
+        job.steps.add(() -> utilityBays(w));
+        job.steps.add(() -> job.poses = bossHall(w));
+        job.steps.add(() -> paddock(w));
+        job.steps.add(() -> traitWall(w));
+        job.steps.add(() -> extraItems(w));
+        job.steps.add(() -> {
+            for (MenagerieLayout.Label label : MenagerieLayout.labels()) {
+                GalleryDisplays.label(level, w.ex(label.x() + 0.5), w.ey(7), w.ez(label.z() + 0.5),
+                        Component.translatable(label.key()));
+                w.entities++;
+            }
+            selfCheck(w);
+        });
+        JOBS.add(job);
     }
 
-    /** Builds the compact grid (no signs, plates, tour, rideable mounts or working blocks). */
-    public static Stats buildGrid(ServerLevel level, BlockPos origin) {
-        long started = System.nanoTime();
-        bulldoze(level, origin, MenagerieLayout.GRID_BUILD_BOX);
+    /** Starts the compact grid (no signs, plates, tour, rideable mounts or working blocks). */
+    public static void startGrid(ServerLevel level, BlockPos origin, Consumer<Stats> done) {
         W w = new W(level, origin);
-        w.fill(-27, 0, -34, 53, 0, 40, GalleryPalette.STREET);
-        for (int z : new int[] {-33, -9, 3, 14, 27}) {
-            w.fill(10, 0, z, 53, 0, z, GalleryPalette.KERB);
-        }
+        Job job = new Job(level, w, done);
+        bulldozeSteps(job.steps, level, origin, MenagerieLayout.GRID_BUILD_BOX, new int[2]);
+        job.steps.add(() -> {
+            GalleryDisplays.anchor(level, origin, true);
+            w.entities++;
+        });
+        job.steps.add(() -> {
+            w.fill(-27, 0, -34, 53, 0, 40, GalleryPalette.STREET);
+            for (int z : new int[] {-33, -9, 3, 14, 27}) {
+                w.fill(10, 0, z, 53, 0, z, GalleryPalette.KERB);
+            }
+        });
+        job.steps.add(() -> job.creatures = gridExhibits(w));
+        job.steps.add(() -> gridItems(w));
+        JOBS.add(job);
+    }
+
+    private static int gridExhibits(W w) {
+        ServerLevel level = w.level;
         int creatures = 0;
         for (MenagerieLayout.GridExhibit g : MenagerieLayout.gridExhibits()) {
             boolean boss = MenagerieLayout.BOSSES.contains(g.entity());
@@ -248,6 +381,11 @@ public final class MenagerieBuilder {
                     Component.translatable("entity.nerocreatures." + g.entity()));
             w.entities++;
         }
+        return creatures;
+    }
+
+    private static void gridItems(W w) {
+        ServerLevel level = w.level;
         List<int[]> blocks = MenagerieLayout.gridBlocks();
         for (int i = 0; i < blocks.size(); i++) {
             String id = MenagerieLayout.HABITAT_BLOCKS.get(i);
@@ -270,16 +408,11 @@ public final class MenagerieBuilder {
                 w.entities++;
             }
         }
-        GalleryDisplays.anchor(level, origin, true);
-        w.entities++;
-        return new Stats(creatures, 0, w.items, w.writes, w.mobs, w.entities, List.copyOf(w.missing),
-                (System.nanoTime() - started) / 1000L);
     }
 
     // --- streets, plaza, lights ------------------------------------------------------------------
 
     private static void streets(W w) {
-        w.fill(-55, 0, -52, 55, 0, 52, GalleryPalette.STREET);
         for (int x = -55; x <= 55; x++) {
             if (Math.abs(x) <= 4) {
                 continue;
@@ -396,7 +529,8 @@ public final class MenagerieBuilder {
         }
         sign(w, slot.signX(), 1, slot.signZ(), standing(p, row), p.glowText(), signLines(slot));
         // the stand: spawn egg (base) or guaranteed alpha drop (alpha)
-        ItemStack shown = slot.isAlpha() ? alphaDrop(w.level, slot.entity()) : item(slot.entity() + "_spawn_egg");
+        ItemStack shown = slot.isAlpha() ? alphaDrop(w.level, slot.entity())
+                : item(MenagerieLayout.standItem(slot.entity()));
         if (!shown.isEmpty()) {
             if (GalleryDisplays.stand(w.level, w.ex(slot.standX() + 0.5), w.ey(1), w.ez(slot.signZ() + 0.5), row.yaw(),
                     shown, false) != null) {
@@ -404,7 +538,7 @@ public final class MenagerieBuilder {
                 w.entities++;
             }
         } else {
-            w.missing.add(slot.isAlpha() ? slot.entity() + " alpha drop" : slot.entity() + "_spawn_egg");
+            w.missing.add(slot.isAlpha() ? slot.entity() + " alpha drop" : MenagerieLayout.standItem(slot.entity()));
         }
         props(w, slot, row, p);
         Mob mob = GalleryDisplays.spawn(w.level, slot.entity(), w.ex(slot.entityX()), w.ey(1), w.ez(slot.entityZ()),
@@ -979,16 +1113,56 @@ public final class MenagerieBuilder {
      * non-air block to air from the top down (the layer below F is never touched), discard every
      * tagged entity (the anchor last), then discard item and XP litter. Untagged entities stay.
      *
-     * @return {blocks cleared, entities removed}
+     * <p>Spread over server ticks like a build; {@code done} gets {blocks cleared, entities removed}.
      */
+    public static void startClear(ServerLevel level, BlockPos origin, MenagerieLayout.Box box, Consumer<int[]> done) {
+        int[] result = new int[2];
+        Job job = new Job(level, new W(level, origin), stats -> done.accept(result));
+        bulldozeSteps(job.steps, level, origin, box, result);
+        JOBS.add(job);
+    }
+
+    /** {@link #startClear}, run to the end at once. */
     public static int[] bulldoze(ServerLevel level, BlockPos origin, MenagerieLayout.Box box) {
-        BlockPos.MutableBlockPos cursor = new BlockPos.MutableBlockPos();
+        int[] result = new int[2];
+        Job job = new Job(level, new W(level, origin), stats -> { });
+        bulldozeSteps(job.steps, level, origin, box, result);
+        runNow(job);
+        return result;
+    }
+
+    /**
+     * The clear steps: every container in the box emptied first (slab by slab), then every non-air
+     * block to air from the top down (slab by slab; the layer below F is never touched), then the
+     * tagged entities (anchor last) and item and XP litter. Counts go to {@code result}.
+     */
+    private static void bulldozeSteps(Deque<Runnable> steps, ServerLevel level, BlockPos origin,
+            MenagerieLayout.Box box, int[] result) {
         int minX = origin.getX() + box.minX();
         int maxX = origin.getX() + box.maxX();
         int minZ = origin.getZ() + box.minZ();
         int maxZ = origin.getZ() + box.maxZ();
         int minY = origin.getY() + box.minY();
         int maxY = origin.getY() + box.maxY();
+        for (int x0 = minX; x0 <= maxX; x0 += SLAB) {
+            final int a = x0;
+            final int b = Math.min(maxX, x0 + SLAB - 1);
+            steps.add(() -> emptyContainers(level, a, b, minY, maxY, minZ, maxZ));
+        }
+        for (int x0 = minX; x0 <= maxX; x0 += SLAB) {
+            final int a = x0;
+            final int b = Math.min(maxX, x0 + SLAB - 1);
+            steps.add(() -> result[0] += toAir(level, a, b, minY, maxY, minZ, maxZ));
+        }
+        AABB aabb = new AABB(minX, minY - 1, minZ, maxX + 1, maxY + 4, maxZ + 1);
+        steps.add(() -> {
+            result[1] += discardTagged(level, aabb);
+            GalleryDisplays.forgetAnchors(level);
+        });
+    }
+
+    private static void emptyContainers(ServerLevel level, int minX, int maxX, int minY, int maxY, int minZ, int maxZ) {
+        BlockPos.MutableBlockPos cursor = new BlockPos.MutableBlockPos();
         for (int x = minX; x <= maxX; x++) {
             for (int z = minZ; z <= maxZ; z++) {
                 for (int y = maxY; y >= minY; y--) {
@@ -1002,6 +1176,10 @@ public final class MenagerieBuilder {
                 }
             }
         }
+    }
+
+    private static int toAir(ServerLevel level, int minX, int maxX, int minY, int maxY, int minZ, int maxZ) {
+        BlockPos.MutableBlockPos cursor = new BlockPos.MutableBlockPos();
         BlockState air = Blocks.AIR.defaultBlockState();
         int cleared = 0;
         for (int y = maxY; y >= minY; y--) {
@@ -1015,28 +1193,26 @@ public final class MenagerieBuilder {
                 }
             }
         }
-        AABB aabb = new AABB(minX, minY - 1, minZ, maxX + 1, maxY + 4, maxZ + 1);
+        return cleared;
+    }
+
+    private static int discardTagged(ServerLevel level, AABB aabb) {
         int removed = 0;
         List<Entity> anchors = new ArrayList<>();
-        for (Entity entity : level.getEntitiesOfClass(Entity.class, aabb, GalleryDisplays::isDisplay)) {
+        for (Entity entity : level.getEntitiesOfClass(Entity.class, aabb, e -> MenagerieLayout.clearRemoves(
+                GalleryDisplays.tags(e), e instanceof ItemEntity || e instanceof ExperienceOrb))) {
             if (GalleryDisplays.tags(entity).contains(MenagerieLayout.ANCHOR_TAG)) {
                 anchors.add(entity);
                 continue;
             }
-            entity.ejectPassengers();
-            entity.discard();
-            removed++;
-        }
-        for (Entity entity : level.getEntitiesOfClass(Entity.class, aabb,
-                e -> e instanceof ItemEntity || e instanceof ExperienceOrb)) {
-            entity.discard();
+            entity.ejectPassengers(); // a paddock rider is put off first
+            entity.discard();         // never kill: no death, loot, XP or death event
             removed++;
         }
         for (Entity anchor : anchors) {
             anchor.discard();
             removed++;
         }
-        GalleryDisplays.forgetAnchors(level);
-        return new int[] {cleared, removed};
+        return removed;
     }
 }

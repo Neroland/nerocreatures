@@ -39,7 +39,7 @@ import za.co.neroland.nerocreatures.entity.visual.VisualPose;
  * Demo plates: a creative player who steps onto one of the Menagerie's gold plates sees that slot's
  * ability played once as a <b>script of visuals</b> (a pose, particles, a sound and the listed prop
  * blocks inside the slot's prop box). A demo never calls a species' goal or ability code: it moves,
- * hurts, heals or affects nobody, drops nothing, and writes no statistic, gate, ownership row or link
+ * damages, mends or affects nobody, drops nothing, and writes no statistic, gate, ownership row or link
  * event.
  *
  * <p>Survival and adventure players, mobs, items and redstone do nothing: the plate is a plain vanilla
@@ -91,6 +91,7 @@ public final class GalleryDemos {
 
     /** Called once per server tick (from the spawn engine's tick hook). */
     public static void serverTick(MinecraftServer server) {
+        MenagerieBuilder.tick(); // a build or clear in progress, a few milliseconds per tick
         if (server.getTickCount() % 2 == 0) {
             for (ServerPlayer player : server.getPlayerList().getPlayers()) {
                 checkPlate(player);
@@ -215,6 +216,7 @@ public final class GalleryDemos {
 
     /** Forgets everything (server stop). */
     public static void reset() {
+        MenagerieBuilder.reset();
         RUNNING.clear();
         COOLDOWN.clear();
         CRUST_COOLDOWN.clear();

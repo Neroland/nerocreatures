@@ -18,6 +18,9 @@ so a new registration without assets fails here before it reaches a client. Chec
 - **Equipment**: every ``equipment/<id>.json`` layer texture exists.
 - **Sounds**: every ``sounds.json`` event has its ``.ogg`` files and a ``subtitle`` key in ``en_us.json``,
   and every manifest event is in ``sounds.json``.
+- **Recipes**: every recipe result (base resources and every ``resources-<mc>`` overlay) names an item
+  we register (or a known vanilla one) and its count is no more than that item's max stack size; 1.21.1
+  refuses to load a recipe whose result overflows the stack.
 
 Standard library only.
 """
@@ -243,6 +246,52 @@ class Checker:
                 if row["id"] not in events:
                     self.fail("sound %s: in the manifest but not in sounds.json" % row["id"])
 
+    def recipes(self) -> None:
+        """Recipe result counts never exceed the result item's max stack (1.21.1 rejects the recipe)."""
+        stacks = item_max_stacks()
+        main_dir = os.path.join(ROOT, "common", "src", "main")
+        roots = [os.path.join(main_dir, d) for d in sorted(os.listdir(main_dir)) if d.startswith("resources")]
+        count = 0
+        for res in roots:
+            folder = os.path.join(res, "data", NS, "recipe")
+            for d, _, names in os.walk(folder):
+                for name in sorted(names):
+                    if not name.endswith(".json"):
+                        continue
+                    path = os.path.join(d, name)
+                    rel = os.path.relpath(path, ROOT).replace(os.sep, "/")
+                    result = load_json(path).get("result")
+                    if result is None:
+                        continue
+                    count += 1
+                    rid = result if isinstance(result, str) else result.get("id", result.get("item"))
+                    amount = 1 if isinstance(result, str) else int(result.get("count", 1))
+                    max_stack = stacks.get(rid)
+                    if max_stack is None:
+                        self.fail("recipe %s: result %s is not a registered or known item" % (rel, rid))
+                    elif amount > max_stack:
+                        self.fail("recipe %s: result count %d > max stack %d of %s" % (rel, amount, max_stack, rid))
+        self.counts["recipes"] = count
+
+
+# Vanilla items our recipes may produce, with their max stack size.
+VANILLA_STACKS = {"minecraft:glowstone_dust": 64}
+
+
+def item_max_stacks() -> dict:
+    """``nerocreatures:<id>`` -> max stack, read from the registry statements (``stacksTo(n)``, gear = 1, else 64)."""
+    text = read(os.path.join(JAVA, "registry", "ModItems.java"))
+    stacks = dict(VANILLA_STACKS)
+    for statement in re.split(r";\s*\n", text):
+        for iid in re.findall(r'ITEMS\.register\(\s*"(\w+)"', statement):
+            size = re.search(r"stacksTo\((\d+)\)", statement)
+            stacks["%s:%s" % (NS, iid)] = int(size.group(1)) if size else 64
+        for iid in re.findall(r'\bgear\(\s*"(\w+)"', statement):
+            stacks["%s:%s" % (NS, iid)] = 1
+    for iid in registry_ids("ModSpawnEggs", r'egg\("(\w+)"'):
+        stacks["%s:%s" % (NS, iid)] = 64
+    return stacks
+
 
 def main(argv: list) -> int:
     c = Checker()
@@ -253,6 +302,7 @@ def main(argv: list) -> int:
     c.sounds()
     c.particles()
     c.bestiary()
+    c.recipes()
     for p in c.problems:
         print("FAIL " + p)
     summary = ", ".join("%d %s" % (n, k) for k, n in c.counts.items())

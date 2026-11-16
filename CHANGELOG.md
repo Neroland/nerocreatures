@@ -5,7 +5,27 @@ All notable changes to **NeroCreatures** are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [0.5.0-beta.1] - 2026-11-16
+
+**"Menagerie."** 23 new creatures across every habitat, three new altar-summoned bosses, mounts,
+livestock, traits and breeding, habitat blocks, creature gear, the Field Scanner and Bestiary, a
+companion-app link (schema 2) and a walkable Menagerie gallery. Existing worlds load unchanged.
+
+### Compatibility
+
+- **Client and server both need 0.5.0-beta.1.** New network payloads (the Bestiary, scanner and
+  creature actions) and new synced creature data (pose, phase, stage, variant, form and flags) mean a
+  0.4.x client cannot join a 0.5.0 server, nor the other way round.
+- Requires **Neroland Core 1.17.5** or later (still the only hard dependency). Every sibling mod stays
+  optional: cross-mod drops are reached through tags with `"required": false`, the companion
+  interface is a no-op without NeroCompanion, and the quest chapter loads only with NeroQuests.
+- **Companion-app link schema 2.** Every schema-1 member is kept, so an older app keeps working; the
+  new Creatures module in the app needs schema 2.
+- Saves: 0.4.x ownership and boss files load unchanged (the store gains `mount` and `egg` rows); pets
+  from older saves roll their traits on first load. `/nerocreatures export` is now format 3.
+- Same 27 builds as 0.4.x: Minecraft 1.21.1, 1.21.4, 1.21.5, 1.21.8, 1.21.10, 1.21.11, 26.1.2, 26.2
+  and 26.3 on NeoForge, Forge and Fabric. Creature gear is worn in its slot on 1.21.2+ and held on
+  1.21.1.
 
 ### Added
 
@@ -39,7 +59,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Apex Altar** and four **boss sigils** (crafted from habitat drops; item tag `nerocreatures:sigils`). Use a sigil on the altar to start a contribution-tracked fight; the sigil is used only if the boss arrives. The altar locks (glowing, unbreakable in survival) until the fight is over and its cooldown has run: `apexAltarCooldownTicks` (12000), per altar, never per player. Spawn eggs for the three new bosses. Wiki page Bosses (now Bosses and the Apex Altar).
 - **Habitat blocks:** Nest (home point where your pets and mounts rest and heal), Feeding Trough (breeds husbanded livestock from stocked food, never wild herds), Incubator (hatches one egg, put in by hand with no screen; 20 minutes, 5 with power from any adjacent energy storage, no power mod needed), Lure Beacon (one species up to 8x more likely to spawn within 24 blocks; caps still apply), Sonic Ward (no hostile NeroCreatures spawn within 16 blocks, and those at the edge are walked out; nothing is hurt), Terrarium (shows one small captured creature; cannot be mined while full) and Trophy Plaque (shows one trophy). Config `feedingTroughIntervalTicks`, `incubatorHatchTicks`, `incubatorPoweredHatchTicks`, `incubatorEnergyPerTick`, `lureBeaconBaitTicks`, `lureBeaconWeightMultiplier`, `sonicWardFuelTicks`, `nestHealIntervalTicks`. Wiki page Habitat Blocks.
 - **Capture Pod:** carry a small tameable creature (wild, or your own tamed one) and release it on a block; it keeps its traits and stores no owner, UUID or position. A released tamed creature becomes the releaser's pet (pet cap applies). Cheap recipe from a Leviathan Barnacle.
-- **Creature gear:** Mirror Shield, Lurker Cloak, Blink Charm, Rime Flask, Heat-gland Greaves, Graviton Boots, Resonant Whistle, Chitin Bulwark and Bloom Amulet, each crafted from a habitat drop, on cooldowns with a config key each. Worn in their slot on 1.21.2+ or held. Matriarch Frostcore crafts 4 Rime Flasks, a Colossus Facet a Mirror Shield and a Tyrant Ember the Greaves, so every 0.5.0 drop now has an in-mod use. Wiki page Gear.
+- **Creature gear:** Mirror Shield, Lurker Cloak, Blink Charm, Rime Flask, Heat-gland Greaves, Graviton Boots, Resonant Whistle, Chitin Bulwark and Bloom Amulet, each crafted from a habitat drop, on cooldowns with a config key each. Worn in their slot on 1.21.2+ or held. Matriarch Frostcore and a Glass Bottle craft a Rime Flask, a Colossus Facet a Mirror Shield and a Tyrant Ember the Greaves, so every 0.5.0 drop now has an in-mod use. Wiki page Gear.
 - **Breeding:** every livestock and tameable species breeds on its own food (item tags `nerocreatures:food/<species>`). Six species lay eggs (`<species>_egg`, traits carried on the egg) that hatch in the Incubator; hatched tameables tame on their first feed, hatched livestock are born husbanded. At most `maxIncubatingEggsPerPlayer` (8) eggs incubating per player. Wiki page Livestock and Breeding.
 - Space Pirates pick up loose Contraband (up to 16) and drop it on death (`spacePirateTakesContraband`, plus `mobGriefing`).
 - Companion interface: a companion mod can perch small pets, send fetchers on errands, add goals (priorities 3 to 6 only), show a hat and park a tamed pet in its own storage (the ownership row stays, marked parked). No-op without a companion mod.
@@ -54,8 +74,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Companion-app pushes (off by default; the app's "Creatures" category): your creature died, is badly hurt (below a quarter health, not hurt by you, at most once per creature per five minutes), your egg hatched, or a summoned boss fight you joined ended. The push names the species only. New player events `creature_hurt`, `egg_hatched` and `fight_ended`.
 - **Stay** order: a pet or mount on Stay stands exactly where it is and does not follow, wander or fight. The in-game sneak-click cycle is now Sit, Stay, Guard, Follow; the old "Stay here." order is now called **Guard** ("Guard this spot.") and behaves as before.
 
+- **The Menagerie.** `/nerocreatures gallery` now builds a walkable showcase of the whole mod: a pavilion per habitat with a sign and a gold demo plate for every creature (stand on it in creative to see the ability played once as a visual script), alphas beside their base forms, a boss hall with each boss posed in its three phases, a mount paddock with rideable Dune Lopers and Void Mantas (no owner, no cap, they return to their post), a Trait Wall of the 13 Radiant morphs, and working rows of every habitat block, gear item, egg and drop. New subcommands `gallery grid` (the compact flat layout), `gallery tour [n]` (25 stops with Back and Next), and `gallery demo <slot>`. Still player-only and creative-only. Wiki page Menagerie.
+- Gallery displays are tagged and kept out of every population cap, the alpha cap, the one-boss-per-dimension rule, swarm, mimic and hulk area caps, predator, prey, herd and pack logic, Sonic Wards, Feeding Troughs, scans, capture, taming, statistics, ownership and the link module; they drop nothing and give no experience, and `/nerocreatures budget` shows them on one `gallery` line outside the total. At most 82 mobs and 230 entities; at most four demos run at once.
+- Capture harness: `/ncgallery capture` shoots the Menagerie (160 shots in eight sets), `/ncgallery capture grid` the grid (9), `/ncgallery capture set <set>` one set; ability shots trigger the demo first. Shot positions come from the same layout tables as the scene.
+
 ### Changed
 
+- **`/nerocreatures gallery clear` removes only what the gallery placed.** It used to discard every non-player entity in its box, which could delete a player's own pet or mount that had wandered in and leave its ownership row pointing at nothing. It now removes entities by the gallery tag (plus dropped items and XP), empties containers first so nothing drops, finds the nearest gallery within 96 blocks so it works from anywhere inside it, and still clears an old 0.4 scene around you when there is no gallery nearby.
+- The old four-spoke gallery scene is gone; its live vivarium row, boss arena, pets-and-drone pad and item wall are replaced by the Menagerie and the grid. The capture shots `creature_vivarium`, `boss_arena`, `pets` and `drone_work_area` are retired; `gallery_overview` keeps its name.
 - The `pet_state_changed` link event is now published only when an owned creature dies; tamed, released, deployed and recalled are no longer sent (a companion app reads them from the `pets` section), because the bridge would turn every player event into a push.
 - `/nerocreatures export` (format 3) adds `altars_lit`: the Apex Altars the player lit that the server still remembers in memory for the companion app (dimension, position, cooldown end, last boss).
 
@@ -90,6 +116,37 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Failure logs carry the exception type only, never its message or stack trace.
 - `PRIVACY.md` rewritten as a full data inventory (every store and field, purpose, legal-basis notes, retention, erasure, export, link module, pushes and telemetry), including why an erasure marker is treated as pseudonymised personal data.
 - New `tools/check_log_privacy.py --check`: fails if any INFO/WARN/ERROR log call passes a UUID, name, coordinate, a generic object that may hold one, or a whole exception. New `tools/check_private_refs.py --check` keeps references to private planning records out of the repository. Both run in the publish workflow; the private-reference guard also runs before the wiki is published.
+
+### Fixed
+
+- The Matriarch Frostcore recipe for the Rime Flask failed to load on 1.21.1 (it made 4 of an item
+  that stacks to 1). It now makes one Rime Flask from a Matriarch Frostcore and a Glass Bottle on
+  every version. `tools/check_assets.py --check` now fails on any recipe whose result count is above
+  its item's stack size.
+
+### Cuts
+
+- None. Every item on the cut list shipped: the Drift Leviathan, Scrap Hulk assembly, the Void Manta
+  (the deep-space flyer, named Void Manta), the third boss (three new bosses shipped: Rime Matriarch,
+  Bloom Sovereign, Facet Colossus) and trait mutation on breeding.
+
+### Seams and open items
+
+- **Neroland Core:** NeroCreatures has asked Core for erasure tombstones (so an erased player is never
+  re-indexed by a late-loading creature in any mod), a save at the end of an erase, and a scheduled
+  last-seen purge. Until then NeroCreatures keeps its own erasure markers, and operators should run
+  `/save-all` after an erase (see `PRIVACY.md`).
+- **Sibling interfaces:** the companion interface (perch, fetch errands, extra goals, hats, parking a
+  pet) is ready and does nothing until NeroCompanion implements it; the companion hat render layer
+  is not drawn yet. The Menagerie quest chapter is data for NeroQuests. Drops carry `neroland:` and
+  `c:` material tags for Nerotech, Nerospace and NeroEconomy, all optional.
+- **Defaults for server owners to confirm:** overworld spawns on (`overworldSpawns`, cap 12); mounts
+  capped at 2 per player (`maxMountsPerPlayer`); every world-changing ability on but each behind its
+  own key and `mobGriefing`; companion-app pushes off by default; Bloom Hosts spare bred livestock
+  (`bloomHostInfectsLivestock` false); the Incubator has no screen; the Feeding Trough feeds only
+  husbanded adults; the Sovereign Seed breaks down into 4 Bloom Hearts.
+- Not verified in a running client yet: the Menagerie build and capture pass, the Bestiary at every
+  GUI scale, Void Manta flight and the boss fights by phase. These are on the release checklist.
 
 ## [0.4.1-alpha.2] - 2026-10-31
 

@@ -99,7 +99,7 @@ because a data-access request has to work for someone who is not connected.
 ```
 
 Operator permission is required because this is somebody's personal record. A player asking for
-their own data asks an operator to run it — see [`PRIVACY.md`](../PRIVACY.md). To *erase* rather than
+their own data asks an operator to run it — see [`PRIVACY.md`](https://github.com/Neroland/nerocreatures/blob/main/PRIVACY.md). To *erase* rather than
 read, use Core's own `/neroland data eraseme` (player) or `/neroland data erase <uuid>` (operator),
 which purges the player across every Nero mod at once — see [Data storage](Data-Storage.md).
 
@@ -111,7 +111,7 @@ by the server's own account only. Give it to the player securely, then delete it
 Measures how much server tick time NeroCreatures' creatures cost, per species and in total.
 
 | Form | Does |
-|---|---|
+| --- | --- |
 | `/nerocreatures budget` | starts a 10-second sample; run it again for progress, then the result |
 | `/nerocreatures budget start [seconds]` | starts a fresh sample of 1 to 60 seconds |
 | `/nerocreatures budget stop` | ends the sample now and shows the result |
@@ -140,20 +140,30 @@ DSN. See [Telemetry](Telemetry.md).
 
 ## `/nerocreatures gallery`
 
-Builds the **creative showcase scene** at your feet: the whole roster frozen and live, the boss
-arena, the pets and drone, and every item on a wall. `/nerocreatures gallery clear` wipes it again.
+Builds the **Menagerie** at your feet: a walkable showcase of every creature (with signs and demo
+plates), every boss in each phase, the alphas, the Radiant morphs, a rideable mount paddock and working
+rows of every block and gear item. See [Menagerie](Menagerie.md).
 
 ```text
-/nerocreatures gallery
-/nerocreatures gallery clear
+/nerocreatures gallery                 build the Menagerie (refused within 160 blocks of another gallery)
+/nerocreatures gallery grid            build the compact flat layout instead
+/nerocreatures gallery tour            go to tour stop 1 of the nearest Menagerie
+/nerocreatures gallery tour <n>        go to stop n (1 to 25); the chat line has Back and Next
+/nerocreatures gallery demo <slot>     play one exhibit's demo, as its plate would
+/nerocreatures gallery clear           remove the nearest gallery within 96 blocks
 ```
 
-Gated harder than the rest of the tree — a **player**, in **creative** — because it rewrites a box
-about 100 × 80 × 16 blocks. It writes nothing about any player: the boss is a display spawn that
-starts no fight and records no contribution, and the pets and drone are shown untamed and unowned.
+Gated harder than the rest of the tree: a **player**, in **creative** (checked when the command runs).
+The Menagerie rewrites a box of 117 x 111 blocks, 21 high, from your feet up; the layer below your
+feet is never touched.
 
-Full description, including the client-side `/ncgallery capture` screenshot harness that photographs
-it, is on the [Gallery](Gallery.md) page.
+It writes nothing about any player. Bosses are posed and start no fight, bar or cooldown; no display
+is tamed, owned or counted; demo plates play visuals only. `clear` removes **only the entities the
+gallery placed** (by tag) plus dropped items and XP: your own pets, mounts and other animals inside the
+box stay. With no gallery nearby, `clear` clears the old 0.4 showcase box around you the same way.
+
+The client-side `/ncgallery capture` screenshot harness that photographs it is on the
+[Gallery](Gallery.md) page.
 
 ## Commands NeroCreatures deliberately does not add
 
@@ -168,6 +178,7 @@ it, is on the [Gallery](Gallery.md) page.
 
 - [Spawning](Spawning.md) — what `list` and `caps` are reporting on
 - [Bosses](Bosses.md) — what `summon-boss` starts
-- [Gallery](Gallery.md) — what `gallery` builds, and the capture harness that shoots it
+- [Menagerie](Menagerie.md) — what `gallery` builds, the demo plates, the tour and the paddock
+- [Gallery](Gallery.md) — the capture harness that photographs it
 - [Data storage](Data-Storage.md) — what `export` exports, and how to erase it
 - [Link module](Link-Module.md) — the companion-app equivalent of the read-only half

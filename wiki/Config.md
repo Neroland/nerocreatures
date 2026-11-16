@@ -1,9 +1,28 @@
 # Config
 
 NeroCreatures' settings live in `nerocreatures.properties`, through Neroland Core's config system.
-Every gameplay key is **server-authoritative**: the server's value wins. Spawning keys are listed on
-[Spawning](Spawning.md) and the ownership caps on [Pets & Drones](Pets-and-Drones.md); this page lists
-the keys added in 0.5.0.
+Every gameplay key is **server-authoritative**: the server's value wins. The one exception is
+`telemetryEnabled`, which each client and server decides for itself. This page lists every key;
+[Spawning](Spawning.md), [Pets & Drones](Pets-and-Drones.md), [Habitat Blocks](Habitat-Blocks.md) and
+[Gear](Gear.md) explain the ones that belong to them in more depth.
+
+## General
+
+| Key | Default | Range | What it does |
+| --- | --- | --- | --- |
+| `telemetryEnabled` | true | | Opt-out crash reporting for this mod only. Local to each client and server; takes effect on restart. See [Telemetry](Telemetry.md). |
+| `spawnsEnabled` | true | | Master switch for natural spawning. false = creatures come only from spawn eggs, structures and summons. |
+| `globalSpawnWeightMultiplier` | 1.0 | 0-10 | Multiplies every creature's spawn weight. 0 = no natural spawns. |
+| `maxCreaturesPerChunk` | 8 | 0-128 | Most NeroCreatures mobs alive in one chunk. A full chunk gets no new spawn. |
+| `maxCreaturesPerDimension` | 200 | 0-10000 | Most NeroCreatures mobs alive in one dimension. |
+| `hostileAggressionMultiplier` | 1.0 | 0-5 | Scales hostile detection range and attack pressure. 0 = hostiles only retaliate. |
+| `pirateVillagerAggression` | false | | true = Space Pirates also attack villagers and colony NPCs (`nerocreatures:pirate_raid_targets`). |
+| `dropRateMultiplier` | 1.0 | 0-10 | Scales the bonus loot rolls added on top of each loot table; the table itself is untouched. |
+| `naturalBossSpawnsEnabled` | true | | false = the Cinder Tyrant no longer turns up on its own; bosses come only from the Apex Altar or a summon. |
+| `bossDifficultyMultiplier` | 1.0 | 0.1-10 | Scales boss damage, phase pacing and add budgets. |
+| `bossHpMultiplier` | 1.0 | 0.1-10 | Scales boss maximum health. |
+| `maxPetsPerPlayer` | 3 | 0-64 | Pets one player may have tamed at once. 0 = no taming. |
+| `maxDronesPerPlayer` | 2 | 0-64 | Terraforming Drones one player may have deployed at once. 0 = no drones. |
 
 ## Mounts and eggs
 

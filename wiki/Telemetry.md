@@ -74,10 +74,10 @@ to switch off — which is what the two lists above are for.
 
 None of this is player data under POPIA or GDPR, because none of it identifies a person. The things
 that *are* player data live in the world save and are covered by [Data storage](Data-Storage.md) and
-[`PRIVACY.md`](../PRIVACY.md).
+[`PRIVACY.md`](https://github.com/Neroland/nerocreatures/blob/main/PRIVACY.md).
 
 ## See also
 
 - [Data storage](Data-Storage.md) — the player data that actually is stored, and how to erase it
-- [`PRIVACY.md`](../PRIVACY.md) — the formal statement
+- [`PRIVACY.md`](https://github.com/Neroland/nerocreatures/blob/main/PRIVACY.md) — the formal statement
 - [Commands](Commands.md) — `telemetry-test`

@@ -222,7 +222,7 @@ UUID and are purged by the same shared erasure request that clears everything el
 
 ## Privacy
 
-*(See also [`../PRIVACY.md`](../PRIVACY.md) and [Data storage](Data-Storage.md).)*
+*(See also [`PRIVACY.md`](https://github.com/Neroland/nerocreatures/blob/main/PRIVACY.md) and [Data storage](Data-Storage.md).)*
 
 - **Your own data only**, in every section and action: your discovery tiers, kill counts, creatures,
   share and altars. Nothing about any other player.

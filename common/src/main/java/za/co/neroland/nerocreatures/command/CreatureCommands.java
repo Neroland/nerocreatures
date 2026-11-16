@@ -14,6 +14,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
+import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.RequiredArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
@@ -60,7 +61,7 @@ import za.co.neroland.nerocreatures.telemetry.NeroCreaturesTelemetry;
  * /nerocreatures export &lt;player&gt;          one player's stored NeroCreatures data, as a JSON file
  * /nerocreatures budget [start|stop]      creature tick cost per species (see BudgetCommand)
  * /nerocreatures telemetry-test           fire one synthetic crash-reporting event
- * /nerocreatures gallery [clear]          build (or wipe) the creative showcase scene
+ * /nerocreatures gallery [grid|tour [n]|demo <slot>|clear]  the creative Menagerie and its tools
  * </pre>
  *
  * <p>The whole tree is gated at Core's own admin level ({@code Commands.LEVEL_GAMEMASTERS}, i.e.
@@ -144,6 +145,31 @@ public final class CreatureCommands {
                         .requires(src -> src.getPlayer() != null)
                         .executes(ctx -> runSafely(ctx.getSource(), "gallery",
                                 () -> CreatureGallery.build(ctx.getSource())))
+                        .then(Commands.literal("grid")
+                                .executes(ctx -> runSafely(ctx.getSource(), "gallery grid",
+                                        () -> CreatureGallery.grid(ctx.getSource()))))
+                        .then(Commands.literal("tour")
+                                .executes(ctx -> runSafely(ctx.getSource(), "gallery tour",
+                                        () -> CreatureGallery.tour(ctx.getSource(), 1)))
+                                .then(Commands.argument("stop", IntegerArgumentType.integer(1,
+                                                za.co.neroland.nerocreatures.gallery.MenagerieLayout.TOUR.size()))
+                                        .executes(ctx -> runSafely(ctx.getSource(), "gallery tour",
+                                                () -> CreatureGallery.tour(ctx.getSource(),
+                                                        IntegerArgumentType.getInteger(ctx, "stop"))))))
+                        .then(Commands.literal("demo")
+                                .then(Commands.argument("slot", StringArgumentType.word())
+                                        .suggests((ctx, builder) -> {
+                                            for (za.co.neroland.nerocreatures.gallery.MenagerieLayout.Demo demo
+                                                    : za.co.neroland.nerocreatures.gallery.MenagerieLayout.DEMOS) {
+                                                if (demo.slot().startsWith(builder.getRemaining())) {
+                                                    builder.suggest(demo.slot());
+                                                }
+                                            }
+                                            return builder.buildFuture();
+                                        })
+                                        .executes(ctx -> runSafely(ctx.getSource(), "gallery demo",
+                                                () -> CreatureGallery.demo(ctx.getSource(),
+                                                        StringArgumentType.getString(ctx, "slot"))))))
                         .then(Commands.literal("clear")
                                 .executes(ctx -> runSafely(ctx.getSource(), "gallery clear",
                                         () -> CreatureGallery.clear(ctx.getSource()))))));

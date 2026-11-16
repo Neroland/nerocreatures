@@ -37,6 +37,10 @@ jobs:
       - name: Private-reference guard
         run: python3 -B tools/check_private_refs.py --check
 
+      # Pages, config keys and commands on the wiki match the code; no private or agent-file names.
+      - name: Wiki check
+        run: python3 -B tools/check_wiki.py --check
+
       - name: Mirror wiki/ into the wiki repo and push
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

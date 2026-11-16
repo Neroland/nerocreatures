@@ -251,7 +251,7 @@ store called `nerocreatures:boss_contribution`, plus one "last updated" timestam
 - A fight that somehow survives both (a crash mid-fight) is pruned after 6 hours.
 - **Erasure:** `/neroland data eraseme` removes your UUID from every fight it appears in, alongside
   everything else NeroCreatures holds. See [Pets & Drones](Pets-and-Drones.md#what-is-stored-and-how-to-get-rid-of-it)
-  and [`../PRIVACY.md`](../PRIVACY.md).
+  and [`PRIVACY.md`](https://github.com/Neroland/nerocreatures/blob/main/PRIVACY.md).
 - **Retention:** honours Core's `dataRetentionDays` like the ownership store does.
 - **Access:** a per-player export returns exactly your own contribution and nobody else's.
 

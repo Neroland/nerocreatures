@@ -264,6 +264,11 @@ The full contract is in [`wiki/Link-Module.md`](wiki/Link-Module.md).
   owns the creature, is near it and is not flooding requests, and answers only with the sender's own
   data.
 - **`/nerocreatures budget`** reports species and timings only, to the operator who ran it.
+- **The gallery** (`/nerocreatures gallery`) stores nothing about any player. Its creatures are
+  displays that are never tamed or owned, write no ownership row, statistic, gate or link event, and
+  are invisible to the companion app. Two transient in-memory maps (the last demo plate a player
+  stood on, and each exhibit's demo cooldown) hold a block position and a tick, are weakly keyed, and
+  are gone when the player leaves or the server stops. Nothing about the gallery is logged or sent.
 
 ## Logs
 

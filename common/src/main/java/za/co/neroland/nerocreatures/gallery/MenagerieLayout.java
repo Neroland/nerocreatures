@@ -902,7 +902,7 @@ public final class MenagerieLayout {
     public static Set<String> itemsShown() {
         Set<String> out = new LinkedHashSet<>();
         for (Slot slot : baseSlots()) {
-            out.add(slot.entity() + "_spawn_egg");
+            out.add(standItem(slot.entity()));
         }
         for (Stand st : dropStands()) {
             out.add(st.item());
@@ -927,6 +927,22 @@ public final class MenagerieLayout {
         Set<String> out = new LinkedHashSet<>(HABITAT_BLOCKS);
         out.add("ephemeral_crust");
         return Collections.unmodifiableSet(out);
+    }
+
+    /**
+     * What {@code clear} removes from its box: anything carrying the gallery tag, plus item and XP litter.
+     * Never anything else: a player's own pet or mount that walked in, a villager, an untagged mob.
+     */
+    public static boolean clearRemoves(java.util.Collection<String> tags, boolean litter) {
+        return litter || tags.contains(TAG);
+    }
+
+    /**
+     * The item on a base slot's stand: the species' spawn egg, or for the Terraforming Drone (which has
+     * no spawn egg) the Drone Shell it is deployed from.
+     */
+    public static String standItem(String entity) {
+        return entity.equals("terraforming_drone") ? "drone_shell" : entity + "_spawn_egg";
     }
 
     /** Every entity path on display. */

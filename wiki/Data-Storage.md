@@ -1,7 +1,7 @@
 # Data storage
 
 Everything NeroCreatures saves about a player, where it lives, how long it stays, and how to get rid
-of it. The formal statement is [`PRIVACY.md`](../PRIVACY.md); this page is the practical version.
+of it. The formal statement is [`PRIVACY.md`](https://github.com/Neroland/nerocreatures/blob/main/PRIVACY.md); this page is the practical version.
 
 > **The short version:** two small stores, both world-save scoped, both keyed by your existing
 > Minecraft game UUID, neither containing your name or any coordinates. One erase request clears
@@ -97,7 +97,7 @@ A creature marker names no player, so it is kept until its creature loads and is
 that takes. The owner hash is treated as pseudonymised personal data and expires after
 `max(dataRetentionDays, 365)` days; the salt is deleted with the last one. Both sets are capped, and
 dropping a marker at the cap is logged as a count. The reasoning is in
-[`PRIVACY.md`](../PRIVACY.md#creatures-in-unloaded-chunks-erasure-markers).
+[`PRIVACY.md`](https://github.com/Neroland/nerocreatures/blob/main/PRIVACY.md#creatures-in-unloaded-chunks-erasure-markers).
 
 Nothing on the erasure path sends anything to the player being erased (no companion-app event, push
 or alert), and vanilla's `LoveCause` (who fed an animal into love mode) is cleared on loaded animals
@@ -160,7 +160,7 @@ See [Telemetry](Telemetry.md).
 
 ## See also
 
-- [`PRIVACY.md`](../PRIVACY.md) — the formal statement
+- [`PRIVACY.md`](https://github.com/Neroland/nerocreatures/blob/main/PRIVACY.md) — the formal statement
 - [Pets & Drones](Pets-and-Drones.md) — the player-facing view of the ownership store
 - [Bosses](Bosses.md) — what a summoned fight records, and for how long
 - [Commands](Commands.md) — `export`

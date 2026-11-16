@@ -31,9 +31,12 @@ import net.minecraft.world.entity.EntityType;
 public final class CreatureBudget {
 
     public static final int DEFAULT_SECONDS = 10;
+
+    /** The budget key gallery displays are recorded under (never an entity type). */
+    private static final Object GALLERY_KEY = "gallery";
     public static final int MAX_SECONDS = 60;
 
-    private static final BudgetSampler<EntityType<?>> SAMPLER = new BudgetSampler<>();
+    private static final BudgetSampler<Object> SAMPLER = new BudgetSampler<>();
 
     private static boolean active;
     private static long startTick;
@@ -62,7 +65,8 @@ public final class CreatureBudget {
             stop(server.getTickCount());
             return;
         }
-        SAMPLER.record(entity.getType(), elapsed);
+        // Gallery displays get one line of their own, outside every species line and the total.
+        SAMPLER.record(za.co.neroland.nerocreatures.gallery.GalleryDisplays.isDisplay(entity) ? GALLERY_KEY : entity.getType(), elapsed);
     }
 
     /** Opens a fresh window of {@code seconds} (clamped to 1..{@value #MAX_SECONDS}). */
@@ -108,10 +112,13 @@ public final class CreatureBudget {
     /** The report for the current or last window, over the ticks it has covered so far. */
     public static BudgetSampler.Report report(MinecraftServer server) {
         long until = active ? Math.min(server.getTickCount(), endTick) : stoppedAtTick;
-        return SAMPLER.report(until - startTick, CreatureBudget::name);
+        return SAMPLER.report(until - startTick, CreatureBudget::name, type -> type == GALLERY_KEY);
     }
 
-    private static String name(EntityType<?> type) {
+    private static String name(Object key) {
+        if (!(key instanceof EntityType<?> type)) {
+            return String.valueOf(key);
+        }
         return String.valueOf(BuiltInRegistries.ENTITY_TYPE.getKey(type));
     }
 

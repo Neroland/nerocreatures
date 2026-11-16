@@ -117,6 +117,11 @@ public abstract class InventoryHabitatBlockEntity extends HabitatBlockEntity {
         Containers.dropContents(level, pos, this.stock);
     }
 
+    @Override
+    public void emptyForGallery() {
+        this.stock.clearContent();
+    }
+
     // --- persistence ------------------------------------------------------------------------
 
     //? if >=1.21.6 {

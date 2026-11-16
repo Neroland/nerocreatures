@@ -203,6 +203,8 @@ if (project.hasProperty('budgetProbe')) {
                 programArguments.add('--nogui')
                 systemProperty 'nerocreatures.budgetProbe', 'true'
                 systemProperty 'nerocreatures.budgetProbe.mc', mc
+                // -PgalleryOnly skips probes A and B and runs only the headless gallery check.
+                systemProperty 'nerocreatures.budgetProbe.galleryOnly', String.valueOf(project.hasProperty('galleryOnly'))
             }
         }
         mods {

@@ -56,13 +56,23 @@ public final class CreatureGallery {
             return 0;
         }
         ServerLevel level = levelOf(player);
-        if (GalleryDisplays.nearestAnchor(level, player.position(), MenagerieLayout.NO_STACK_RADIUS) != null) {
+        if (MenagerieBuilder.busy()
+                || GalleryDisplays.nearestAnchor(level, player.position(), MenagerieLayout.NO_STACK_RADIUS) != null) {
             source.sendFailure(Component.translatable("command.nerocreatures.gallery.exists"));
             return 0;
         }
         BlockPos origin = player.blockPosition();
-        MenagerieBuilder.Stats stats = grid ? MenagerieBuilder.buildGrid(level, origin)
-                : MenagerieBuilder.build(level, origin);
+        // The work is spread over a few server ticks; the summary arrives when the last step has run.
+        java.util.function.Consumer<MenagerieBuilder.Stats> done = stats -> report(source, origin, grid, stats);
+        if (grid) {
+            MenagerieBuilder.startGrid(level, origin, done);
+        } else {
+            MenagerieBuilder.startMenagerie(level, origin, done);
+        }
+        return Command.SINGLE_SUCCESS;
+    }
+
+    private static void report(CommandSourceStack source, BlockPos origin, boolean grid, MenagerieBuilder.Stats stats) {
         if (grid) {
             source.sendSuccess(() -> Component.translatable("command.nerocreatures.gallery.grid_built",
                     stats.mobs(), stats.items()), false);
@@ -81,7 +91,6 @@ public final class CreatureGallery {
             source.sendSuccess(() -> Component.translatable("command.nerocreatures.gallery.over_budget",
                     stats.mobs(), stats.entities(), stats.blocks()).withStyle(ChatFormatting.RED), false);
         }
-        return Command.SINGLE_SUCCESS;
     }
 
     /** {@code gallery tour [n]}: goes to stop {@code n} (1..25) of the nearest Menagerie. */
@@ -141,18 +150,19 @@ public final class CreatureGallery {
         ServerLevel level = levelOf(player);
         GalleryDisplays.Anchor anchor = GalleryDisplays.nearestAnchor(level, player.position(),
                 MenagerieLayout.ANCHOR_RADIUS);
-        int[] result;
+        if (MenagerieBuilder.busy()) {
+            source.sendFailure(Component.translatable("command.nerocreatures.gallery.busy"));
+            return 0;
+        }
+        java.util.function.Consumer<int[]> done = result -> source.sendSuccess(() -> Component.translatable(
+                "command.nerocreatures.gallery.cleared", result[0], result[1]), false);
         if (anchor != null) {
             GalleryDemos.stopAt(level, anchor.origin());
-            result = MenagerieBuilder.bulldoze(level, anchor.origin(),
-                    anchor.grid() ? MenagerieLayout.GRID_CLEAR_BOX : MenagerieLayout.CLEAR_BOX);
+            MenagerieBuilder.startClear(level, anchor.origin(),
+                    anchor.grid() ? MenagerieLayout.GRID_CLEAR_BOX : MenagerieLayout.CLEAR_BOX, done);
         } else {
-            result = MenagerieBuilder.bulldoze(level, player.blockPosition(), MenagerieLayout.LEGACY_CLEAR_BOX);
+            MenagerieBuilder.startClear(level, player.blockPosition(), MenagerieLayout.LEGACY_CLEAR_BOX, done);
         }
-        final int blocks = result[0];
-        final int entities = result[1];
-        source.sendSuccess(() -> Component.translatable("command.nerocreatures.gallery.cleared", blocks, entities),
-                false);
         return Command.SINGLE_SUCCESS;
     }
 
