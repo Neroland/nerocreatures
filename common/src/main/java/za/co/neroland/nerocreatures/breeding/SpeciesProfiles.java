@@ -18,10 +18,10 @@ import org.jetbrains.annotations.Nullable;
 import za.co.neroland.nerocreatures.NeroCreaturesCommon;
 
 /**
- * The jar-bundled {@value #RESOURCE} (decision 003): per-species breeding, Studied threshold and
+ * The jar-bundled {@value #RESOURCE}: per-species breeding, Studied threshold and
  * product timer rows, keyed by the entity id's path ({@code dune_loper}). Loaded once, lazily, like
  * the trait pool; a malformed file fails loudly in development and degrades to an empty table (every
- * species on {@link SpeciesProfile#DEFAULT}) in production. Stage 2 work packages each add their row.
+ * species on {@link SpeciesProfile#DEFAULT}) in production. Each species adds its own row.
  *
  * @param schema  file schema (currently 1)
  * @param species rows by entity-id path

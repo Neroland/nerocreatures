@@ -19,7 +19,7 @@ import org.jetbrains.annotations.Nullable;
  *       which other mods fill. An empty tag simply finds nothing.</li>
  *   <li>An ore block item ({@code *_ore}) of a vanilla material maps to the same vanilla tag; any
  *       other block item tracks exactly that block.</li>
- *   <li><b>Allow list</b> (Stage 2 review M5): whatever the spec, a block is only ever tracked when
+ *   <li><b>Allow list</b> whatever the spec, a block is only ever tracked when
  *       it is in {@code #nerocreatures:strata_trackable} (ores, {@code #c:ores}, natural stone) and
  *       has no block entity ({@link #trackable}). Chests, barrels, shulker boxes, spawners and any
  *       other placed or container block are refused, so the hound is a prospector, never a base
@@ -28,7 +28,7 @@ import org.jetbrains.annotations.Nullable;
  */
 public final class StrataTargets {
 
-    /** Colour families for the back-stripe glow (entity contract {@code variant} 0-7). */
+    /** Colour families for the back-stripe glow ({@code variant} 0-7). */
     public static final int FAMILY_NONE = 0;
     public static final int FAMILY_COAL = 1;
     public static final int FAMILY_IRON = 2;

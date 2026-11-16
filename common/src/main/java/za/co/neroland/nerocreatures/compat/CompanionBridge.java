@@ -14,6 +14,7 @@ import net.minecraft.world.item.ItemStack;
 import za.co.neroland.nerolandcore.platform.Services;
 
 import za.co.neroland.nerocreatures.NeroCreaturesCommon;
+import za.co.neroland.nerocreatures.telemetry.NeroCreaturesTelemetry;
 
 /**
  * The NeroCompanion hand-off seam: the single place NeroCreatures asks "is something else driving
@@ -94,9 +95,11 @@ public final class CompanionBridge {
             }
             return found;
         } catch (RuntimeException | ServiceConfigurationError | LinkageError e) {
+            // Exception class only: the message is free text (POPIA/GDPR).
             NeroCreaturesCommon.LOGGER.warn(
-                    "[NeroCreatures] A companion pet-hook implementation could not be loaded; "
-                            + "continuing with NeroCreatures' own behaviour.", e);
+                    "[NeroCreatures] A companion pet-hook implementation could not be loaded ({}); "
+                            + "continuing with NeroCreatures' own behaviour.", e.getClass().getSimpleName());
+            NeroCreaturesTelemetry.captureHandledException(e, "companion", "loadHooks");
             return NO_OP;
         }
     }

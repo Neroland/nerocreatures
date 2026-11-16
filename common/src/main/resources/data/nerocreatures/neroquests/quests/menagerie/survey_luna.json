@@ -1,0 +1,30 @@
+{
+  "title": "quest.nerocreatures.menagerie.survey_luna.title",
+  "description": "quest.nerocreatures.menagerie.survey_luna.desc",
+  "icon": "nerocreatures:resonant_membrane",
+  "prerequisites": [
+    "nerocreatures:menagerie/lantern_light"
+  ],
+  "objectives": [
+    {
+      "type": "neroquests:gate_open",
+      "gate": "nerocreatures:bestiary/scanned/echo_shrike"
+    },
+    {
+      "type": "neroquests:gate_open",
+      "gate": "nerocreatures:bestiary/scanned/lode_tortoise"
+    }
+  ],
+  "rewards": [
+    {
+      "type": "neroquests:xp",
+      "amount": 60
+    },
+    {
+      "type": "neroquests:currency",
+      "amount": 40
+    }
+  ],
+  "scope": "player",
+  "visible_gate": "nerolandcore:reached_orbit"
+}

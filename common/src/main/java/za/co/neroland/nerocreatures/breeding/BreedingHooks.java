@@ -11,10 +11,10 @@ import za.co.neroland.nerocreatures.trait.TraitSet;
  * Seams the breeding path calls into, bound by later stages so this package never depends on items,
  * blocks or registries it does not own.
  *
- * <p><b>Egg layer</b> (Stage 4, decision 003): for an {@link BirthMode#EGG} species, breeding asks the
+ * <p><b>Egg layer</b>: for an {@link BirthMode#EGG} species, breeding asks the
  * bound {@link EggLayer} to drop a {@code <species>_egg} carrying the rolled traits in
  * {@code minecraft:custom_data} ({@code {species, v, a, b}}). Until one is bound, or if it returns
- * {@code false}, the species falls back to live birth, so nothing is lost before Stage 4 lands.
+ * {@code false}, the species falls back to live birth, so a species never loses a birth.
  */
 public final class BreedingHooks {
 

@@ -28,6 +28,7 @@ import za.co.neroland.nerocreatures.entity.base.NeroCreatureEntity;
 import za.co.neroland.nerocreatures.entity.visual.VisualPose;
 import za.co.neroland.nerocreatures.registry.ModItems;
 import za.co.neroland.nerocreatures.registry.ModSounds;
+import za.co.neroland.nerocreatures.registry.ModParticles;
 
 /**
  * <b>Rogue Android</b> — the heavy frame: a walking security system that has stopped taking orders.
@@ -163,7 +164,7 @@ public class RogueAndroid extends AbstractAndroid {
 
     /** A hit that the shield ate: one spark burst and a clang. */
     private void absorbHit(ServerLevel level) {
-        level.sendParticles(ParticleTypes.ELECTRIC_SPARK, this.getX(),
+        level.sendParticles(ModParticles.STATIC_SPARK.get(), this.getX(),
                 this.getY() + this.getBbHeight() * 0.6D, this.getZ(), 6, 0.3D, 0.3D, 0.3D, 0.02D);
         // The counter, made legible: one bright pip per charge still left, in a row across the chest.
         double yaw = Math.toRadians(this.getYRot());
@@ -181,7 +182,7 @@ public class RogueAndroid extends AbstractAndroid {
     /** The charge that emptied the shield: a break, and the window opens. */
     private void breakShield(ServerLevel level) {
         this.staggerTicks = STAGGER_TICKS;
-        level.sendParticles(ParticleTypes.ELECTRIC_SPARK, this.getX(),
+        level.sendParticles(ModParticles.STATIC_SPARK.get(), this.getX(),
                 this.getY() + this.getBbHeight() * 0.6D, this.getZ(), 24, 0.5D, 0.5D, 0.5D, 0.08D);
         level.sendParticles(ParticleTypes.LARGE_SMOKE, this.getX(),
                 this.getY() + this.getBbHeight() * 0.6D, this.getZ(), 8, 0.3D, 0.3D, 0.3D, 0.01D);

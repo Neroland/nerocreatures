@@ -8,7 +8,7 @@ package za.co.neroland.nerocreatures.entity.luna;
  *       {@link #GRAZE_RADIUS} blocks. <b>It never breaks or changes it.</b></li>
  *   <li>Nodules grow only while the last graze found ore. <b>The family is fixed once nodules
  *       show</b> (stage 1 or more): grazing another ore then keeps growing the same family at that
- *       family's rate, so a tortoise walking a mixed cave never loses progress (Stage 2 review M2).
+ *       family's rate, so a tortoise walking a mixed cave never loses progress.
  *       Only at stage 0, where nothing is visible yet, does a different ore switch the family, and
  *       that hidden progress restarts (no diamonds grown on iron progress). Ready nodules keep their
  *       family until harvested.</li>
@@ -27,14 +27,14 @@ public final class NoduleRules {
     public static final int DEFAULT_YIELD_CAP = 4;
     /**
      * Default ticks of ore grazing from bare shell to ready nodules for a common family: one and a
-     * half days (rare families six). Raised from one day in the Stage 2 review (M2): husbanded
+     * half days (rare families six). Raised from one day because husbanded
      * tortoises no longer despawn, so a bred herd beside one placed diamond ore scales the yield,
-     * and the brief asks for slow, low-yield ore.
+     * and ore from a creature is meant to be slow and low-yield.
      */
     public static final int DEFAULT_REGROW_TICKS = 36_000;
     /** Ticks between grazes. */
     public static final int GRAZE_INTERVAL = 600;
-    /** Horizontal graze radius, blocks (decision 006: four). */
+    /** Horizontal graze radius, blocks (four). */
     public static final int GRAZE_RADIUS = 4;
     /** Vertical graze radius, blocks. */
     public static final int GRAZE_VERTICAL = 2;
@@ -91,7 +91,7 @@ public final class NoduleRules {
 
     /**
      * Timer progress for a seeded stage: the start of that stage plus {@code fraction} of one stage
-     * (clamped to {@code [0, 1)}), or full for the ready stage. Stage 0 seeds nothing.
+     * (clamped to {@code [0, 1)}), or full for the ready stage. A bare shell (stage 0) seeds nothing.
      */
     public static int seedProgress(int stage, int regrowTicks, double fraction) {
         if (stage <= 0 || regrowTicks <= 0) {

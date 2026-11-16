@@ -10,12 +10,14 @@ import java.util.Optional;
 import org.junit.jupiter.api.Test;
 
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.StringTag;
 
 import za.co.neroland.nerocreatures.block.CapturedCreature;
 import za.co.neroland.nerocreatures.trait.TraitPool;
 import za.co.neroland.nerocreatures.trait.TraitSet;
 
-/** Stage 4 Capture Pod: the round trip, who may be captured, release rules, and duplication. */
+/** Capture Pod: the round trip, who may be captured, release rules, and duplication. */
 class CapturePodTest {
 
     // --- round trip ---------------------------------------------------------------------------
@@ -57,6 +59,31 @@ class CapturePodTest {
         String stored = captured.toTag().toString();
         assertFalse(stored.contains("55,66,77,88") || stored.contains("55, 66, 77, 88"), "owner ints stored");
         assertFalse(stored.contains("11,22,33,44") || stored.contains("11, 22, 33, 44"), "uuid ints stored");
+    }
+
+    @Test
+    void aPodWrittenWithIdentityIsStrippedOnRead() {
+        // A pod from an earlier build or another mod: the raw record bypasses CapturedCreature.of.
+        CompoundTag raw = tamedPetSave(TraitSet.of(TraitPool.HARDY, TraitPool.SWIFT));
+        raw.putIntArray("last_hurt_by_player", new int[] {9, 8, 7, 6});
+        raw.put("neoforge:attachments", new CompoundTag());
+        ListTag tags = new ListTag();
+        tags.add(StringTag.valueOf("nerocreatures.nest:minecraft:overworld/1/2/3"));
+        tags.add(StringTag.valueOf("keep_me"));
+        raw.put("Tags", tags);
+        CapturedCreature unsafe = new CapturedCreature(CapturedCreature.CURRENT_VERSION, "nerocreatures:lumen_moth",
+                raw, Optional.empty(), false);
+
+        CapturedCreature read = CapturedCreature.fromTag(unsafe.toTag()).orElseThrow();
+
+        for (String key : new String[] {"UUID", "Owner", "LoveCause", "last_hurt_by_player", "neoforge:attachments",
+                "Command"}) {
+            assertFalse(read.entity().contains(key), key);
+        }
+        String tagsAfter = String.valueOf(read.entity().get("Tags"));
+        assertFalse(tagsAfter.contains("nerocreatures.nest:"), "a nest binding is a coordinate: " + tagsAfter);
+        assertTrue(tagsAfter.contains("keep_me"), tagsAfter);
+        assertTrue(read.entity().contains("CustomName"));
     }
 
     // --- capture eligibility ------------------------------------------------------------------

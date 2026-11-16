@@ -103,7 +103,7 @@ public class SonicWardBlockEntity extends FieldBlockEntity {
         double reach = FieldRules.WARD_RADIUS + SWEEP_MARGIN;
         AABB box = new AABB(pos).inflate(reach, FieldRules.VERTICAL_REACH, reach);
         List<NeroCreatureEntity> hostiles = level.getEntitiesOfClass(NeroCreatureEntity.class, box,
-                creature -> creature.isAlive() && FieldRules.wardRepels(HabitatFields.isHostile(creature),
+                creature -> creature.isAlive() && !za.co.neroland.nerocreatures.gallery.GalleryDisplays.isDisplay(creature) && FieldRules.wardRepels(HabitatFields.isHostile(creature),
                         creature instanceof NeroBossEntity, false));
         int handled = 0;
         for (NeroCreatureEntity creature : hostiles) {

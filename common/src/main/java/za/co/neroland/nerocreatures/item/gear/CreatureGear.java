@@ -41,7 +41,7 @@ import za.co.neroland.nerocreatures.registry.ModSounds;
 
 /**
  * The server half of the creature gear: the passive effects (one pass over online players per tick,
- * most work on a 5-tick cadence) and the three use actions. Hooks the integrator adds:
+ * most work on a 5-tick cadence) and the three use actions. Hooks:
  * {@link #init()} once at common init (registers the Lurker Cloak silencer with
  * {@link SoundHearing}), and {@link #serverTick(MinecraftServer)} from the server tick.
  *
@@ -318,7 +318,7 @@ public final class CreatureGear {
             if (!(entity instanceof TameableCreature creature) || !creature.isAlive()) {
                 continue;
             }
-            boolean busy = creature.command() == PetCommand.SIT || creature.isVehicle() || creature.isPassenger();
+            boolean busy = creature.command() == PetCommand.SIT || creature.command() == PetCommand.STAY || creature.isVehicle() || creature.isPassenger();
             candidates.add(new GearRules.WhistleCandidate(found.size(), true, user.equals(creature.ownerId()),
                     creature.distanceToSqr(player), busy));
             found.add(creature);

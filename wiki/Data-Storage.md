@@ -27,7 +27,7 @@ The index of who owns which pet or drone. Per creature it holds:
 | entity type id | `nerocreatures:glacite_wisp` | so an app or an export can name it |
 | dimension id | `nerospace:glacira` | **only** so an erase request knows which level to look in |
 
-Plus one "last updated" timestamp per player, used only for retention.
+Plus one "last updated" timestamp per player: when their rows last changed, shown in their export.
 
 It exists for three jobs and no others: enforcing `maxPetsPerPlayer` / `maxDronesPerPlayer` without
 loading every chunk in the save, finding every creature bound to a player during an erasure, and
@@ -90,8 +90,18 @@ markers in the ownership store: the creature ids of the rows it removed, and a *
 of your UUID (never the UUID itself; the salt is random per world). When such a creature next loads it
 finds its marker and is released (a drone is recalled), silently. A creature is only ever released on
 such a marker: a pet whose owner the index simply does not know (an older save, a store restored from
-backup) stays tamed and is re-indexed. Markers are capped, oldest first; a creature's marker is
-removed once it is freed, and the hash once that player tames or deploys something again.
+backup) stays tamed and is re-indexed. A creature's marker is removed once it is freed, and the hash
+once that player tames or deploys something again.
+
+A creature marker names no player, so it is kept until its creature loads and is freed, however long
+that takes. The owner hash is treated as pseudonymised personal data and expires after
+`max(dataRetentionDays, 365)` days; the salt is deleted with the last one. Both sets are capped, and
+dropping a marker at the cap is logged as a count. The reasoning is in
+[`PRIVACY.md`](../PRIVACY.md#creatures-in-unloaded-chunks-erasure-markers).
+
+Nothing on the erasure path sends anything to the player being erased (no companion-app event, push
+or alert), and vanilla's `LoveCause` (who fed an animal into love mode) is cleared on loaded animals
+that name them.
 
 **Nothing on the erasure path logs who was erased** — only a count of creatures released.
 
@@ -99,19 +109,26 @@ removed once it is freed, and the hash once that player tames or deploys somethi
 
 Retention honours **Core's** `dataRetentionDays` setting; NeroCreatures has no separate one.
 
-The first time each store is read in a server session, any player untouched for longer than that is
-erased **in full** — index row *and* creatures. That is deliberate: dropping only the row would leave
-a pruned player's UUID sitting in a pet's entity data, which would not be erasure at all.
+"Inactive" means what it means for every Nero mod: Core's record of when the player was last seen.
+Core's purge-inactive sweep (`/neroland data purge-inactive`) erases a player not seen for longer
+than `dataRetentionDays` **in full** through the registered eraser — index rows *and* creatures, so
+no UUID is left sitting in a pet's entity data. NeroCreatures never decides on its own that a player
+is inactive because they have not tamed anything new: a player who plays daily keeps their pets.
 
-Core's default is `0`, which disables the local sweep and leaves retention entirely to Core's own
-purge-inactive flow — which reaches both of these stores through the same registered eraser.
+The first time each store is read in a server session (and daily after that) NeroCreatures expires
+its own short-lived records: boss contribution in a fight that has gone quiet for longer than the
+retention period, and owner erasure hashes past their lifetime.
 
 Only the number of records pruned is logged, never which ones.
 
 ## Access (export)
 
-`/nerocreatures export <player>` prints exactly one player's own record as JSON — their ownership
-rows and their own boss contribution, and nobody else's. See [Commands](Commands.md).
+`/nerocreatures export <player>` writes everything the mod holds about one player as JSON to a file
+under the world folder, and
+nobody else's: their ownership rows, their own boss contribution, this mod's Bestiary and milestone
+gates, loaded creatures that name them as owner (with any Nest home), whether an erasure marker
+exists for them, and the Apex Altars they lit that the server still remembers in memory for the
+companion app. See [Commands](Commands.md).
 
 Operator permission is required because it is somebody's personal record; a player asking for their
 own data asks an operator to run it. A player may be named by their **online name or their raw

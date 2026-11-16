@@ -10,7 +10,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.world.entity.LivingEntity;
@@ -122,7 +121,7 @@ public final class BestiaryGfx {
         graphics.setTooltipForNextFrame(font, stack, mouseX, mouseY);
         //?} else {
         /*screen.setTooltipForNextRenderPass(Screen.getTooltipFromItem(Minecraft.getInstance(), stack).stream()
-                .map(Component::getVisualOrderText).toList());
+                .map(net.minecraft.network.chat.Component::getVisualOrderText).toList());
         *///?}
     }
 

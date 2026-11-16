@@ -1,6 +1,5 @@
 package za.co.neroland.nerocreatures.entity.tame;
 
-import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.damagesource.DamageSource;
@@ -17,6 +16,7 @@ import za.co.neroland.nerocreatures.entity.base.CreatureTier;
 import za.co.neroland.nerocreatures.entity.visual.VisualPose;
 import za.co.neroland.nerocreatures.registry.ModItems;
 import za.co.neroland.nerocreatures.registry.ModSounds;
+import za.co.neroland.nerocreatures.registry.ModParticles;
 
 /**
  * <b>Glacite Wisp</b> — the ice-lattice fauna of the frozen worlds.
@@ -72,7 +72,7 @@ public class GlaciteWisp extends TameableCreature {
                 .add(Attributes.SAFE_FALL_DISTANCE, DRIFT_SAFE_FALL);
     }
 
-    /** Breeding opt-in (decision 003, additive): live birth, food = its taming food. */
+    /** Breeding opt-in (additive): live birth, food = its taming food. */
     @Override
     public boolean breedable() {
         return true;
@@ -92,7 +92,7 @@ public class GlaciteWisp extends TameableCreature {
         // effect never visibly blinks while the owner is still falling.
         owner.addEffect(new MobEffectInstance(MobEffects.SLOW_FALLING, SLOW_FALL_TICKS, 0,
                 true, false, true));
-        level.sendParticles(ParticleTypes.SNOWFLAKE, this.getX(), this.getY() + 0.4D, this.getZ(),
+        level.sendParticles(ModParticles.RIME_MOTE.get(), this.getX(), this.getY() + 0.4D, this.getZ(),
                 4, 0.3D, 0.2D, 0.3D, 0.0D);
         if (!this.isOrderedToSit() && this.visuals().abilityDuration() == 0) {
             this.visuals().playPose(VisualPose.ABILITY, CUSHION_POSE_TICKS);

@@ -3,7 +3,6 @@ package za.co.neroland.nerocreatures.entity.deepspace;
 import com.mojang.serialization.Codec;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
@@ -29,6 +28,7 @@ import za.co.neroland.nerocreatures.entity.tame.TameableCreature;
 import za.co.neroland.nerocreatures.entity.visual.VisualPose;
 import za.co.neroland.nerocreatures.spawn.HabitatTags;
 import za.co.neroland.nerocreatures.registry.ModSounds;
+import za.co.neroland.nerocreatures.registry.ModParticles;
 import za.co.neroland.nerolandcore.worldgen.SpaceTags;
 
 /**
@@ -37,7 +37,7 @@ import za.co.neroland.nerolandcore.worldgen.SpaceTags;
  *
  * <p>Everything a mount does (taming as {@code MOUNT} against {@code maxMountsPerPlayer}, the
  * {@code creature_saddle}, owner-only riding, stamina, panniers behind Stout, egg breeding from
- * {@code species.json}) is the shared {@link MountCreature} base (decision 004). The species adds:
+ * {@code species.json}) is the shared {@link MountCreature} base. The species adds:
  *
  * <p><b>Flight, gated by gravity</b> ({@link VoidMantaFlight#flightAllowed}): free flight where the
  * gravity attribute is reduced or in its own deep-space habitat; a glide (no climbing, slow sink)
@@ -248,15 +248,15 @@ public class VoidManta extends MountCreature {
         }
     }
 
-    // Particles: vanilla reverse_portal until ModParticles has void_trail (decision 007); one swap each.
+    // Particles: vanilla reverse_portal until ModParticles has void_trail; one swap each.
     private void tickBlinkFx(ServerLevel level) {
         if (this.serverBlinkFx > 0 && --this.serverBlinkFx == 0) {
-            level.sendParticles(ParticleTypes.REVERSE_PORTAL, this.getX(), this.getY() + 0.4D, this.getZ(),
+            level.sendParticles(ModParticles.VOID_TRAIL.get(), this.getX(), this.getY() + 0.4D, this.getZ(),
                     16, 1.0D, 0.2D, 1.0D, 0.02D);
             ModSounds.VOID_MANTA_BLINK.play(this);
             this.serverArrivalFx = ARRIVAL_FX_DELAY;
         } else if (this.serverArrivalFx > 0 && --this.serverArrivalFx == 0) {
-            level.sendParticles(ParticleTypes.REVERSE_PORTAL, this.getX(), this.getY() + 0.4D, this.getZ(),
+            level.sendParticles(ModParticles.VOID_TRAIL.get(), this.getX(), this.getY() + 0.4D, this.getZ(),
                     16, 1.0D, 0.2D, 1.0D, 0.02D);
         }
     }

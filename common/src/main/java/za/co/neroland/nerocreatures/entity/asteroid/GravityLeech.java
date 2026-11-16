@@ -125,6 +125,11 @@ public class GravityLeech extends NeroCreatureEntity implements Enemy
     /** The latch lands at the end of the wind-up; the held {@code ability} pose is already running. */
     void onLatched() {
         this.visuals().holdPose(VisualPose.ABILITY);
+        if (this.level() instanceof net.minecraft.server.level.ServerLevel level && this.getTarget() != null) {
+            net.minecraft.world.entity.LivingEntity target = this.getTarget();
+            level.sendParticles(za.co.neroland.nerocreatures.registry.ModParticles.GRAVITY_RIPPLE.get(), target.getX(),
+                    target.getY() + 0.1D, target.getZ(), 1, 0.0D, 0.0D, 0.0D, 0.0D);
+        }
     }
 
     void onReleased() {

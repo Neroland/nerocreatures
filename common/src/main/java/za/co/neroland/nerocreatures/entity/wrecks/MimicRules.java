@@ -2,7 +2,7 @@ package za.co.neroland.nerocreatures.entity.wrecks;
 
 /**
  * Pure rules for the {@link CacheMimic}: when it wakes, when it may bite, when it goes back to sleep,
- * and how a dormant crate sits on the block grid (decision 007: exactly one block, grid-aligned, yaw
+ * and how a dormant crate sits on the block grid (exactly one block, grid-aligned, yaw
  * snapped to 90 degrees). No Minecraft types, so every rule is unit-tested.
  */
 public final class MimicRules {
@@ -26,7 +26,7 @@ public final class MimicRules {
     /** How often a dormant mimic re-asserts its grid position and yaw. */
     public static final int SETTLE_INTERVAL_TICKS = 20;
 
-    /** Natural spawn cap (Stage 2 review M4): at most this many mimics within {@link #AREA_RADIUS}. */
+    /** Natural spawn cap: at most this many mimics within {@link #AREA_RADIUS}. */
     public static final int MAX_PER_AREA = 1;
     /** Radius (blocks) of the natural spawn cap. */
     public static final double AREA_RADIUS = 48.0D;
@@ -66,7 +66,7 @@ public final class MimicRules {
         return Math.floorMod(roll, SKINS);
     }
 
-    /** The natural spawn rule's level gate: the config key on and a space level (decision 001). */
+    /** The natural spawn rule's level gate: the config key on and a space level. */
     public static boolean maySpawn(boolean keyOn, boolean spaceLevel) {
         return keyOn && spaceLevel;
     }
@@ -77,7 +77,7 @@ public final class MimicRules {
     }
 
     /**
-     * Whether the loot table pays out (Stage 2 review M4): every pool of
+     * Whether the loot table pays out: every pool of
      * {@code entities/cache_mimic} carries {@code minecraft:killed_by_player}, so a mimic killed by
      * magma, a trap or another mob drops nothing and cannot be farmed with nobody present. This
      * mirrors the loot condition for the tests.

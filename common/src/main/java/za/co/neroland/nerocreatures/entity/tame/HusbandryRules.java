@@ -1,7 +1,7 @@
 package za.co.neroland.nerocreatures.entity.tame;
 
 /**
- * Pure rules for <b>husbanded</b> livestock (Stage 2 review M1): an animal a player keeps or bred.
+ * Pure rules for <b>husbanded</b> livestock: an animal a player keeps or bred.
  * No Minecraft types, so every rule is unit-tested.
  *
  * <ul>

@@ -55,9 +55,10 @@ import za.co.neroland.nerocreatures.entity.visual.VisualPose;
 import za.co.neroland.nerocreatures.sound.CreatureSound;
 import za.co.neroland.nerocreatures.world.CreatureGriefing;
 import za.co.neroland.nerocreatures.registry.ModSounds;
+import za.co.neroland.nerocreatures.registry.ModParticles;
 
 /**
- * <b>Rime Matriarch</b> — Glacira's signature boss (altar-summoned only, decision 001).
+ * <b>Rime Matriarch</b> — Glacira's signature boss (altar-summoned only).
  *
  * <p>Built on {@link BossController} like the Cinder Tyrant. The fight (numbers in
  * {@link MatriarchRules}):
@@ -68,7 +69,7 @@ import za.co.neroland.nerocreatures.registry.ModSounds;
  *   <li><b>Ice pillars</b> are the cover: {@code ephemeral_crust[variant=rime,restore=air]} columns
  *       raised into air only on a ring around the arena centre, breakable, capped, self-melting, and
  *       removed when the fight ends. Gated by {@code bossArenaBlocks} through
- *       {@link CreatureGriefing} (decision 006). Denied: no pillars, any solid block is cover and the
+ *       {@link CreatureGriefing}. Denied: no pillars, any solid block is cover and the
  *       telegraph is twice as long, so the fight stays fair without touching the world.</li>
  *   <li><b>Freezing floor</b> spreading in stages (radius per phase): players standing on it gain
  *       freeze ticks (short of damage until phase 3), and still water sources in it turn into
@@ -88,7 +89,7 @@ public class RimeMatriarch extends NeroBossEntity {
     private final ArenaLedger frozenBlocks = new ArenaLedger(MatriarchRules.MAX_FROZEN_BLOCKS);
     private final FightEndLatch latch = new FightEndLatch();
 
-    /** Whether the last arena-block attempt was refused (decision 006 fallback in effect). */
+    /** Whether the last arena-block attempt was refused (the griefing-denied fallback in effect). */
     private boolean arenaDenied;
     private int floorTick;
     private int pillarTick;
@@ -184,7 +185,7 @@ public class RimeMatriarch extends NeroBossEntity {
         this.pillarTick = 0;
         this.floorTick = 0;
         ModSounds.RIME_MATRIARCH_PHASE.play(this);
-        level.sendParticles(ParticleTypes.SNOWFLAKE, this.getX(), this.getY() + 2.0D, this.getZ(),
+        level.sendParticles(ModParticles.RIME_MOTE.get(), this.getX(), this.getY() + 2.0D, this.getZ(),
                 60, 2.0D, 1.5D, 2.0D, 0.05D);
     }
 
@@ -349,7 +350,7 @@ public class RimeMatriarch extends NeroBossEntity {
             player.setTicksFrozen(MatriarchRules.freezeTicks(player.getTicksFrozen(),
                     player.getTicksRequiredToFreeze(), phase));
         }
-        level.sendParticles(ParticleTypes.SNOWFLAKE, cx, anchor.getY() + 0.2D, cz,
+        level.sendParticles(ModParticles.RIME_MOTE.get(), cx, anchor.getY() + 0.2D, cz,
                 6 + radius, radius * 0.5D, 0.05D, radius * 0.5D, 0.0D);
         this.freezeWater(level, anchor, radius);
     }
@@ -573,7 +574,7 @@ public class RimeMatriarch extends NeroBossEntity {
             }
             if (this.clipTick < MatriarchRules.TELEGRAPH_TICKS) {
                 if ((this.clipTick & 3) == 0) {
-                    level.sendParticles(ParticleTypes.SNOWFLAKE, eye.x, eye.y + 0.6D, eye.z,
+                    level.sendParticles(ModParticles.RIME_MOTE.get(), eye.x, eye.y + 0.6D, eye.z,
                             8, 0.6D, 0.4D, 0.6D, 0.02D);
                 }
             }

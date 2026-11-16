@@ -101,7 +101,7 @@ public final class NestHome {
         LivingEntity ownerEntity = creature.getOwner();
         boolean following = creature.command() == PetCommand.FOLLOW && ownerEntity != null
                 && ownerEntity.level() == level;
-        boolean sitting = creature.command() == PetCommand.SIT;
+        boolean sitting = creature.command() == PetCommand.SIT || creature.command() == PetCommand.STAY;
         double distance = Math.sqrt(creature.distanceToSqr(nest.getX() + 0.5D, nest.getY() + 0.5D, nest.getZ() + 0.5D));
         NestRules.Action action = NestRules.decide(valid, following, creature.isVehicle(), sitting, distance);
         switch (action) {

@@ -604,7 +604,7 @@ for _creature, (_base, _spot, _outline) in PALETTES.items():
     if _creature not in NO_SPAWN_EGG:
         MOTIFS[_creature + "_spawn_egg"] = _spawn_egg(_base, _spot, _outline)
 
-# Stage 4 creature eggs (laid by egg-birth species, hatched in an Incubator): a paler shell in the
+# Creature eggs (laid by egg-birth species, hatched in an Incubator): a paler shell in the
 # species palette so an egg never reads as its spawn egg.
 EGG_SPECIES = ("lumen_moth", "lode_tortoise", "slag_beetle", "magnet_crab", "spore_drifter", "void_manta")
 
@@ -648,18 +648,18 @@ ENTITY_MOTIFS = {
     "lunar_stalker": _entity_sheet(*PALETTES["lunar_stalker"], band_step=8, speckles=30),
     "asteroid_worm": _entity_sheet(*PALETTES["asteroid_worm"], band_step=4, speckles=50),
     "plasma_slime": _entity_sheet(*PALETTES["plasma_slime"], band_step=5, speckles=60),
-    # Stage 4. Band step doubles as a "surface" cue: wide bands read as slabs (golem, android),
+    # Band step doubles as a "surface" cue: wide bands read as slabs (golem, android),
     # tight ones as fabric and panelling (pirate, drone).
     "crystal_golem": _entity_sheet(*PALETTES["crystal_golem"], band_step=10, speckles=45),
     "space_pirate": _entity_sheet(*PALETTES["space_pirate"], band_step=6, speckles=25),
     "rogue_drone": _entity_sheet(*PALETTES["rogue_drone"], band_step=4, speckles=20),
     "rogue_android": _entity_sheet(*PALETTES["rogue_android"], band_step=8, speckles=30),
-    # Stage 5. The two pets are small and bright; the drone reuses the machine banding of its
+    # The two pets are small and bright; the drone reuses the machine banding of its
     # hostile cousins so the family reads, but in the green of a tool rather than a threat.
     "glacite_wisp": _entity_sheet(*PALETTES["glacite_wisp"], band_step=3, speckles=55),
     "xertz_forager": _entity_sheet(*PALETTES["xertz_forager"], band_step=7, speckles=35),
     "terraforming_drone": _entity_sheet(*PALETTES["terraforming_drone"], band_step=4, speckles=20),
-    # Stage 6. The boss gets the widest bands in the mod — big slabs of cooled slag — and the
+    # The boss gets the widest bands in the mod — big slabs of cooled slag — and the
     # heaviest speckle count, which reads as the ember cracks running through them.
     "cinder_tyrant": _entity_sheet(*PALETTES["cinder_tyrant"], band_step=12, speckles=70),
 }

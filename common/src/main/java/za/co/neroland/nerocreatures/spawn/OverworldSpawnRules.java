@@ -1,7 +1,7 @@
 package za.co.neroland.nerocreatures.spawn;
 
 /**
- * The pure halves of decision 005's overworld spawning: the alive cap and the per-attempt chance.
+ * The pure halves of overworld spawning: the alive cap and the per-attempt chance.
  * Unit-tested ({@code OverworldSpawnRulesTest}) over many simulated attempts.
  */
 public final class OverworldSpawnRules {

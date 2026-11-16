@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Write the Bestiary's Neroland Core record gates (decision 002): two player-scope gates per species.
+"""Write the Bestiary's Neroland Core record gates: two player-scope gates per species.
 
     python tools/gen_bestiary_gates.py           # write the gate files
     python tools/gen_bestiary_gates.py --check   # change nothing; exit 1 if a file is missing, stale or stray

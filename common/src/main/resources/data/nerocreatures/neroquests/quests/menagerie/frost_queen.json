@@ -1,0 +1,26 @@
+{
+  "title": "quest.nerocreatures.menagerie.frost_queen.title",
+  "description": "quest.nerocreatures.menagerie.frost_queen.desc",
+  "icon": "nerocreatures:matriarch_frostcore",
+  "prerequisites": [
+    "nerocreatures:menagerie/survey_glacira"
+  ],
+  "objectives": [
+    {
+      "type": "neroquests:kill_entity",
+      "entity": "nerocreatures:rime_matriarch"
+    }
+  ],
+  "rewards": [
+    {
+      "type": "neroquests:xp",
+      "amount": 300
+    },
+    {
+      "type": "neroquests:currency",
+      "amount": 500
+    }
+  ],
+  "scope": "player",
+  "visible_gate": "nerolandcore:reached_orbit"
+}

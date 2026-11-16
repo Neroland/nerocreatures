@@ -188,7 +188,7 @@ neoForge {
     }
 }
 
-// Dev-only budget probe (BUILD-PROMPT Stage 2 "budget probe"): `gradlew :neoforge:<mc>:runBudgetProbe -PbudgetProbe`.
+// Dev-only budget probe (0.5.0 creature budget check): `gradlew :neoforge:<mc>:runBudgetProbe -PbudgetProbe`.
 // Only exists with -PbudgetProbe. Starts a headless dedicated server on a fresh flat dev world under
 // runs/probe, adds the TEST source set (common/src/test/java .../probe/BudgetProbe) to the dev mod so the
 // probe can hook server ticks, writes runs/probe/budget-probe-<mc>.txt and halts the server on its own.

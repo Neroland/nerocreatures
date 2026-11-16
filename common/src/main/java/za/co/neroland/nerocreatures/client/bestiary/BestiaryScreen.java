@@ -49,7 +49,7 @@ import za.co.neroland.nerocreatures.trait.TraitDefinition;
 import za.co.neroland.nerocreatures.trait.TraitPool;
 
 /**
- * The Bestiary (decision 010 sections 3-7): a plain client screen with a creature list grouped by
+ * The Bestiary: a plain client screen with a creature list grouped by
  * habitat on the left and a detail page on the right (one pane in a small window), plus a trait
  * glossary page. Tiers come from Core's client gate cache at once, and the asking player's own
  * counts from one {@code bestiary_counts} payload when it arrives. Every control has a visible label
@@ -60,7 +60,7 @@ import za.co.neroland.nerocreatures.trait.TraitPool;
  */
 public final class BestiaryScreen extends Screen {
 
-    // --- palette (section 3) -------------------------------------------------------------------
+    // --- palette -------------------------------------------------------------------
     static final int PANEL = 0xFF0D1322;
     static final int PANEL_HI = 0xFF141D31;
     static final int PANEL_EDGE = 0xFF26344F;
@@ -82,7 +82,7 @@ public final class BestiaryScreen extends Screen {
 
     private static final String K = "gui.nerocreatures.bestiary.";
 
-    /** Focusable areas, in Tab order (section 7). */
+    /** Focusable areas, in Tab order. */
     enum Area {
         TABS, LIST, CONTROLS, TEXT, CLOSE
     }
@@ -113,7 +113,6 @@ public final class BestiaryScreen extends Screen {
     private int ticks;
     private boolean opened;
     private int versionAtOpen;
-    private boolean requestedEvent;
     @Nullable
     private Object dimension;
 
@@ -187,7 +186,6 @@ public final class BestiaryScreen extends Screen {
     /** A bestiary_event arrived while open: ask for fresh counts. */
     void onEvent() {
         ClientBestiary.request();
-        this.requestedEvent = true;
     }
 
     @Override
@@ -427,7 +425,7 @@ public final class BestiaryScreen extends Screen {
         return false;
     }
 
-    /** Single pane, nothing scanned: the empty text sits above the list (section 6). */
+    /** Single pane, nothing scanned: the empty text sits above the list. */
     private boolean emptyBanner() {
         return !this.layout.twoPane() && !anyDiscovered();
     }
@@ -662,7 +660,7 @@ public final class BestiaryScreen extends Screen {
         return 0xFF000000 | r << 16 | gg << 8 | bl;
     }
 
-    /** The goal line (section 4.3), or {@code null} for an unknown study kind. */
+    /** The goal line, or {@code null} for an unknown study kind. */
     @Nullable
     private Component goalLine(Entry entry) {
         BestiaryCountsPayload.Entry counts = ClientBestiary.counts(entry.id());
@@ -787,7 +785,7 @@ public final class BestiaryScreen extends Screen {
 
     private void fail(Entry entry, @Nullable Throwable error) {
         if (this.failed.add(entry.id())) {
-            NeroCreaturesCommon.LOGGER.warn("[NeroCreatures] Bestiary model unavailable for {} ({})", entry.id(),
+            NeroCreaturesCommon.LOGGER.warn("[NeroCreatures] Bestiary model unavailable for {} ({})", entry.id(), // log-privacy: ok species id
                     error == null ? "no instance" : error.getClass().getSimpleName());
         }
         this.displays.remove(entry.id());

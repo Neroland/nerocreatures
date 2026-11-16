@@ -4,7 +4,6 @@ import java.util.EnumSet;
 import java.util.function.Predicate;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
@@ -38,6 +37,7 @@ import za.co.neroland.nerocreatures.entity.visual.VisualPose;
 import za.co.neroland.nerocreatures.trait.TraitEffects;
 import za.co.neroland.nerocreatures.trait.TraitPool;
 import za.co.neroland.nerocreatures.registry.ModSounds;
+import za.co.neroland.nerocreatures.registry.ModParticles;
 
 /**
  * <b>Strata Hound</b> (Mars; tameable, breedable, live birth) — a prospecting dog with a shovel
@@ -130,6 +130,10 @@ public class StrataHound extends TameableCreature {
 
     @Override
     public InteractionResult mobInteract(Player player, InteractionHand hand) {
+        // A gallery display does nothing (a paddock mount may be ridden by a creative player).
+        if (za.co.neroland.nerocreatures.gallery.GalleryDisplays.isDisplay(this)) {
+            return za.co.neroland.nerocreatures.gallery.GalleryDisplays.interact(this, player, hand);
+        }
         ItemStack held = player.getItemInHand(hand);
         if (this.isTame() && !this.isBaby() && this.isOwnedBy(player) && !player.isSecondaryUseActive()
                 && !held.isEmpty() && !this.isSpeciesFood(held)) {
@@ -156,7 +160,7 @@ public class StrataHound extends TameableCreature {
         return StrataTargets.specForItem(id.getNamespace(), id.getPath());
     }
 
-    /** {@code #nerocreatures:strata_trackable}: the only blocks a hound will ever track (M5). */
+    /** {@code #nerocreatures:strata_trackable}: the only blocks a hound will ever track. */
     static final TagKey<Block> TRACKABLE = TagKey.create(Registries.BLOCK,
             Identifier.tryParse(StrataTargets.TRACKABLE_TAG));
 
@@ -302,11 +306,11 @@ public class StrataHound extends TameableCreature {
     private void mark(ServerLevel level, BlockPos pos) {
         double x = pos.getX() + 0.5D;
         double z = pos.getZ() + 0.5D;
-        level.sendParticles(ParticleTypes.END_ROD, x, pos.getY() + 0.5D, z, 4, 0.3D, 0.3D, 0.3D, 0.0D);
+        level.sendParticles(ModParticles.ECHO_RING.get(), x, pos.getY() + 0.5D, z, 4, 0.3D, 0.3D, 0.3D, 0.0D);
         int top = (int) Math.floor(this.getY());
         int placed = 0;
         for (int y = pos.getY() + 2; y <= top && placed < MARK_COLUMN_MAX; y += 2, placed++) {
-            level.sendParticles(ParticleTypes.END_ROD, x, y + 0.5D, z, 1, 0.05D, 0.2D, 0.05D, 0.0D);
+            level.sendParticles(ModParticles.NODULE_GLINT.get(), x, y + 0.5D, z, 1, 0.05D, 0.2D, 0.05D, 0.0D);
         }
     }
 

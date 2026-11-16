@@ -33,9 +33,10 @@ final class SentryLogAppender extends AbstractAppender {
                 NeroCreaturesTelemetry.capture(thrown);
             }
         } else if (level == Level.FATAL) {
+            // The line is only inspected here; what is sent is a fixed text plus the logger name.
             String message = event.getMessage() == null ? null : event.getMessage().getFormattedMessage();
             if (message != null && message.contains("za.co.neroland.nerocreatures")) {
-                NeroCreaturesTelemetry.captureMessage(message);
+                NeroCreaturesTelemetry.captureFatalLine(event.getLoggerName());
             }
         }
     }

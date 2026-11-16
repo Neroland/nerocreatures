@@ -8,7 +8,6 @@ import java.util.UUID;
 
 import org.jetbrains.annotations.Nullable;
 
-import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
@@ -44,6 +43,7 @@ import za.co.neroland.nerocreatures.entity.tame.TameableCreature;
 import za.co.neroland.nerocreatures.entity.visual.VisualPose;
 import za.co.neroland.nerocreatures.world.CreatureGriefing;
 import za.co.neroland.nerocreatures.registry.ModSounds;
+import za.co.neroland.nerocreatures.registry.ModParticles;
 
 /**
  * <b>Magnet Crab</b> (Asteroid, tameable): an auto-pickup pet for mining.
@@ -74,7 +74,7 @@ import za.co.neroland.nerocreatures.registry.ModSounds;
  * the magnet is delivering and for {@value MagnetCrabRules#PULL_LINGER_TICKS} ticks after;
  * {@code rest} (perch) held while sitting.
  *
- * <p>Breeding: {@code nerocreatures:food/magnet_crab} (iron nugget), egg birth (decision 003).
+ * <p>Breeding: {@code nerocreatures:food/magnet_crab} (iron nugget), egg birth.
  */
 public class MagnetCrab extends TameableCreature {
 
@@ -243,7 +243,7 @@ public class MagnetCrab extends TameableCreature {
     }
 
     /**
-     * Decision 006: the thrower must be the owner or absent, and no owner-only pick-up target may be set.
+     * The griefing rule: the thrower must be the owner or absent, and no owner-only pick-up target may be set.
      * A loaded thrower is compared directly; otherwise the item's saved {@code Thrower}/{@code Owner}
      * keys are read (presence only), so an absent-but-recorded thrower (another player, offline) is
      * still refused.
@@ -270,11 +270,11 @@ public class MagnetCrab extends TameableCreature {
 
     /** Moves the item to the owner's feet; vanilla pick-up does the rest. */
     private void deliver(ServerLevel level, ItemEntity item, ServerPlayer owner) {
-        level.sendParticles(ParticleTypes.ELECTRIC_SPARK, item.getX(), item.getY() + 0.2D, item.getZ(),
+        level.sendParticles(ModParticles.MAGNET_SPARK.get(), item.getX(), item.getY() + 0.2D, item.getZ(),
                 4, 0.15D, 0.15D, 0.15D, 0.02D);
         item.setPos(owner.getX(), owner.getY() + 0.25D, owner.getZ());
         item.setDeltaMovement(0.0D, 0.0D, 0.0D);
-        level.sendParticles(ParticleTypes.ELECTRIC_SPARK, owner.getX(), owner.getY() + 0.5D, owner.getZ(),
+        level.sendParticles(ModParticles.MAGNET_SPARK.get(), owner.getX(), owner.getY() + 0.5D, owner.getZ(),
                 3, 0.2D, 0.2D, 0.2D, 0.02D);
         this.lastPull = level.getGameTime();
         if (this.visuals().pose() != VisualPose.ABILITY) {

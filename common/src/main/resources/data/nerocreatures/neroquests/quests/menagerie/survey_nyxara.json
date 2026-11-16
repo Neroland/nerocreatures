@@ -1,0 +1,30 @@
+{
+  "title": "quest.nerocreatures.menagerie.survey_nyxara.title",
+  "description": "quest.nerocreatures.menagerie.survey_nyxara.desc",
+  "icon": "nerocreatures:mirror_scale",
+  "prerequisites": [
+    "nerocreatures:menagerie/field_scanner"
+  ],
+  "objectives": [
+    {
+      "type": "neroquests:gate_open",
+      "gate": "nerocreatures:bestiary/scanned/prism_stag"
+    },
+    {
+      "type": "neroquests:gate_open",
+      "gate": "nerocreatures:bestiary/scanned/shardback"
+    }
+  ],
+  "rewards": [
+    {
+      "type": "neroquests:xp",
+      "amount": 80
+    },
+    {
+      "type": "neroquests:currency",
+      "amount": 60
+    }
+  ],
+  "scope": "player",
+  "visible_gate": "nerolandcore:reached_orbit"
+}

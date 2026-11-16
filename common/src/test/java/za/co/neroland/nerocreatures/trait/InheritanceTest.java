@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test;
 
 import net.minecraft.util.RandomSource;
 
-/** Decision 003: one slot from each parent, per-slot mutation, Radiant rarity, mutation off switch. */
+/** Inheritance: one slot from each parent, per-slot mutation, Radiant rarity, mutation off switch. */
 class InheritanceTest {
 
     private static final int TRIALS = 20_000;

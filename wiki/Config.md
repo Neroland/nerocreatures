@@ -70,6 +70,15 @@ its owner's own permission to build there.
 Colossus's prism crystals; `bloomHostSporelings` gates the Bloom Sovereign's sporeling adds. The boss
 health and difficulty multipliers are on [Bosses](Bosses.md#configuration).
 
+## Companion app (link module)
+
+| Key | Default | Range | What it does |
+| --- | --- | --- | --- |
+| `linkRecallCooldownSeconds` | 10 | 0-600 | Seconds a player waits between two companion-app recalls (`pet_recall`). 0 = only the bridge's own per-device limit. |
+| `linkCommandCooldownMillis` | 1000 | 0-60000 | Milliseconds a player waits between two companion-app orders (`pet_command`). 0 = only the bridge's own per-device limit. |
+
+See [Link module](Link-Module.md#validation-and-refusals).
+
 ## Habitat blocks and gear
 
 The habitat-block keys are on [Habitat Blocks](Habitat-Blocks.md#config) and the gear keys on

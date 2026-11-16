@@ -7,13 +7,13 @@ package za.co.neroland.nerocreatures.entity.glacira;
  */
 public final class RimeYakRules {
 
-    /** Aura cadence: one pass every 2 s (decision 006: at most one frozen block per 2 s). */
+    /** Aura cadence: one pass every 2 s (at most one frozen block per 2 s). */
     public static final int AURA_INTERVAL = 40;
     /** Entities within this many blocks are cooled (players) or chilled (hostile mobs). */
     public static final double AURA_RADIUS = 6.0D;
     /** Most entities one aura pass touches (a bounded query). */
     public static final int MAX_AURA_TARGETS = 12;
-    /** Horizontal reach of water freezing (decision 006: radius 2). */
+    /** Horizontal reach of water freezing (radius 2). */
     public static final int FREEZE_RADIUS = 2;
     /** Hard cap: frozen water blocks per aura pass. */
     public static final int MAX_FREEZE_PER_PASS = 1;
@@ -26,7 +26,7 @@ public final class RimeYakRules {
     public static final int FROSTED_MELT_MAX_TICKS = 120;
     /** Frozen ticks the aura gives a hostile mob: slows it, always below a full freeze, so no damage. */
     public static final int MOB_CHILL_TICKS = 100;
-    /** Aura edge ring of frost motes every 5 s (decision 007, section 1.4). */
+    /** Aura edge ring of frost motes every 5 s. */
     public static final int RING_EVERY_TICKS = 100;
     /** Breath vapour about every 4 s. */
     public static final int BREATH_EVERY_TICKS = 80;
@@ -41,7 +41,7 @@ public final class RimeYakRules {
     public static final int GROWTH_STEP = 20;
     public static final int DEFAULT_MILK_COOLDOWN_TICKS = 2400;
     public static final int MIN_MILK_COOLDOWN_TICKS = 200;
-    /** The shear and milk "shiver" pose length (hurt-length, decision 007 section 4.2). */
+    /** The shear and milk "shiver" pose length (hurt-length). */
     public static final int SHIVER_TICKS = 6;
 
     private RimeYakRules() {

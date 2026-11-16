@@ -2,7 +2,7 @@
 """Asset checker: proves every registered NeroCreatures thing has its client assets.
 
     python3 -B tools/check_assets.py           # report (exit 1 on any gap)
-    python3 -B tools/check_assets.py --check   # same; the form CI and the stage gate use
+    python3 -B tools/check_assets.py --check   # same; the form CI uses
 
 Ids are read from the registry classes themselves (``registry/Mod{Entities,Items,Blocks,SpawnEggs}``),
 so a new registration without assets fails here before it reaches a client. Checks:
@@ -198,6 +198,30 @@ class Checker:
                         self.need_file(os.path.join(ASSETS, "textures", "entity", "equipment", layer, path + ".png"),
                                        "equipment %s" % name[:-5])
 
+    def particles(self) -> None:
+        """Every ``ModParticles`` id has ``particles/<id>.json`` and every frame it names."""
+        ids = registry_ids("ModParticles", r'simple\("(\w+)"\)')
+        self.counts["particles"] = len(ids)
+        for pid in ids:
+            path = os.path.join(ASSETS, "particles", pid + ".json")
+            if self.need_file(path, "particle %s" % pid):
+                for tex in load_json(path).get("textures", []):
+                    ns, _, name = tex.partition(":")
+                    if ns == NS:
+                        self.need_file(os.path.join(ASSETS, "textures", "particle", name + ".png"), "particle %s" % pid)
+
+    def bestiary(self) -> None:
+        """Every entity has its Bestiary portrait, silhouette and ability/weakness lines."""
+        gui = os.path.join(ASSETS, "textures", "gui")
+        self.need_file(os.path.join(gui, "scanner_hud.png"), "scanner HUD")
+        for name in ("panel", "widgets"):
+            self.need_file(os.path.join(gui, "bestiary", name + ".png"), "bestiary %s" % name)
+        for eid in sorted(entity_classes()):
+            for kind in ("portrait", "silhouette"):
+                self.need_file(os.path.join(gui, "bestiary", kind, eid + ".png"), "bestiary %s" % eid)
+            for part in ("ability", "weakness"):
+                self.need_lang("bestiary.%s.%s.%s" % (NS, eid, part))
+
     def sounds(self) -> None:
         events = load_json(os.path.join(ASSETS, "sounds.json"))
         self.counts["sound events"] = len(events)
@@ -227,6 +251,8 @@ def main(argv: list) -> int:
     c.entities()
     c.equipment()
     c.sounds()
+    c.particles()
+    c.bestiary()
     for p in c.problems:
         print("FAIL " + p)
     summary = ", ".join("%d %s" % (n, k) for k, n in c.counts.items())

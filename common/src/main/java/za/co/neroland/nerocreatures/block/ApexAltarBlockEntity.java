@@ -45,7 +45,7 @@ import za.co.neroland.nerocreatures.registry.ModSounds;
  */
 public class ApexAltarBlockEntity extends BlockEntity {
 
-    /** The registry id the integration pass registers the block-entity type under. */
+    /** The registry id the block-entity type is registered under. */
     public static final Identifier ID = ApexAltarBlock.ID;
 
     private static IntSupplier cooldownTicks = () -> ApexAltarRules.DEFAULT_COOLDOWN_TICKS;
@@ -81,6 +81,17 @@ public class ApexAltarBlockEntity extends BlockEntity {
         return cached;
     }
 
+    /** The game time this altar is ready again. */
+    public long readyAt() {
+        return this.state.readyAt();
+    }
+
+    /** The fight this altar started, while it is remembered; {@code null} otherwise. */
+    @Nullable
+    public UUID fight() {
+        return this.state.fight();
+    }
+
     // --- interaction --------------------------------------------------------
 
     /**
@@ -101,6 +112,9 @@ public class ApexAltarBlockEntity extends BlockEntity {
         if (outcome.consumed()) {
             stack.consume(1, player);
             this.setChanged();
+            // Memory only: lets the summoner's companion app show this altar's cooldown (never saved).
+            za.co.neroland.nerocreatures.boss.AltarUses.noteSummon(level, pos, player.getUUID(),
+                    this.state.readyAt(), this.state.fight(), bossId);
             this.applyLock(level, pos, this.getBlockState(), now, true);
             ModSounds.APEX_ALTAR_SUMMON.play(level, pos, SoundSource.BLOCKS);
             return;

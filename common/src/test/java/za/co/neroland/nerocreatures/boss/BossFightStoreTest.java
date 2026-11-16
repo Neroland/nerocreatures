@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test;
 
 import net.minecraft.resources.Identifier;
 
-/** S3: abandoned summoned fights are pruned when the store is full, not only at server start. */
+/** Abandoned summoned fights are pruned when the store is full, not only at server start. */
 class BossFightStoreTest {
 
     private static final Identifier BOSS = Identifier.fromNamespaceAndPath("nerocreatures", "facet_colossus");

@@ -10,7 +10,7 @@ import org.junit.jupiter.api.Test;
 
 import net.minecraft.nbt.CompoundTag;
 
-/** Decision 003: NBT schema {@code {v,a,b}}, version handling, unknown ids and egg custom data. */
+/** NBT schema {@code {v,a,b}}, version handling, unknown ids and egg custom data. */
 class TraitSetTest {
 
     @Test

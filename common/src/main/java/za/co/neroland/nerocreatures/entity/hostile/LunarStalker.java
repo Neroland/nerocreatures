@@ -161,7 +161,7 @@ public class LunarStalker extends NeroCreatureEntity implements Enemy {
         ModSounds.LUNAR_STALKER_HOWL.play(this);
         List<LunarStalker> mates = this.level().getEntitiesOfClass(LunarStalker.class,
                 this.getBoundingBox().inflate(PACK_RADIUS),
-                mate -> mate != this && mate.isAlive() && mate.getTarget() == target);
+                mate -> mate != this && mate.isAlive() && mate.getTarget() == target && !za.co.neroland.nerocreatures.gallery.GalleryDisplays.isDisplay(mate));
         int glows = PackRules.glowCount(mates.size());
         for (int i = 0; i < glows; i++) {
             mates.get(i).addEffect(new MobEffectInstance(MobEffects.GLOWING, PackRules.HOWL_GLOW_TICKS, 0,
@@ -262,7 +262,7 @@ public class LunarStalker extends NeroCreatureEntity implements Enemy {
             }
             int mates = this.stalker.level().getEntitiesOfClass(LunarStalker.class,
                     this.stalker.getBoundingBox().inflate(PACK_RADIUS),
-                    mate -> mate != this.stalker && mate.isAlive()).size();
+                    mate -> mate != this.stalker && mate.isAlive() && !za.co.neroland.nerocreatures.gallery.GalleryDisplays.isDisplay(mate)).size();
             if (!PackRules.shouldFlee(this.stalker.getHealth(), this.stalker.getMaxHealth(), mates)) {
                 return false;
             }

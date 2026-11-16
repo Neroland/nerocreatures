@@ -10,7 +10,7 @@ import net.minecraft.resources.Identifier;
 import za.co.neroland.nerocreatures.NeroCreaturesCommon;
 
 /**
- * Client &rarr; server: "send me my own Bestiary counts" (decision 010 section 9.1). Carries only a
+ * Client &rarr; server: "send me my own Bestiary counts". Carries only a
  * schema number. The server answers for the sender as the network layer identified them, at most
  * once per 20 ticks; anything but schema 1 is ignored.
  */

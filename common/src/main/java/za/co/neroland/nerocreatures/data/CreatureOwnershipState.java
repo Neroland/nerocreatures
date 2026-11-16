@@ -8,11 +8,10 @@ import java.util.ArrayList;
 import java.util.HexFormat;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.UUID;
+import java.util.function.LongSupplier;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -67,9 +66,12 @@ import za.co.neroland.nerocreatures.NeroCreaturesCommon;
  *       identity. Erasure also leaves two markers that name nobody, so a creature in an unloaded
  *       chunk is released when it next loads: a salted one-way hash of the erased owner and the
  *       entity UUIDs of the rows it removed (see {@link #loadVerdict}).</li>
- *   <li><b>Retention</b> — when Core's {@code dataRetentionDays} is above zero, rows whose stamp is
- *       older than that are pruned on the first access per server session; only the number pruned is
- *       logged.</li>
+ *   <li><b>Retention</b> — inactivity has one definition across the Neroland mods: Core's
+ *       {@code PlayerActivity} last-seen time. Core's purge-inactive sweep erases an inactive player
+ *       through the same registered eraser, so this store keeps no inactivity clock of its own (a
+ *       player who logs in daily but has not tamed anything for a month is <em>active</em>). The
+ *       per-player stamp here records only when the rows last changed, for that player's export.
+ *       Owner erasure markers are the one thing this store expires itself.</li>
  *   <li><b>Access</b> — {@link #exportPlayer(MinecraftServer, UUID)} returns exactly one player's own
  *       rows, and nobody else's.</li>
  * </ul>
@@ -100,10 +102,27 @@ public final class CreatureOwnershipState extends SavedData {
     private static final long MILLIS_PER_DAY = 86_400_000L;
 
     /**
-     * Upper bound on each erasure-marker set. Oldest markers go first; a creature whose marker was
-     * evicted is re-indexed on load rather than released, which never costs a world anything.
+     * Upper bound on each erasure-marker set, so a runaway caller cannot grow the file without limit.
+     * Reaching it is never silent: every marker dropped at the cap is counted and logged at WARN,
+     * because a creature whose marker was dropped is re-indexed on load instead of released. 65,536
+     * creature UUIDs is about 2.4 MB of save data.
      */
-    static final int MAX_ERASURE_MARKERS = 16_384;
+    static final int MAX_ERASURE_MARKERS = 65_536;
+
+    /**
+     * The shortest life an <em>owner</em> erasure marker (the salted hash) gets: one year. The real
+     * lifetime is {@code max(dataRetentionDays, 365)} ({@link #markerLifetimeDays}): a marker that
+     * expired with the retention period would defeat itself on a short-retention server. Creature
+     * markers do not expire at all; see {@link #pruneErasureMarkers}. See {@code PRIVACY.md},
+     * "Erasure markers".
+     */
+    public static final int ERASURE_MARKER_DAYS = 365;
+
+    /** Markers dropped at {@link #MAX_ERASURE_MARKERS} since the last WARN; server thread only. */
+    private int markersDroppedAtCap;
+
+    /** Wall clock for retention stamps; tests swap it. Server thread only. */
+    static LongSupplier clock = System::currentTimeMillis;
 
     /** What the load-time ownership check does with one tamed creature. */
     public enum LoadVerdict {
@@ -119,16 +138,19 @@ public final class CreatureOwnershipState extends SavedData {
      * Root schema written by this version. 0.4.x files have no {@code schema} key and read as 1; the
      * row shape is unchanged between 1 and 2 (2 adds the {@code mount} and {@code egg} kinds and the
      * optional {@code hatch_at} field, all read leniently), so nothing is migrated on load and nothing
-     * is rewritten until the next ordinary save (decision 004).
+     * is rewritten until the next ordinary save.
      */
     public static final int SCHEMA = 2;
 
     /**
-     * The server whose retention sweep has already run, so the lazy check in {@link #get} fires at
+     * The server whose marker expiry has already run, so the lazy check in {@link #get} fires at
      * most once per server instance. Written on the server thread; {@code volatile} only so an
      * integrated-server restart in the same JVM is seen promptly.
      */
     private static volatile MinecraftServer prunedFor;
+
+    /** When marker expiry last ran for {@link #prunedFor}, so a long-running server re-runs it daily. */
+    private static volatile long prunedAt;
 
     private final Map<UUID, List<OwnedCreature>> byPlayer = new LinkedHashMap<>();
     private final Map<UUID, Long> lastUpdated = new LinkedHashMap<>();
@@ -137,29 +159,52 @@ public final class CreatureOwnershipState extends SavedData {
      * Erasure markers (load-time half of erasure). {@code erasedOwners} holds a salted one-way hash
      * of each erased owner, never the UUID itself; {@code erasedCreatures} holds the entity UUIDs of
      * the rows erasure removed and could not free because they were not loaded. Neither names a
-     * player. The salt is random per world and lives only in this file.
+     * player. The salt is random per world, lives only in this file and is deleted again as soon as
+     * no owner marker needs it. Each marker carries the epoch-millis it was written, for retention.
      */
     private String erasureSalt = "";
-    private final Set<String> erasedOwners = new LinkedHashSet<>();
-    private final Set<UUID> erasedCreatures = new LinkedHashSet<>();
+    private final Map<String, Long> erasedOwners = new LinkedHashMap<>();
+    private final Map<UUID, Long> erasedCreatures = new LinkedHashMap<>();
 
     public CreatureOwnershipState() {
     }
 
     /**
-     * The one store, on the overworld so it is always loaded. Runs the retention sweep on the first
-     * call for a given server instance.
+     * The one store, on the overworld so it is always loaded. Expires old owner erasure markers on
+     * the first call for a given server instance and then daily.
      */
     public static CreatureOwnershipState get(MinecraftServer server) {
         CreatureOwnershipState state = SavedDataRecovery.get(
                 server.overworld(), TYPE, CreatureOwnershipState::new, NAME);
-        if (prunedFor != server) {
-            prunedFor = server; // set first: pruning must never re-enter this sweep
-            CreatureData.applyRetention(server, state);
-            // The sweep purged rows after Core's get() refreshed the backup; push the purge into it.
-            state.backupNow(server);
+        long now = clock.getAsLong();
+        if (prunedFor != server || now - prunedAt >= MILLIS_PER_DAY) {
+            // Set first: pruning must never re-enter this check. Re-run daily on a long-running server.
+            prunedFor = server;
+            prunedAt = now;
+            if (CreatureData.applyRetention(state) > 0) {
+                // Markers went after Core's get() refreshed the backup; push the expiry into it.
+                state.backupNow(server);
+            }
         }
+        state.reportMarkersDroppedAtCap();
         return state;
+    }
+
+    /** Logs (count only, at WARN) any erasure markers dropped at the cap since the last report. */
+    void reportMarkersDroppedAtCap() {
+        if (this.markersDroppedAtCap > 0) {
+            int dropped = this.markersDroppedAtCap;
+            this.markersDroppedAtCap = 0;
+            NeroCreaturesCommon.LOGGER.warn(
+                    "[NeroCreatures] {} erasure marker(s) dropped at the {} cap; the creatures they covered "
+                            + "will be re-indexed instead of released when they next load.",
+                    dropped, MAX_ERASURE_MARKERS);
+        }
+    }
+
+    /** How many markers have been dropped at the cap and not yet reported (tests). */
+    int markersDroppedAtCap() {
+        return this.markersDroppedAtCap;
     }
 
     /**
@@ -204,7 +249,7 @@ public final class CreatureOwnershipState extends SavedData {
     }
 
     /**
-     * The load-time ownership check for one tamed creature (decision 004). Release happens only when
+     * The load-time ownership check for one tamed creature. Release happens only when
      * erasure or retention <b>positively recorded</b> this creature or its owner; an owner the index
      * merely does not know (a 0.4.x pet tamed before its row existed, a store that recovered empty,
      * an owner whose other rows were all removed) is re-indexed instead, so no world loses a pet to
@@ -214,18 +259,31 @@ public final class CreatureOwnershipState extends SavedData {
         if (this.contains(owner, entity)) {
             return LoadVerdict.INDEXED;
         }
-        if (this.erasedCreatures.contains(entity)) {
+        if (this.erasedCreatures.containsKey(entity)) {
             return LoadVerdict.RELEASE;
         }
-        if (!this.erasureSalt.isEmpty() && this.erasedOwners.contains(this.ownerMarker(owner))) {
+        if (this.hasErasureMarker(owner)) {
             return LoadVerdict.RELEASE;
         }
         return LoadVerdict.REINDEX;
     }
 
+    /**
+     * Whether erasure left an owner marker for this player (a salted one-way hash; the UUID itself is
+     * never stored). Used by the load-time check and reported, as a yes/no, in that player's own export.
+     */
+    public boolean hasErasureMarker(UUID owner) {
+        return !this.erasureSalt.isEmpty() && this.erasedOwners.containsKey(this.ownerMarker(owner));
+    }
+
+    /** How many owner and creature markers the store holds (for tests and the retention log count). */
+    public int erasureMarkerCount() {
+        return this.erasedOwners.size() + this.erasedCreatures.size();
+    }
+
     /** A creature erasure pointed at has now been freed; its marker is no longer needed. */
     public void creatureFreed(UUID entity) {
-        if (this.erasedCreatures.remove(entity)) {
+        if (this.erasedCreatures.remove(entity) != null) {
             this.setDirty();
         }
     }
@@ -255,6 +313,7 @@ public final class CreatureOwnershipState extends SavedData {
         this.erasedCreatures.remove(owned.entity());
         if (!this.erasureSalt.isEmpty()) {
             this.erasedOwners.remove(this.ownerMarker(player));
+            this.dropSaltIfUnused();
         }
         List<OwnedCreature> rows = this.byPlayer.computeIfAbsent(player, key -> new ArrayList<>());
         rows.removeIf(row -> row.entity().equals(owned.entity()));
@@ -324,7 +383,7 @@ public final class CreatureOwnershipState extends SavedData {
     /**
      * Drops one row by its id alone, whoever it belongs to: an Incubator's egg row when the egg hatches,
      * is taken back out or its incubator breaks. The block entity only knows the random incubation id,
-     * never the player (decision 004), so it cannot call {@link #remove(UUID, UUID)}. One pass over the
+     * never the player, so it cannot call {@link #remove(UUID, UUID)}. One pass over the
      * index; eggs are rare events.
      *
      * @return {@code true} if a row was actually removed
@@ -392,11 +451,12 @@ public final class CreatureOwnershipState extends SavedData {
         if (this.erasureSalt.isEmpty()) {
             this.erasureSalt = newSalt();
         }
-        addBounded(this.erasedOwners, this.ownerMarker(player));
+        long now = clock.getAsLong();
+        this.markersDroppedAtCap += addBounded(this.erasedOwners, this.ownerMarker(player), now);
         if (removed != null) {
             for (OwnedCreature row : removed) {
                 if (row.kind() != OwnedCreature.Kind.EGG) {
-                    addBounded(this.erasedCreatures, row.entity());
+                    this.markersDroppedAtCap += addBounded(this.erasedCreatures, row.entity(), now);
                 }
             }
         }
@@ -405,25 +465,44 @@ public final class CreatureOwnershipState extends SavedData {
     }
 
     /**
-     * The players whose ownership rows have not changed in {@code days} days. A value of {@code 0}
-     * or less disables the sweep, leaving retention entirely to Core's own purge-inactive flow
-     * (which reaches this store through the registered eraser).
-     *
-     * <p>Rows with no usable stamp are left alone rather than deleted on a guess.
+     * The owner-marker lifetime for a given {@code dataRetentionDays}: {@code max(retention, 365)}.
+     * Never shorter than a year, because a tombstone that expires with the retention period defeats
+     * itself on a short-retention server (an erased pet in a chunk nobody visits for a month).
      */
-    public List<UUID> stalerThan(int days) {
+    public static int markerLifetimeDays(int retentionDays) {
+        return Math.max(retentionDays, ERASURE_MARKER_DAYS);
+    }
+
+    /**
+     * Expiry for the <em>owner</em> erasure markers: drops every salted owner hash older than
+     * {@code days} days, and the per-world salt with the last one.
+     *
+     * <p>Creature markers never expire. Each is the random entity UUID of a game object that erasure
+     * could not reach because it was unloaded; it names no player (tying it to a person needs the
+     * region file where the creature itself sits, which already holds the owner), so keeping it until
+     * that creature loads and is freed ({@link #creatureFreed}) adds no identifying information and is
+     * what finishes the erasure. Without it a still-tamed creature would load after expiry and write
+     * the erased player's UUID back into this store.
+     *
+     * <p>The owner hash is the backstop for creatures the index never held (tamed before indexing
+     * existed, or during an index gap); after it expires, such a creature is re-indexed on load. That
+     * narrow case is the documented residual in {@code PRIVACY.md}.
+     *
+     * @return how many markers were dropped
+     */
+    public int pruneErasureMarkers(int days) {
         if (days <= 0) {
-            return List.of();
+            return 0;
         }
-        long threshold = System.currentTimeMillis() - days * MILLIS_PER_DAY;
-        List<UUID> stale = new ArrayList<>();
-        for (Map.Entry<UUID, Long> entry : this.lastUpdated.entrySet()) {
-            Long stamp = entry.getValue();
-            if (stamp != null && stamp > 0L && stamp < threshold) {
-                stale.add(entry.getKey());
-            }
+        long threshold = clock.getAsLong() - days * MILLIS_PER_DAY;
+        int before = this.erasureMarkerCount();
+        this.erasedOwners.values().removeIf(at -> at < threshold);
+        this.dropSaltIfUnused();
+        int dropped = before - this.erasureMarkerCount();
+        if (dropped > 0) {
+            this.setDirty();
         }
-        return stale;
+        return dropped;
     }
 
     /**
@@ -478,20 +557,36 @@ public final class CreatureOwnershipState extends SavedData {
         return HexFormat.of().formatHex(salt);
     }
 
-    private static <T> void addBounded(Set<T> set, T value) {
-        set.remove(value);
-        set.add(value);
-        Iterator<T> oldest = set.iterator();
-        while (set.size() > MAX_ERASURE_MARKERS && oldest.hasNext()) {
+    /**
+     * Adds one marker, dropping the oldest if the set is over {@link #MAX_ERASURE_MARKERS}.
+     *
+     * @return how many markers were dropped at the cap (the caller counts them for the WARN)
+     */
+    static <T> int addBounded(Map<T, Long> markers, T value, long at) {
+        markers.remove(value);
+        markers.put(value, at);
+        int dropped = 0;
+        Iterator<T> oldest = markers.keySet().iterator();
+        while (markers.size() > MAX_ERASURE_MARKERS && oldest.hasNext()) {
             oldest.next();
             oldest.remove();
+            dropped++;
+        }
+        return dropped;
+    }
+
+    /** The salt exists only to hash owner markers; with none left it is deleted (data minimisation). */
+    private void dropSaltIfUnused() {
+        if (this.erasedOwners.isEmpty() && !this.erasureSalt.isEmpty()) {
+            this.erasureSalt = "";
+            this.setDirty();
         }
     }
 
-    /** Stamps a player's row as just-changed (retention input) and marks the store dirty. */
+    /** Stamps a player's rows as just-changed (shown in their export) and marks the store dirty. */
     private void touch(UUID player) {
         if (this.byPlayer.containsKey(player)) {
-            this.lastUpdated.put(player, System.currentTimeMillis());
+            this.lastUpdated.put(player, clock.getAsLong());
         } else {
             this.lastUpdated.remove(player);
         }
@@ -508,6 +603,14 @@ public final class CreatureOwnershipState extends SavedData {
         ).apply(instance, PlayerRow::new));
     }
 
+    /** One erasure marker on disk: the marker (owner hash or creature UUID) and when it was written. */
+    private record MarkerRow(String id, long at) {
+        static final Codec<MarkerRow> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+                Codec.STRING.fieldOf("id").forGetter(MarkerRow::id),
+                Codec.LONG.optionalFieldOf("at", 0L).forGetter(MarkerRow::at)
+        ).apply(instance, MarkerRow::new));
+    }
+
     private static Codec<CreatureOwnershipState> codec() {
         return RecordCodecBuilder.create(instance -> instance.group(
                 // Absent in 0.4.x files (reads as 1). Always written as SCHEMA from 0.5.0 on.
@@ -516,11 +619,20 @@ public final class CreatureOwnershipState extends SavedData {
                         .forGetter(CreatureOwnershipState::playerRows),
                 // Erasure markers (0.5.0). Absent in 0.4.x files: no markers, nothing is released.
                 Codec.STRING.optionalFieldOf("erasure_salt", "").forGetter(state -> state.erasureSalt),
-                Codec.STRING.listOf().optionalFieldOf("erased_owners", List.of())
-                        .forGetter(state -> List.copyOf(state.erasedOwners)),
-                Codec.STRING.listOf().optionalFieldOf("erased_creatures", List.of())
-                        .forGetter(state -> state.erasedCreatures.stream().map(UUID::toString).toList())
+                // Early 0.5.0 development files wrote unstamped marker lists; read them, never write them.
+                Codec.STRING.listOf().optionalFieldOf("erased_owners", List.of()).forGetter(state -> List.of()),
+                Codec.STRING.listOf().optionalFieldOf("erased_creatures", List.of()).forGetter(state -> List.of()),
+                MarkerRow.CODEC.listOf().optionalFieldOf("erased_owner_marks", List.of())
+                        .forGetter(state -> markerRows(state.erasedOwners, id -> id)),
+                MarkerRow.CODEC.listOf().optionalFieldOf("erased_creature_marks", List.of())
+                        .forGetter(state -> markerRows(state.erasedCreatures, UUID::toString))
         ).apply(instance, CreatureOwnershipState::fromRows));
+    }
+
+    private static <T> List<MarkerRow> markerRows(Map<T, Long> markers, java.util.function.Function<T, String> id) {
+        List<MarkerRow> out = new ArrayList<>(markers.size());
+        markers.forEach((key, at) -> out.add(new MarkerRow(id.apply(key), at)));
+        return out;
     }
 
     /** The store codec, exposed to the package for the migration tests. */
@@ -537,7 +649,8 @@ public final class CreatureOwnershipState extends SavedData {
     }
 
     private static CreatureOwnershipState fromRows(int schema, List<PlayerRow> players, String salt,
-            List<String> erasedOwners, List<String> erasedCreatures) {
+            List<String> legacyOwners, List<String> legacyCreatures, List<MarkerRow> ownerMarks,
+            List<MarkerRow> creatureMarks) {
         // Schema 1 (0.4.x) and 2 share the row shape; a future schema is read leniently the same way
         // (unknown fields are ignored by the codecs, unknown kinds read as pet).
         CreatureOwnershipState state = new CreatureOwnershipState();
@@ -552,16 +665,41 @@ public final class CreatureOwnershipState extends SavedData {
             state.lastUpdated.put(player, row.updatedAt());
         }
         state.erasureSalt = salt;
+        // An unstamped (early development) marker counts as written now, so it still expires. The
+        // stamp is new data, so the store is marked dirty: otherwise a quiet store would re-stamp the
+        // marker "now" on every load and it would never expire.
+        long now = clock.getAsLong();
+        boolean stamped = false;
         if (!salt.isEmpty()) {
-            erasedOwners.forEach(marker -> addBounded(state.erasedOwners, marker));
-        }
-        for (String raw : erasedCreatures) {
-            try {
-                addBounded(state.erasedCreatures, UUID.fromString(raw));
-            } catch (IllegalArgumentException ignored) {
-                // A malformed marker is dropped; the creature is then re-indexed, never lost.
+            for (String marker : legacyOwners) {
+                state.markersDroppedAtCap += addBounded(state.erasedOwners, marker, now);
+                stamped = true;
+            }
+            for (MarkerRow mark : ownerMarks) {
+                stamped |= mark.at() <= 0L;
+                state.markersDroppedAtCap += addBounded(state.erasedOwners, mark.id(), mark.at() > 0L ? mark.at() : now);
             }
         }
+        for (String raw : legacyCreatures) {
+            addCreatureMarker(state, raw, now);
+            stamped = true;
+        }
+        for (MarkerRow mark : creatureMarks) {
+            stamped |= mark.at() <= 0L;
+            addCreatureMarker(state, mark.id(), mark.at() > 0L ? mark.at() : now);
+        }
+        state.dropSaltIfUnused();
+        if (stamped) {
+            state.setDirty();
+        }
         return state;
+    }
+
+    private static void addCreatureMarker(CreatureOwnershipState state, String raw, long at) {
+        try {
+            state.markersDroppedAtCap += addBounded(state.erasedCreatures, UUID.fromString(raw), at);
+        } catch (IllegalArgumentException ignored) {
+                // A malformed marker is dropped; the creature is then re-indexed, never lost.
+        }
     }
 }

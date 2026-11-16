@@ -12,7 +12,7 @@ import za.co.neroland.nerocreatures.world.CreatureGriefing;
 import za.co.neroland.nerocreatures.world.CreatureGriefing.Change;
 import za.co.neroland.nerocreatures.world.CreatureGriefingTest.FakeChecks;
 
-/** WP-Glacira: Rime Yak and Frost Lurker ability rules and caps. */
+/** Glacira creatures: Rime Yak and Frost Lurker ability rules and caps. */
 public class GlaciraCreaturesTest {
 
     // --- Rime Yak: cold aura ---------------------------------------------------------------
@@ -22,7 +22,7 @@ public class GlaciraCreaturesTest {
         assertTrue(RimeYakRules.inAura(0.0D));
         assertTrue(RimeYakRules.inAura(RimeYakRules.AURA_RADIUS * RimeYakRules.AURA_RADIUS));
         assertFalse(RimeYakRules.inAura(RimeYakRules.AURA_RADIUS * RimeYakRules.AURA_RADIUS + 0.01D));
-        assertTrue(RimeYakRules.AURA_INTERVAL >= 40, "decision 006: at most one frozen block per 2 s");
+        assertTrue(RimeYakRules.AURA_INTERVAL >= 40, "at most one frozen block per 2 s");
         assertTrue(RimeYakRules.MAX_AURA_TARGETS > 0 && RimeYakRules.MAX_AURA_TARGETS <= 16);
     }
 

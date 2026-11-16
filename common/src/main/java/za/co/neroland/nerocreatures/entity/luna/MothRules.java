@@ -36,7 +36,7 @@ public final class MothRules {
     }
 
     /**
-     * Decision 005: a wild moth in the overworld that is not tamed, leashed or persistent despawns
+     * A wild moth in the overworld that is not tamed, leashed or persistent despawns
      * in daylight when no player is within {@link #DAY_DESPAWN_PLAYER_RADIUS} blocks.
      */
     public static boolean despawnAtDay(boolean tame, boolean leashed, boolean persistent, boolean overworld,

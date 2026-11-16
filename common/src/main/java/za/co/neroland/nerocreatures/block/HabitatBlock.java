@@ -18,7 +18,7 @@ import org.jetbrains.annotations.Nullable;
 /**
  * Base of the habitat blocks that have a block entity: model rendering, a server-only ticker for the
  * blocks that work on a cadence, and the pre-1.21.5 removal hook. Placed by players, so nothing here goes
- * through {@code CreatureGriefing} (decision 006).
+ * through {@code CreatureGriefing}.
  */
 public abstract class HabitatBlock extends BaseEntityBlock {
 

@@ -136,7 +136,7 @@ public final class CreatureGriefing {
         });
     }
 
-    /** The decision itself. Public so tests (and the Stage 2 denied-griefing tests) can drive it. */
+    /** The decision itself. Public so tests (and the per-ability denied-griefing tests) can drive it. */
     public static boolean decide(Change change, Checks checks) {
         if (!checks.keyEnabled()) {
             return false;

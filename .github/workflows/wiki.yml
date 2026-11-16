@@ -32,6 +32,11 @@ jobs:
         with:
           fetch-depth: 1
 
+      # The wiki is public text: refuse to publish it while anything in the repo points at private
+      # planning records (standard-library Python, no setup needed).
+      - name: Private-reference guard
+        run: python3 -B tools/check_private_refs.py --check
+
       - name: Mirror wiki/ into the wiki repo and push
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

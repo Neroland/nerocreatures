@@ -113,7 +113,7 @@ import za.co.neroland.nerocreatures.block.NestHome;
  * and its own index ({@link CreatureOwnershipState}) is erasable and export-able. Nothing on this
  * class logs player identity.
  *
- * <h2>0.5.0 additions (decisions 003 and 004)</h2>
+ * <h2>0.5.0 additions</h2>
  *
  * <ul>
  *   <li><b>Traits.</b> Every individual carries a {@link TraitSet} under {@value TraitSet#NBT_KEY}. A
@@ -136,7 +136,7 @@ import za.co.neroland.nerocreatures.block.NestHome;
  */
 public abstract class TameableCreature extends TamableAnimal implements ProductSource, CreatureVisualsHolder {
 
-    /** Entity contract section 3: the root's visuals ids are this class's first {@code defineId}. */
+    /** The root's visuals ids are this class's first {@code defineId}. */
     // defineId must be called from the owning class itself (NeoForge 26.x rejects helper-allocated ids).
     private static final CreatureVisuals.Ids VISUALS_IDS = new CreatureVisuals.Ids(
             SynchedEntityData.defineId(TameableCreature.class, EntityDataSerializers.INT),
@@ -163,7 +163,7 @@ public abstract class TameableCreature extends TamableAnimal implements ProductS
     @Nullable
     private TraitSet traits;
 
-    /** A hatchling's first feed tames at 100% (decision 003). Saved. */
+    /** A hatchling's first feed tames at 100%. Saved. */
     private boolean hatchling;
 
     /** One-shot first-server-tick work (trait roll, ownership check) has run. Not saved. */
@@ -184,7 +184,7 @@ public abstract class TameableCreature extends TamableAnimal implements ProductS
     /** Pose, stage/variant/form and the four flags (radiant, alpha, saddled, panniers), synced. */
     private final CreatureVisuals visuals = new CreatureVisuals(this, VISUALS_IDS);
 
-    /** "Far creatures tick slowly" gate for species' own per-tick work (entity contract section 1). */
+    /** "Far creatures tick slowly" gate for species' own per-tick work. */
     private final FarTickGate farTick = new FarTickGate();
 
     private PetCommand command = PetCommand.FOLLOW;
@@ -194,6 +194,12 @@ public abstract class TameableCreature extends TamableAnimal implements ProductS
     private BlockPos guardAnchor;
 
     private int perkCooldown;
+
+    /** Below a quarter health at the last check (companion-app "badly hurt"). Not saved. */
+    private boolean badlyHurt;
+
+    /** How often the "badly hurt" crossing is checked, in ticks. */
+    private static final int HURT_CHECK_TICKS = 10;
 
     protected TameableCreature(EntityType<? extends TameableCreature> type, Level level, CreatureTier tier) {
         super(type, level);
@@ -234,7 +240,7 @@ public abstract class TameableCreature extends TamableAnimal implements ProductS
     }
 
     /**
-     * Whether this species breeds (decision 003). Default {@code false}: existing species are
+     * Whether this species breeds. Default {@code false}: existing species are
      * unchanged until they opt in. Must be a per-class constant (goals are registered from the
      * constructor).
      */
@@ -312,7 +318,7 @@ public abstract class TameableCreature extends TamableAnimal implements ProductS
         return this.farTick;
     }
 
-    /** Marks a freshly hatched baby: its first feed by any player tames it at 100% (Stage 4). */
+    /** Marks a freshly hatched baby: its first feed by any player tames it at 100%. */
     public void setHatchling(boolean hatchling) {
         this.hatchling = hatchling;
     }
@@ -375,6 +381,7 @@ public abstract class TameableCreature extends TamableAnimal implements ProductS
     protected void registerGoals() {
         this.goalSelector.addGoal(0, new FloatGoal(this));
         this.goalSelector.addGoal(1, new SitWhenOrderedToGoal(this));
+        this.goalSelector.addGoal(1, new StayPutGoal(this));
         this.goalSelector.addGoal(2, new MeleeAttackGoal(this, 1.2D, true));
         if (this.breedable()) {
             this.goalSelector.addGoal(3, new BreedGoal(this, 1.0D));
@@ -413,15 +420,15 @@ public abstract class TameableCreature extends TamableAnimal implements ProductS
 
     /**
      * Sets the standing order and keeps the two vanilla flags the client actually renders in step.
-     * {@code SIT} additionally stops the pet where it is and drops any target; {@code GUARD}
-     * re-anchors the hold area to the pet's current position.
+     * {@code SIT} and {@code STAY} additionally stop the pet where it is and drop any target;
+     * {@code GUARD} re-anchors the hold area to the pet's current position.
      */
     public void setCommand(PetCommand command) {
         this.command = command;
         boolean sitting = command == PetCommand.SIT;
         this.setOrderedToSit(sitting);
         this.setInSittingPose(sitting);
-        if (sitting) {
+        if (sitting || command == PetCommand.STAY) {
             this.getNavigation().stop();
             this.setTarget(null);
         }
@@ -438,6 +445,15 @@ public abstract class TameableCreature extends TamableAnimal implements ProductS
      */
     public void releaseToWild() {
         this.releaseToWild(true);
+    }
+
+    /**
+     * Releases this pet for a POPIA/GDPR erasure (or Core's inactivity purge): the same as
+     * {@link #releaseToWild()}, but nothing is published to the former owner, because they are the
+     * person being erased.
+     */
+    public void releaseForErasure() {
+        this.releaseToWild(false);
     }
 
     /**
@@ -462,12 +478,29 @@ public abstract class TameableCreature extends TamableAnimal implements ProductS
         }
     }
 
+    /** A gallery display drops nothing (no loot, no equipment) and gives no experience. */
+    @Override
+    protected void dropAllDeathLoot(ServerLevel level, DamageSource source) {
+        if (!za.co.neroland.nerocreatures.gallery.GalleryDisplays.isDisplay(this)) {
+            super.dropAllDeathLoot(level, source);
+        }
+    }
+
+    @Override
+    public boolean shouldDropExperience() {
+        return !za.co.neroland.nerocreatures.gallery.GalleryDisplays.isDisplay(this) && super.shouldDropExperience();
+    }
+
     // --- interaction --------------------------------------------------------
 
     // Public rather than protected: Animal widens Mob's protected mobInteract to public, so an
     // override on this branch of the hierarchy has to match it.
     @Override
     public InteractionResult mobInteract(Player player, InteractionHand hand) {
+        // A gallery display does nothing (a paddock mount may be ridden by a creative player).
+        if (za.co.neroland.nerocreatures.gallery.GalleryDisplays.isDisplay(this)) {
+            return za.co.neroland.nerocreatures.gallery.GalleryDisplays.interact(this, player, hand);
+        }
         ItemStack held = player.getItemInHand(hand);
         if (this.isTame()) {
             return this.interactWhileTame(player, hand, held);
@@ -593,7 +626,7 @@ public abstract class TameableCreature extends TamableAnimal implements ProductS
                 this.setTraits(Inheritance.fresh(TraitPool.get(), this.random));
             }
             this.verifyOwnership(level);
-            if (this.isTameable()) {
+            if (this.isTameable() && !za.co.neroland.nerocreatures.gallery.GalleryDisplays.isDisplay(this)) {
                 // Companion SPI: goals once per loaded instance (band-checked), then "pet loaded".
                 CompanionBridge.addCompanionGoals(this, this.goalSelector);
                 UUID owner = this.isTame() ? this.ownerId() : null;
@@ -606,7 +639,7 @@ public abstract class TameableCreature extends TamableAnimal implements ProductS
     }
 
     /**
-     * The load-time half of erasure (decision 004). Released silently (clearing the UUID from entity
+     * The load-time half of erasure. Released silently (clearing the UUID from entity
      * data, no app event) only on a positive erasure record; any other missing row is re-added, so a
      * pet from an older save or a recovered-empty store stays tamed.
      */
@@ -654,7 +687,11 @@ public abstract class TameableCreature extends TamableAnimal implements ProductS
                 }
             }
         }
-        // Nest home (Stage 4): rest/heal at the nest, return to it; forgets an invalid nest. Throttled.
+        // Companion app: "badly hurt" crossing for the owner, checked on a cadence (debounced per creature).
+        if (this.isTame() && this.tickCount % HURT_CHECK_TICKS == 0) {
+            this.checkBadlyHurt(level);
+        }
+        // Nest home: rest/heal at the nest, return to it; forgets an invalid nest. Throttled.
         NestHome.tick(this);
         if (!this.isTame() || --this.perkCooldown > 0) {
             return;
@@ -667,6 +704,28 @@ public abstract class TameableCreature extends TamableAnimal implements ProductS
                 && this.distanceToSqr(owner) <= PERK_RADIUS * PERK_RADIUS) {
             this.applyOwnerPerk(level, owner);
         }
+    }
+
+    /**
+     * Publishes {@code creature_hurt} to the owner when this creature's health has just crossed below a
+     * quarter, unless its own owner is the one hurting it. The crossing is remembered on the entity (not
+     * saved); the five-minute debounce lives in {@link CreatureLinkEvents}.
+     */
+    private void checkBadlyHurt(ServerLevel level) {
+        UUID owner = this.ownerId();
+        if (owner == null) {
+            return;
+        }
+        float max = this.getMaxHealth();
+        boolean low = max > 0.0F && za.co.neroland.nerocreatures.link.CreatureLinkRules.isBadlyHurt(this.getHealth() / max);
+        boolean wasLow = this.badlyHurt;
+        this.badlyHurt = low;
+        if (!low || wasLow) {
+            return;
+        }
+        LivingEntity attacker = this.getLastHurtByMob();
+        boolean byOwner = attacker != null && owner.equals(attacker.getUUID());
+        CreatureLinkEvents.creatureHurt(level, owner, this, this.ownershipKind(), byOwner);
     }
 
     /** A dead pet stops being anyone's, so its row leaves the index with it. */
@@ -701,7 +760,7 @@ public abstract class TameableCreature extends TamableAnimal implements ProductS
         return !this.isPersistenceRequired() && !this.requiresCustomPersistence();
     }
 
-    // --- breeding (decision 003) ---------------------------------------------
+    // --- breeding ---------------------------------------------
 
     /** Only species that opted in through {@link #breedable()} can enter love mode. */
     @Override
@@ -741,7 +800,7 @@ public abstract class TameableCreature extends TamableAnimal implements ProductS
     }
 
     /**
-     * Egg species lay an egg instead of a baby when Stage 4's egg layer is bound; otherwise (and for
+     * Egg species lay an egg instead of a baby when the egg layer is bound; otherwise (and for
      * live-birth species) this is vanilla's path, including the loaders' baby-spawn events.
      */
     @Override
@@ -837,6 +896,42 @@ public abstract class TameableCreature extends TamableAnimal implements ProductS
      * Vanilla's follow-owner goal, gated on the standing order. A pet on {@code SIT} or
      * {@code GUARD} is told to stay somewhere, and following would be the opposite of that.
      */
+    /**
+     * {@link PetCommand#STAY}: stands exactly where it was told to, on its feet. It holds the movement
+     * and jump controls, so nothing lower (attacking, following, strolling) can move it, and it drops
+     * any target, so it does not fight either, not even back.
+     */
+    private static final class StayPutGoal extends net.minecraft.world.entity.ai.goal.Goal {
+
+        private final TameableCreature pet;
+
+        StayPutGoal(TameableCreature pet) {
+            this.pet = pet;
+            this.setFlags(java.util.EnumSet.of(Flag.MOVE, Flag.JUMP));
+        }
+
+        @Override
+        public boolean canUse() {
+            return this.pet.command() == PetCommand.STAY && this.pet.isTame() && !this.pet.isPassenger();
+        }
+
+        @Override
+        public void start() {
+            this.pet.getNavigation().stop();
+            this.pet.setTarget(null);
+        }
+
+        @Override
+        public void tick() {
+            if (!this.pet.getNavigation().isDone()) {
+                this.pet.getNavigation().stop();
+            }
+            if (this.pet.getTarget() != null) {
+                this.pet.setTarget(null);
+            }
+        }
+    }
+
     private static final class CommandedFollowOwnerGoal extends FollowOwnerGoal {
 
         private final TameableCreature pet;

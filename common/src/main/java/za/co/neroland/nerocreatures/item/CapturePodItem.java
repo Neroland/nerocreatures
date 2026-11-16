@@ -119,7 +119,7 @@ public class CapturePodItem extends Item {
                 .loadVerdict(owner, mob.getUUID()) != CreatureOwnershipState.LoadVerdict.RELEASE;
         return new CaptureRules.Candidate(
                 mob.isAlive() && !mob.isRemoved(),
-                mob.isNoAi() || mob.isInvulnerable(),
+                mob.isNoAi() || mob.isInvulnerable() || za.co.neroland.nerocreatures.gallery.GalleryDisplays.isDisplay(mob),
                 mob instanceof Enemy,
                 mob instanceof NeroBossEntity,
                 mob instanceof NeroCreatureEntity creature && creature.isAlpha(),

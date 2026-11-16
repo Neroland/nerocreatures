@@ -416,7 +416,9 @@ public final class BossController {
         if (!keepContribution && !this.defeated && this.fightId != null
                 && this.boss.level() instanceof ServerLevel level) {
             // The fight cannot be won any more, so nothing should be holding damage totals for it.
-            BossContributionState.get(level.getServer()).discard(this.fightId);
+            List<UUID> joined = BossContributionState.get(level.getServer()).discard(this.fightId);
+            // Each player who joined is told, privately, that the fight is over (never a roster).
+            CreatureLinkEvents.fightEnded(level, this.bossId, joined);
         }
         // Out of the live index either way: an unloaded boss still has a fight, but it has no live
         // state to report until its chunk comes back and its save data is read again.

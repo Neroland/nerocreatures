@@ -3,7 +3,6 @@ package za.co.neroland.nerocreatures.entity.mechanical;
 import java.util.EnumSet;
 import java.util.List;
 
-import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
@@ -28,6 +27,7 @@ import za.co.neroland.nerocreatures.entity.base.CreatureTier;
 import za.co.neroland.nerocreatures.entity.base.NeroCreatureEntity;
 import za.co.neroland.nerocreatures.entity.visual.VisualPose;
 import za.co.neroland.nerocreatures.registry.ModSounds;
+import za.co.neroland.nerocreatures.registry.ModParticles;
 
 /**
  * <b>Rogue Drone</b> — the small, cheap half of the android family.
@@ -123,7 +123,7 @@ public class RogueDrone extends AbstractAndroid {
 
     /** The death spark burst: particles, a crackle, and a capped nudge away from the wreck. */
     private void shortOut(ServerLevel level) {
-        level.sendParticles(ParticleTypes.ELECTRIC_SPARK, this.getX(), this.getY() + this.getBbHeight() * 0.5D,
+        level.sendParticles(ModParticles.STATIC_SPARK.get(), this.getX(), this.getY() + this.getBbHeight() * 0.5D,
                 this.getZ(), 20, 0.3D, 0.3D, 0.3D, 0.2D);
         this.playSound(SoundEvents.FIREWORK_ROCKET_BLAST, 0.6F, 1.6F);
         List<LivingEntity> near = level.getEntitiesOfClass(LivingEntity.class,

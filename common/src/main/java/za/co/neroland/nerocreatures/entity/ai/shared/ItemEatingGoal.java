@@ -28,7 +28,7 @@ import net.minecraft.world.phys.AABB;
  *       {@link Output} callback (smelted ore plus a bonus roll, for the Slag Beetle).</li>
  * </ol>
  *
- * <p>{@link Permission} is where the griefing gate goes (decision 006: picking up a ground item goes
+ * <p>{@link Permission} is where the griefing gate goes (picking up a ground item goes
  * through {@code CreatureGriefing.mayAlter(..., Change.ITEM)}). There is deliberately no default
  * that skips it.
  */

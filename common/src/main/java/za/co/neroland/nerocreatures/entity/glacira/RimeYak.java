@@ -55,6 +55,7 @@ import za.co.neroland.nerocreatures.trait.TraitEffects;
 import za.co.neroland.nerocreatures.trait.TraitPool;
 import za.co.neroland.nerocreatures.world.CreatureGriefing;
 import za.co.neroland.nerocreatures.registry.ModSounds;
+import za.co.neroland.nerocreatures.registry.ModParticles;
 
 /**
  * <b>Rime Yak</b> (Glacira, livestock): a haystack of frost-cream wool under wide sweeping horns.
@@ -66,7 +67,7 @@ import za.co.neroland.nerocreatures.registry.ModSounds;
  *   <li><b>Milk.</b> A bucket on an adult returns {@code coolant_milk}; then a cooldown.</li>
  *   <li><b>Cold aura</b> (cadence {@value RimeYakRules#AURA_INTERVAL} ticks, radius
  *       {@value RimeYakRules#AURA_RADIUS}; nothing in vanilla spoils, so there is no food-preservation
- *       part, decision 006): players inside are cooled (fire put out, and the
+ *       part): players inside are cooled (fire put out, and the
  *       {@link GlaciraHooks.Cooling} hook is called for them); hostile mobs are chilled, which slows
  *       them and never reaches a damaging full freeze; still water sources at the surface within
  *       {@value RimeYakRules#FREEZE_RADIUS} blocks slowly turn to {@code minecraft:frosted_ice}, which
@@ -86,7 +87,7 @@ public class RimeYak extends LivestockCreature implements HerdMember {
     private static final Identifier RIME_WOOL = Identifier.fromNamespaceAndPath(NeroCreaturesCommon.MOD_ID, "rime_wool");
     private static final Identifier COOLANT_MILK = Identifier.fromNamespaceAndPath(NeroCreaturesCommon.MOD_ID, "coolant_milk");
 
-    /** Config hooks, bound at common init by the integrator (defaults until then). */
+    /** Config hooks, bound at common init (defaults until then). */
     private static volatile IntSupplier woolRegrowTicks = () -> RimeYakRules.DEFAULT_WOOL_REGROW_TICKS;
     private static volatile IntSupplier milkCooldownTicks = () -> RimeYakRules.DEFAULT_MILK_COOLDOWN_TICKS;
 
@@ -203,7 +204,7 @@ public class RimeYak extends LivestockCreature implements HerdMember {
         int points = 12;
         for (int i = 0; i < points; i++) {
             double a = Math.PI * 2.0D * i / points;
-            level.sendParticles(ParticleTypes.SNOWFLAKE, this.getX() + Math.cos(a) * RimeYakRules.AURA_RADIUS,
+            level.sendParticles(ModParticles.RIME_MOTE.get(), this.getX() + Math.cos(a) * RimeYakRules.AURA_RADIUS,
                     this.getY() + 0.3D, this.getZ() + Math.sin(a) * RimeYakRules.AURA_RADIUS, 1, 0.0D, 0.05D, 0.0D, 0.0D);
         }
     }
@@ -280,6 +281,10 @@ public class RimeYak extends LivestockCreature implements HerdMember {
 
     @Override
     public InteractionResult mobInteract(Player player, InteractionHand hand) {
+        // A gallery display does nothing (a paddock mount may be ridden by a creative player).
+        if (za.co.neroland.nerocreatures.gallery.GalleryDisplays.isDisplay(this)) {
+            return za.co.neroland.nerocreatures.gallery.GalleryDisplays.interact(this, player, hand);
+        }
         ItemStack held = player.getItemInHand(hand);
         if (!held.isEmpty() && held.getItem() instanceof ShearsItem && !this.isBaby()) {
             return za.co.neroland.nerocreatures.bestiary.BestiaryProgress.noteHarvest(player, this, this.shear(player, hand, held));

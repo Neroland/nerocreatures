@@ -32,7 +32,7 @@ public final class ModBlockEntities {
     public static final RegistryEntry<BlockEntityType<ApexAltarBlockEntity>> APEX_ALTAR = BLOCK_ENTITIES.register(
             "apex_altar", key -> BlockEntityTypeCompat.create(ApexAltarBlockEntity::new, ModBlocks.APEX_ALTAR.get()));
 
-    /** Stage 4 habitat block entities; ids equal the block ids (types are looked up by id). */
+    /** Habitat block entities; ids equal the block ids (types are looked up by id). */
     public static final RegistryEntry<BlockEntityType<FeedingTroughBlockEntity>> FEEDING_TROUGH = BLOCK_ENTITIES.register(
             "feeding_trough", key -> BlockEntityTypeCompat.create(FeedingTroughBlockEntity::new, ModBlocks.FEEDING_TROUGH.get()));
     public static final RegistryEntry<BlockEntityType<IncubatorBlockEntity>> INCUBATOR = BLOCK_ENTITIES.register(

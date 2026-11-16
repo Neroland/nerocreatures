@@ -25,7 +25,7 @@ import net.minecraft.world.level.Level;
  * (POPIA/GDPR). The dimension id is stored purely so erasure knows which level to look in rather
  * than having to walk every level in the save.
  *
- * <p><b>Egg rows</b> ({@link Kind#EGG}, decision 004) reuse the same shape: {@code entity} is a random
+ * <p><b>Egg rows</b> ({@link Kind#EGG}) reuse the same shape: {@code entity} is a random
  * incubation id (not an entity), {@code type} the species that will hatch, {@code dimension} the
  * incubator's dimension, and {@code hatchAt} the game time it hatches. No position is stored for
  * eggs either; the incubator block entity holds the incubation id, never the player.

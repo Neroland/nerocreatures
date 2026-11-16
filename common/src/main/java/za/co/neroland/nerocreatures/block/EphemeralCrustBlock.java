@@ -27,7 +27,7 @@ import net.minecraft.world.level.Explosion;
 import net.minecraft.world.item.ItemStack;
 
 /**
- * {@code nerocreatures:ephemeral_crust} (decision 001): the one temporary block creatures and boss
+ * {@code nerocreatures:ephemeral_crust}: the one temporary block creatures and boss
  * arenas place. It heals the world by itself, so nothing has to track it.
  *
  * <ul>
@@ -41,10 +41,10 @@ import net.minecraft.world.item.ItemStack;
  * </ul>
  *
  * <p><b>Gating.</b> {@link #place} does not check anything: the caller must already have passed
- * {@code CreatureGriefing.mayAlter(..)} with its own key (decision 006), as the Magma Wader does with
+ * {@code CreatureGriefing.mayAlter(..)} with its own key, as the Magma Wader does with
  * {@code magmaWaderSlag}. Boss arenas use {@code bossArenaBlocks}.
  *
- * <p>Registered by the integration pass (see the WP-Cindara fragment); this class owns the logic.
+ * <p>Registered in {@code ModBlocks}; this class owns the logic.
  */
 public class EphemeralCrustBlock extends Block {
 
@@ -98,7 +98,7 @@ public class EphemeralCrustBlock extends Block {
         }
     }
 
-    /** The registry id the integration pass registers this block under (decision 001). */
+    /** The registry id this block is registered under. */
     public static final Identifier ID = Identifier.fromNamespaceAndPath("nerocreatures", "ephemeral_crust");
 
     @Nullable
@@ -115,7 +115,7 @@ public class EphemeralCrustBlock extends Block {
     }
 
     /**
-     * The registration properties, without the registry id (the integrator adds {@code .setId(key)}
+     * The registration properties, without the registry id (registration adds {@code .setId(key)}
      * on 1.21.2+ through its usual helper). Basalt-like, dim glow for slag, no loot, immovable,
      * random ticks on for the lost-tick safety net.
      */

@@ -4,8 +4,8 @@ import java.util.function.BooleanSupplier;
 import java.util.function.IntSupplier;
 
 /**
- * The gear's tunables. Defaults are the {@link GearRules} constants; the integrator points each at
- * its {@code NeroCreaturesConfig} key at init (contract section 7 names). Read on the server only.
+ * The gear's tunables. Defaults are the {@link GearRules} constants; common init points each at
+ * its {@code NeroCreaturesConfig} key. Read on the server only.
  */
 public final class GearSettings {
 

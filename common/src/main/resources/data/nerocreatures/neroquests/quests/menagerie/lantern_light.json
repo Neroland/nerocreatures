@@ -1,0 +1,25 @@
+{
+  "title": "quest.nerocreatures.menagerie.lantern_light.title",
+  "description": "quest.nerocreatures.menagerie.lantern_light.desc",
+  "icon": "nerocreatures:lumen_dust",
+  "prerequisites": [
+    "nerocreatures:menagerie/field_scanner"
+  ],
+  "objectives": [
+    {
+      "type": "neroquests:gate_open",
+      "gate": "nerocreatures:bestiary/scanned/lumen_moth"
+    }
+  ],
+  "rewards": [
+    {
+      "type": "neroquests:xp",
+      "amount": 40
+    },
+    {
+      "type": "neroquests:currency",
+      "amount": 25
+    }
+  ],
+  "scope": "player"
+}

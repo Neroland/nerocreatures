@@ -62,7 +62,7 @@ import za.co.neroland.nerocreatures.entity.visual.VisualPose;
 import za.co.neroland.nerocreatures.registry.ModEntities;
 
 /**
- * DEV-ONLY budget probe (BUILD-PROMPT Stage 2). Lives in the TEST source set, so it is never in a
+ * DEV-ONLY budget probe (0.5.0 creature budget check). Lives in the TEST source set, so it is never in a
  * release jar; it is only added to the dev mod by {@code gradlew :neoforge:<mc>:runBudgetProbe
  * -PbudgetProbe}, which also sets {@code -Dnerocreatures.budgetProbe=true}. Without that property it
  * does nothing.
@@ -133,7 +133,7 @@ public final class BudgetProbe {
         try {
             run.tick(end);
         } catch (RuntimeException e) {
-            LOG.error("[budget-probe] FAILED with an exception; halting", e);
+            LOG.error("[budget-probe] FAILED with an exception; halting", e); // log-privacy: ok test-only probe, no players
             run.out.append("PROBE ERROR: ").append(e).append('\n');
             run.finish();
         }
@@ -805,7 +805,7 @@ public final class BudgetProbe {
             try {
                 Files.writeString(Path.of("budget-probe-" + MC + ".txt"), text, StandardCharsets.UTF_8);
             } catch (java.io.IOException e) {
-                LOG.error("[budget-probe] could not write the result file", e);
+                LOG.error("[budget-probe] could not write the result file", e); // log-privacy: ok test-only probe
             }
             for (String line : text.split("\n")) {
                 LOG.info("[budget-probe] {}", line);

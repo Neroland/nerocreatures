@@ -3,7 +3,6 @@ package za.co.neroland.nerocreatures.entity.mechanical;
 import java.util.UUID;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -49,6 +48,7 @@ import za.co.neroland.nerocreatures.progression.CreatureMilestones;
 import za.co.neroland.nerocreatures.registry.ModItems;
 import za.co.neroland.nerocreatures.world.CreatureGriefing;
 import za.co.neroland.nerocreatures.registry.ModSounds;
+import za.co.neroland.nerocreatures.registry.ModParticles;
 
 /**
  * <b>Terraforming Drone</b> — the mod's one utility mob: an owned, deployed machine that tends the
@@ -245,6 +245,15 @@ public class TerraformingDrone extends NeroCreatureEntity implements OwnableEnti
     }
 
     /**
+     * Recalls this drone for a POPIA/GDPR erasure (or Core's inactivity purge): the same as
+     * {@link #recall(ServerLevel)}, but nothing is published to the former owner, because they are the
+     * person being erased.
+     */
+    public void recallForErasure(ServerLevel level) {
+        this.recall(level, false);
+    }
+
+    /**
      * {@link #recall(ServerLevel)} with control over the companion-app event. The load-time ownership
      * check passes {@code false}: the former owner was erased, so nothing may be published to them.
      */
@@ -255,7 +264,7 @@ public class TerraformingDrone extends NeroCreatureEntity implements OwnableEnti
         }
         this.unregisterOwnership(level);
         this.spawnAtLocation(level, new ItemStack(ModItems.DRONE_SHELL.get()));
-        level.sendParticles(ParticleTypes.ELECTRIC_SPARK, this.getX(), this.getY() + 0.5D, this.getZ(),
+        level.sendParticles(ModParticles.STATIC_SPARK.get(), this.getX(), this.getY() + 0.5D, this.getZ(),
                 8, 0.3D, 0.3D, 0.3D, 0.0D);
         level.playSound(null, this.blockPosition(), SoundEvents.BEACON_DEACTIVATE,
                 SoundSource.NEUTRAL, 0.5F, 1.4F);
@@ -266,6 +275,10 @@ public class TerraformingDrone extends NeroCreatureEntity implements OwnableEnti
 
     @Override
     protected InteractionResult mobInteract(Player player, InteractionHand hand) {
+        // A gallery display does nothing (a paddock mount may be ridden by a creative player).
+        if (za.co.neroland.nerocreatures.gallery.GalleryDisplays.isDisplay(this)) {
+            return za.co.neroland.nerocreatures.gallery.GalleryDisplays.interact(this, player, hand);
+        }
         if (!this.isOwnedBy(player)) {
             // Somebody else's machine: let their click fall through to whatever they meant by it.
             return InteractionResult.PASS;
@@ -340,7 +353,7 @@ public class TerraformingDrone extends NeroCreatureEntity implements OwnableEnti
             if (level.getBlockState(target).isAir()) {
                 continue;
             }
-            // Decision 006: crop growth is a world change, so it goes through the shared gate (config
+            // Crop growth is a world change, so it goes through the shared gate (config
             // key, mobGriefing, loaded/in-border, the loader's place check, the owner's build right).
             if (!CreatureGriefing.mayAlter(level, this, target, NeroCreaturesConfig.TERRAFORMING_DRONE_WORK,
                     CreatureGriefing.Change.REPLACE)) {
@@ -386,7 +399,7 @@ public class TerraformingDrone extends NeroCreatureEntity implements OwnableEnti
     }
 
     private void outlinePoint(ServerLevel level, double x, double y, double z) {
-        level.sendParticles(ParticleTypes.HAPPY_VILLAGER, x + 0.5D, y, z + 0.5D, 1, 0.0D, 0.0D, 0.0D, 0.0D);
+        level.sendParticles(ModParticles.BLOOM_MOTE.get(), x + 0.5D, y, z + 0.5D, 1, 0.0D, 0.0D, 0.0D, 0.0D);
     }
 
     /**
@@ -407,7 +420,7 @@ public class TerraformingDrone extends NeroCreatureEntity implements OwnableEnti
     // --- lifecycle ----------------------------------------------------------
 
     /**
-     * The load-time half of erasure, the same rule as pets (decision 004): a drone whose erasure the
+     * The load-time half of erasure, the same rule as pets: a drone whose erasure the
      * ownership index positively recorded is recalled silently (its shell drops where it stands, as
      * erasure does for a loaded drone); any other missing row is re-added, so no drone is lost to an
      * index gap.

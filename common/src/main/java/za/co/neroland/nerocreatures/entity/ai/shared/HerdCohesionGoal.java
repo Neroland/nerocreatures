@@ -55,7 +55,7 @@ public class HerdCohesionGoal extends Goal {
         AABB box = this.mob.getBoundingBox().inflate(this.radius, 4.0D, this.radius);
         List<PathfinderMob> mates = new ArrayList<>(MAX_MATES);
         level.getEntities(EntityTypeTest.forClass(PathfinderMob.class), box,
-                e -> e != this.mob && e.isAlive() && e.getType() == this.mob.getType(), mates, MAX_MATES);
+                e -> e != this.mob && e.isAlive() && e.getType() == this.mob.getType() && !za.co.neroland.nerocreatures.gallery.GalleryDisplays.isDisplay(e), mates, MAX_MATES);
         if (mates.isEmpty()) {
             return false;
         }

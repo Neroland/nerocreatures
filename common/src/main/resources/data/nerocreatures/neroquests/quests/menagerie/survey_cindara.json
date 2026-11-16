@@ -1,0 +1,30 @@
+{
+  "title": "quest.nerocreatures.menagerie.survey_cindara.title",
+  "description": "quest.nerocreatures.menagerie.survey_cindara.desc",
+  "icon": "nerocreatures:heat_gland",
+  "prerequisites": [
+    "nerocreatures:menagerie/field_scanner"
+  ],
+  "objectives": [
+    {
+      "type": "neroquests:gate_open",
+      "gate": "nerocreatures:bestiary/scanned/slag_beetle"
+    },
+    {
+      "type": "neroquests:gate_open",
+      "gate": "nerocreatures:bestiary/scanned/magma_wader"
+    }
+  ],
+  "rewards": [
+    {
+      "type": "neroquests:xp",
+      "amount": 80
+    },
+    {
+      "type": "neroquests:currency",
+      "amount": 60
+    }
+  ],
+  "scope": "player",
+  "visible_gate": "nerolandcore:reached_orbit"
+}

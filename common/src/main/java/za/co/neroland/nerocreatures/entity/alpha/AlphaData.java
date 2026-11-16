@@ -100,7 +100,7 @@ public final class AlphaData {
             return JsonParser.parseReader(reader);
         } catch (Exception e) {
             // Resource id only: no player data in logs.
-            NeroCreaturesCommon.LOGGER.warn("[NeroCreatures] Skipping unreadable alpha data {}: {}", id,
+            NeroCreaturesCommon.LOGGER.warn("[NeroCreatures] Skipping unreadable alpha data {}: {}", id, // log-privacy: ok resource id
                     e.getClass().getSimpleName());
             return null;
         }

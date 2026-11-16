@@ -49,6 +49,7 @@ import za.co.neroland.nerocreatures.entity.visual.VisualPose;
 import za.co.neroland.nerocreatures.registry.ModEntities;
 import za.co.neroland.nerocreatures.registry.ModSounds;
 import za.co.neroland.nerocreatures.sound.CreatureSound;
+import za.co.neroland.nerocreatures.registry.ModParticles;
 import za.co.neroland.nerolandcore.event.ThresholdEvents;
 
 /**
@@ -316,7 +317,7 @@ public class CinderTyrant extends NeroBossEntity {
         scaleBase(Attributes.ATTACK_DAMAGE, ENRAGE_DAMAGE);
         level.sendParticles(ParticleTypes.LAVA, this.getX(), this.getY() + this.getBbHeight() * 0.5D,
                 this.getZ(), 40, 1.2D, 1.2D, 1.2D, 0.1D);
-        level.sendParticles(ParticleTypes.FLAME, this.getX(), this.getY() + this.getBbHeight() * 0.5D,
+        level.sendParticles(ModParticles.SLAG_EMBER.get(), this.getX(), this.getY() + this.getBbHeight() * 0.5D,
                 this.getZ(), 60, 1.4D, 1.4D, 1.4D, 0.05D);
         ModSounds.CINDER_TYRANT_PHASE.play(this);
     }

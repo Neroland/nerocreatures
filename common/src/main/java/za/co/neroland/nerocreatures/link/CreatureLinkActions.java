@@ -1,7 +1,9 @@
 package za.co.neroland.nerocreatures.link;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
+import java.util.function.LongSupplier;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -20,60 +22,57 @@ import za.co.neroland.nerolandcore.link.LinkActionHandler;
 import za.co.neroland.nerolandcore.link.LinkActionResult;
 
 import za.co.neroland.nerocreatures.NeroCreaturesCommon;
+import za.co.neroland.nerocreatures.compat.CompanionBridge;
+import za.co.neroland.nerocreatures.config.NeroCreaturesConfig;
 import za.co.neroland.nerocreatures.data.CreatureOwnershipState;
 import za.co.neroland.nerocreatures.data.OwnedCreature;
+import za.co.neroland.nerocreatures.entity.tame.PetCommand;
 import za.co.neroland.nerocreatures.entity.tame.TameableCreature;
+import za.co.neroland.nerocreatures.telemetry.NeroCreaturesTelemetry;
 
 /**
- * The write half of the link module, and a deliberately tiny one: a single action,
- * {@code pet_recall}, which brings your own pets to you.
+ * The write half of the link module: {@code pet_recall} (bring your own pets and mounts to you) and,
+ * from schema 2, {@code pet_command} (tell one of your own pets or mounts to follow, stay or sit).
  *
- * <h2>Why this action and no others</h2>
+ * <h2>Why these two and no others</h2>
  *
- * <p>Everything else a companion client might want to do to a creature — taming it, commanding it,
- * deploying a drone, summoning a boss — is an <em>in-world</em> act with an in-world cost and an
- * in-world audience. Doing any of those from a phone would let a player affect the world without
- * being in it. Recalling a pet you already own to a place you are already standing changes nothing
- * that was not already yours, which is what makes it the one safe write.
+ * <p>Everything else a companion client might want to do to a creature — taming it, deploying a
+ * drone, summoning a boss — is an <em>in-world</em> act with an in-world cost and audience. Recalling a
+ * creature you own to where you are standing, or changing its standing order, changes nothing that was
+ * not already yours.
  *
- * <h2>Validation</h2>
- *
- * <p>Server-authoritative, and the incoming {@link UUID} is trusted for <em>nothing beyond scoping
- * the request to that player's own data</em>:
+ * <h2>Validation (server-authoritative)</h2>
  *
  * <ol>
- *   <li>the player must be online ({@link LinkActionResult.Error#PLAYER_OFFLINE_REQUIRED}) — see
- *       {@link #allowOffline(String)};</li>
- *   <li>an optional {@code pet} parameter naming an entity UUID must be one of <em>this player's
- *       own</em> ownership rows, or the call is refused with
- *       {@link LinkActionResult.Error#NOT_OWNER} — which is also the answer for a pet that belongs
- *       to somebody else, so the action cannot be used to probe for other players' creatures;</li>
- *   <li>a pet must be in the same dimension as its owner and currently loaded, or it is skipped
- *       with a reason ({@link LinkActionResult.Error#VALIDATION} if that leaves nothing to
- *       recall).</li>
+ *   <li>A per-player, per-action rate limit ({@code linkRecallCooldownSeconds},
+ *       {@code linkCommandCooldownMillis}), on top of the bridge's per-device limit. Refused with
+ *       {@code VALIDATION} and the token {@code rate_limited}.</li>
+ *   <li>Parameters: {@code pet} must be a creature id when present (required for
+ *       {@code pet_command}); {@code command} must be exactly {@code follow}, {@code stay} or
+ *       {@code sit} — anything else is {@code unknown_command}, never a silent default.</li>
+ *   <li>The player must be online ({@code PLAYER_OFFLINE_REQUIRED}).</li>
+ *   <li>Ownership through the ownership store: a creature id that is not one of <em>this player's
+ *       own</em> rows answers {@code NOT_OWNER} / {@code not_owner}, exactly like one that does not
+ *       exist, so the action cannot probe for other players' creatures.</li>
  * </ol>
  *
- * <p><b>Drones are never recalled by this action</b>, and that is not an oversight: a drone's whole
- * purpose is the area it was deployed to work, and teleporting it to its owner would quietly break
- * it. Folding a drone away remains a deliberate in-world act (sneak-interact with an empty hand).
+ * <p>Refusals carry a stable <b>token</b> as the message, never a sentence, so the app can show its own
+ * words: {@code rate_limited}, {@code bad_request}, {@code unknown_command}, {@code not_owner},
+ * {@code no_pets}, {@code not_loaded}, {@code other_dimension}, {@code no_room}, {@code player_offline},
+ * {@code internal}.
  *
- * <h2>What "recall" actually does</h2>
+ * <p><b>Drones are never recalled or commanded</b>: a drone belongs to the area it works.
  *
- * <p>The pet is placed on a valid block near the owner — solid ground, open air, room to stand,
- * found by a small bounded search — exactly the checks the spawn engine uses. If no such place
- * exists the pet stays where it is and is reported as skipped; a recall never puts an animal inside
- * a wall or over a drop. A pet's standing order is preserved and re-applied, so a guarding pet
- * guards its new spot rather than walking back to the old one.
- *
- * <p><b>Privacy (POPIA/GDPR).</b> No coordinates are read from or written to any store; the search
- * happens against the live world and is forgotten. A result names only the requesting player's own
- * creatures. Nothing on this path logs player identity.
+ * <p><b>Privacy (POPIA/GDPR).</b> No coordinates are read from or written to any store; a recall's
+ * placement search happens against the live world and is forgotten. Results name only the requesting
+ * player's own creatures. Nothing on this path logs player identity.
  *
  * <p>Server thread only.
  */
 public final class CreatureLinkActions implements LinkActionHandler {
 
-    private static final List<String> ACTIONS = List.of(CreatureLinkModule.ACTION_PET_RECALL);
+    private static final List<String> ACTIONS = List.of(
+            CreatureLinkModule.ACTION_PET_RECALL, CreatureLinkModule.ACTION_PET_COMMAND);
 
     /** Candidate positions tried around the owner before giving up on one pet. */
     private static final int PLACEMENT_ATTEMPTS = 12;
@@ -81,14 +80,35 @@ public final class CreatureLinkActions implements LinkActionHandler {
     /** Half-width of the box around the owner a pet may be placed in, in blocks. */
     private static final int PLACEMENT_SPREAD = 3;
 
-    /** Reported for a pet that is in another dimension from its owner. */
-    private static final String SKIP_OTHER_DIMENSION = "other_dimension";
+    public static final String RATE_LIMITED = "rate_limited";
+    public static final String BAD_REQUEST = "bad_request";
+    public static final String UNKNOWN_COMMAND = "unknown_command";
+    public static final String NOT_OWNER = "not_owner";
+    public static final String NO_PETS = "no_pets";
+    public static final String NOT_LOADED = "not_loaded";
+    public static final String OTHER_DIMENSION = "other_dimension";
+    public static final String NO_ROOM = "no_room";
+    public static final String PLAYER_OFFLINE = "player_offline";
+    public static final String INTERNAL = "internal";
 
-    /** Reported for a pet whose chunk is not loaded, so there is nothing to move. */
-    private static final String SKIP_NOT_LOADED = "not_loaded";
+    private final CreatureLinkRules.RateLimiter limiter = new CreatureLinkRules.RateLimiter();
+    private final LongSupplier clockMs;
+    private final LongSupplier recallIntervalMs;
+    private final LongSupplier commandIntervalMs;
 
-    /** Reported when no safe standing position could be found near the owner. */
-    private static final String SKIP_NO_ROOM = "no_room";
+    /** The registered handler: wall clock and the two config keys. */
+    public CreatureLinkActions() {
+        this(System::currentTimeMillis,
+                () -> NeroCreaturesConfig.LINK_RECALL_COOLDOWN_SECONDS.get() * 1000L,
+                () -> NeroCreaturesConfig.LINK_COMMAND_COOLDOWN_MILLIS.get().longValue());
+    }
+
+    /** For tests: an explicit clock and intervals. */
+    public CreatureLinkActions(LongSupplier clockMs, LongSupplier recallIntervalMs, LongSupplier commandIntervalMs) {
+        this.clockMs = clockMs;
+        this.recallIntervalMs = recallIntervalMs;
+        this.commandIntervalMs = commandIntervalMs;
+    }
 
     @Override
     public String moduleId() {
@@ -101,107 +121,175 @@ public final class CreatureLinkActions implements LinkActionHandler {
     }
 
     /**
-     * {@code false}, and permanently so. A recall moves an animal to where its owner is standing;
-     * an offline player is not standing anywhere. There is no sensible offline semantics for this
-     * action, so refusing it is not a limitation to be lifted later.
+     * {@code false}, and permanently so. A recall moves a creature to where its owner is standing, and
+     * a standing order is something a player gives while they are in the world.
      */
     @Override
     public boolean allowOffline(String actionId) {
         return false;
     }
 
+    /** Erasure: the limiter forgets the player (its entries expire within seconds anyway). */
+    public void forgetPlayer(UUID player) {
+        this.limiter.forget(player);
+    }
+
     @Override
     public LinkActionResult execute(UUID playerId, String actionId, JsonObject params) {
-        if (!CreatureLinkModule.ACTION_PET_RECALL.equals(actionId)) {
-            return LinkActionResult.error(LinkActionResult.Error.VALIDATION,
-                    "NeroCreatures does not know the action '" + actionId + "'.");
+        boolean recall = CreatureLinkModule.ACTION_PET_RECALL.equals(actionId);
+        boolean command = CreatureLinkModule.ACTION_PET_COMMAND.equals(actionId);
+        if (!recall && !command) {
+            return refuse(LinkActionResult.Error.VALIDATION, BAD_REQUEST);
         }
         if (playerId == null) {
-            return LinkActionResult.error(LinkActionResult.Error.VALIDATION, "No player was supplied.");
+            return refuse(LinkActionResult.Error.VALIDATION, BAD_REQUEST);
         }
+        long interval = recall ? this.recallIntervalMs.getAsLong() : this.commandIntervalMs.getAsLong();
+        if (!this.limiter.tryAcquire(playerId, actionId, this.clockMs.getAsLong(), interval)) {
+            return refuse(LinkActionResult.Error.VALIDATION, RATE_LIMITED);
+        }
+
+        // Parameters are checked before anything in the world is touched.
+        boolean hasPet = params != null && params.has("pet");
+        UUID requested = entityId(params);
+        if (hasPet && requested == null) {
+            // Present but unusable: never widen a typo into "recall everything".
+            return refuse(LinkActionResult.Error.VALIDATION, BAD_REQUEST);
+        }
+        PetCommand order = null;
+        if (command) {
+            if (requested == null) {
+                return refuse(LinkActionResult.Error.VALIDATION, BAD_REQUEST);
+            }
+            Optional<PetCommand> parsed = PetCommand.fromRemoteKey(stringParam(params, "command"));
+            if (parsed.isEmpty()) {
+                return refuse(LinkActionResult.Error.VALIDATION, UNKNOWN_COMMAND);
+            }
+            order = parsed.get();
+        }
+
         MinecraftServer server = CreatureLinkAccess.server();
         if (server == null) {
-            return LinkActionResult.error(LinkActionResult.Error.INTERNAL,
-                    "The server is not running a world yet.");
+            return refuse(LinkActionResult.Error.INTERNAL, INTERNAL);
         }
         try {
-            return recall(server, playerId, params);
+            ServerPlayer owner = CreatureLinkAccess.online(server, playerId);
+            if (owner == null) {
+                return refuse(LinkActionResult.Error.PLAYER_OFFLINE_REQUIRED, PLAYER_OFFLINE);
+            }
+            List<OwnedCreature> rows = CreatureOwnershipState.get(server).owned(playerId);
+            if (requested != null && rows.stream().noneMatch(row -> row.entity().equals(requested))) {
+                return refuse(LinkActionResult.Error.NOT_OWNER, NOT_OWNER);
+            }
+            return recall ? recall(owner, rows, requested) : command(server, playerId, rows, requested, order);
         } catch (RuntimeException e) {
             // Action id only — never who asked (POPIA/GDPR).
-            NeroCreaturesCommon.LOGGER.warn("[NeroCreatures] NeroLink action '{}' failed.", actionId, e);
-            return LinkActionResult.error(LinkActionResult.Error.INTERNAL,
-                    "The recall could not be processed.");
+            NeroCreaturesCommon.LOGGER.warn("[NeroCreatures] NeroLink action '{}' failed: {}", actionId,
+                    e.getClass().getSimpleName());
+            NeroCreaturesTelemetry.captureHandledException(e, "link-action", actionId);
+            return refuse(LinkActionResult.Error.INTERNAL, INTERNAL);
         }
     }
 
-    // --- pet_recall -----------------------------------------------------------
+    private static LinkActionResult refuse(LinkActionResult.Error error, String token) {
+        return LinkActionResult.error(error, token);
+    }
 
-    private static LinkActionResult recall(MinecraftServer server, UUID playerId, JsonObject params) {
-        ServerPlayer owner = CreatureLinkAccess.online(server, playerId);
-        if (owner == null) {
-            return LinkActionResult.error(LinkActionResult.Error.PLAYER_OFFLINE_REQUIRED,
-                    "Pets can only be recalled while you are online.");
+    /** Whether a row may be recalled or commanded: pets and mounts, never drones or eggs. */
+    static boolean commandable(OwnedCreature row) {
+        return row.kind() == OwnedCreature.Kind.PET || row.kind() == OwnedCreature.Kind.MOUNT;
+    }
+
+    // --- pet_command ----------------------------------------------------------------
+
+    private static LinkActionResult command(MinecraftServer server, UUID playerId, List<OwnedCreature> rows,
+            UUID requested, PetCommand order) {
+        OwnedCreature row = rows.stream().filter(r -> r.entity().equals(requested)).findFirst().orElse(null);
+        if (row == null) {
+            return refuse(LinkActionResult.Error.NOT_OWNER, NOT_OWNER);
         }
+        if (!commandable(row)) {
+            return refuse(LinkActionResult.Error.VALIDATION, UNKNOWN_COMMAND);
+        }
+        if (row.parked()) {
+            return refuse(LinkActionResult.Error.VALIDATION, NOT_LOADED);
+        }
+        ServerLevel level = server.getLevel(row.dimensionKey());
+        Entity entity = level == null ? null : level.getEntity(row.entity());
+        if (!(entity instanceof TameableCreature pet) || !pet.isAlive() || pet.isPerched()) {
+            return refuse(LinkActionResult.Error.VALIDATION, NOT_LOADED);
+        }
+        if (!playerId.equals(pet.ownerId())) {
+            // The store and the creature disagree: answer as though it is not ours.
+            return refuse(LinkActionResult.Error.NOT_OWNER, NOT_OWNER);
+        }
+        pet.setCommand(order);
+        CompanionBridge.petCommandChanged(pet, order.key());
+        JsonObject result = new JsonObject();
+        result.addProperty("schema_version", CreatureLinkModule.SCHEMA_VERSION);
+        result.addProperty("entity", row.entity().toString());
+        result.addProperty("command", order.key());
+        return LinkActionResult.ok(result);
+    }
+
+    // --- pet_recall -----------------------------------------------------------------
+
+    private static LinkActionResult recall(ServerPlayer owner, List<OwnedCreature> rows, @Nullable UUID requested) {
         if (!(owner.level() instanceof ServerLevel ownerLevel)) {
-            return LinkActionResult.error(LinkActionResult.Error.INTERNAL,
-                    "You are not in a server level.");
+            return refuse(LinkActionResult.Error.INTERNAL, INTERNAL);
         }
-
-        UUID requested = entityId(params);
-        if (requested == null && params != null && params.has("pet")) {
-            // Present but unusable. Falling through to "recall everything" would turn a typo into a
-            // much larger action than the caller asked for.
-            return LinkActionResult.error(LinkActionResult.Error.VALIDATION,
-                    "The 'pet' parameter must be a creature UUID.");
-        }
-        List<OwnedCreature> rows = CreatureOwnershipState.get(server).owned(playerId);
-        if (requested != null && rows.stream().noneMatch(row -> row.entity().equals(requested))) {
-            // Indistinguishable from "no such creature", so the action cannot be used to find out
-            // whether somebody else's pet exists.
-            return LinkActionResult.error(LinkActionResult.Error.NOT_OWNER,
-                    "You do not own a creature with that id.");
-        }
-
         JsonArray recalled = new JsonArray();
         JsonArray skipped = new JsonArray();
+        String firstSkip = null;
         int candidates = 0;
 
         for (OwnedCreature row : rows) {
-            if (row.kind() != OwnedCreature.Kind.PET) {
-                continue; // a drone belongs to its work area, not to its owner's feet
+            if (!commandable(row)) {
+                continue; // a drone belongs to its work area, an egg to its Incubator
             }
             if (requested != null && !row.entity().equals(requested)) {
                 continue;
             }
             candidates++;
-            if (!row.dimension().equals(ownerLevel.dimension().identifier())) {
-                skipped.add(skip(row, SKIP_OTHER_DIMENSION));
-                continue;
+            String reason = null;
+            TameableCreature pet = null;
+            if (row.parked()) {
+                reason = NOT_LOADED;
+            } else if (!row.dimension().equals(ownerLevel.dimension().identifier())) {
+                reason = OTHER_DIMENSION;
+            } else {
+                Entity entity = ownerLevel.getEntity(row.entity());
+                if (!(entity instanceof TameableCreature found) || !found.isAlive() || found.isPerched()
+                        || found.isPassenger() || found.isVehicle()) {
+                    reason = NOT_LOADED;
+                } else {
+                    pet = found;
+                    if (!teleportNear(ownerLevel, pet, owner)) {
+                        reason = NO_ROOM;
+                    }
+                }
             }
-            Entity entity = ownerLevel.getEntity(row.entity());
-            if (!(entity instanceof TameableCreature pet) || !pet.isAlive()) {
-                skipped.add(skip(row, SKIP_NOT_LOADED));
-                continue;
-            }
-            if (!teleportNear(ownerLevel, pet, owner)) {
-                skipped.add(skip(row, SKIP_NO_ROOM));
+            if (reason != null || pet == null) {
+                reason = reason == null ? NOT_LOADED : reason;
+                skipped.add(skip(row, reason));
+                if (firstSkip == null) {
+                    firstSkip = reason;
+                }
                 continue;
             }
             JsonObject moved = new JsonObject();
             moved.addProperty("entity", row.entity().toString());
             moved.addProperty("type", row.type().toString());
-            moved.addProperty("name", CreatureLinkAccess.readablePath(row.type().getPath()));
+            moved.addProperty("name", CreatureLinkJson.speciesName(row.type()));
             moved.addProperty("command", pet.command().key());
             recalled.add(moved);
         }
 
         if (candidates == 0) {
-            return LinkActionResult.error(LinkActionResult.Error.VALIDATION,
-                    "You have no tamed pets to recall.");
+            return refuse(LinkActionResult.Error.VALIDATION, NO_PETS);
         }
         if (recalled.isEmpty()) {
-            return LinkActionResult.error(LinkActionResult.Error.VALIDATION,
-                    "None of your pets could be recalled right now.");
+            return refuse(LinkActionResult.Error.VALIDATION, firstSkip == null ? NOT_LOADED : firstSkip);
         }
 
         JsonObject result = new JsonObject();
@@ -213,7 +301,7 @@ public final class CreatureLinkActions implements LinkActionHandler {
     }
 
     /**
-     * Puts one pet down somewhere it can actually stand near its owner. Bounded to
+     * Puts one creature down somewhere it can actually stand near its owner. Bounded to
      * {@value #PLACEMENT_ATTEMPTS} candidates; returns {@code false} without moving anything if
      * none of them work.
      */
@@ -252,17 +340,19 @@ public final class CreatureLinkActions implements LinkActionHandler {
         return entry;
     }
 
+    @Nullable
+    private static String stringParam(@Nullable JsonObject params, String name) {
+        if (params == null || !params.has(name)) {
+            return null;
+        }
+        JsonElement element = params.get(name);
+        return element != null && element.isJsonPrimitive() ? element.getAsString() : null;
+    }
+
     /** The {@code pet} parameter as an entity UUID, or {@code null} if absent or malformed. */
     @Nullable
-    private static UUID entityId(JsonObject params) {
-        if (params == null || !params.has("pet")) {
-            return null;
-        }
-        JsonElement element = params.get("pet");
-        if (element == null || !element.isJsonPrimitive()) {
-            return null;
-        }
-        String raw = element.getAsString();
+    private static UUID entityId(@Nullable JsonObject params) {
+        String raw = stringParam(params, "pet");
         if (raw == null || raw.isBlank()) {
             return null;
         }

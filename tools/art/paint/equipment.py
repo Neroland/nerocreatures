@@ -10,7 +10,7 @@ has no layer. Colours come from each item's own palette ramps (``items.py``), so
 as the item: the Lurker Cloak in Glacira indigo and wool, the Heat Gland Greaves in Cindara clinker with
 ember vents, the Graviton Boots in asteroid gunmetal with a lit graviton band.
 
-These are first-pass layers drawn by rule (Opus, Stage 5 wiring); Fable may repaint them in place.
+These are first-pass layers drawn by rule; a hand-painted pass may replace them in place.
 
 Layout is the vanilla humanoid armour sheet (64x32): head 0..32 x 0..16, legs at (0,16), body at
 (16,16), arms at (40,16); each box face is cut from its ``(u, v)`` origin like a vanilla cube.

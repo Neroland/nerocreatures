@@ -8,7 +8,7 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 
 /**
  * What one trait does, as read from the jar-bundled pool. The <b>type is a closed set implemented in
- * code</b>; the JSON only tunes the numbers (decision 003). Fields that a type does not use are simply
+ * code</b>; the JSON only tunes the numbers. Fields that a type does not use are simply
  * left at their neutral default, so one flat record serves every type and the codec stays trivial.
  *
  * @param type            which hook in code consumes this trait

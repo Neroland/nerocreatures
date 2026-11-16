@@ -4,12 +4,12 @@ import java.util.List;
 
 /**
  * Pure rules for the two area blocks that shape NeroCreatures' own spawn table: the <b>Lure Beacon</b>
- * and the <b>Sonic Ward</b> (decision 006). No world types, so every bound is unit-tested.
+ * and the <b>Sonic Ward</b>. No world types, so every bound is unit-tested.
  *
  * <ul>
  *   <li><b>Bounded radius.</b> A ward covers {@value #WARD_RADIUS} blocks and a lure
  *       {@value #LURE_RADIUS} (horizontal distance, plus {@value #VERTICAL_REACH} up and down), fixed by
- *       decision 006 and not configurable.</li>
+ *       the griefing rules and not configurable.</li>
  *   <li><b>Bounded strength.</b> A lure multiplies one species' rule weight by its multiplier, clamped
  *       to {@code [1, }{@value #MAX_LURE_MULTIPLIER}{@code ]}. Overlapping lures do not stack: the
  *       strongest one applies.</li>
@@ -25,10 +25,10 @@ import java.util.List;
  */
 public final class FieldRules {
 
-    /** Sonic Ward radius in blocks (decision 006). */
+    /** Sonic Ward radius in blocks. */
     public static final int WARD_RADIUS = 16;
 
-    /** Lure Beacon radius in blocks (decision 006). */
+    /** Lure Beacon radius in blocks. */
     public static final int LURE_RADIUS = 24;
 
     /** Blocks above and below the field's block that still count as inside. */

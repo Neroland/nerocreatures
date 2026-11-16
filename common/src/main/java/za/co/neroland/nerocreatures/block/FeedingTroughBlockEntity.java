@@ -10,7 +10,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
@@ -58,7 +57,8 @@ public class FeedingTroughBlockEntity extends InventoryHabitatBlockEntity {
             return;
         }
         AABB box = new AABB(pos).inflate(TroughRules.RADIUS, TroughRules.VERTICAL, TroughRules.RADIUS);
-        List<LivestockCreature> near = level.getEntitiesOfClass(LivestockCreature.class, box, LivingEntity::isAlive);
+        List<LivestockCreature> near = level.getEntitiesOfClass(LivestockCreature.class, box,
+                e -> e.isAlive() && !za.co.neroland.nerocreatures.gallery.GalleryDisplays.isDisplay(e));
         if (near.size() < 2) {
             return;
         }

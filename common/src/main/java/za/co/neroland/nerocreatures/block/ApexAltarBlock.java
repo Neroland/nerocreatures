@@ -50,7 +50,7 @@ import za.co.neroland.nerocreatures.item.SigilItem;
  */
 public class ApexAltarBlock extends BaseEntityBlock {
 
-    /** The registry id the integration pass registers this block under (decision 001). */
+    /** The registry id this block is registered under. */
     public static final Identifier ID = Identifier.fromNamespaceAndPath(NeroCreaturesCommon.MOD_ID, "apex_altar");
 
     /** Which habitat accent the sigil slot glows in; {@code none} = idle and unlocked. */
@@ -89,7 +89,7 @@ public class ApexAltarBlock extends BaseEntityBlock {
     }
 
     /**
-     * Registration properties without the id (the integrator adds {@code .setId(key)}): obsidian-hard,
+     * Registration properties without the id (registration adds {@code .setId(key)}): obsidian-hard,
      * blast-proof, needs a pickaxe, glows faintly while locked.
      */
     public static BlockBehaviour.Properties altarProperties() {

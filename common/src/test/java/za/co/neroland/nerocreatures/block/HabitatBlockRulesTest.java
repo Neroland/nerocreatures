@@ -17,7 +17,7 @@ import za.co.neroland.nerocreatures.block.FieldRules.Field;
 import za.co.neroland.nerocreatures.block.FieldRules.Kind;
 import za.co.neroland.nerocreatures.trait.TraitSet;
 
-/** Stage 4 habitat blocks: the pure rule of every block, its bounds and its caps. */
+/** Habitat blocks: the pure rule of every block, its bounds and its caps. */
 class HabitatBlockRulesTest {
 
     // --- Incubator ----------------------------------------------------------------------------
@@ -276,13 +276,18 @@ class HabitatBlockRulesTest {
         entity.putString("LoveCause", "player-id");
         entity.putString("Pos", "here");
         entity.putString("nerocreatures:mount", "saddled");
-        entity.putString("CustomKept", "kept");
+        entity.putString("nerocreatures:custom_kept", "kept");
+        entity.putString("neoforge:attachments", "another mod's data");
+        entity.putString("last_hurt_by_player", "player-id");
+        entity.putString("Health", "10");
         CapturedCreature capture = CapturedCreature.of("nerocreatures:lumen_moth", entity,
                 Optional.of(TraitSet.of("keen", "calm")), true);
         for (String key : CapturedCreature.STRIPPED_KEYS) {
             assertFalse(capture.entity().contains(key), key);
         }
-        assertTrue(capture.entity().contains("CustomKept"));
+        assertTrue(capture.entity().contains("nerocreatures:custom_kept"), "this mod's own keys travel");
+        assertTrue(capture.entity().contains("Health"), "allowed vanilla keys travel");
+        assertFalse(capture.entity().contains("neoforge:attachments"), "anything not allowed is dropped");
         assertTrue(entity.contains("Owner"), "the caller's tag is not modified");
 
         Optional<CapturedCreature> back = CapturedCreature.fromTag(capture.toTag());

@@ -57,7 +57,7 @@ import za.co.neroland.nerocreatures.registry.ModSounds;
  *   <li><b>Grazing (read-only).</b> Every {@value NoduleRules#GRAZE_INTERVAL} ticks an adult reads
  *       the nearest block within 4 blocks (2 vertically) that is in a
  *       {@code nerocreatures:lode_tortoise/<family>} block tag. It never breaks or changes it
- *       (decision 006: no world change; {@code lodeTortoiseNodules} is a balance switch). The
+ *       (no world change; {@code lodeTortoiseNodules} is a balance switch). The
  *       {@code ability} pose (48 ticks) plays.</li>
  *   <li><b>Nodules</b> grow on a {@link ProductTimer} only while it grazes ore; the family is fixed
  *       once nodules show (see {@link NoduleRules#onGraze}); rare families grow four times slower.
@@ -81,7 +81,7 @@ public class LodeTortoise extends LivestockCreature implements HerdMember {
 
     private static final TagKey<Block>[] FAMILY_TAGS = familyTags();
 
-    /** Config hooks, wired at common init by the integrator (defaults until then). */
+    /** Config hooks, wired at common init (defaults until then). */
     private static volatile IntSupplier regrowTicks = () -> NoduleRules.DEFAULT_REGROW_TICKS;
     private static volatile IntSupplier yieldCap = () -> NoduleRules.DEFAULT_YIELD_CAP;
 
@@ -212,7 +212,14 @@ public class LodeTortoise extends LivestockCreature implements HerdMember {
     }
 
     private void syncVisuals() {
-        this.visuals().setStage(this.family == null ? 0 : this.nodules.stage());
+        int stage = this.family == null ? 0 : this.nodules.stage();
+        if (stage >= NoduleRules.MAX_STAGE && this.visuals().stage() < NoduleRules.MAX_STAGE
+                && this.level() instanceof ServerLevel level) {
+            // A nodule reaching its last stage catches the light.
+            level.sendParticles(za.co.neroland.nerocreatures.registry.ModParticles.NODULE_GLINT.get(), this.getX(),
+                    this.getY() + this.getBbHeight(), this.getZ(), 3, 0.3D, 0.1D, 0.3D, 0.0D);
+        }
+        this.visuals().setStage(stage);
         this.visuals().setVariant(this.family == null ? 0 : this.family.variant());
     }
 
@@ -225,6 +232,10 @@ public class LodeTortoise extends LivestockCreature implements HerdMember {
 
     @Override
     public InteractionResult mobInteract(Player player, InteractionHand hand) {
+        // A gallery display does nothing (a paddock mount may be ridden by a creative player).
+        if (za.co.neroland.nerocreatures.gallery.GalleryDisplays.isDisplay(this)) {
+            return za.co.neroland.nerocreatures.gallery.GalleryDisplays.interact(this, player, hand);
+        }
         ItemStack held = player.getItemInHand(hand);
         if (held.isEmpty() || !held.typeHolder().is(ItemTags.PICKAXES) || this.isBaby()) {
             return super.mobInteract(player, hand);
@@ -255,7 +266,7 @@ public class LodeTortoise extends LivestockCreature implements HerdMember {
         return za.co.neroland.nerocreatures.bestiary.BestiaryProgress.noteHarvest(player, this, InteractionResult.SUCCESS_SERVER);
     }
 
-    // --- natural spawn (M2) -------------------------------------------------------------
+    // --- natural spawn ------------------------------------------------------------------
 
     /** A wild tortoise arrives with a random, low-weighted nodule stage of a common family. */
     @Override
@@ -308,7 +319,7 @@ public class LodeTortoise extends LivestockCreature implements HerdMember {
         return this.alarmThreat;
     }
 
-    // --- sounds (mapped vanilla until Stage 5) -------------------------------------------
+    // --- sounds -------------------------------------------
 
     @Override
     protected SoundEvent getAmbientSound() {

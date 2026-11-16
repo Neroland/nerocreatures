@@ -1,0 +1,25 @@
+{
+  "title": "quest.nerocreatures.menagerie.slow_ore.title",
+  "description": "quest.nerocreatures.menagerie.slow_ore.desc",
+  "icon": "nerocreatures:lode_scute",
+  "prerequisites": [
+    "nerocreatures:menagerie/field_scanner"
+  ],
+  "objectives": [
+    {
+      "type": "neroquests:gate_open",
+      "gate": "nerocreatures:bestiary/studied/lode_tortoise"
+    }
+  ],
+  "rewards": [
+    {
+      "type": "neroquests:xp",
+      "amount": 80
+    },
+    {
+      "type": "neroquests:currency",
+      "amount": 50
+    }
+  ],
+  "scope": "player"
+}

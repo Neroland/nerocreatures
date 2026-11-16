@@ -1,7 +1,7 @@
 package za.co.neroland.nerocreatures.client.bestiary;
 
 /**
- * Every rectangle of the Bestiary screen for a scaled window (decision 010 section 4). Pure integer
+ * Every rectangle of the Bestiary screen for a scaled window. Pure integer
  * arithmetic, identical to {@code layout(width, height)} in {@code tools/art/paint/gui.py}; if the
  * two ever disagree, that function wins. Nothing is scaled, cropped or hidden to fit: a smaller
  * window gets fewer columns, a smaller viewport and more scrolling.
@@ -81,7 +81,7 @@ public record BestiaryLayout(int width, int height, Rect panel, Rect header, Rec
         return this.viewport.w();
     }
 
-    /** Width of one tile row inside the list (section 4.2). */
+    /** Width of one tile row inside the list. */
     public int rowWidth() {
         return this.columns * 30 - 2;
     }

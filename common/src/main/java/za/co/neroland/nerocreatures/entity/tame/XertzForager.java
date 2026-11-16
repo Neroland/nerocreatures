@@ -1,6 +1,5 @@
 package za.co.neroland.nerocreatures.entity.tame;
 
-import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.damagesource.DamageSource;
@@ -17,6 +16,7 @@ import za.co.neroland.nerocreatures.entity.base.CreatureTier;
 import za.co.neroland.nerocreatures.entity.visual.VisualPose;
 import za.co.neroland.nerocreatures.registry.ModItems;
 import za.co.neroland.nerocreatures.registry.ModSounds;
+import za.co.neroland.nerocreatures.registry.ModParticles;
 
 /**
  * <b>Xertz Forager</b> — the quartz-forest critter of the lush green worlds.
@@ -69,7 +69,7 @@ public class XertzForager extends TameableCreature {
                 .add(Attributes.FOLLOW_RANGE, 20.0D);
     }
 
-    /** Breeding opt-in (decision 003, additive): live birth, food = its taming food. */
+    /** Breeding opt-in (additive): live birth, food = its taming food. */
     @Override
     public boolean breedable() {
         return true;
@@ -89,7 +89,7 @@ public class XertzForager extends TameableCreature {
         // vision never blinks while the owner is still in the dark.
         owner.addEffect(new MobEffectInstance(MobEffects.NIGHT_VISION, NIGHT_VISION_TICKS, 0,
                 true, false, true));
-        level.sendParticles(ParticleTypes.GLOW, this.getX(), this.getY() + this.getBbHeight(),
+        level.sendParticles(ModParticles.LUMEN_MOTE.get(), this.getX(), this.getY() + this.getBbHeight(),
                 this.getZ(), 2, 0.2D, 0.1D, 0.2D, 0.0D);
     }
 

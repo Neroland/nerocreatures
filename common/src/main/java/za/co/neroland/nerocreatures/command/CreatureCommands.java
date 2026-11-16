@@ -1,5 +1,7 @@
 package za.co.neroland.nerocreatures.command;
 
+import java.io.IOException;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -27,15 +29,16 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.level.entity.EntityTypeTest;
+import net.minecraft.world.level.storage.LevelResource;
 
 import za.co.neroland.nerolandcore.registry.RegistrationProvider.RegistryEntry;
 
 import za.co.neroland.nerocreatures.NeroCreaturesCommon;
-import za.co.neroland.nerocreatures.boss.BossContributionState;
 import za.co.neroland.nerocreatures.boss.BossFights;
 import za.co.neroland.nerocreatures.boss.BossSummons;
 import za.co.neroland.nerocreatures.config.NeroCreaturesConfig;
-import za.co.neroland.nerocreatures.data.CreatureOwnershipState;
+import za.co.neroland.nerocreatures.data.CreatureExport;
+import za.co.neroland.nerocreatures.data.CreatureExportFile;
 import za.co.neroland.nerocreatures.entity.base.NeroCreatureEntity;
 import za.co.neroland.nerocreatures.entity.tame.TameableCreature;
 import za.co.neroland.nerocreatures.registry.ModEntities;
@@ -54,7 +57,7 @@ import za.co.neroland.nerocreatures.telemetry.NeroCreaturesTelemetry;
  * /nerocreatures list                     the roster, with what is loaded in your dimension
  * /nerocreatures caps                     population and ownership caps, and what is using them
  * /nerocreatures summon-boss &lt;boss&gt;       start a contribution-tracked fight where you stand
- * /nerocreatures export &lt;player&gt;          one player's stored NeroCreatures data, as JSON
+ * /nerocreatures export &lt;player&gt;          one player's stored NeroCreatures data, as a JSON file
  * /nerocreatures budget [start|stop]      creature tick cost per species (see BudgetCommand)
  * /nerocreatures telemetry-test           fire one synthetic crash-reporting event
  * /nerocreatures gallery [clear]          build (or wipe) the creative showcase scene
@@ -81,19 +84,18 @@ import za.co.neroland.nerocreatures.telemetry.NeroCreaturesTelemetry;
  *   <li>Nothing here logs player identity, and no subcommand prints anything about a player other
  *       than the one named — {@code list} and {@code caps} report world state and configuration
  *       only, never who owns what.</li>
- *   <li><b>{@code export} is the documented data-access path.</b> It prints exactly one player's own
- *       ownership rows and their own boss contribution, and nobody else's — a property of the
- *       stores' {@code exportPlayer} methods, not of this presentation. It requires operator
- *       permission because it is somebody's personal record; a player asking for their own data asks
- *       an operator to run it, exactly as {@code PRIVACY.md} says.</li>
+ *   <li><b>{@code export} is the documented data-access path.</b> It writes exactly one player's own
+ *       data, and nobody else's — a property of {@code CreatureExport}, not of this presentation —
+ *       to a file under the world folder ({@link CreatureExportFile}) and tells the invoker only the
+ *       path. Never chat: console and RCON output is copied into the server log, and a long export
+ *       would be cut off. It requires operator permission because it is somebody's personal record; a
+ *       player asking for their own data asks an operator to run it, exactly as {@code PRIVACY.md}
+ *       says.</li>
  * </ul>
  *
  * <p>Server thread only.
  */
 public final class CreatureCommands {
-
-    /** Chat is not a file transfer: an export longer than this is cut off with a note. */
-    private static final int EXPORT_CHAR_LIMIT = 32_000;
 
     /** Upper bound on the entities {@code list} will count in one dimension. */
     private static final int LIST_SCAN_LIMIT = 2_048;
@@ -232,13 +234,13 @@ public final class CreatureCommands {
     private static Map<Identifier, Integer> countByType(ServerLevel level) {
         Map<Identifier, Integer> counts = new LinkedHashMap<>();
         List<NeroCreatureEntity> creatures = new ArrayList<>();
-        level.getEntities(EntityTypeTest.forClass(NeroCreatureEntity.class), creature -> true,
+        level.getEntities(EntityTypeTest.forClass(NeroCreatureEntity.class), creature -> !za.co.neroland.nerocreatures.gallery.GalleryDisplays.isDisplay(creature),
                 creatures, LIST_SCAN_LIMIT);
         for (NeroCreatureEntity creature : creatures) {
             counts.merge(EntityType.getKey(creature.getType()), 1, Integer::sum);
         }
         List<TameableCreature> pets = new ArrayList<>();
-        level.getEntities(EntityTypeTest.forClass(TameableCreature.class), pet -> true, pets,
+        level.getEntities(EntityTypeTest.forClass(TameableCreature.class), pet -> !za.co.neroland.nerocreatures.gallery.GalleryDisplays.isDisplay(pet), pets,
                 LIST_SCAN_LIMIT);
         for (TameableCreature pet : pets) {
             counts.merge(EntityType.getKey(pet.getType()), 1, Integer::sum);
@@ -340,13 +342,14 @@ public final class CreatureCommands {
     // --- export --------------------------------------------------------------
 
     /**
-     * POPIA/GDPR data access: prints exactly one player's own NeroCreatures rows as pretty JSON to
-     * the invoker — their ownership index rows and their own boss contribution, and nothing that
-     * belongs to anybody else.
+     * POPIA/GDPR data access: writes exactly one player's own NeroCreatures data as pretty JSON to a
+     * file — ownership rows, their own boss contribution, this mod's progression gates, loaded
+     * creatures that name them as owner (with any Nest home) and whether an erasure marker exists —
+     * and nothing that belongs to anybody else. The invoker is told the path and size only, so nothing
+     * personal reaches chat or, from the console, the server log.
      *
-     * <p>Both halves come straight from the stores' own {@code exportPlayer} methods, so this
-     * command cannot accidentally widen what an export contains; widening it would mean changing
-     * the stores, which is where the guarantee is documented.
+     * <p>The content comes from {@link CreatureExport}, whose every section reads by the one player
+     * id, so this command cannot accidentally widen what an export contains.
      */
     private static int export(CommandContext<CommandSourceStack> ctx) {
         CommandSourceStack source = ctx.getSource();
@@ -358,28 +361,24 @@ public final class CreatureCommands {
         if (player == null) {
             return 0;
         }
-        JsonObject json = new JsonObject();
-        json.addProperty("player", player.toString());
-        json.addProperty("exported_at", System.currentTimeMillis());
-        json.add("ownership", CreatureOwnershipState.exportPlayer(server, player));
-        json.add("boss_contribution", BossContributionState.exportPlayer(server, player));
-
-        String subject = player.toString();
-        source.sendSuccess(() -> Component.translatable("command.nerocreatures.export.header",
-                subject), false);
-
+        JsonObject json = CreatureExport.export(server, player);
         String pretty = new GsonBuilder().setPrettyPrinting().create().toJson(json);
-        boolean truncated = pretty.length() > EXPORT_CHAR_LIMIT;
-        if (truncated) {
-            pretty = pretty.substring(0, EXPORT_CHAR_LIMIT);
+        Path worldRoot = server.getWorldPath(LevelResource.ROOT);
+        Path file;
+        try {
+            file = CreatureExportFile.write(worldRoot, pretty, System.currentTimeMillis());
+        } catch (IOException e) {
+            // Exception class only: the message holds a file path (POPIA/GDPR).
+            NeroCreaturesCommon.LOGGER.warn("[NeroCreatures] Writing a data export failed: {}",
+                    e.getClass().getSimpleName());
+            source.sendFailure(Component.translatable("command.nerocreatures.export.failed"));
+            return 0;
         }
-        for (String line : pretty.split("\n", -1)) {
-            source.sendSuccess(() -> Component.literal(line), false);
-        }
-        if (truncated) {
-            source.sendSuccess(() -> Component.translatable("command.nerocreatures.export.truncated",
-                    EXPORT_CHAR_LIMIT), false);
-        }
+        String where = worldRoot.toAbsolutePath().normalize().relativize(file.toAbsolutePath().normalize())
+                .toString().replace('\\', '/');
+        int size = pretty.length();
+        source.sendSuccess(() -> Component.translatable("command.nerocreatures.export.written", where, size),
+                false);
         return Command.SINGLE_SUCCESS;
     }
 
@@ -448,7 +447,9 @@ public final class CreatureCommands {
             return body.run();
         } catch (RuntimeException e) {
             NeroCreaturesTelemetry.captureHandledException(e, "command", "/nerocreatures " + subcommand);
-            NeroCreaturesCommon.LOGGER.error("[NeroCreatures] /nerocreatures {} failed", subcommand, e);
+            // Subcommand and exception class only: the message is free text (POPIA/GDPR).
+            NeroCreaturesCommon.LOGGER.error("[NeroCreatures] /nerocreatures {} failed: {}", subcommand,
+                    e.getClass().getSimpleName());
             source.sendFailure(Component.translatable("command.nerocreatures.failed", subcommand));
             return 0;
         }

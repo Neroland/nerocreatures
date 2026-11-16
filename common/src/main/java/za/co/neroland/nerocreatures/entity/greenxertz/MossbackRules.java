@@ -1,7 +1,7 @@
 package za.co.neroland.nerocreatures.entity.greenxertz;
 
 /**
- * The Mossback's grazing rules as pure logic (decision 006, key {@code mossbackFertilises},
+ * The Mossback's grazing rules as pure logic (key {@code mossbackFertilises},
  * {@code Change.PLACE}).
  *
  * <p>Every {@link #GRAZE_INTERVAL} ticks an adult standing on a grass block grazes (the

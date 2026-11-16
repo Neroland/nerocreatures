@@ -1,0 +1,26 @@
+{
+  "title": "quest.nerocreatures.menagerie.broken_facets.title",
+  "description": "quest.nerocreatures.menagerie.broken_facets.desc",
+  "icon": "nerocreatures:colossus_facet",
+  "prerequisites": [
+    "nerocreatures:menagerie/survey_nyxara"
+  ],
+  "objectives": [
+    {
+      "type": "neroquests:kill_entity",
+      "entity": "nerocreatures:facet_colossus"
+    }
+  ],
+  "rewards": [
+    {
+      "type": "neroquests:xp",
+      "amount": 300
+    },
+    {
+      "type": "neroquests:currency",
+      "amount": 500
+    }
+  ],
+  "scope": "player",
+  "visible_gate": "nerolandcore:reached_orbit"
+}

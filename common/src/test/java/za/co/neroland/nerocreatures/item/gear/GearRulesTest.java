@@ -8,7 +8,7 @@ import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
-/** Stage 4 creature gear: each item's rule, cooldown floor and bounds. */
+/** Creature gear: each item's rule, cooldown floor and bounds. */
 class GearRulesTest {
 
     @Test

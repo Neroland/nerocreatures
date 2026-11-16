@@ -15,11 +15,11 @@ import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
 /**
- * Base of the habitat block entities (Stage 4). Three things every one of them needs:
+ * Base of the habitat block entities. Three things every one of them needs:
  *
  * <ul>
  *   <li><b>Type lookup by id</b>, like the Apex Altar: the block entity never names a registry entry, so
- *       this package compiles before the integration pass registers anything.</li>
+ *       this package compiles without the registries.</li>
  *   <li><b>One removal hook</b>, {@link #onBlockRemoved}, run once when the block is broken or replaced
  *       (never on chunk unload). 1.21.5+ calls it from {@code preRemoveSideEffects} (the only safe place
  *       for world changes on 26.x); older lines from the block's {@code onRemove}.</li>
@@ -33,7 +33,7 @@ public abstract class HabitatBlockEntity extends BlockEntity {
         super(type, pos, state);
     }
 
-    /** The registered type for {@code id}; fails loudly if the integration pass has not registered it. */
+    /** The registered type for {@code id}; fails loudly if it has not been registered. */
     @SuppressWarnings("unchecked")
     static <T extends BlockEntity> BlockEntityType<T> lookup(Identifier id) {
         BlockEntityType<?> type = BuiltInRegistries.BLOCK_ENTITY_TYPE.getValue(id);

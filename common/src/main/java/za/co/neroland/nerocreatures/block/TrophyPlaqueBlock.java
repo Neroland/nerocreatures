@@ -54,7 +54,7 @@ public class TrophyPlaqueBlock extends HabitatBlock {
                 Direction.NORTH));
     }
 
-    /** Registration properties without the id (the integrator adds {@code .setId(key)}). */
+    /** Registration properties without the id (registration adds {@code .setId(key)}). */
     public static BlockBehaviour.Properties plaqueProperties() {
         return BlockBehaviour.Properties.of().mapColor(MapColor.WOOD).strength(1.0F, 3.0F).sound(SoundType.WOOD)
                 .noOcclusion();

@@ -1,226 +1,308 @@
 # NeroCreatures — Privacy & Data Protection
 
-NeroCreatures is designed to comply with POPIA and GDPR. This document describes what player
-data the mod stores and how players and server admins control it.
+NeroCreatures is built to help a server meet its obligations under **POPIA** (South Africa) and the
+**GDPR** (EU/UK). This document lists every piece of player data the mod stores or sends, why, for how
+long, and how a player or an operator inspects or removes it.
 
-## What is stored
+The server operator decides why and how the server processes player data, so under both laws the
+operator is the responsible party (POPIA) / controller (GDPR). The "legal basis" notes below are
+guidance for operators, not legal advice. The developers receive no player data from the mod (see
+[Telemetry](#telemetry)).
 
-By design, very little. Most of the mod's creatures live as ordinary world entities: they are
-saved with the world like any other mob and carry no player information at all.
+## At a glance
 
-**Two player-keyed stores exist**, both world-save scoped and both keyed by the player's existing
-Minecraft game UUID:
+- **Two player-keyed stores** in the world save: the creature **ownership index** and the summoned
+  **boss contribution** record. Both are keyed by the player's Minecraft game UUID.
+- **No names, IP addresses, chat or position history** are stored. The one coordinate the mod writes
+  is a pet's **Nest** home, kept on the pet itself (see below).
+- One **erase** request removes a player from every Nero mod at once, frees their creatures and
+  refreshes the crash-recovery backups. One **export** command writes everything about one player, and
+  nothing about anyone else, to a file. **Retention** follows Neroland Core's `dataRetentionDays` and
+  its last-seen record of each player.
+- Logs at INFO and above never carry a UUID, a name, a coordinate or free text: they carry counts and
+  exception types.
 
-- **Pet, mount, drone and egg ownership** (`nerocreatures:ownership`) — for each creature a player
-  owns: the *creature's* entity UUID (a game-internal id, not a player id), its kind (`pet`,
-  `mount`, `drone` or `egg`), its entity-type id (for example `nerocreatures:glacite_wisp`), and the
-  id of the dimension it was last registered in. An **egg** row is an egg the player has incubating:
-  instead of an entity UUID it holds a random incubation id, plus the game time it hatches
-  (`hatch_at`). Mounts and eggs exist so the per-player caps (`maxMountsPerPlayer`,
-  `maxIncubatingEggsPerPlayer`) can be enforced; they carry nothing a pet row does not. Plus one
-  "last updated" timestamp per player, used only for retention.
-- **Boss contribution** (`nerocreatures:boss_contribution`) — while a **summoned** boss fight is
-  running, how much damage each participating UUID has done to it, so the fight's rewards can be
-  split fairly. Per fight it holds a random fight id, the boss's id, a timestamp, and a list of
-  (player UUID, damage) pairs. Plus one "last updated" timestamp per player, used only for
-  retention.
+## Data inventory
 
-Each store also has a **last-known-good backup** kept by Neroland Core's crash-recovery guard, in the
-same world save (`data/nerocreatures_ownership_backup.dat` and
-`data/nerocreatures_boss_contribution_backup.dat`). A backup holds exactly the same fields as its
-store — nothing more — and exists only so a corrupt file can be restored instead of lost. Erasure and
-retention reach it in the same request (see below).
+| # | Record | Where | Fields | Purpose | Legal basis (operator note) | Retention | Erasure | Export |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| 1 | Ownership index | `data/nerocreatures_ownership.dat` (overworld) | player UUID; per creature: creature UUID, kind (`pet`, `mount`, `drone`, `egg`), entity-type id, dimension id, `parked` flag, and for an egg a random incubation id and its hatch game time; when the player's rows last changed | enforce per-player caps; find a player's creatures for erasure and recall; answer access requests | providing the game feature the player chose (taming, riding, breeding); legitimate interests | until the player is erased, on request or by Core's inactivity purge | rows removed, creatures freed | `ownership` |
+| 2 | Erasure markers | same file | a random per-world salt; a 128-bit salted SHA-256 hash of each erased owner's UUID, with the time it was written; the creature UUIDs of erased creatures that were not loaded, with the time | release a creature that was unloaded at erasure time when it next loads | complying with an erasure request (GDPR art. 6(1)(c) with art. 17; POPIA s 11(1)(c) with s 24) | creature marker: until that creature is freed; owner hash: `max(dataRetentionDays, 365)` days; the salt is deleted with the last owner hash | (they are the erasure record) | `erasure_marker`: yes or no |
+| 3 | Boss contribution | `data/nerocreatures_boss_contribution.dat` | per **summoned** fight: random fight id, boss id, last-updated time, (player UUID, damage) pairs; one last-updated time per player | split a summoned fight's rewards by damage | providing the game feature; legitimate interests | deleted when the fight ends; an abandoned fight once it is 6 hours past its last hit (checked at start-up and daily, so up to about 30 hours); `dataRetentionDays` | the player's pairs removed; a fight nobody is left in is dropped | `boss_contribution` (own share only) |
+| 4 | Last-known-good backups of 1–3 | `data/nerocreatures_ownership_backup.dat`, `data/nerocreatures_boss_contribution_backup.dat` | exactly the fields of the store they copy | restore a corrupt file instead of losing it | as the store | refreshed straight after every erasure and retention purge | same request | (same data as 1–3) |
+| 5 | Owner on the creature | the creature's entity data, in the chunk | the owner's UUID on a tamed pet or mount (vanilla's own field for every tameable animal) and on a deployed Terraforming Drone | what "owned" means to the game | as row 1 | as row 1 (the creature is freed) | owner cleared / drone recalled | `loaded_creatures` |
+| 6 | Nest home | an entity tag on the creature | the nest's dimension id and block position | send a homed pet back to its nest | as row 1 | until un-homed, freed or captured | cleared when the creature is freed | `loaded_creatures[].nest` |
+| 7 | Bestiary and milestone gates | Neroland Core's progression store | per player: `nerocreatures:bestiary/scanned/<species>`, `nerocreatures:bestiary/studied/<species>`, `nerocreatures:first_tame`, `first_deploy`, `first_breed` | Bestiary tiers, the one-time Studied reward, quest hooks | providing the game feature | Core's `dataRetentionDays` sweep | Core's eraser (same request) | `progression_gates` |
 
-The dimension id in the ownership store is there for exactly one reason: so an erase request knows
-which level to look in instead of having to walk the whole save. **No coordinates and no position
-history are stored anywhere in this mod** — where your pets have been, and where you fought a boss,
-are not things NeroCreatures records.
+Nothing else NeroCreatures does is saved against a player. In particular:
 
-Three things about the contribution store are worth stating plainly, because they mean it is almost
-always empty:
+- **Kept in memory only, never saved:** a Field Scanner scan in progress; Bestiary and client-request
+  flood counters; gear charge and cooldown state; the Space Pirate's search for loot; boss-bar viewer
+  lists. These are keyed by the live player object and vanish when the player leaves.
+- **Kept in memory only, never saved, keyed by the player's game UUID:** the Apex Altars a player lit
+  (dimension, block position, cooldown end, last boss summoned), so the companion app can show the
+  cooldowns of the player's own altars by label number (never the position). Lost on a restart,
+  dropped an hour after the altar is ready again or when it is broken, at most 8 per player, forgotten
+  by an erasure request and listed by the export (`altars_lit`). And the time of a player's last
+  companion-app recall and order, for the per-player rate limit; useless and pruned after its interval
+  (at most 10 minutes), forgotten by an erasure request.
+- **Read, not written:** vanilla's kill statistics (the Bestiary's "Defeated" counts), and vanilla's
+  "who threw this" mark on a ground item (a tamed Magnet Crab refuses items its owner did not drop).
+  Both belong to Minecraft and are not part of Neroland erasure.
+- **Vanilla's breeding cause:** vanilla writes `LoveCause`, the UUID of the player who fed an animal into
+  love mode, on every bred or hand-fed animal, wild ones included. NeroCreatures reads it (the online
+  breeder gets Bestiary credit) and never writes it. An erasure request clears it on every **loaded**
+  animal that names the erased player; an animal in an unloaded chunk keeps it until vanilla overwrites
+  it at the next breeding.
+- **Vanilla's own files:** recipe-book unlocks are ordinary vanilla advancements in
+  `world/advancements/<uuid>.json`; per-species kill counts are in `world/stats/<uuid>.json`; a Capture
+  Pod in a player's inventory, and a mount the player is riding at logout, are in
+  `world/playerdata/<uuid>.dat`. Neroland erasure does not edit vanilla's per-player files: a full
+  erasure also means deleting those three files for the player. **World backups and copies of region
+  files are outside the mod's reach**; an operator who keeps them must handle them in their own
+  erasure process.
 
-- **A boss you simply found in the world records nothing at all.** Contribution exists only for a
-  fight that was deliberately summoned (an event, or an operator command). Wandering into a wild
-  boss never puts you in this store.
-- **The row is deleted when the fight ends.** Paying the rewards out both reads the totals and
-  removes them; a boss that leaves the world unbeaten discards them. There is no history kept.
-- A fight that somehow survives both of those — the server crashed mid-fight — is pruned after six
-  hours.
+### Things that are game data, not player data
 
-### Owner data on the entity itself
-
-A tamed pet also carries its owner's UUID in its own entity data, and a deployed Terraforming
-Drone carries the UUID of the player who placed it. That is vanilla Minecraft's own design for
-every tameable animal (a wolf, a cat and a parrot all do the same thing) and it is inherent to
-the creature belonging to someone — an owner reference is what "owned" *means* to the game.
-NeroCreatures adds nothing beyond it: no names, no coordinates, no interaction history.
-
-Erasure covers it. Clearing a player's data does not merely delete the index row; it also finds
-the creatures themselves and severs the link — see below.
-
-No names, IP addresses, chat, coordinate history, or any other personal information is stored —
-nothing beyond what Minecraft itself already keeps.
-
-Two items carry game data, never player data: a **Captain's Ledger** holds the position of its pirate
-stash on the item itself (vanilla's lodestone-tracker component), with no record of who killed the
-captain; it goes only to the player the kill is credited to. A tamed **Magnet Crab** reads vanilla's
-own "who threw this" mark on ground items, in memory and only to refuse items its owner did not drop;
-it stores nothing. A **Gravity Leech** tether is a temporary attribute modifier that is never saved.
-
-Two milestone records — "tamed a first pet" and "deployed a first drone" — are kept as player-scope
-progression gates in Neroland Core's store (`nerocreatures:first_tame`, `nerocreatures:first_deploy`),
-covered by Core's privacy statement and erased by the same shared erasure hook described below.
+- **Apex Altar** (block): its cooldown, the random id of the fight it started and the sigil used. The
+  summoner is recorded only as a zero-damage row in the boss contribution store (row 3).
+- **Eggs** (items): species and traits. No owner, no position. The Incubator holds the egg and the
+  random incubation id that points at the egg row; that row is the only link to a player.
+- **Capture Pod** (item): only the parts of the creature's saved data it needs to be the same animal
+  (health, age, name, attributes, effects, equipment, variant, tags and this mod's own traits and
+  growth), chosen by an allow-list: no creature UUID, owner, love cause, last attacker, anger target,
+  brain memories, leash, mount state, loader or other mods' attachment data, Nest home or position. The
+  same filter runs again when a pod is read, so a pod written by an older build cannot carry an owner
+  either. A name the creature was given with a name tag travels with it, as it would on the creature.
+- **Captain's Ledger** (item): the position of its pirate stash (vanilla's lodestone-tracker component),
+  with no record of who killed the captain.
+- **Space Pirate carried loot:** an item stack of `contraband` picked up from the ground. Only the
+  stack is kept, never who dropped it; it drops when the pirate dies.
+- **Crystal Golem anger** is not saved, so the provoking player's UUID is never written to the golem.
+- **Gravity Leech tether** is a temporary attribute modifier that is never saved.
 
 ## Erasure
 
-NeroCreatures registers with Neroland Core's shared per-player data-erasure hook. A single
-request purges the player across all Nero mods, including NeroCreatures:
+NeroCreatures registers with Neroland Core's shared per-player erasure hook. One request removes a
+player from every Nero mod:
 
 - players: `/neroland data eraseme`
-- admins: `/neroland data erase <uuid>`
+- operators: `/neroland data erase <uuid>`
 
-For NeroCreatures the request does four things:
+For NeroCreatures the request:
 
-1. removes every ownership row for that UUID (pets, mounts, drones and eggs);
-2. follows each row to its creature and frees it — **tamed pets are returned to the wild** (owner
-   cleared, standing order reset, ordinary despawnable animals again), **mounts are unsaddled**
-   (saddle, panniers and their contents dropped where the mount stands) and returned to the wild,
-   **deployed drones are recalled**, dropping their shell where they stood, and **egg rows are
-   dropped** (the egg still hatches, owned by nobody);
-3. sweeps every loaded level for any pet or drone still carrying that UUID and frees those too,
-   so the erase is complete even if the index and the world had drifted apart;
-4. removes that UUID from every boss fight it appears in, and drops any fight it was the last
-   participant in;
-5. refreshes both stores' last-known-good backups straight away, so the erased rows do not linger
-   in the backup copy. Retention purges do the same.
+1. removes every ownership row for that UUID: pets, mounts, drones, eggs and parked pets;
+2. follows each row to its creature and frees it if it is loaded. A **pet** goes wild (owner cleared,
+   order reset, Nest home cleared, despawnable again). A **mount** is unsaddled (saddle, panniers and
+   their contents drop where it stands) and goes wild. A **drone** is recalled into its shell. An
+   **egg** row is simply dropped: the egg still hatches, owned by nobody;
+3. sweeps every loaded level for any pet, mount or drone still carrying that UUID and frees it too, so
+   erasure is complete even if the index and the world had drifted apart;
+4. clears vanilla's `LoveCause` on every loaded animal that names the player;
+5. removes the player from every summoned boss fight, and drops a fight nobody is left in;
+6. refreshes both stores' last-known-good backups at once, so the erased rows do not survive in a
+   backup copy. Marker expiry does the same.
 
-Erasure never logs player identity — only a count of how many creatures were released.
+Nothing on this path sends anything to the player being erased: no companion-app event, push or
+alert is published or raised for them while their creatures are released, because the request has
+already removed their alerts and anything sent now would re-create data about them.
 
-**Creatures in unloaded chunks.** A pet, mount or drone whose chunk is not loaded at the time of the
-request cannot be reached then. So the request leaves two markers in the ownership store: the
-creature UUIDs of the rows it removed, and a **salted one-way hash** of the erased player's UUID (a
-random salt per world, kept only in that file). Neither is the player's UUID, and neither can be
-turned back into it. When such a creature next loads, it finds its marker and is released (or, for a
-drone, recalled) silently, with no message to anyone. A creature's marker is removed once it is
-freed; the hash is removed if that player tames or deploys something again. Each marker set is capped
-(oldest first). A creature is only ever released on such a marker: an owner the store simply does not
-know (an older save, a store restored from backup) keeps their creature, which is re-indexed.
+Core's own eraser, in the same request, removes the Bestiary and milestone gates (row 7) and any
+companion-app alerts. Erasure logs only how many creatures were released.
 
-The hook is registered at mod construction, before the store it purges is ever loaded, precisely
-so that a later store can never be added without being covered by it.
+**When it reaches the disk.** The stores are marked changed at once and the crash-recovery backups are
+rewritten at once, but the main data files are written at the game's next autosave (or a clean stop).
+If the server crashes between the erase and that save, the old main file loads again and the erased
+rows are back. Operators who need certainty should run `/save-all` after an erasure; Neroland Core has
+been asked to save the affected stores itself at the end of every erase request.
+
+### Creatures in unloaded chunks: erasure markers
+
+A creature whose chunk is not loaded (or that a companion mod has parked in storage) cannot be reached
+during the request, and its saved data still names the owner. So erasure leaves two kinds of
+**erasure marker** in the ownership file:
+
+- the **creature UUID** of each removed row that could not be freed;
+- a **salted one-way hash** of the erased player's UUID, which also catches creatures the index never
+  knew about (for example a pet from an older save).
+
+When such a creature next loads it finds its marker and is released silently (a drone is recalled),
+and nothing is sent to anyone. A creature is only ever released on a marker: an owner the index simply
+does not know (an older save, a store restored empty) keeps their creature, which is re-indexed.
+
+**Is a marker personal data?** We treat it as such. The hash cannot be reversed, but an operator who
+already holds a list of player UUIDs (Minecraft's own `usercache.json`, for example) could hash each
+one with the salt in the same file and test it. That makes the marker **pseudonymised** personal data
+(GDPR recital 26; under POPIA, information that can be re-identified is not de-identified). It is kept
+only to finish the erasure the player asked for, and is minimised:
+
+- **Content:** a 128-bit truncation of SHA-256 over a random salt and the UUID. Never the UUID, never a
+  name. Creature markers name only the creature.
+- **Salt:** random per world, stored only in this one file, and **deleted** as soon as no owner marker
+  needs it. A new salt is made for the next erasure.
+- **Lifetime, creature markers:** kept until that creature is freed (it loads and is released), then
+  deleted. A creature marker is the random UUID of a game object; it names no player and cannot be tied
+  to one without reading the very region file where the creature itself sits beside its owner tag, so
+  keeping it adds no identifying information. It is what finishes the erasure.
+- **Lifetime, owner hash:** `max(dataRetentionDays, 365)` days, so a short retention period never makes
+  the tombstone expire before the erasure it records is finished. Expired owner hashes are pruned when
+  the store is first read each session and daily after that.
+- **Size:** each marker set is capped at 65,536 entries. Reaching the cap is never silent: the server
+  log gets a WARN with the number of markers dropped (a count only).
+- **Use:** markers are never logged, never sent to the companion app, never put in telemetry, and an
+  export reports only whether one exists for the player (yes or no). A player who returns and tames or
+  deploys something again removes their own owner marker.
+
+**The trade-off, stated plainly.** Every creature the ownership index ever held is released whenever it
+next loads, however long that takes. The one remaining gap: a creature the index never held (tamed
+under a version before 0.5.0 and not loaded since, or tamed while the index was being rebuilt), whose
+owner was erased, and which stays unloaded for longer than the owner hash lives. That creature loads
+still tamed and is re-indexed under the erased UUID. Keeping the owner hash forever would close it, at
+the price of a re-identifiable record of every erased player for the life of the world; we chose not
+to. A shared tombstone service in Neroland Core, used by every Nero mod, is the planned long-term
+answer.
+
+The eraser is registered when the mod starts, before either store is ever loaded, so a later store
+cannot be added without being covered.
 
 ## Retention
 
-Two mechanisms, and both end at the same place:
+Retention follows Neroland Core's `dataRetentionDays` (default `0`: no timed purge; erasure is on
+request). NeroCreatures has no separate setting.
 
-- Core's `purge-inactive` sweep calls the erasure hook above for every player inactive longer
-  than `dataRetentionDays`.
-- NeroCreatures additionally prunes **both** of its stores the first time each is read in a server
-  session: any player whose ownership has not changed in `dataRetentionDays` days is erased in full
-  — row *and* creatures — so a pruned record leaves nothing behind, not even an owner UUID sitting
-  in a pet's entity data; and any player whose boss contribution has not changed in that long is
-  dropped from the contribution store.
+- **Who is inactive** has one definition across the Neroland mods: Core's record of when each player was
+  last seen on the server. Core's purge-inactive sweep (`/neroland data purge-inactive`) runs the full
+  erasure above for every player not seen for longer than `dataRetentionDays`: rows **and** creatures,
+  so no owner UUID is left in a pet's entity data.
+- NeroCreatures does **not** treat "has not tamed anything new lately" as inactivity: a player who logs
+  in every day keeps every pet, mount and drone however long ago they were tamed.
+- NeroCreatures expires its own short-lived and tombstone records the first time each store is read in
+  a server session and once a day after that:
+  - **boss contribution:** a player whose contribution in a still-open fight has not changed in
+    `dataRetentionDays` days is removed (a fight record lives only for one fight);
+  - **erasure markers:** owner hashes expire as described above; creature markers do not expire.
+- **Unconditional limits:** a boss contribution row is deleted when its fight ends, and an abandoned
+  fight is dropped once it is six hours past its last hit (checked at start-up and then daily), whatever
+  the retention setting.
+- **Bestiary and milestone gates** are Core's records and follow Core's retention.
 
-`dataRetentionDays` is Core's setting and defaults to `0`, which disables the timed sweep and
-leaves erasure entirely on request. Each record carries a single "last updated" timestamp for
-exactly this purpose, and the sweeps log only *how many* records were pruned — never who. The
-contribution store has one further, unconditional control on top of retention: an abandoned fight
-is dropped after six hours regardless of the setting.
+Sweeps log only how many records were removed, never whose.
 
 ## Access / export
 
-NeroCreatures can produce an admin-safe JSON export of **a single player's own records and no one
-else's**: their last-updated timestamp and their list of owned creatures (entity UUID, kind, type,
-dimension, and for an incubating egg its hatch time), and their own contribution to any boss fight currently running (fight id, boss id,
-damage) — never another participant's totals in the same fight.
+`/nerocreatures export <player>` (operator level 2) writes, as JSON, everything NeroCreatures holds
+about **one** player and nothing about anyone else, to a file under the world folder:
+`data/nerocreatures/exports/export-<time>-<random>.json`. The file name names nobody. Where the file
+system supports it the folder and file are readable by the server's own account only; on Windows they
+inherit the world folder's access rules. The whole export is written, however long. The command
+replies with the file's path and size only, so nothing personal appears in chat or, when run from the
+console or RCON, in the server log. The operator gives the file to the player securely and deletes it
+afterwards.
 
-The operator command is **`/nerocreatures export <player>`** (permission level 2). A player is
-named by their online name *or* by a raw UUID, so an access request works for someone who has
-already left. Output goes to the operator who ran the command and to nobody else: it is never
-broadcast to other operators and never written to `latest.log`.
+| Section | Content |
+| --- | --- |
+| `player`, `exported_at`, `format` | the subject's UUID, when the export was made, the export format |
+| `ownership` | their last-updated time and every ownership row: creature UUID, kind, type, dimension, `parked`, and an egg's `hatch_at` |
+| `boss_contribution` | their own damage in any summoned fight still running: fight id, boss id, damage. Never another participant's totals |
+| `progression_gates` | this mod's gates open for them in Core's store (Bestiary tiers, first tame, deploy and breed) |
+| `loaded_creatures` | creatures loaded right now whose own data names them as owner: creature UUID, type, kind, dimension, and its Nest home (dimension and block position) if it has one |
+| `erasure_marker` | `true` if an earlier erasure left an owner marker for them |
+| `altars_lit` | the Apex Altars they lit that the server still remembers in memory: label number, dimension, block position, cooldown end, last boss |
 
-Operator permission is required because an export is somebody's personal record. A player asking
-for their own data asks an operator to run it — or reads the same data themselves through a
-companion app, where it is scoped to them automatically.
+A player is named by their online name **or** by a raw UUID, so an access request works for somebody
+who has left. The reply goes only to the operator who ran the command and is not broadcast to other
+operators. An operator is required because an export is somebody's personal record; a player can also
+see their own data, scoped to them automatically, in the companion app. Per-species kill counts are
+vanilla statistics and are not in this export; they are in `world/stats/<uuid>.json`.
 
 ## Companion app (link module)
 
-NeroCreatures exposes your own bestiary progress, your pets and your boss contribution to a
-**Neroland companion app** through Neroland Core's link API. NeroCreatures ships no server, no HTTP
-and no outbound connection of its own — it only registers what it is able to show; a separate bridge
-mod serves that to a paired app, and **that pairing is the consent step**. With no bridge installed,
-nothing is exposed.
+NeroCreatures shows a player's **own** Bestiary progress, creatures and boss share in a Neroland
+companion app through Neroland Core's link API. NeroCreatures opens no network connection of its own:
+a separate bridge mod serves a paired app, and **pairing the app is the player's consent**. With no
+bridge installed, nothing is exposed.
 
-What an app can see is **your own data only**. Never another player's records, never names, never
-coordinates.
+- **Only the asking player's data**, in every section and every schema version: the Bestiary
+  (species facts and the player's own discovery tier and kill counts), the player's own pets, mounts,
+  drones and egg timers (species name, traits, health, saddle, stamina, breeding timer, standing order),
+  and boss fights (boss, phase, participant **count** and the player's **own** damage share, and
+  cooldowns of the player's own altars). Never another player's records or names, and **never
+  coordinates**: at most a dimension id.
+- **The link module saves nothing new.** Every read goes to the stores above, Core's gates or vanilla's
+  kill statistics, so an erased player immediately reads as owning nothing. Its only own state is the
+  in-memory altar list and rate-limit times described above.
+- **Actions are owner-scoped and rate-limited.** Recall and pet orders (follow, stay, sit) act only on
+  the asking player's own pets and mounts, checked against the ownership index; somebody else's
+  creature answers exactly like one that does not exist. Each player may recall once per
+  `linkRecallCooldownSeconds` (10) and give one order per `linkCommandCooldownMillis` (1000).
+- **Events.** Only four events are sent to a player, and only to that player's sessions: their
+  creature died, is badly hurt, their egg hatched, or a summoned fight they joined ended (with their
+  own share). Routine changes are not sent. Boss phase and defeat events go to everyone and therefore
+  carry a boss, a phase and a dimension id, and nothing about any player.
+- **Push notifications are off by default.** A player turns on the "Creatures" category in the app.
+  A push names the **species only** (for example "Your Rime Yak is badly hurt."): never a custom name,
+  a dimension, a position or another player.
+- **Alerts** ("your pet died", "a summoned fight you joined ended") are raised through Core's alert
+  store, name a creature or a boss only, and are erased by the same request as everything else.
 
-- **The link module stores nothing new.** Every read goes to one of the two stores above, or to
-  vanilla's own kill statistics — so a player erased through the shared hook immediately reads as
-  owning nothing and having contributed nothing, with no extra wiring.
-- **One write, and it is owner-scoped:** `pet_recall` brings your own pets to where you are
-  standing. Somebody else's pet answers exactly like a creature that does not exist, so the action
-  cannot be used to find out what other players own.
-- **Live events.** A change to one of your own creatures is routed to your sessions alone. Boss
-  phase and defeat events are broadcast to every session and therefore carry a boss, a phase and a
-  **dimension** and nothing player-shaped at all — no participant list, no killer, no position.
-- **Alerts.** Two per-player alerts are raised through Core's alert store — "your pet died" and "a
-  boss you fought was defeated" (the latter only for a *summoned* fight, which is the only kind that
-  records participants). Alert text names a creature or a boss and nothing else, and alerts are
-  purged by the same shared erasure request as everything else.
-
-The full contract, section by section, is published at
-[`wiki/Link-Module.md`](wiki/Link-Module.md).
+The full contract is in [`wiki/Link-Module.md`](wiki/Link-Module.md).
 
 ## Neighbours, claims and requests from the client
 
-- **Creatures never change another player's world for anyone.** Every creature ability that places,
-  replaces or advances a block, moves a ground item, or spawns a helper entity asks one check first:
-  its own config key, the `mobGriefing` game rule (through the loader's mob-griefing event on NeoForge
-  and Forge, which claim mods hook), the loader's block-place event (NeoForge and Forge), and, for an
-  owned creature, whether its owner could do the same thing in person (online in that dimension,
-  allowed to build there, not under spawn protection). With the owner offline, owned creatures make no
-  world changes. A refused check falls back to a harmless variant and logs nothing.
-- **Fabric gap:** Fabric has no standard claim event. On Fabric a claim mod that does not hook the
-  `mobGriefing` rule is not consulted for **wild** creatures. Owned creatures are still limited to what
-  their owner may do. Turn the ability keys off, or `mobGriefing` off, if this matters on your server.
-- **Requests from the client** (for example "open my mount's panniers") carry only the creature's
-  session network id and an action number. The server checks that the sender owns the creature, is
-  close to it and is not flooding requests. The flood counter lives in memory only, is keyed by the
-  connected player object, is never saved, and disappears when the player leaves.
-- **`/nerocreatures budget`** reports creature species and timings only, to the operator who ran it.
+- **Creatures never change another player's world for anyone.** Every ability that places, replaces or
+  advances a block, moves a ground item or spawns a helper asks first: its own config key, the
+  `mobGriefing` game rule (through the loader's mob-griefing event on NeoForge and Forge, which claim
+  mods hook), the loader's block-place event (NeoForge and Forge), and, for an owned creature, whether
+  its owner could do the same thing in person (online in that dimension, allowed to build there, not
+  under spawn protection). With the owner offline, owned creatures change nothing. A refused check falls
+  back to a harmless variant and logs nothing.
+- **Fabric gap:** Fabric has no standard claim event. A claim mod that does not hook `mobGriefing` is
+  not consulted for **wild** creatures on Fabric. Owned creatures are still limited to what their owner
+  may do. Turn the ability keys off, or `mobGriefing` off, if this matters on your server.
+- **Requests from the client** (for example "open my mount's panniers", "show my Bestiary") carry only a
+  creature's session network id, an action number or a species id. The server checks that the sender
+  owns the creature, is near it and is not flooding requests, and answers only with the sender's own
+  data.
+- **`/nerocreatures budget`** reports species and timings only, to the operator who ran it.
+
+## Logs
+
+Nothing NeroCreatures logs at INFO, WARN or ERROR carries a player UUID, a player or creature name, a
+coordinate or free text: erasure, retention and recovery log counts; failures log the subsystem and the
+exception type (its class name, never its message or stack trace). The repository's
+`tools/check_log_privacy.py --check` checks every log call for this, including that no call passes a
+whole exception, and runs in CI on every publish.
 
 ## Telemetry
 
-NeroCreatures ships anonymous crash reporting via **Sentry** (EU ingest servers), matching the
-rest of the Neroland ecosystem. It is **on by default and opt-out**:
+NeroCreatures ships anonymous crash reporting via **Sentry** (EU ingest servers), matching the rest of
+the Neroland ecosystem. It is **on by default and opt-out** (legitimate interest in fixing crashes;
+reports are anonymous):
 
-- **Opt out:** set `telemetryEnabled=false` in `config/nerocreatures.properties` (takes effect
-  on restart). This is a client-local setting — a server can never force it on or off.
-- **NeroCreatures-only:** a report is sent only if its stack trace touches
+- **Opt out:** set `telemetryEnabled=false` in `config/nerocreatures.properties` (takes effect on
+  restart). This is a client-local setting; a server can never force it on or off.
+- **NeroCreatures only:** a report is sent only if its stack trace touches
   `za.co.neroland.nerocreatures`; everything else is dropped before it leaves the game.
+- A build that carries no DSN (a fork, a stripped build) is a hard no-op whatever the config says.
 
-> **Current status: active from 0.1.0.** This build carries a real Sentry DSN, so everything
-> described here applies. Set `telemetryEnabled=false` and no network connection is opened at all.
-> A build that carries no DSN (a fork, a stripped build) stays a hard no-op regardless of config.
+**A report contains:** the stack trace; NeroCreatures, Minecraft, loader, OS and Java versions; the ids
+and versions of other installed mods; this mod's own config values; recent NeroCreatures actions
+(breadcrumbs); anonymous stability and timing data.
 
-### What a report contains
-
-Stack trace; NeroCreatures / Minecraft / loader / OS / Java version strings; the ids and
-versions of your other installed mods; this mod's own config values; recent in-game
-NeroCreatures actions (breadcrumbs); anonymous stability and timing data.
-
-### What a report never contains
-
-No IP address, username, player UUID, world name or seed, coordinates, chat, or **any ownership
-or contribution data**. `sendDefaultPii` is off, the machine hostname is never attached, the
-Sentry user object is cleared on every event, and file paths are scrubbed of your OS account
-name before sending. Volume is bounded: events are de-duplicated per session and capped at 10
-per game session.
+**A report is not meant to contain** an IP address, username, player UUID, world name or seed,
+coordinates, chat, or any ownership, contribution or Bestiary data, and every report is scrubbed of
+them before it leaves the game. `sendDefaultPii` is off, the machine hostname is never attached and the
+Sentry user object is cleared on every event. Exception messages and breadcrumbs are free text (the
+game itself puts an entity's name, world and position into some of them), so each one passes a
+scrubber that replaces UUIDs, entity and player names, world and save-folder names, coordinates and the
+OS account name in file paths. A FATAL log line that mentions NeroCreatures without an exception is
+never sent as text: the report carries a fixed message and the logger's name only. Events are
+de-duplicated and capped at 10 per game session.
 
 ### CurseForge telemetry blurb
 
 Keep the following (or equivalent) in the project description while telemetry is enabled, as
-required by CurseForge moderation policy:
+CurseForge moderation policy requires:
 
 > **Telemetry notice:** NeroCreatures sends anonymous error reports (stack trace + mod/game
 > versions only — never IPs, usernames, UUIDs, pet ownership or world data) to the developers

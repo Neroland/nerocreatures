@@ -8,7 +8,7 @@ import net.minecraft.world.level.biome.Biome;
 import za.co.neroland.nerocreatures.NeroCreaturesCommon;
 
 /**
- * NeroCreatures' own habitat biome tags (decision 001), {@code nerocreatures:habitat/<world>} at
+ * NeroCreatures' own habitat biome tags, {@code nerocreatures:habitat/<world>} at
  * {@code data/nerocreatures/tags/worldgen/biome/habitat/}. Each one lists a single world's biomes, with
  * every planet-mod entry {@code required:false}, because Core's umbrella space tags mix worlds.
  *
@@ -27,9 +27,9 @@ public final class HabitatTags {
     public static final TagKey<Biome> WRECKS = habitat("wrecks");
     public static final TagKey<Biome> DEEP_SPACE = habitat("deep_space");
     public static final TagKey<Biome> GAS_GIANT = habitat("gas_giant");
-    /** Overworld dark forests (and the pale garden where it exists): decision 005's moth habitat. */
+    /** Overworld dark forests (and the pale garden where it exists): the overworld moth habitat. */
     public static final TagKey<Biome> OVERWORLD_DARK_FOREST = habitat("overworld_dark_forest");
-    /** Every overworld biome ({@code #minecraft:is_overworld}): decision 005's cave and storm rules. */
+    /** Every overworld biome ({@code #minecraft:is_overworld}): the overworld cave and storm rules. */
     public static final TagKey<Biome> OVERWORLD = habitat("overworld");
 
     private HabitatTags() {

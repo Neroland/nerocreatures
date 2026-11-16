@@ -13,7 +13,7 @@ package za.co.neroland.nerocreatures.entity.ai;
  *       {@link #MAX_CRUST_PER_LOB} crust blocks per landing and at most {@link #MAX_LIVE_CRUST} live
  *       crust blocks per wader. {@link #crustBudget} turns those into "how many blocks may this
  *       landing place", and returns 0 when {@code CreatureGriefing} said no: the fallback is the
- *       fire damage alone (decision 006).</li>
+ *       fire damage alone.</li>
  *   <li><b>Decay.</b> Each crust block reverts after {@link #DECAY_MIN_TICKS}..{@link #DECAY_MAX_TICKS}
  *       (30-60 s), through {@code EphemeralCrustBlock}'s scheduled tick.</li>
  * </ul>

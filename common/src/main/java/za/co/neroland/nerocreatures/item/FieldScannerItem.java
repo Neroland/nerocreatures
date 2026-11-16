@@ -14,7 +14,7 @@ import za.co.neroland.nerocreatures.bestiary.BestiaryRules;
 import za.co.neroland.nerocreatures.bestiary.ScanTracker;
 
 /**
- * The Field Scanner (decision 010 section 1). Hold Use on a creature within 8 blocks for two
+ * The Field Scanner. Hold Use on a creature within 8 blocks for two
  * seconds to scan it; Sneak + Use opens the Bestiary on the client. Stack size 1, no durability.
  * Every scan result is decided on the server ({@link ScanTracker}); the client only draws the bar.
  */

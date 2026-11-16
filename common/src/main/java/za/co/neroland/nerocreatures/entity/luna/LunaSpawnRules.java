@@ -1,7 +1,7 @@
 package za.co.neroland.nerocreatures.entity.luna;
 
 /**
- * The pure halves of the Luna creatures' overworld spawn gates (decision 005). The world-reading
+ * The pure halves of the Luna creatures' overworld spawn gates. The world-reading
  * halves are in {@link LunaSpawnGates}. Unit-tested.
  */
 public final class LunaSpawnRules {
@@ -27,12 +27,12 @@ public final class LunaSpawnRules {
         return uniform < chance;
     }
 
-    /** Decision 005 moth gate, after the dimension and biome checks. */
+    /** Overworld moth gate, after the dimension and biome checks. */
     public static boolean mothSpot(boolean dark, boolean air, int blockLight) {
         return dark && air && blockLight <= MOTH_MAX_BLOCK_LIGHT;
     }
 
-    /** Decision 005 tortoise gate: deep, sealed from the sky, standing on base stone. */
+    /** Overworld tortoise gate: deep, sealed from the sky, standing on base stone. */
     public static boolean tortoiseSpot(int y, boolean canSeeSky, int skyLight, boolean stoneBelow) {
         return y <= TORTOISE_MAX_Y && !canSeeSky && skyLight == 0 && stoneBelow;
     }

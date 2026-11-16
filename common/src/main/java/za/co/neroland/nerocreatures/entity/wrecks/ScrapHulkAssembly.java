@@ -7,7 +7,6 @@ import java.util.Optional;
 import java.util.WeakHashMap;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
@@ -20,9 +19,10 @@ import net.minecraft.world.phys.AABB;
 import za.co.neroland.nerocreatures.config.NeroCreaturesConfig;
 import za.co.neroland.nerocreatures.spawn.CreatureCensus;
 import za.co.neroland.nerocreatures.world.CreatureGriefing;
+import za.co.neroland.nerocreatures.registry.ModParticles;
 
 /**
- * Builds a {@link ScrapHulk} from mechanical wreckage (decision 006).
+ * Builds a {@link ScrapHulk} from mechanical wreckage.
  *
  * <p>The shared creature base calls {@link #onCreatureDeath} when a creature dies (integration hook).
  * Only {@code #nerocreatures:mechanical} deaths that are not hulks count. Each dimension keeps a small
@@ -85,7 +85,7 @@ public final class ScrapHulkAssembly {
         boolean allowed = CreatureGriefing.mayAlter(level, dead, at, NeroCreaturesConfig.SCRAP_HULK_ASSEMBLY,
                 CreatureGriefing.Change.ENTITY);
         if (!ScrapHulkRules.assembles(true, allowed)) {
-            return; // decision 006 fallback: no hulk
+            return; // griefing denied: no hulk
         }
         if (spawn(level, at)) {
             tracker.deaths.removeAll(cluster);
@@ -96,12 +96,12 @@ public final class ScrapHulkAssembly {
         double r = ScrapHulkRules.AREA_RADIUS;
         AABB box = new AABB(at.getX() - r, at.getY() - r, at.getZ() - r, at.getX() + r, at.getY() + r, at.getZ() + r);
         List<ScrapHulk> found = new ArrayList<>(1);
-        level.getEntities(EntityTypeTest.forClass(ScrapHulk.class), box, Entity::isAlive, found, 1);
+        level.getEntities(EntityTypeTest.forClass(ScrapHulk.class), box, e -> e.isAlive() && !za.co.neroland.nerocreatures.gallery.GalleryDisplays.isDisplay(e), found, 1);
         return found.size();
     }
 
     private static int hulksInDimension(ServerLevel level) {
-        return level.getEntities(EntityTypeTest.forClass(ScrapHulk.class), Entity::isAlive).size();
+        return level.getEntities(EntityTypeTest.forClass(ScrapHulk.class), e -> e.isAlive() && !za.co.neroland.nerocreatures.gallery.GalleryDisplays.isDisplay(e)).size();
     }
 
     private static boolean spawn(ServerLevel level, BlockPos at) {
@@ -119,7 +119,7 @@ public final class ScrapHulkAssembly {
             return false;
         }
         hulk.beginAssembly();
-        level.sendParticles(ParticleTypes.ELECTRIC_SPARK, at.getX() + 0.5D, at.getY() + 1.0D, at.getZ() + 0.5D,
+        level.sendParticles(ModParticles.STATIC_SPARK.get(), at.getX() + 0.5D, at.getY() + 1.0D, at.getZ() + 0.5D,
                 30, 1.0D, 1.0D, 1.0D, 0.15D);
         CreatureCensus.invalidate(level);
         return true;

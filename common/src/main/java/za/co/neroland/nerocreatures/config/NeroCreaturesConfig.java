@@ -100,6 +100,17 @@ public final class NeroCreaturesConfig {
             "maxDronesPerPlayer", 2, 0, 64, true,
             "How many terraforming drones one player may have deployed at once. 0 disables drones.");
 
+    // --- Companion app (link module) -----------------------------------------
+    public static final ConfigValue<Integer> LINK_RECALL_COOLDOWN_SECONDS = SCHEMA.intRange(
+            "linkRecallCooldownSeconds", 10, 0, 600, true,
+            "Seconds a player waits between two companion-app recalls (pet_recall). 0 = no limit beyond "
+                    + "the bridge's own per-device limit.");
+
+    public static final ConfigValue<Integer> LINK_COMMAND_COOLDOWN_MILLIS = SCHEMA.intRange(
+            "linkCommandCooldownMillis", 1000, 0, 60000, true,
+            "Milliseconds a player waits between two companion-app pet orders (pet_command). 0 = no "
+                    + "limit beyond the bridge's own per-device limit.");
+
     // --- World-changing abilities (server-authoritative) ----------------------
     // Every key is still subject to the mobGriefing rule, the loader's place check and, for owned
     // creatures, the owner's own build permission (world/CreatureGriefing). Default true.
@@ -257,7 +268,7 @@ public final class NeroCreaturesConfig {
             "The most alphas loaded in one dimension. -1 = use the data pack value "
                     + "(alpha/settings.json, 4 by default); 0 = no new alphas.");
 
-    // --- Habitat blocks (server-authoritative; Stage 4) ---------------------------------
+    // --- Habitat blocks (server-authoritative) ---------------------------------
     public static final ConfigValue<Integer> FEEDING_TROUGH_INTERVAL_TICKS = SCHEMA.intRange(
             "feedingTroughIntervalTicks", 200, 0, 24000, true,
             "Ticks between a trough's feeding pulses. 0 = troughs never feed.");
@@ -290,7 +301,7 @@ public final class NeroCreaturesConfig {
             "nestHealIntervalTicks", 200, 0, 24000, true,
             "A creature resting at its nest heals 1 HP this often (ticks). 0 = no healing.");
 
-    // --- Creature gear (server-authoritative; Stage 4) -----------------------------------
+    // --- Creature gear (server-authoritative) -----------------------------------
     public static final ConfigValue<Integer> MIRROR_SHIELD_COOLDOWN_TICKS = SCHEMA.intRange(
             "mirrorShieldCooldownTicks", 200, 20, 6000, true,
             "Ticks between Mirror Shield reflections (one projectile each).");

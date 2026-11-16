@@ -16,7 +16,7 @@ import net.minecraft.resources.Identifier;
 import za.co.neroland.nerocreatures.data.CreatureOwnershipState.LoadVerdict;
 
 /**
- * The load-time ownership check (decision 004). No world loses a pet: a tamed creature is released
+ * The load-time ownership check. No world loses a pet: a tamed creature is released
  * only when erasure or retention positively recorded it or its owner, never because the index merely
  * does not know the owner.
  */

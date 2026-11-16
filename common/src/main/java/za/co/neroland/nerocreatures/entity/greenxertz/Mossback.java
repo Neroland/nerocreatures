@@ -1,7 +1,6 @@
 package za.co.neroland.nerocreatures.entity.greenxertz;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
@@ -28,6 +27,7 @@ import za.co.neroland.nerocreatures.entity.tame.LivestockCreature;
 import za.co.neroland.nerocreatures.entity.visual.VisualPose;
 import za.co.neroland.nerocreatures.world.CreatureGriefing;
 import za.co.neroland.nerocreatures.registry.ModSounds;
+import za.co.neroland.nerocreatures.registry.ModParticles;
 
 /**
  * <b>Mossback</b> (Greenxertz, livestock) — a long, low barrel body with a flat moss-carpeted back and
@@ -37,12 +37,12 @@ import za.co.neroland.nerocreatures.registry.ModSounds;
  *   <li><b>Herd grazer and prey.</b> Keeps with its herd ({@link HerdCohesionGoal}) and flees
  *       {@code #nerocreatures:predators} as a herd ({@link PreyFleeGoal}, {@link HerdMember});
  *       listed in {@code #nerocreatures:prey/grazers}, so stalkers and lurkers hunt it.</li>
- *   <li><b>Fertilises the ground it grazes</b> (decision 006, key {@code mossbackFertilises},
+ *   <li><b>Fertilises the ground it grazes</b> (key {@code mossbackFertilises},
  *       {@code Change.PLACE}): see {@link MossbackRules}. On a grass block it grazes every 15 s (the
  *       {@code ability} pose); at most once a minute the grazed grass is bone-mealed through
  *       {@code BoneMealItem.growCrop} (grass and flowers sprout; grass never becomes dirt). Denied:
  *       it grazes with no effect.</li>
- *   <li>Breeds from fern or short grass (live birth, decision 003); drops {@code mossback_hide} and
+ *   <li>Breeds from fern or short grass (live birth); drops {@code mossback_hide} and
  *       {@code raw_mossback}. Sleeps (held {@code rest}) when idle after dark.</li>
  * </ul>
  */
@@ -128,7 +128,7 @@ public class Mossback extends LivestockCreature implements HerdMember {
         if (result == MossbackRules.Graze.NONE) {
             return;
         }
-        level.sendParticles(ParticleTypes.SPORE_BLOSSOM_AIR, this.getX(), this.getY() + 0.2D, this.getZ(),
+        level.sendParticles(ModParticles.SPORE_MOTE.get(), this.getX(), this.getY() + 0.2D, this.getZ(),
                 4, 0.4D, 0.1D, 0.4D, 0.0D);
         if (result == MossbackRules.Graze.FERTILISE
                 && BoneMealItem.growCrop(new ItemStack(Items.BONE_MEAL), level, grass)) {

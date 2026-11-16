@@ -1,0 +1,29 @@
+{
+  "title": "quest.nerocreatures.menagerie.storm_static.title",
+  "description": "quest.nerocreatures.menagerie.storm_static.desc",
+  "icon": "nerocreatures:static_jar",
+  "prerequisites": [
+    "nerocreatures:menagerie/field_scanner"
+  ],
+  "objectives": [
+    {
+      "type": "neroquests:gate_open",
+      "gate": "nerocreatures:bestiary/scanned/static_swarm"
+    },
+    {
+      "type": "neroquests:collect_item",
+      "item": "nerocreatures:static_jar"
+    }
+  ],
+  "rewards": [
+    {
+      "type": "neroquests:xp",
+      "amount": 80
+    },
+    {
+      "type": "neroquests:currency",
+      "amount": 50
+    }
+  ],
+  "scope": "player"
+}

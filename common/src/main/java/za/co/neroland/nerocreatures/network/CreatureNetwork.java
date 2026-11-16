@@ -115,7 +115,7 @@ public final class CreatureNetwork {
         // ServerPayloadGuard before any action handler sees the entity.
         serverbound(CreatureActionPayload.TYPE, CreatureActionPayload.STREAM_CODEC,
                 CreatureActions::handle);
-        // The Bestiary (decision 010 section 9): one request answered with the sender's own counts,
+        // The Bestiary: one request answered with the sender's own counts,
         // and scan/tier events sent only to the player they are about. Client handlers go through
         // BestiaryClientHooks so this common class never names a client class.
         serverbound(BestiaryRequestPayload.TYPE, BestiaryRequestPayload.STREAM_CODEC,

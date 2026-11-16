@@ -6,14 +6,14 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 
 /**
- * One species' row of {@code species.json} (decision 003): how it breeds, when its Bestiary entry
+ * One species' row of {@code species.json}: how it breeds, when its Bestiary entry
  * becomes Studied, and its product timer. Every field is optional; a species with no row gets
  * {@link #DEFAULT} (live birth, threshold 1, no product).
  *
  * @param birth                egg or live birth
  * @param foodTag              breeding/taming food item tag id; empty means the convention
  *                             {@code nerocreatures:food/<species>}
- * @param studiedThreshold     Bestiary Studied threshold (decision 002)
+ * @param studiedThreshold     Bestiary Studied threshold
  * @param productIntervalTicks ticks between products; 0 = this species has no product timer
  */
 public record SpeciesProfile(BirthMode birth, Optional<String> foodTag, int studiedThreshold,

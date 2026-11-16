@@ -121,6 +121,14 @@ jobs:
           python3 -B tools/check_assets.py --check
           python3 -B tools/gen_recipe_unlocks.py --check
 
+      # Privacy and hygiene gates (standard-library Python): no log call at INFO or above carries a
+      # player's identity or a bare throwable (POPIA/GDPR), and no comment or doc points at private
+      # planning records. Either failing stops the publish before any build.
+      - name: Privacy and private-reference checks
+        run: |
+          python3 -B tools/check_log_privacy.py --check
+          python3 -B tools/check_private_refs.py --check
+
       # Static analysis + unit tests first, so a failure is obvious and stops the publish before any
       # build. ecjCheck is the VS Code Problems-panel analyzer (tools/ecj.prefs); it resolves
       # org.eclipse.jdt:ecj from Maven Central. Tests run on the two bracketing NeoForge cells (they also

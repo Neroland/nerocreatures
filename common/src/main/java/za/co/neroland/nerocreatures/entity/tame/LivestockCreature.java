@@ -26,7 +26,7 @@ import net.minecraft.world.level.storage.ValueOutput;
 import za.co.neroland.nerocreatures.entity.base.CreatureTier;
 
 /**
- * Root for breedable, untameable livestock (decision 003, option B): Lode Tortoise, Rime Yak,
+ * Root for breedable, untameable livestock (option B): Lode Tortoise, Rime Yak,
  * Mossback, Prism Stag. It is a {@link TameableCreature} with taming switched off, so it inherits
  * vanilla age, love mode, breeding, leash and baby scaling, is counted by the census as the second
  * root, and still fits the companion SPI's {@code TamableAnimal} type.
@@ -38,7 +38,7 @@ import za.co.neroland.nerocreatures.entity.base.CreatureTier;
  *       {@code nerocreatures:food/<species>} only.</li>
  *   <li>Default goals are herbivore goals: panic, breed, tempt by food, follow parent, stroll.
  *       Species add their own (herd, product timer, predator/prey) on top.</li>
- *   <li><b>Husbanded</b> (Stage 2 review M1, {@link HusbandryRules}): a player feed, breed, shear,
+ *   <li><b>Husbanded</b> ({@link HusbandryRules}): a player feed, breed, shear,
  *       milk, harvest, leash or name marks the animal. A husbanded animal never despawns, is never
  *       wild prey, and passes the mark to its babies. Saved; older saves are marked on load when the
  *       animal has an owner or a name.</li>
@@ -48,14 +48,14 @@ public abstract class LivestockCreature extends TameableCreature {
 
     private static final String HUSBANDED_KEY = "nerocreatures:husbanded";
 
-    /** Kept or bred by a player (M1). Server state, saved. */
+    /** Kept or bred by a player. Server state, saved. */
     private boolean husbanded;
 
     protected LivestockCreature(EntityType<? extends LivestockCreature> type, Level level, CreatureTier tier) {
         super(type, level, tier);
     }
 
-    // --- husbandry (M1) -------------------------------------------------------------------
+    // --- husbandry ------------------------------------------------------------------------
 
     /** Whether a player keeps or bred this animal. */
     public boolean isHusbanded() {
@@ -87,6 +87,10 @@ public abstract class LivestockCreature extends TameableCreature {
     /** Feeding, breeding food and the species' own shear/milk/harvest (which call super) mark it. */
     @Override
     public InteractionResult mobInteract(Player player, InteractionHand hand) {
+        // A gallery display does nothing (a paddock mount may be ridden by a creative player).
+        if (za.co.neroland.nerocreatures.gallery.GalleryDisplays.isDisplay(this)) {
+            return za.co.neroland.nerocreatures.gallery.GalleryDisplays.interact(this, player, hand);
+        }
         InteractionResult result = super.mobInteract(player, hand);
         if (HusbandryRules.marksOnInteraction(this.level() instanceof ServerLevel, result.consumesAction())) {
             this.markHusbanded();

@@ -1,7 +1,7 @@
 package za.co.neroland.nerocreatures.block;
 
 /**
- * Pure rules for the Incubator (decision 003): one egg at a time, 20 minutes unpowered, 5 minutes with
+ * Pure rules for the Incubator: one egg at a time, 20 minutes unpowered, 5 minutes with
  * full power pulled through Core's {@code EnergyLookup}, linear in between. Progress is counted in
  * "unpowered ticks", so an unpowered egg is done after exactly {@code hatchTicks} ticks and a fully
  * powered one after exactly {@code poweredHatchTicks}.
@@ -76,7 +76,7 @@ public final class IncubatorRules {
     }
 
     /**
-     * The game time the egg row advertises (decision 004 egg timer): the unpowered worst case from now.
+     * The game time the egg row advertises (egg timer): the unpowered worst case from now.
      * Power can only make it earlier.
      */
     public static long hatchAtEstimate(long now, long progress, int hatchTicks) {

@@ -14,7 +14,7 @@ import net.minecraft.nbt.Tag;
 
 /**
  * The two traits one individual carries, as stored in its entity NBT under {@value #NBT_KEY}:
- * {@code {v: 1, a: "hardy", b: "radiant"}} (decision 003).
+ * {@code {v: 1, a: "hardy", b: "radiant"}}.
  *
  * <ul>
  *   <li>{@code v} is the schema version. A reader that sees a {@code v} greater than

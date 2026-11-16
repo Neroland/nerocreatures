@@ -1,12 +1,14 @@
 package za.co.neroland.nerocreatures.link;
 
 import java.util.List;
+import java.util.UUID;
 
 import za.co.neroland.nerolandcore.link.LinkModuleInfo;
 import za.co.neroland.nerolandcore.link.NeroLinkRegistry;
 
 import za.co.neroland.nerocreatures.NeroCreaturesCommon;
 import za.co.neroland.nerocreatures.platform.Services;
+import za.co.neroland.nerocreatures.telemetry.NeroCreaturesTelemetry;
 
 /**
  * NeroCreatures' plug into Neroland Core's link API — the seam a companion client reaches a
@@ -23,11 +25,12 @@ import za.co.neroland.nerocreatures.platform.Services;
  * <ul>
  *   <li><b>Read</b> — {@link CreatureLinkSnapshots}, serving the {@code bestiary}, {@code pets} and
  *       {@code bosses} sections;</li>
- *   <li><b>Write</b> — {@link CreatureLinkActions}, accepting the single {@code pet_recall}
- *       action;</li>
- *   <li><b>Live</b> — {@link CreatureLinkEvents}, publishing {@code pet_state_changed},
- *       {@code boss_phase} and {@code boss_defeated} onto Core's shared event bus, and raising the
- *       two per-player alerts this mod has any business raising.</li>
+ *   <li><b>Write</b> — {@link CreatureLinkActions}, accepting {@code pet_recall} and (schema 2)
+ *       {@code pet_command}, both owner-checked and rate-limited per player;</li>
+ *   <li><b>Live</b> — {@link CreatureLinkEvents}, publishing the four player events that may push
+ *       ({@code pet_state_changed} for a death, {@code creature_hurt}, {@code egg_hatched},
+ *       {@code fight_ended}) and the {@code boss_phase} / {@code boss_defeated} broadcasts onto Core's
+ *       shared event bus, and raising the two per-player alerts this mod has any business raising.</li>
  * </ul>
  *
  * <h2>Privacy (POPIA/GDPR)</h2>
@@ -45,8 +48,9 @@ import za.co.neroland.nerocreatures.platform.Services;
  * through Core's {@code PlayerDataErasure} hook immediately reads as owning nothing and having
  * contributed nothing. See {@code PRIVACY.md} and {@code wiki/Link-Module.md}.
  *
- * <p><b>Schema version 1.</b> Bump {@link #SCHEMA_VERSION} whenever the shape of a snapshot section
- * changes, so a companion client can tell what it is parsing.
+ * <p><b>Schema version 2</b> (0.5.0). Every schema-1 member is kept; schema 2 only adds members
+ * (see {@code wiki/Link-Module.md}). Bump {@link #SCHEMA_VERSION} whenever the shape of a snapshot
+ * section changes, so a companion client can tell what it is parsing.
  */
 public final class CreatureLinkModule {
 
@@ -54,7 +58,7 @@ public final class CreatureLinkModule {
     public static final String MODULE_ID = NeroCreaturesCommon.MOD_ID;
 
     /** The snapshot schema revision. Bump on any change to a section's shape. */
-    public static final int SCHEMA_VERSION = 1;
+    public static final int SCHEMA_VERSION = 2;
 
     /** Section: the roster, with the requesting player's own kill counts. */
     public static final String SECTION_BESTIARY = "bestiary";
@@ -65,11 +69,26 @@ public final class CreatureLinkModule {
     /** Section: summoned boss fights in progress, with the requesting player's own share. */
     public static final String SECTION_BOSSES = "bosses";
 
-    /** Action: bring your own pets to you (see {@link CreatureLinkActions}). */
+    /** Action: bring your own pets and mounts to you (see {@link CreatureLinkActions}). */
     public static final String ACTION_PET_RECALL = "pet_recall";
 
-    /** Topic: one of your pets or drones was tamed, released, deployed, recalled or died. */
+    /** Action (schema 2): tell one of your own pets or mounts to follow, stay or sit. */
+    public static final String ACTION_PET_COMMAND = "pet_command";
+
+    /**
+     * Topic: one of your owned creatures died. Schema 1 also published tamed, released, deployed and
+     * recalled here; schema 2 publishes only the death (the app polls the rest).
+     */
     public static final String TOPIC_PET_STATE_CHANGED = "pet_state_changed";
+
+    /** Topic (schema 2): one of your owned creatures is badly hurt. Player-scoped; may push. */
+    public static final String TOPIC_CREATURE_HURT = "creature_hurt";
+
+    /** Topic (schema 2): an egg you were incubating hatched. Player-scoped; may push. */
+    public static final String TOPIC_EGG_HATCHED = "egg_hatched";
+
+    /** Topic (schema 2): a summoned fight you joined ended. Player-scoped; may push. */
+    public static final String TOPIC_FIGHT_ENDED = "fight_ended";
 
     /** Topic: a boss fight entered a new phase. Broadcast; carries no player data. */
     public static final String TOPIC_BOSS_PHASE = "boss_phase";
@@ -77,7 +96,22 @@ public final class CreatureLinkModule {
     /** Topic: a boss fight ended in the boss's defeat. Broadcast; carries no player data. */
     public static final String TOPIC_BOSS_DEFEATED = "boss_defeated";
 
+    /** The registered action handler, kept so erasure can reach its in-memory rate limiter. */
+    private static volatile CreatureLinkActions actions;
+
     private CreatureLinkModule() {
+    }
+
+    /**
+     * Erasure: forgets the player's in-memory link state (the action rate limiter and the altars they
+     * lit). Called from {@code CreatureData} in the same request as the stores.
+     */
+    public static void forgetPlayer(UUID player) {
+        CreatureLinkActions handler = actions;
+        if (handler != null) {
+            handler.forgetPlayer(player);
+        }
+        za.co.neroland.nerocreatures.boss.AltarUses.forget(player);
     }
 
     /**
@@ -92,15 +126,19 @@ public final class CreatureLinkModule {
         try {
             LinkModuleInfo info = new LinkModuleInfo(MODULE_ID, modVersion(), SCHEMA_VERSION,
                     List.of(SECTION_BESTIARY, SECTION_PETS, SECTION_BOSSES),
-                    List.of(ACTION_PET_RECALL));
+                    List.of(ACTION_PET_RECALL, ACTION_PET_COMMAND));
             // One provider and one handler cover the whole module; Core keys both on the module id.
+            CreatureLinkActions handler = new CreatureLinkActions();
+            actions = handler;
             NeroLinkRegistry.registerSnapshotProvider(new CreatureLinkSnapshots(), info);
-            NeroLinkRegistry.registerActionHandler(new CreatureLinkActions(), info);
+            NeroLinkRegistry.registerActionHandler(handler, info);
             CreatureLinkEvents.init();
         } catch (RuntimeException e) {
             NeroCreaturesCommon.LOGGER.warn(
                     "[NeroCreatures] Could not register the NeroLink module; companion clients will "
-                            + "not see NeroCreatures data. Creatures themselves are unaffected.", e);
+                            + "not see NeroCreatures data. Creatures themselves are unaffected. ({})",
+                    e.getClass().getSimpleName());
+            NeroCreaturesTelemetry.captureHandledException(e, "link-module", "register");
         }
     }
 

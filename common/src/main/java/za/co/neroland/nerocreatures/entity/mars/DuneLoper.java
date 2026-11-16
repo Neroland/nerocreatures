@@ -1,6 +1,5 @@
 package za.co.neroland.nerocreatures.entity.mars;
 
-import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
@@ -20,6 +19,7 @@ import za.co.neroland.nerocreatures.entity.mount.MountCreature;
 import za.co.neroland.nerocreatures.entity.tame.TameableCreature;
 import za.co.neroland.nerocreatures.entity.visual.VisualPose;
 import za.co.neroland.nerocreatures.registry.ModSounds;
+import za.co.neroland.nerocreatures.registry.ModParticles;
 
 /**
  * <b>Dune Loper</b> (Mars; mount, tameable, breedable, live birth) — a digitigrade biped that
@@ -27,7 +27,7 @@ import za.co.neroland.nerocreatures.registry.ModSounds;
  *
  * <p>Everything a mount does (taming as {@code MOUNT} against {@code maxMountsPerPlayer}, the
  * {@code creature_saddle}, owner-only riding, stamina, panniers behind Stout) is the shared
- * {@link MountCreature} base (decision 004). The species adds exactly one thing, its ability:
+ * {@link MountCreature} base. The species adds exactly one thing, its ability:
  *
  * <p><b>Bounding leap.</b> The jump bar (stamina-limited by the base; Thrifty makes it cheaper)
  * launches a forward bound along the mount's facing, and for up to
@@ -136,7 +136,7 @@ public class DuneLoper extends MountCreature {
         this.serverLeapAge = 0;
         this.visuals().playPose(VisualPose.ABILITY, DuneLoperLeap.LEAP_POSE_TICKS);
         ModSounds.DUNE_LOPER_LEAP.play(this);
-        level.sendParticles(ParticleTypes.CLOUD, this.getX(), this.getY() + 0.1D, this.getZ(),
+        level.sendParticles(ModParticles.DUST_SWIRL.get(), this.getX(), this.getY() + 0.1D, this.getZ(),
                 6, 0.5D, 0.05D, 0.5D, 0.02D);
     }
 

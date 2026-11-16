@@ -27,7 +27,7 @@ public final class WrecksLookups {
     /** Entity types a {@code static_jar} disables and whose deaths feed Scrap Hulk assembly. */
     public static final TagKey<EntityType<?>> MECHANICAL = TagKey.create(Registries.ENTITY_TYPE, id("mechanical"));
 
-    /** Items a Static Swarm drains (decision 005, audit 8.5). */
+    /** Items a Static Swarm drains. */
     public static final TagKey<Item> CHARGEABLE = TagKey.create(Registries.ITEM, id("chargeable"));
 
     public static final Identifier STATIC_JAR = id("static_jar");

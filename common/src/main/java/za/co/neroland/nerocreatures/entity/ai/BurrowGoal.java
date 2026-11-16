@@ -2,12 +2,13 @@ package za.co.neroland.nerocreatures.entity.ai;
 
 import java.util.EnumSet;
 
-import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.ai.goal.Goal;
+
+import za.co.neroland.nerocreatures.registry.ModParticles;
 
 /**
  * Dives underground and stalks the target from below. The other half of the pattern is
@@ -126,7 +127,7 @@ public class BurrowGoal<T extends PathfinderMob & Burrower> extends Goal {
         // A dust trail on the surface above the burrower, so a player can track it (one small packet
         // every few ticks while it is under).
         if (this.burrowedTicks % TRAIL_INTERVAL_TICKS == 0 && this.mob.level() instanceof ServerLevel level) {
-            level.sendParticles(ParticleTypes.POOF, this.mob.getX(), this.mob.getY() + 0.1D, this.mob.getZ(),
+            level.sendParticles(ModParticles.DUST_SWIRL.get(), this.mob.getX(), this.mob.getY() + 0.1D, this.mob.getZ(),
                     2, 0.3D, 0.0D, 0.3D, 0.01D);
         }
         LivingEntity target = this.mob.getTarget();
@@ -149,7 +150,7 @@ public class BurrowGoal<T extends PathfinderMob & Burrower> extends Goal {
      * warden dig sound. Concrete creatures override for their own identity.
      */
     protected void onSubmerge(ServerLevel level) {
-        level.sendParticles(ParticleTypes.POOF, this.mob.getX(), this.mob.getY(), this.mob.getZ(),
+        level.sendParticles(ModParticles.DUST_SWIRL.get(), this.mob.getX(), this.mob.getY(), this.mob.getZ(),
                 20, 0.6D, 0.1D, 0.6D, 0.02D);
         this.mob.playSound(SoundEvents.WARDEN_DIG, 1.0F, 0.8F);
     }

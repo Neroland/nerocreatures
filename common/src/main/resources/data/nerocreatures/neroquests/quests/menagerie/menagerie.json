@@ -1,0 +1,61 @@
+{
+  "title": "quest.nerocreatures.menagerie.menagerie.title",
+  "description": "quest.nerocreatures.menagerie.menagerie.desc",
+  "icon": "nerocreatures:apex_trophy",
+  "prerequisites": [
+    "nerocreatures:menagerie/survey_luna",
+    "nerocreatures:menagerie/survey_mars",
+    "nerocreatures:menagerie/survey_cindara",
+    "nerocreatures:menagerie/survey_glacira",
+    "nerocreatures:menagerie/survey_greenxertz",
+    "nerocreatures:menagerie/survey_nyxara",
+    "nerocreatures:menagerie/survey_asteroid",
+    "nerocreatures:menagerie/survey_wrecks"
+  ],
+  "objectives": [
+    {
+      "type": "neroquests:quest_complete",
+      "quest": "nerocreatures:menagerie/survey_luna"
+    },
+    {
+      "type": "neroquests:quest_complete",
+      "quest": "nerocreatures:menagerie/survey_mars"
+    },
+    {
+      "type": "neroquests:quest_complete",
+      "quest": "nerocreatures:menagerie/survey_cindara"
+    },
+    {
+      "type": "neroquests:quest_complete",
+      "quest": "nerocreatures:menagerie/survey_glacira"
+    },
+    {
+      "type": "neroquests:quest_complete",
+      "quest": "nerocreatures:menagerie/survey_greenxertz"
+    },
+    {
+      "type": "neroquests:quest_complete",
+      "quest": "nerocreatures:menagerie/survey_nyxara"
+    },
+    {
+      "type": "neroquests:quest_complete",
+      "quest": "nerocreatures:menagerie/survey_asteroid"
+    },
+    {
+      "type": "neroquests:quest_complete",
+      "quest": "nerocreatures:menagerie/survey_wrecks"
+    }
+  ],
+  "rewards": [
+    {
+      "type": "neroquests:xp",
+      "amount": 400
+    },
+    {
+      "type": "neroquests:currency",
+      "amount": 500
+    }
+  ],
+  "scope": "player",
+  "visible_gate": "nerolandcore:reached_orbit"
+}

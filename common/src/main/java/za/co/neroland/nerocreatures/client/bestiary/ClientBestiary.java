@@ -53,7 +53,7 @@ public final class ClientBestiary {
     private static boolean countsReceived;
     private static int countsVersion;
 
-    // Session memory for the screen (decision 010 section 7); never saved.
+    // Session memory for the screen; never saved.
     @Nullable
     static String lastOpen;
     static int lastPage;

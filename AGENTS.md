@@ -91,6 +91,14 @@
   `dataRetentionDays`. Nothing on any of these paths may log a player UUID. **There are exactly two
   player-keyed stores** — this one and `boss/BossContributionState`; adding a third means wiring it
   into `CreatureData` and declaring it in `PRIVACY.md` in the same change.
+  Erasure markers: creature ids are kept until the creature is freed; the salted owner hash expires
+  after `max(dataRetentionDays, 365)` days and the salt goes with the last one. No local inactivity
+  sweep: inactivity is Core's last-seen purge through the eraser. Erasure publishes nothing to the
+  erased player (`CreatureLinkEvents.whileErasing`).
+  `CreatureErasureConformanceTest` runs Core's `ErasureConformance` fixture over both stores; any new
+  record needs a probe there. `tools/check_log_privacy.py --check` guards log calls at INFO and above
+  (no identity, no bare throwable); `tools/check_private_refs.py --check` keeps pointers to private
+  planning records out of the repo. Both run in CI.
 - `entity/base/` — `NeroCreatureEntity` (shared base: tier attributes, config scaling, despawn rules,
   and the persistent `WaveId` marker `spawn/InvasionBudget` sweeps on) and `CreatureTier`. Every
   creature must extend the base, or it escapes the population caps.
@@ -179,9 +187,9 @@
   `telemetry-test`, `gallery`), built once in common and registered from each loader's
   `*CreatureEvents`.
   Whole tree at `LEVEL_GAMEMASTERS`; every `sendSuccess` passes `false` for "broadcast to ops".
-  **`export` is the documented POPIA/GDPR access path** and must keep coming straight from the
-  stores' own `exportPlayer` methods — widening what an export contains is a change to a store, not
-  to this class.
+  **`export` is the documented POPIA/GDPR access path** and comes from `data/CreatureExport`, whose
+  every section reads by the one player id (ownership rows, own boss share, this mod's Core gates,
+  loaded creatures naming the player, erasure-marker flag) — widen it there, with `CreatureExportTest`.
 - `command/CreatureGallery` — the creative-only `/nerocreatures gallery` showcase scene (roster
   frozen + live, boss arena, pets/drone, item wall) and its `clear`. Gated player-only **and**
   creative (the creative check is in the body, because a `requires` predicate is evaluated when the

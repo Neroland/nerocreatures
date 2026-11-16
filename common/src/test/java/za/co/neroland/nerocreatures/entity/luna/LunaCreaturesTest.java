@@ -14,7 +14,7 @@ import za.co.neroland.nerocreatures.world.CreatureGriefing;
 import za.co.neroland.nerocreatures.world.CreatureGriefing.Change;
 import za.co.neroland.nerocreatures.world.CreatureGriefingTest.FakeChecks;
 
-/** WP-Luna: Lumen Moth, Echo Shrike and Lode Tortoise ability rules and caps. */
+/** Luna creatures: Lumen Moth, Echo Shrike and Lode Tortoise ability rules and caps. */
 public class LunaCreaturesTest {
 
     // --- Lumen Moth: living lantern -------------------------------------------------------
@@ -190,7 +190,7 @@ public class LunaCreaturesTest {
 
     @Test
     void visibleNodulesKeepTheirFamilyAndStageInAMixedCave() {
-        // M2: a tortoise at stage 1+ walking past other ores never loses progress.
+        // A tortoise at stage 1+ walking past other ores never loses progress.
         for (int stage = 1; stage < NoduleRules.MAX_STAGE; stage++) {
             NoduleRules.GrazeResult mixed = NoduleRules.onGraze(NoduleFamily.IRON, stage, false, NoduleFamily.COAL);
             assertEquals(NoduleFamily.IRON, mixed.family(), "family fixed once nodules show");
@@ -237,7 +237,7 @@ public class LunaCreaturesTest {
                 assertEquals(stage, timer.stage(), "seed lands in its stage: " + stage + " @ " + f);
             }
         }
-        assertTrue(NoduleRules.DEFAULT_REGROW_TICKS >= 36_000, "slow, low-yield default (M2)");
+        assertTrue(NoduleRules.DEFAULT_REGROW_TICKS >= 36_000, "slow, low-yield default");
     }
 
     @Test
@@ -282,7 +282,7 @@ public class LunaCreaturesTest {
         assertNull(NoduleFamily.byVariant(8));
     }
 
-    // --- overworld spawn gates (decision 005) ------------------------------------------------------
+    // --- overworld spawn gates ------------------------------------------------------
 
     @Test
     void overworldGatesHoldTheirRules() {

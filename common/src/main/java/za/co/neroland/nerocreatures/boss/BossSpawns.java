@@ -114,7 +114,7 @@ public final class BossSpawns {
             return cached.bossAlive();
         }
         List<NeroBossEntity> found = new ArrayList<>(1);
-        level.getEntities(EntityTypeTest.forClass(NeroBossEntity.class), boss -> true, found, 1);
+        level.getEntities(EntityTypeTest.forClass(NeroBossEntity.class), boss -> !za.co.neroland.nerocreatures.gallery.GalleryDisplays.isDisplay(boss), found, 1);
         boolean alive = !found.isEmpty();
         PRESENCE.put(level.dimension(), new Presence(now, alive));
         return alive;

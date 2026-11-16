@@ -37,7 +37,7 @@ import za.co.neroland.nerocreatures.trait.TraitPool;
 import za.co.neroland.nerocreatures.trait.TraitSet;
 
 /**
- * Stage 4 breeding (decision 003) at the pure-logic level: breed (inherit) -> egg item custom data ->
+ * Breeding at the pure-logic level: breed (inherit) -> egg item custom data ->
  * Incubator save -> hatch, egg rows and their cap, hatchling marking, and every L/T species' data.
  */
 class BreedingCycleTest {
@@ -47,7 +47,7 @@ class BreedingCycleTest {
     private static final Identifier MOTH = Identifier.fromNamespaceAndPath("nerocreatures", "lumen_moth");
     private static final Identifier LUNA = Identifier.fromNamespaceAndPath("nerospace", "luna");
 
-    /** Every L and T species (BUILD-PROMPT roster + the two existing pets) and its birth mode. */
+    /** Every L and T species (the 0.5.0 roster + the two existing pets) and its birth mode. */
     private static final List<String> EGG_SPECIES = List.of("lumen_moth", "slag_beetle", "spore_drifter",
             "magnet_crab", "void_manta", "lode_tortoise");
     private static final List<String> LIVE_SPECIES = List.of("dune_loper", "strata_hound", "rime_yak",
@@ -146,7 +146,7 @@ class BreedingCycleTest {
         assertFalse(state.removeRow(egg.entity()), "the incubator's later remove is a harmless no-op");
     }
 
-    /** PROGRESS "Stage 4 egg-baby marking": the egg path spawns no baby at breeding, so hatch marks it. */
+    /** Egg-baby marking: the egg path spawns no baby at breeding, so hatch marks it. */
     @Test
     void hatchedLivestockIsHusbandedAndHatchedPetsTameOnFirstFeed() {
         HatchRules livestock = HatchRules.of(false, true);

@@ -60,10 +60,11 @@ import za.co.neroland.nerocreatures.sound.CreatureSound;
 import za.co.neroland.nerocreatures.world.CreatureGriefing;
 import za.co.neroland.nerocreatures.world.CreatureOwners;
 import za.co.neroland.nerocreatures.registry.ModSounds;
+import za.co.neroland.nerocreatures.registry.ModParticles;
 
 /**
  * <b>Facet Colossus</b> — Nyxara's boss: a standing monolith inside a ring of six facet plates.
- * Altar-summoned only (decision 001); no natural spawn rule.
+ * Altar-summoned only; no natural spawn rule.
  *
  * <h2>The fight</h2>
  *
@@ -79,7 +80,7 @@ import za.co.neroland.nerocreatures.registry.ModSounds;
  *       through {@code CreatureGriefing} ({@code bossArenaBlocks}); the beam refracts through them.
  *       Players break them (they drop nothing). Capped, self-reverting, and every one still standing
  *       is reverted when the fight ends ({@link ArenaCrystalRules}). Denied: the beam splits off the
- *       boss's own facets instead (decision 006 fallback).</li>
+ *       boss's own facets instead (the fallback when the griefing gate says no).</li>
  *   <li><b>Phase 2</b> (66%): two decoy facets; striking one sparks back at the attacker (capped).
  *       <b>Phase 3</b> (33%): the core is exposed for 30 ticks after every rotation (half damage
  *       from any side) and crystals regrow at once.</li>
@@ -182,14 +183,14 @@ public class FacetColossus extends NeroBossEntity {
 
     private void enterDecoys(ServerLevel level) {
         this.rotateIn = 1;
-        this.burst(level, ParticleTypes.END_ROD, 30);
+        this.burst(level, ModParticles.PRISM_GLINT.get(), 30);
         ModSounds.FACET_COLOSSUS_PHASE.play(this);
     }
 
     private void enterShatter(ServerLevel level) {
         this.rotateIn = 1;
         this.crystalIn = 1;
-        this.burst(level, ParticleTypes.END_ROD, 50);
+        this.burst(level, ModParticles.PRISM_GLINT.get(), 50);
         ModSounds.FACET_COLOSSUS_PHASE.play(this);
     }
 
@@ -326,7 +327,7 @@ public class FacetColossus extends NeroBossEntity {
         this.traceRay(level, origin, this.beamYaw, this.beamPitch, ArenaCrystalRules.BEAM_RANGE,
                 ArenaCrystalRules.MAX_BOUNCES, out);
         if (this.crystalsDenied) {
-            // Decision 006 fallback: no blocks, so the beam splits off the boss's own facets.
+            // Griefing denied: no blocks, so the beam splits off the boss's own facets.
             this.traceRay(level, origin, this.beamYaw - ArenaCrystalRules.REFRACT_DEGREES, this.beamPitch,
                     ArenaCrystalRules.SPLIT_RANGE, 0, out);
             this.traceRay(level, origin, this.beamYaw + ArenaCrystalRules.REFRACT_DEGREES, this.beamPitch,
@@ -389,7 +390,7 @@ public class FacetColossus extends NeroBossEntity {
     }
 
     private void draw(ServerLevel level, List<Segment> path, boolean firing) {
-        ParticleOptions particle = firing ? ParticleTypes.END_ROD : ParticleTypes.ELECTRIC_SPARK;
+        ParticleOptions particle = firing ? ModParticles.PRISM_GLINT.get() : ParticleTypes.ELECTRIC_SPARK;
         int budget = MAX_PARTICLES_PER_DRAW;
         for (Segment segment : path) {
             double length = segment.from().distanceTo(segment.to());
@@ -641,7 +642,7 @@ public class FacetColossus extends NeroBossEntity {
         if (source.getEntity() instanceof LivingEntity attacker && attacker.isAlive()
                 && this.distanceToSqr(attacker) <= RETALIATION_RANGE * RETALIATION_RANGE) {
             attacker.hurtServer(level, this.damageSources().thorns(this), RETALIATION_DAMAGE);
-            level.sendParticles(ParticleTypes.ELECTRIC_SPARK, attacker.getX(), attacker.getY() + 1.0D,
+            level.sendParticles(ModParticles.PRISM_GLINT.get(), attacker.getX(), attacker.getY() + 1.0D,
                     attacker.getZ(), 8, 0.3D, 0.4D, 0.3D, 0.05D);
         }
     }

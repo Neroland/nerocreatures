@@ -1,7 +1,7 @@
 package za.co.neroland.nerocreatures.entity.boss;
 
 /**
- * Art-timing rules for boss abilities (decision 007 §4), as pure logic.
+ * Art-timing rules for boss abilities, as pure logic.
  *
  * <p>Cinder Tyrant slam: the {@code ability} pose runs {@value #SLAM_POSE_TICKS} ticks and starts
  * {@value #SLAM_POSE_LEAD} ticks before the slam lands, so both arms are up for the telegraph and come

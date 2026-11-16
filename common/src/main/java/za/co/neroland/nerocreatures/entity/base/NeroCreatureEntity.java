@@ -67,7 +67,7 @@ import za.co.neroland.nerocreatures.spawn.CreatureCensus;
  */
 public abstract class NeroCreatureEntity extends PathfinderMob implements CreatureVisualsHolder {
 
-    /** Entity contract section 3: the root's visuals ids are this class's first {@code defineId}. */
+    /** The root's visuals ids are this class's first {@code defineId}. */
     // defineId must be called from the owning class itself: NeoForge 26.x rejects ids allocated
     // through a helper ("synced data to a foreign entity").  Keep these two direct calls.
     private static final CreatureVisuals.Ids VISUALS_IDS = new CreatureVisuals.Ids(
@@ -75,7 +75,7 @@ public abstract class NeroCreatureEntity extends PathfinderMob implements Creatu
             SynchedEntityData.defineId(NeroCreatureEntity.class, EntityDataSerializers.INT));
 
     /**
-     * Synced alpha flag (decision 007): the renderer reads it for the crimson accent and darker
+     * Synced alpha flag: the renderer reads it for the crimson accent and darker
      * body; size comes from the vanilla {@code minecraft:scale} attribute, which syncs itself.
      */
     private static final EntityDataAccessor<Boolean> DATA_ALPHA =
@@ -86,7 +86,7 @@ public abstract class NeroCreatureEntity extends PathfinderMob implements Creatu
     /** Pose, phase, stage/variant/form and the four flags (radiant, alpha, saddled, panniers), synced. */
     private final CreatureVisuals visuals = new CreatureVisuals(this, VISUALS_IDS);
 
-    /** "Far creatures tick slowly" gate for species' own per-tick work (entity contract section 1). */
+    /** "Far creatures tick slowly" gate for species' own per-tick work. */
     private final FarTickGate farTick = new FarTickGate();
 
     /** One-shot first-server-tick work ({@link #onFirstServerTick}) has run. Not saved. */
@@ -120,7 +120,7 @@ public abstract class NeroCreatureEntity extends PathfinderMob implements Creatu
         builder.define(DATA_ALPHA, false);
     }
 
-    // --- visuals, budget, far-tick (entity contract sections 1 and 3) ----------
+    // --- visuals, budget, far-tick ----------
 
     @Override
     public CreatureVisuals visuals() {
@@ -286,6 +286,19 @@ public abstract class NeroCreatureEntity extends PathfinderMob implements Creatu
     @Override
     public boolean removeWhenFarAway(double distanceToClosestPlayerSqr) {
         return !this.isPersistenceRequired() && !this.requiresCustomPersistence();
+    }
+
+    /** A gallery display drops nothing (no loot, no equipment) and gives no experience. */
+    @Override
+    protected void dropAllDeathLoot(ServerLevel level, DamageSource source) {
+        if (!za.co.neroland.nerocreatures.gallery.GalleryDisplays.isDisplay(this)) {
+            super.dropAllDeathLoot(level, source);
+        }
+    }
+
+    @Override
+    public boolean shouldDropExperience() {
+        return !za.co.neroland.nerocreatures.gallery.GalleryDisplays.isDisplay(this) && super.shouldDropExperience();
     }
 
     /** Alphas add one guaranteed rare drop when a player kills them (see {@link AlphaSystem}). */

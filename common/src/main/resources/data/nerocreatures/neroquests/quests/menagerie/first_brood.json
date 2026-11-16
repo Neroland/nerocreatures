@@ -1,0 +1,25 @@
+{
+  "title": "quest.nerocreatures.menagerie.first_brood.title",
+  "description": "quest.nerocreatures.menagerie.first_brood.desc",
+  "icon": "nerocreatures:lode_tortoise_egg",
+  "prerequisites": [
+    "nerocreatures:menagerie/slow_ore"
+  ],
+  "objectives": [
+    {
+      "type": "neroquests:gate_open",
+      "gate": "nerocreatures:first_breed"
+    }
+  ],
+  "rewards": [
+    {
+      "type": "neroquests:xp",
+      "amount": 100
+    },
+    {
+      "type": "neroquests:currency",
+      "amount": 60
+    }
+  ],
+  "scope": "player"
+}

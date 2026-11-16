@@ -1,9 +1,9 @@
-# Link module (companion app)
+# Link module (schema 2)
 
-NeroCreatures can show your bestiary, your pets and the boss fight you are in to a **Neroland
-companion app**. It does that through **Neroland Core's link API**: NeroCreatures registers what it
-can show and what it can do, and a separate bridge mod serves that to your paired app over your own
-network.
+NeroCreatures can show your Bestiary, your creatures and the boss fights you are in to a **Neroland
+companion app**, and let you call or order your own pets from it. It does that through **Neroland
+Core's link API**: NeroCreatures registers what it can show and what it can do, and a separate bridge
+mod serves that to your paired app over your own network.
 
 NeroCreatures itself ships **no server, no HTTP, no accounts and no outbound connection**. It only
 fills in a registry entry inside Core. With no bridge mod installed, the link module does nothing at
@@ -13,215 +13,241 @@ all.
 
 | Kind | Name | What it is |
 | --- | --- | --- |
-| Section | `bestiary` | The whole creature roster, with **your** kill count for each |
-| Section | `pets` | **Your** tamed pets and deployed drones, with their caps |
-| Section | `bosses` | Summoned boss fights in progress, with **your** contribution |
-| Action | `pet_recall` | Bring your own pets to you |
-| Event | `pet_state_changed` | One of your creatures was tamed, released, deployed, recalled or died |
+| Section | `bestiary` | Every creature with its habitat and kind, and **your** discovery tier, kill counts and study progress |
+| Section | `pets` | **Your** pets, mounts, drones and incubating eggs, with health, traits, orders and timers |
+| Section | `bosses` | Summoned boss fights in progress with **your** share, and **your** altars' cooldowns |
+| Action | `pet_recall` | Bring your own pets and mounts to you |
+| Action | `pet_command` | Tell one of your own pets or mounts to follow, stay or sit |
+| Event | `pet_state_changed` | One of your creatures died |
+| Event | `creature_hurt` | One of your creatures is badly hurt |
+| Event | `egg_hatched` | An egg you were incubating hatched |
+| Event | `fight_ended` | A summoned boss fight you joined ended |
 | Event | `boss_phase` | A boss fight escalated (broadcast) |
 | Event | `boss_defeated` | A boss fight ended in the boss's defeat (broadcast) |
 | Alert | your pet died | Raised for the owner |
 | Alert | a boss you fought was defeated | Raised for each participant of a summoned fight |
 
-Module id `nerocreatures`, **schema version 1**. The schema version is bumped whenever the shape of
-a section changes, so an app can tell what it is parsing.
+Module id `nerocreatures`, **schema version 2** (NeroCreatures 0.5.0). Schema 2 only **adds**
+members: every schema-1 member keeps its name and type, so a schema-1 reader still works. The one
+narrowing is on purpose: a creature you have not scanned yet is sent as a silhouette (see below).
+
+**Never in any section, action result or event:** a coordinate, a block position, another player's
+name or id, or a list of players. At most a dimension id and a participant **count**.
 
 ## Section: `bestiary`
 
 ```json
 {
-  "schema_version": 1,
-  "player_online": true,
-  "total_kills": 41,
-  "species_killed": 5,
+  "schema_version": 2, "player_online": true, "total_kills": 12, "species_killed": 4,
   "spawns_enabled": true,
   "creatures": [
-    {
-      "id": "nerocreatures:void_crawler",
-      "name": "Void Crawler",
-      "translation_key": "entity.nerocreatures.void_crawler",
-      "killed": 12,
-      "spawns": [
-        { "biome_tag": "neroland:space/dark_biomes", "weight": 30,
-          "group_min": 1, "group_max": 2 }
-      ]
-    }
+    { "id": "nerocreatures:frost_lurker", "habitat": "glacira", "kind": "hostile", "tier": 0 },
+    { "id": "nerocreatures:lumen_moth", "habitat": "luna", "kind": "tameable", "tier": 2,
+      "name": "Lumen Moth", "translation_key": "entity.nerocreatures.lumen_moth", "killed": 0,
+      "spawns": [ { "biome_tag": "nerocreatures:habitat/luna", "weight": 10, "group_min": 1, "group_max": 2 } ],
+      "ability": "A living lantern: …", "weakness": "Fragile and drawn to light: …",
+      "also": "Also in the overworld: dark forests at night.",
+      "drops": [ { "item": "nerocreatures:lumen_dust", "name": "Lumen Dust", "use": "…" } ],
+      "study": { "kind": "tame_or_breed", "progress": 1, "goal": 1 }, "owned": 2 }
   ]
 }
 ```
 
-Kill counts come from **vanilla's own statistics** — the same `minecraft:killed` numbers on your
-statistics screen — not from a NeroCreatures store. That is deliberate: a bestiary with its own store
-would be a third player-keyed record to erase, retain and declare, in exchange for a number the game
-already keeps.
+| Member | Since | When | Notes |
+| --- | --- | --- | --- |
+| `id`, `habitat`, `kind`, `tier` | 2 (`id` 1) | always | `tier`: 0 not scanned, 1 Scanned, 2 Studied — **yours** |
+| `name`, `translation_key`, `spawns` | 1 | tier ≥ 1 | spawn rows are tags, never places |
+| `killed` | 1 | tier ≥ 1, while you are online | vanilla's own kill statistic |
+| `ability`, `drops` (≤ 8, each `item`, `name`, `use`) | 2 | tier ≥ 1 | English text, at most 220 characters |
+| `weakness` | 2 | tier 2 | the Studied reward |
+| `also` | 2 | tier ≥ 1 | the three species with an overworld spawn |
+| `study` (`kind`, `progress`, `goal`) | 2 | tier ≥ 1 | a kill study is left out while you are offline, rather than shown as 0 |
+| `owned` | 2 | tier ≥ 1, ownable species | how many you own now |
+| `sigil` | 2 | tier ≥ 1, bosses | the sigil item's name |
 
-The one consequence is that kill counts need you to be **online**, because vanilla's stats counter
-is loaded with you. While you are offline the roster and its spawn data still come back — those are
-facts about the world — and `player_online` is `false`, so an app can say why the numbers are missing
-rather than showing zeroes as though you had never killed anything.
-
-A creature with an empty `spawns` array never spawns naturally (the Terraforming Drone).
+`total_kills` and `species_killed` are present only while you are online. A **tier-0 entry carries
+exactly `id`, `habitat`, `kind` and `tier`**, so an app cannot show what you have not discovered.
 
 ## Section: `pets`
 
 ```json
 {
-  "schema_version": 1,
-  "player_online": true,
-  "caps": { "pets": { "used": 2, "max": 3 }, "drones": { "used": 1, "max": 2 } },
+  "schema_version": 2, "player_online": true,
+  "caps": { "pets": {"used": 2, "max": 3}, "mounts": {"used": 1, "max": 2},
+            "drones": {"used": 0, "max": 2}, "eggs": {"used": 1, "max": 8} },
   "pets": [
-    { "entity": "…", "kind": "pet", "type": "nerocreatures:glacite_wisp",
-      "name": "Glacite Wisp", "dimension": "nerospace:glacira",
-      "status": "loaded", "health": 8.0, "max_health": 12.0, "command": "follow" },
-    { "entity": "…", "kind": "drone", "type": "nerocreatures:terraforming_drone",
-      "name": "Terraforming Drone", "dimension": "nerospace:greenxertz",
-      "status": "unloaded" }
+    { "entity": "…", "kind": "mount", "type": "nerocreatures:dune_loper", "name": "Dune Loper",
+      "dimension": "nerospace:mars", "status": "loaded", "commands": ["follow", "stay", "sit"],
+      "can_recall": true, "health": 28.0, "max_health": 30.0, "command": "sit",
+      "traits": ["stout", "calm"], "baby": false, "saddled": true, "stamina": 0.8,
+      "breed_ready_in_s": 0 },
+    { "entity": "…", "kind": "egg", "type": "nerocreatures:lumen_moth", "name": "Lumen Moth",
+      "dimension": "nerospace:luna", "status": "loaded", "commands": [], "can_recall": false,
+      "hatch_in_s": 250 }
   ]
 }
 ```
 
-Your own rows and nobody else's. `status` is `loaded` when the creature happens to be in a loaded
-chunk — answered with a single lookup in the level's entity index, so an unloaded pet simply reads
-as `unloaded` rather than being dragged into memory to be described.
+| Member | Since | When |
+| --- | --- | --- |
+| `entity`, `kind`, `type`, `name`, `dimension`, `status` | 1 | always; `kind` is `pet`, `drone`, and from schema 2 `mount` and `egg` |
+| `health`, `max_health`, `command` | 1 | the creature is loaded |
+| `commands`, `can_recall` | 2 | always: pets and mounts take `follow`, `stay`, `sit` and can be recalled; drones and eggs take nothing |
+| `traits` (≤ 2), `baby` | 2 | loaded |
+| `saddled`, `stamina` (0–1) | 2 | a loaded mount |
+| `breed_ready_in_s` | 2 | a loaded adult of a breedable species; 0 = can breed now |
+| `hatch_in_s` | 2 | an egg whose Incubator is loaded (unpowered rate, the worst case) |
 
-**There are no coordinates**, here or in the store behind it. The `dimension` is present because
-that is what the ownership index holds (so an erase request knows which level to look in); *where*
-your pets are is not something NeroCreatures records. See
-[Pets & Drones](Pets-and-Drones.md#what-is-stored-and-how-to-get-rid-of-it).
+`name` is the **species** name, never a name tag. `command` is one of `sit`, `stay`, `guard` or
+`follow` (`guard` is the in-game "Guard" order; the app shows it with Stay). `entity` is the
+creature's game id, which the app sends back in actions and never shows. Status is read from the
+world's entity index without loading a chunk; a parked pet reads as `unloaded`.
 
 ## Section: `bosses`
 
 ```json
 {
-  "schema_version": 1,
-  "player_online": true,
+  "schema_version": 2, "player_online": true,
   "fights": [
-    { "fight": "…", "boss": "nerocreatures:cinder_tyrant", "name": "Cinder Tyrant",
-      "dimension": "nerospace:cindara", "phase": 2, "phase_count": 3, "health": 0.41,
-      "your_damage": 184.5, "your_share": 0.37, "participants": 3 }
+    { "fight": "…", "boss": "nerocreatures:rime_matriarch", "name": "Rime Matriarch",
+      "dimension": "nerospace:glacira", "phase": 2, "phase_count": 3, "health": 0.42,
+      "your_damage": 120.5, "your_share": 0.3, "participants": 4 }
+  ],
+  "altars": [
+    { "index": 1, "state": "cooldown", "ready_in_s": 412, "last_boss": "nerocreatures:rime_matriarch" },
+    { "index": 2, "state": "ready" }
   ]
 }
 ```
 
-Only **summoned** fights appear, because only summoned fights exist as fights: a boss you find in
-the world is a mob, not an event, and records nothing about anybody
-([Bosses](Bosses.md#how-a-boss-turns-up)).
-
-`your_damage` and `your_share` are yours alone, and read `0` for a fight you have not touched. There
-is no participant list — `participants` is a **count**, so an app can say "you and two others"
-without knowing who they are. `your_share` is your damage over the fight's total, which is an
-aggregate of the fight rather than a fact about any identifiable other player.
-
-Any section name other than these three returns an empty object.
+- `fights` (schema 1) lists every summoned fight in progress. `your_damage` and `your_share` are
+  **yours** (0 in a fight you are not in); `participants` is a count, never a list.
+- `altars` (schema 2) are the Apex Altars **you** lit. An altar has no name and no position here,
+  only `index`, a label number that stays the same while the altar is remembered. `state` is
+  `ready`, `cooldown` (with `ready_in_s`) or `fighting` (your fight there is still going).
+  The list is kept in server memory only (see [Privacy](#privacy)): it is empty after a restart, and
+  an altar is forgotten an hour after it is ready again or as soon as it is broken.
 
 ## Action: `pet_recall`
 
-```json
-{}                                       // recall all of your pets
-{ "pet": "<creature UUID>" }             // recall one
-```
-
-Brings your own tamed pets to where you are standing. Each pet is placed on a valid block near you —
-solid ground, open air, room to stand, found by a small bounded search — so a recall never puts an
-animal inside a wall or over a drop. A pet's standing order is preserved and re-applied, so a
-**guarding** pet guards its new spot rather than walking back to the old one.
+Parameters: `{"pet": "<entity>"}` for one creature, or `{}` for all your pets and mounts. Only
+creatures in **your** dimension, loaded, and not ridden or perched are moved; each is placed on solid
+ground within 3 blocks of you, or skipped. Result:
 
 ```json
-{ "schema_version": 1, "recalled": 1,
-  "pets": [ { "entity": "…", "type": "nerocreatures:glacite_wisp",
-              "name": "Glacite Wisp", "command": "follow" } ],
+{ "schema_version": 2, "recalled": 1, "pets": [ { "entity": "…", "type": "…", "name": "…", "command": "follow" } ],
   "skipped": [ { "entity": "…", "type": "…", "reason": "other_dimension" } ] }
 ```
 
-`reason` is one of `other_dimension`, `not_loaded` or `no_room`.
+Drones are never recalled: a drone belongs to the area it works.
 
-**Drones are never recalled by this action**, and that is not an oversight: a drone's whole purpose
-is the area it was deployed to work, and teleporting it to you would quietly break it. Folding a
-drone away stays a deliberate in-world act (sneak-interact with an empty hand).
+## Action: `pet_command`
 
-Refusals use Core's shared action error codes:
+Parameters: `{"pet": "<entity>", "command": "follow" | "stay" | "sit"}`. Result:
+`{"schema_version": 2, "entity": "…", "command": "stay"}`. Any other command, including `guard`,
+upper case or a missing one, is refused with `unknown_command`; it never falls back to Follow.
 
-| Code | When |
+| Order | In game |
 | --- | --- |
-| `PLAYER_OFFLINE_REQUIRED` | You are not online (see below) |
-| `NOT_OWNER` | The `pet` id is not one of your own creatures |
-| `VALIDATION` | Malformed `pet` id, you have no pets, or none could be recalled |
-| `INTERNAL` | No world is running, or something went wrong server-side |
+| `follow` | Follows you. |
+| `stay` | Stands exactly where it is: no following, no wandering and no fighting, not even back. |
+| `sit` | Sits down where it is. |
 
-A pet that belongs to somebody else answers **exactly like a creature that does not exist**, so the
-action cannot be used to probe for other players' pets.
+The order applies to a loaded pet or mount wherever it is. Drones and eggs take no orders.
 
-`pet_recall` is **online-only, permanently**. A recall moves an animal to where its owner is
-standing, and an offline player is not standing anywhere; there is no sensible offline semantics to
-add later.
+## Validation and refusals
 
-### Why only one action
+Both actions are checked on the server, in this order:
 
-Everything else an app might want to do to a creature — taming, commanding, deploying a drone,
-summoning a boss — is an *in-world* act with an in-world cost and an in-world audience. Doing any of
-those from a phone would let a player affect the world without being in it. Recalling a pet you
-already own to a place you are already standing changes nothing that was not already yours, which is
-what makes it the one safe write.
+1. **Rate limit, per player:** one recall per `linkRecallCooldownSeconds` (default 10) and one order
+   per `linkCommandCooldownMillis` (default 1000), on top of the bridge's per-device limit.
+2. **Parameters:** a malformed `pet` id is refused, never widened into "recall everything".
+3. **Online:** you must be in the game.
+4. **Ownership:** the creature must be one of **your** rows in the ownership index. Somebody else's
+   creature answers exactly like one that does not exist.
+
+Refusals carry a token as the message, never a sentence:
+
+| Token | Error | Meaning |
+| --- | --- | --- |
+| `rate_limited` | `VALIDATION` | too soon after your last call |
+| `bad_request` | `VALIDATION` | missing or malformed parameters |
+| `unknown_command` | `VALIDATION` | not `follow`, `stay` or `sit`, or the creature takes no orders |
+| `not_owner` | `NOT_OWNER` | not one of your creatures (or no such creature) |
+| `no_pets` | `VALIDATION` | you have no pets or mounts to recall |
+| `not_loaded`, `other_dimension`, `no_room` | `VALIDATION` | nothing could be recalled or ordered right now |
+| `player_offline` | `PLAYER_OFFLINE_REQUIRED` | you are not online |
+| `internal` | `INTERNAL` | something failed on the server |
 
 ## Events
 
-| Topic | Scope | Payload |
-| --- | --- | --- |
-| `pet_state_changed` | Your session | `entity`, `kind`, `type`, `name`, `dimension`, `state`, `timestamp` |
-| `boss_phase` | Broadcast | `boss`, `name`, `dimension`, `phase`, `phase_count`, `summoned`, `timestamp` |
-| `boss_defeated` | Broadcast | as above, plus `participants` |
+| Topic | Scope | Payload | Push |
+| --- | --- | --- | --- |
+| `pet_state_changed` | yours | `entity`, `kind`, `type`, `name`, `dimension`, `state` (`died`), `timestamp`, `_notify` | "Your Dune Loper died." |
+| `creature_hurt` | yours | `entity`, `kind`, `type`, `timestamp`, `_notify` | "Your Dune Loper is badly hurt." |
+| `egg_hatched` | yours | `type`, `kind` (`egg`), `timestamp`, `_notify` | "A Lumen Moth egg has hatched." |
+| `fight_ended` | yours | `type` (boss), `kind` (`boss`), `outcome` (`defeated` or `ended`), `share` (yours), `timestamp`, `_notify` | "The Rime Matriarch fight has ended." |
+| `boss_phase` | broadcast | `boss`, `name`, `dimension`, `phase`, `phase_count`, `summoned`, `timestamp` | never |
+| `boss_defeated` | broadcast | as above, plus `participants` | never |
 
-`state` is one of `tamed`, `released`, `deployed`, `recalled` or `died`.
+- **Push notifications are off by default.** The bridge sends a push for an event only when you have
+  turned on the **Creatures** category in the app (wire category `nerocreatures`) and the app is not
+  open. The `_notify` copy is `title` "NeroCreatures", a `body` that names the **species only** —
+  never a name tag, a dimension, a position or another player — and a `deepLink` to the module, never
+  to one creature.
+- **Badly hurt** means its health just dropped below a quarter, and its own owner is not the one
+  hurting it. At most one per creature per five minutes.
+- **Fight ended** is sent to each player who joined a summoned fight (the summoner included), when the
+  boss is defeated or leaves the world unbeaten, with that player's own share only.
+- **Routine changes are not events any more.** Schema 1 also published `pet_state_changed` for
+  `tamed`, `released`, `deployed` and `recalled`; with the bridge, every player event can become a
+  push, so schema 2 publishes only the death. The app polls `pets` for the rest. Orders, traits,
+  timers, Bestiary discoveries and altar cooldowns are never events.
+- Broadcasts reach every session, so they carry a boss, a phase and a dimension id and nothing about
+  any player, the same rule Core's `ThresholdEvents` contract imposes on the
+  [`nerocreatures:boss_pressure` channel](Bosses.md).
 
-**Broadcasts carry no player data at all.** A boss event reaches every session, so it says which
-boss, how far the fight got and where — a *place*, not a person. There is no participant list, no
-killer and no position, which is the same rule Core's `ThresholdEvents` contract imposes on the
-[`nerocreatures:boss_pressure` channel](Bosses.md).
+Each player event is published **before** the matching alert, so the bridge's species-only push
+replaces the alert's generic one.
 
 ## Alerts
-
-Two, and deliberately only two. A Core alert survives until it is acknowledged, so it is reserved
-for things worth telling you about while the game is closed.
 
 | Alert | Severity | Raised for | Text |
 | --- | --- | --- | --- |
 | Your pet died | `WARN` | The owner | "Your Glacite Wisp did not survive." |
 | A boss you fought was defeated | `INFO` | Each recorded participant of a **summoned** fight | "The Cinder Tyrant you fought has been defeated." |
 
-Alert text names a creature or a boss and **nothing else** — never who killed it, never who else was
-in the fight. A natural boss records no participants, so it alerts nobody.
-
-Alerts are stored by Core under your UUID and are purged by the same shared erasure request that
-clears everything else.
+Alert text names a creature or a boss and **nothing else**. Alerts are stored by Core under your
+UUID and are purged by the same shared erasure request that clears everything else.
 
 ## Privacy
 
 *(See also [`../PRIVACY.md`](../PRIVACY.md) and [Data storage](Data-Storage.md).)*
 
-- **Your own data only.** Every section is scoped to your player id before it leaves the mod: your
-  kill counts, your ownership rows, your contribution. No other player's rows, shares, names, UUIDs
-  or positions appear in a snapshot, an action result, an event payload or an alert.
-- **No coordinates.** The mod stores none, so the link cannot leak any.
-- **The link adds no stored data.** Every read goes to a store that already exists, which is also
-  why erasure needs no extra wiring: a player erased through Core's shared hook immediately reads as
-  owning nothing and having contributed nothing.
-- **Consent lives with the bridge.** Whether an app may connect at all, and which of your data it
-  receives, is governed by the bridge mod's pairing — NeroCreatures only answers questions the
-  bridge is already authorised to ask.
+- **Your own data only**, in every section and action: your discovery tiers, kill counts, creatures,
+  share and altars. Nothing about any other player.
+- **No coordinates.** No section carries a position; the altars you lit are shown by label number.
+- **Two small things are kept in server memory, never saved:** the altars you lit (to show their
+  cooldowns; dropped on restart, an hour after the altar is ready, when it is broken, or by an
+  erasure request, and listed in `/nerocreatures export`), and the time of your last recall and order
+  (for the rate limit; useless after a few seconds). Everything else is read from stores that already
+  exist, so an erased player immediately reads as owning nothing.
+- **Consent lives with the bridge.** Whether an app may connect at all is governed by the bridge's
+  pairing; NeroCreatures only answers questions the bridge is already authorised to ask.
 
 ## Notes for server admins
 
 - The link module is server-side only and starts with the world. Nothing is exposed until a bridge
   mod is installed and an app has been paired with it.
-- Creature data reaches an app read-only apart from the single `pet_recall` action. There is no way
-  to spawn, tame, summon or configure anything through the link — those stay operator commands (see
-  [Commands](Commands.md)).
-- If the link module fails to register for any reason, it is logged as a warning and the mod carries
-  on. Creatures do not depend on it.
+- The only writes are recall and the three orders, on the asking player's own pets and mounts. There
+  is no way to spawn, tame, summon or configure anything through the link.
+- Tune the rate limits with `linkRecallCooldownSeconds` and `linkCommandCooldownMillis` (see
+  [Config](Config.md)).
+- If the link module fails to register, it is logged as a warning and the mod carries on.
 
 ## See also
 
-- [Pets & Drones](Pets-and-Drones.md) — what the `pets` section is describing
-- [Bosses](Bosses.md) — the two entry modes, and the threshold channel other **mods** listen to
+- [Pets & Drones](Pets-and-Drones.md) — the orders, and what the `pets` section is describing
+- [Field Scanner and Bestiary](Field-Scanner-and-Bestiary.md) — discovery tiers
+- [Bosses](Bosses.md) — summoned fights and the Apex Altar
 - [Data storage](Data-Storage.md) — the stores behind all of this, and how to erase them
-- [Commands](Commands.md) — the operator-side equivalents

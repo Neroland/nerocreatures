@@ -7,8 +7,7 @@ import java.util.List;
  *
  * @param chance          chance (0-1) that an eligible natural spawn becomes an alpha
  * @param maxPerDimension hard cap of loaded alphas per dimension
- * @param scaleBonus      added to {@code minecraft:scale} as {@code add_multiplied_base} (0.3 = 1.3x,
- *                        decision 007)
+ * @param scaleBonus      added to {@code minecraft:scale} as {@code add_multiplied_base} (0.3 = 1.3x)
  * @param base            attribute bonuses every alpha gets on top of its rolled modifier
  */
 public record AlphaSettings(double chance, int maxPerDimension, double scaleBonus,

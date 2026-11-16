@@ -4,7 +4,7 @@ package za.co.neroland.nerocreatures.entity.greenxertz;
  * The Spore Drifter's rules as pure arithmetic, unit-tested without a world.
  *
  * <ul>
- *   <li><b>Growth ticks</b> (decision 006, key {@code sporeDrifterGrowth}, {@code Change.REPLACE}).
+ *   <li><b>Growth ticks</b> (key {@code sporeDrifterGrowth}, {@code Change.REPLACE}).
  *       At most one extra random tick per {@link #GROWTH_INTERVAL} ticks (4 s) on one crop in
  *       {@code #minecraft:crops} in the 3 x 3 column below it, at most {@link #MAX_DEPTH} blocks
  *       down. Denied: particles only.</li>
@@ -19,7 +19,7 @@ package za.co.neroland.nerocreatures.entity.greenxertz;
  */
 public final class DrifterRules {
 
-    /** Ticks between growth ticks for a lone drifter: 4 s (decision 006). */
+    /** Ticks between growth ticks for a lone drifter: 4 s. */
     public static final int GROWTH_INTERVAL = 80;
     /** Radius in which drifters share the area cap. */
     public static final double AREA_RADIUS = 6.0D;
@@ -42,7 +42,7 @@ public final class DrifterRules {
         NONE,
         /** Allowed: one extra random tick on the crop. */
         TICK,
-        /** Denied by the gate: spore particles only (decision 006 fallback). */
+        /** Denied by the gate: spore particles only (the fallback when the griefing gate says no). */
         PARTICLES
     }
 

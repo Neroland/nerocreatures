@@ -7,7 +7,6 @@ import java.util.WeakHashMap;
 
 import org.jetbrains.annotations.Nullable;
 
-import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
@@ -22,6 +21,7 @@ import za.co.neroland.nerocreatures.NeroCreaturesCommon;
 import za.co.neroland.nerocreatures.entity.ai.shared.TetherGoal;
 import za.co.neroland.nerocreatures.entity.ai.shared.TetherState;
 import za.co.neroland.nerocreatures.registry.ModSounds;
+import za.co.neroland.nerocreatures.registry.ModParticles;
 
 /**
  * The Gravity Leech tether effect: a transient {@code minecraft:gravity} modifier on the target,
@@ -32,8 +32,8 @@ import za.co.neroland.nerocreatures.registry.ModSounds;
  *   <li>{@link #release} on every tether end (break, timeout, target loss, death, removal), using a weak
  *       reference to the latched entity, so a target that changed dimension is still cleared;</li>
  *   <li>a lease renewed every hold pulse; {@link #sweep} removes any modifier whose lease ran out (the
- *       leech stopped ticking in a frozen chunk). Every leech calls {@link #sweepIfDue}; the integrator may
- *       also call it from the server tick;</li>
+ *       leech stopped ticking in a frozen chunk). Every leech calls {@link #sweepIfDue}; the server tick
+ *       may call it too;</li>
  *   <li>a transient modifier is never saved, so a logout, a death or a restart drops it.</li>
  * </ul>
  * No identity is stored: leases are keyed by the live entity object (weakly) and die with it.
@@ -155,14 +155,14 @@ public final class GravityTether implements TetherGoal.TetherEffect {
         }
     }
 
-    /** A chain of particles from leech to target (decision 007: the tether must be seen). */
+    /** A chain of particles from leech to target (the tether must be seen). */
     private static void trail(ServerLevel level, PathfinderMob tetherer, LivingEntity target) {
         Vec3 from = tetherer.position().add(0.0D, tetherer.getBbHeight() * 0.5D, 0.0D);
         Vec3 to = target.position().add(0.0D, target.getBbHeight() * 0.5D, 0.0D);
         int points = GravityTetherRules.trailPoints(from.distanceTo(to));
         for (int i = 1; i <= points; i++) {
             Vec3 at = from.lerp(to, i / (double) (points + 1));
-            level.sendParticles(ParticleTypes.REVERSE_PORTAL, at.x, at.y, at.z, 1, 0.02D, 0.02D, 0.02D, 0.0D);
+            level.sendParticles(ModParticles.VOID_TRAIL.get(), at.x, at.y, at.z, 1, 0.02D, 0.02D, 0.02D, 0.0D);
         }
     }
 }

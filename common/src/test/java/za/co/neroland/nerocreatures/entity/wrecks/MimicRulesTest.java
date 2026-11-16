@@ -63,7 +63,7 @@ class MimicRulesTest {
 
     @Test
     void lootNeedsAPlayerKill() throws java.io.IOException {
-        // M4: no AFK farm. Every pool of the loot table carries killed_by_player, whichever format
+        // No AFK farm. Every pool of the loot table carries killed_by_player, whichever format
         // (pools' "conditions" before 26.x, "condition"/all_of after) is on the classpath.
         assertTrue(MimicRules.dropsLoot(true));
         assertFalse(MimicRules.dropsLoot(false), "magma, traps and mobs earn nothing");

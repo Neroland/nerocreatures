@@ -1,0 +1,34 @@
+{
+  "title": "quest.nerocreatures.menagerie.survey_wrecks.title",
+  "description": "quest.nerocreatures.menagerie.survey_wrecks.desc",
+  "icon": "nerocreatures:captains_ledger",
+  "prerequisites": [
+    "nerocreatures:menagerie/field_scanner"
+  ],
+  "objectives": [
+    {
+      "type": "neroquests:gate_open",
+      "gate": "nerocreatures:bestiary/scanned/cache_mimic"
+    },
+    {
+      "type": "neroquests:gate_open",
+      "gate": "nerocreatures:bestiary/scanned/scrap_hulk"
+    },
+    {
+      "type": "neroquests:gate_open",
+      "gate": "nerocreatures:bestiary/scanned/pirate_captain"
+    }
+  ],
+  "rewards": [
+    {
+      "type": "neroquests:xp",
+      "amount": 150
+    },
+    {
+      "type": "neroquests:currency",
+      "amount": 120
+    }
+  ],
+  "scope": "player",
+  "visible_gate": "nerolandcore:reached_orbit"
+}

@@ -1,7 +1,7 @@
 package za.co.neroland.nerocreatures.entity.luna;
 
 /**
- * The pure rules behind the Lumen Moth's living lantern (decision 006). No game types, so the rule
+ * The pure rules behind the Lumen Moth's living lantern. No game types, so the rule
  * and its cap are unit-tested.
  *
  * <ul>

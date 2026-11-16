@@ -18,8 +18,8 @@ package za.co.neroland.nerocreatures.entity.greenxertz;
  * <h2>Population</h2>
  *
  * <p>At most {@link #MAX_PER_DIMENSION} loaded per dimension (spawn gate). It is saved with its chunk
- * like any mob, barnacles and deck axis included (Stage 2 review M3: an unsaved leviathan lost its
- * barnacle progress on every unload, so barnacles were never harvestable). It never takes vanilla's
+ * like any mob, barnacles and deck axis included (an unsaved leviathan would lose its
+ * barnacle progress on every unload, so barnacles would never be harvestable). It never takes vanilla's
  * random despawn ({@link #mayDespawnAt}); it leaves only past vanilla's hard 128-block range, and a
  * named one is kept.
  *

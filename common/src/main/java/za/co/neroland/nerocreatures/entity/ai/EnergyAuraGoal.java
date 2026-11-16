@@ -3,7 +3,6 @@ package za.co.neroland.nerocreatures.entity.ai;
 import java.util.EnumSet;
 import java.util.List;
 
-import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.LivingEntity;
@@ -13,6 +12,7 @@ import net.minecraft.world.phys.AABB;
 
 import za.co.neroland.nerocreatures.entity.visual.CreatureVisualsHolder;
 import za.co.neroland.nerocreatures.entity.visual.VisualPose;
+import za.co.neroland.nerocreatures.registry.ModParticles;
 
 /**
  * A slow, low-damage energy field around the creature — pressure that makes standing next to a
@@ -160,7 +160,7 @@ public class EnergyAuraGoal extends Goal {
 
     /** Feedback for a pulse that actually hit something. Default: a ring of enchant-hit sparks. */
     protected void onPulse(ServerLevel level) {
-        level.sendParticles(ParticleTypes.ENCHANTED_HIT, this.mob.getX(),
+        level.sendParticles(ModParticles.STATIC_SPARK.get(), this.mob.getX(),
                 this.mob.getY() + this.mob.getBbHeight() * 0.5D, this.mob.getZ(),
                 10, this.radius * 0.4D, 0.3D, this.radius * 0.4D, 0.0D);
         // The visible edge of the aura: a ring of sparks at the pulse radius, drifting outward.
@@ -169,7 +169,7 @@ public class EnergyAuraGoal extends Goal {
             double angle = (Math.PI * 2.0D * i) / PULSE_RING_POINTS;
             double dx = Math.cos(angle);
             double dz = Math.sin(angle);
-            level.sendParticles(ParticleTypes.ELECTRIC_SPARK, this.mob.getX() + dx * this.radius, y,
+            level.sendParticles(ModParticles.STATIC_SPARK.get(), this.mob.getX() + dx * this.radius, y,
                     this.mob.getZ() + dz * this.radius, 0, dx, 0.0D, dz, 0.15D);
         }
     }

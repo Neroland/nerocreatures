@@ -13,7 +13,7 @@ import net.minecraft.world.item.component.CustomData;
 import za.co.neroland.nerocreatures.trait.TraitSet;
 
 /**
- * An egg item's contents, as decision 003 fixes them: {@code minecraft:custom_data} holds
+ * An egg item's contents: {@code minecraft:custom_data} holds
  * {@code {species: "nerocreatures:lumen_moth", v: 1, a: "hardy", b: "swift"}}. The species is a full
  * entity-type id; a bare path is read in the {@code nerocreatures} namespace. No owner, no player, no
  * position: an egg is creature data only.

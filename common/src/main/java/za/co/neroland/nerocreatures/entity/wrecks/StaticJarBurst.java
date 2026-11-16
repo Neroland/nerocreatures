@@ -5,7 +5,6 @@ import java.util.Optional;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
-import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.effect.MobEffect;
@@ -23,6 +22,7 @@ import org.jetbrains.annotations.Nullable;
 
 import za.co.neroland.nerocreatures.config.NeroCreaturesConfig;
 import za.co.neroland.nerocreatures.registry.ModSounds;
+import za.co.neroland.nerocreatures.registry.ModParticles;
 
 /**
  * The thrown {@code static_jar}: its arc and its burst. Server side only.
@@ -30,14 +30,14 @@ import za.co.neroland.nerocreatures.registry.ModSounds;
  * <p>No projectile entity: the arc is simulated in one call ({@link SwarmRules#step}, the vanilla
  * thrown-item physics, at most {@value SwarmRules#JAR_MAX_STEPS} ticks), clipped against blocks and
  * living entities, drawn as a spark trail, and bursts where it lands. That keeps the jar free of the
- * projectile class moves between Minecraft lines, and decision 001's {@code creature_projectile} id
+ * projectile class moves between Minecraft lines, and the {@code creature_projectile} id
  * stays unregistered (it was reserved only for this).
  *
  * <p>The burst disables up to {@value SwarmRules#MAX_JAR_TARGETS} creatures in
  * {@code #nerocreatures:mechanical} within {@value SwarmRules#JAR_RADIUS} blocks for
  * {@value SwarmRules#JAR_DISABLE_TICKS} ticks: target dropped, path stopped, and vanilla slowness X
  * plus weakness V (ordinary saved effects, so nothing to clean up). Entities only, no world change:
- * gated by {@code staticSwarmDrain} alone (decision 006); off, the jar just shatters.
+ * gated by {@code staticSwarmDrain} alone; off, the jar just shatters.
  */
 public final class StaticJarBurst {
 
@@ -75,7 +75,7 @@ public final class StaticJarBurst {
                 hit = true;
             }
             if (step % 2 == 0) {
-                level.sendParticles(ParticleTypes.ELECTRIC_SPARK, end.x, end.y, end.z, 1, 0.0D, 0.0D, 0.0D, 0.0D);
+                level.sendParticles(ModParticles.STATIC_SPARK.get(), end.x, end.y, end.z, 1, 0.0D, 0.0D, 0.0D, 0.0D);
             }
             if (hit) {
                 landed = end;
@@ -111,7 +111,7 @@ public final class StaticJarBurst {
     /** Shatters a jar at {@code at}. @return how many mechanical creatures were disabled */
     public static int burst(ServerLevel level, Vec3 at) {
         ModSounds.STATIC_JAR_SHATTER.play(level, at.x, at.y, at.z, SoundSource.PLAYERS);
-        level.sendParticles(ParticleTypes.ELECTRIC_SPARK, at.x, at.y, at.z, 24, 1.2D, 0.8D, 1.2D, 0.15D);
+        level.sendParticles(ModParticles.STATIC_SPARK.get(), at.x, at.y, at.z, 24, 1.2D, 0.8D, 1.2D, 0.15D);
         if (!SwarmRules.drainEnabled(NeroCreaturesConfig.STATIC_SWARM_DRAIN.get())) {
             return 0;
         }
@@ -138,7 +138,7 @@ public final class StaticJarBurst {
         if (weakness != null) {
             mob.addEffect(new MobEffectInstance(weakness, SwarmRules.JAR_DISABLE_TICKS, 4, false, true));
         }
-        level.sendParticles(ParticleTypes.ELECTRIC_SPARK, mob.getX(), mob.getY() + mob.getBbHeight() * 0.6D,
+        level.sendParticles(ModParticles.STATIC_SPARK.get(), mob.getX(), mob.getY() + mob.getBbHeight() * 0.6D,
                 mob.getZ(), 8, 0.3D, 0.4D, 0.3D, 0.05D);
     }
 }

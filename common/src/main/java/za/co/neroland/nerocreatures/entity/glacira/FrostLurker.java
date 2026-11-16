@@ -37,6 +37,7 @@ import za.co.neroland.nerocreatures.entity.base.CreatureTier;
 import za.co.neroland.nerocreatures.entity.base.NeroCreatureEntity;
 import za.co.neroland.nerocreatures.entity.visual.VisualPose;
 import za.co.neroland.nerocreatures.registry.ModSounds;
+import za.co.neroland.nerocreatures.registry.ModParticles;
 
 /**
  * <b>Frost Lurker</b> (Glacira, hostile): a flat diamond body with a row of ice-shard spines and two
@@ -45,7 +46,7 @@ import za.co.neroland.nerocreatures.registry.ModSounds;
  * <ul>
  *   <li><b>Lies in wait</b> (shared {@link AmbushGoal}) in any block of
  *       {@code nerocreatures:frost_lurker_hides_in} (snow and ice by default). Burying is a flag and a
- *       held {@code rest} pose: no block is ever changed, so there is no griefing gate (decision 006).
+ *       held {@code rest} pose: no block is ever changed, so there is no griefing gate.
  *       Buried, other mobs cannot see it as an enemy and it makes no ambient sound.</li>
  *   <li><b>Erupts when walked over</b> by a survival player or a wild grazer: a
  *       {@value FrostLurkerRules#TELEGRAPH_TICKS}-tick telegraph (the {@code ability} pose, snow burst,
@@ -142,7 +143,7 @@ public class FrostLurker extends NeroCreatureEntity implements Enemy, Ambusher {
         this.eruptTicks = FrostLurkerRules.TELEGRAPH_TICKS;
         this.setTarget(null); // no melee during the telegraph; the bite decides
         this.visuals().playPose(VisualPose.ABILITY, FrostLurkerRules.ERUPT_POSE_TICKS);
-        level.sendParticles(ParticleTypes.SNOWFLAKE, this.getX(), this.getY() + 0.3D, this.getZ(),
+        level.sendParticles(ModParticles.RIME_MOTE.get(), this.getX(), this.getY() + 0.3D, this.getZ(),
                 16, 0.6D, 0.3D, 0.6D, 0.05D);
         level.sendParticles(ParticleTypes.ITEM_SNOWBALL, this.getX(), this.getY() + 0.2D, this.getZ(),
                 10, 0.5D, 0.2D, 0.5D, 0.1D);

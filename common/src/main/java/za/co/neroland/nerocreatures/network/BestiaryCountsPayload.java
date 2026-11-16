@@ -14,7 +14,7 @@ import net.minecraft.resources.Identifier;
 import za.co.neroland.nerocreatures.NeroCreaturesCommon;
 
 /**
- * Server &rarr; client: the asking player's own Bestiary tiers and counts (decision 010 section
+ * Server &rarr; client: the asking player's own Bestiary tiers and counts (section
  * 9.2). One entry per species the player has at least Scanned, in roster order; species not yet
  * scanned are omitted, so the payload says nothing about them. No UUID, name, coordinate, entity id
  * or free text.

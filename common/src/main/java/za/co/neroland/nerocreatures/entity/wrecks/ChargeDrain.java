@@ -8,7 +8,7 @@ import net.minecraft.world.item.ItemStack;
 /**
  * The Static Swarm's item-energy façade.
  *
- * <p>Neroland Core has no item-energy API (audit 8.5): it exposes block-side storages only. So the
+ * <p>Neroland Core has no item-energy API: it exposes block-side storages only. So the
  * swarm drains only stacks in {@code #nerocreatures:chargeable}, and the actual drain goes through this
  * class:
  *

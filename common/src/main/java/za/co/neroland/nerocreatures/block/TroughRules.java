@@ -7,7 +7,7 @@ import java.util.Map;
 import java.util.function.Predicate;
 
 /**
- * Pure rules for the Feeding Trough (decision 003): on a cadence, it feeds <b>two adults of one
+ * Pure rules for the Feeding Trough: on a cadence, it feeds <b>two adults of one
  * species</b> in range from its inventory with that species' breeding food, which puts them in love so
  * they breed by vanilla's own path. It never feeds babies and never spawns a baby itself.
  *

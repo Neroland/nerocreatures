@@ -69,13 +69,14 @@ A bare id is read as `nerocreatures:`. Tab completion lists every registered bos
 
 ## `/nerocreatures export <player>`
 
-**This is the POPIA/GDPR data-access path.** It prints exactly one player's own NeroCreatures record
-as JSON: their pet and drone ownership rows, and their own contribution to any boss fight currently
-running. Nobody else's rows appear, ever — that is a property of the stores themselves, not of how
-this command prints them.
+**This is the POPIA/GDPR data-access path.** It writes exactly one player's own NeroCreatures record
+as JSON to a file under the world folder (`data/nerocreatures/exports/export-<time>-<random>.json`)
+and replies with the file's path and size only. Nobody else's rows appear, ever — that is a property
+of the export itself, not of how it is delivered. Nothing personal is printed, so running it from the
+console or RCON does not put the record in the server log.
 
 ```text
-/nerocreatures export Dario
+/nerocreatures export Kestrel
 /nerocreatures export 7f0a1c3e-…-b21d          # works for a player who has left
 ```
 
@@ -102,7 +103,8 @@ their own data asks an operator to run it — see [`PRIVACY.md`](../PRIVACY.md).
 read, use Core's own `/neroland data eraseme` (player) or `/neroland data erase <uuid>` (operator),
 which purges the player across every Nero mod at once — see [Data storage](Data-Storage.md).
 
-Long exports are truncated at 32,000 characters with a note; chat is not a file transfer.
+The whole export is written, however long. Where the file system supports it, the file is readable
+by the server's own account only. Give it to the player securely, then delete it.
 
 ## `/nerocreatures budget`
 

@@ -36,7 +36,7 @@ def strands(face, cols, y0: int = 0, y1: int = None) -> None:
 def rime_yak(p) -> None:
     """Dark mass: the indigo coat, curtain, horns and legs. Light mass: the cream rime mantle on the
     back, its drips down the curtain, the forelock and muzzle. Accent: eyes and the horn bands that
-    make the cold aura. Stage 0 wears the lot; sheared (stage 1) shows the clipped barrel and legs."""
+    make the cold aura. Wool stage 0 wears the lot; sheared (stage 1) shows the clipped barrel and legs."""
 
     # Barrel: its part is pitched 90 degrees, so south is the back, north the belly, up the chest.
     key = "barrel.barrel"

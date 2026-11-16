@@ -1,0 +1,19 @@
+{
+  "title": "quest.nerocreatures.menagerie.field_scanner.title",
+  "description": "quest.nerocreatures.menagerie.field_scanner.desc",
+  "icon": "nerocreatures:field_scanner",
+  "prerequisites": [],
+  "objectives": [
+    {
+      "type": "neroquests:craft_item",
+      "item": "nerocreatures:field_scanner"
+    }
+  ],
+  "rewards": [
+    {
+      "type": "neroquests:xp",
+      "amount": 40
+    }
+  ],
+  "scope": "player"
+}

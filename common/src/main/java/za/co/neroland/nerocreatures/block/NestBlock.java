@@ -31,7 +31,7 @@ import za.co.neroland.nerocreatures.data.CreatureOwnershipState;
 import za.co.neroland.nerocreatures.entity.tame.TameableCreature;
 
 /**
- * Nest: a home point for a pet or mount (decision 001: no block entity; the creature keeps its own
+ * Nest: a home point for a pet or mount (no block entity; the creature keeps its own
  * nest, see {@link NestHome}). Use with an empty hand to home your nearest own creature within
  * {@value NestRules#BIND_REACH} blocks of the nest; sneak-use to un-home all of yours homed here.
  * Only the user's own creatures are ever considered, checked against the ownership store.
@@ -51,7 +51,7 @@ public class NestBlock extends Block {
         super(properties);
     }
 
-    /** Registration properties without the id (the integrator adds {@code .setId(key)}). */
+    /** Registration properties without the id (registration adds {@code .setId(key)}). */
     public static BlockBehaviour.Properties nestProperties() {
         return BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_BROWN).strength(0.6F).sound(SoundType.GRASS)
                 .noOcclusion();

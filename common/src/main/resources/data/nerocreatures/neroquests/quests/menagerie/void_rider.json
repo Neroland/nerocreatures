@@ -1,0 +1,26 @@
+{
+  "title": "quest.nerocreatures.menagerie.void_rider.title",
+  "description": "quest.nerocreatures.menagerie.void_rider.desc",
+  "icon": "nerocreatures:void_essence",
+  "prerequisites": [
+    "nerocreatures:menagerie/saddle_up"
+  ],
+  "objectives": [
+    {
+      "type": "neroquests:gate_open",
+      "gate": "nerocreatures:bestiary/studied/void_manta"
+    }
+  ],
+  "rewards": [
+    {
+      "type": "neroquests:xp",
+      "amount": 200
+    },
+    {
+      "type": "neroquests:currency",
+      "amount": 200
+    }
+  ],
+  "scope": "player",
+  "visible_gate": "nerolandcore:reached_orbit"
+}

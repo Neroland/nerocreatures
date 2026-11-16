@@ -18,13 +18,13 @@ import za.co.neroland.nerocreatures.block.TerrariumBlock;
 import za.co.neroland.nerocreatures.block.TrophyPlaqueBlock;
 
 /**
- * NeroCreatures' blocks (decision 001: at most ten). Same Core {@link RegistrationProvider} seam as
+ * NeroCreatures' blocks (at most ten). Same Core {@link RegistrationProvider} seam as
  * the items, so Fabric registers eagerly at {@link #init()} and NeoForge/Forge attach the deferred
  * register through the existing {@code RegistrationProvider.attach(..)} call.
  *
  * <p>{@link #EPHEMERAL_CRUST} has no item, no loot and no block entity: creature and boss code finds
  * it by id through {@link EphemeralCrustBlock#registered()}, so nothing outside this class names the
- * registry entry. The eight habitat blocks (Stage 4) land here too.
+ * registry entry. The eight habitat blocks live here too.
  */
 public final class ModBlocks {
 
@@ -43,7 +43,7 @@ public final class ModBlocks {
     public static final RegistryEntry<ApexAltarBlock> APEX_ALTAR = BLOCKS.register(
             "apex_altar", key -> new ApexAltarBlock(ApexAltarBlock.altarProperties().setId(key)));
 
-    /** Stage 4 habitat blocks (decision 001). */
+    /** Habitat blocks. */
     public static final RegistryEntry<NestBlock> NEST = BLOCKS.register("nest",
             key -> new NestBlock(NestBlock.nestProperties().setId(key)));
     public static final RegistryEntry<FeedingTroughBlock> FEEDING_TROUGH = BLOCKS.register("feeding_trough",

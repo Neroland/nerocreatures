@@ -17,7 +17,7 @@ import com.google.gson.JsonParser;
 import org.junit.jupiter.api.Test;
 
 /**
- * Stage 5 sound wiring, read from the classpath as the client would: every {@code sounds.json} event
+ * Sound wiring, read from the classpath as the client would: every {@code sounds.json} event
  * has an English subtitle and its files, and the creatures that used to borrow vanilla sounds have
  * their own. ({@code ModSounds} and {@code sounds.json} are generated from one manifest;
  * {@code tools/sound/gen_sound_assets.py --check} proves they agree.)

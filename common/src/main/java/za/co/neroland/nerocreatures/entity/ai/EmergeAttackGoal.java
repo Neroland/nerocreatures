@@ -2,7 +2,6 @@ package za.co.neroland.nerocreatures.entity.ai;
 
 import java.util.EnumSet;
 
-import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.LivingEntity;
@@ -11,6 +10,7 @@ import net.minecraft.world.entity.ai.goal.Goal;
 
 import za.co.neroland.nerocreatures.entity.visual.CreatureVisualsHolder;
 import za.co.neroland.nerocreatures.entity.visual.VisualPose;
+import za.co.neroland.nerocreatures.registry.ModParticles;
 
 /**
  * Surfaces from a burrow with a telegraphed strike — the payoff half of {@link BurrowGoal}.
@@ -168,18 +168,18 @@ public class EmergeAttackGoal<T extends PathfinderMob & Burrower> extends Goal {
 
     /** Warning feedback while still under. Default: dust puffing out of the ground. */
     protected void onTelegraph(ServerLevel level) {
-        level.sendParticles(ParticleTypes.POOF, this.mob.getX(), this.mob.getY(), this.mob.getZ(),
+        level.sendParticles(ModParticles.DUST_SWIRL.get(), this.mob.getX(), this.mob.getY(), this.mob.getZ(),
                 8, 0.4D, 0.0D, 0.4D, 0.05D);
     }
 
     /** Feedback for the surfacing itself. Default: the vanilla warden emerge sound plus dust. */
     protected void onEmerge(ServerLevel level) {
-        level.sendParticles(ParticleTypes.POOF, this.mob.getX(), this.mob.getY(), this.mob.getZ(),
+        level.sendParticles(ModParticles.DUST_SWIRL.get(), this.mob.getX(), this.mob.getY(), this.mob.getZ(),
                 30, 0.8D, 0.3D, 0.8D, 0.1D);
         // The danger ring: dust at exactly the strike range, so "outside the ring" means "safe".
         for (int i = 0; i < EMERGE_RING_POINTS; i++) {
             double angle = (Math.PI * 2.0D * i) / EMERGE_RING_POINTS;
-            level.sendParticles(ParticleTypes.POOF, this.mob.getX() + Math.cos(angle) * this.strikeRange,
+            level.sendParticles(ModParticles.GRAVITY_RIPPLE.get(), this.mob.getX() + Math.cos(angle) * this.strikeRange,
                     this.mob.getY() + 0.1D, this.mob.getZ() + Math.sin(angle) * this.strikeRange,
                     1, 0.0D, 0.0D, 0.0D, 0.0D);
         }

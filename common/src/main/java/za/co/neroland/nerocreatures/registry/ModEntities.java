@@ -204,7 +204,7 @@ public final class ModEntities {
 
     // --- 0.5.0 Mars ---------------------------------------------------------------------------
 
-    /** Dune Loper — Mars mount (decision 004). Size class L, biped. */
+    /** Dune Loper — Mars mount. Size class L, biped. */
     public static final RegistryEntry<EntityType<DuneLoper>> DUNE_LOPER = ENTITY_TYPES.register(
             "dune_loper",
             key -> EntityType.Builder.of(DuneLoper::new, MobCategory.CREATURE)
@@ -335,7 +335,7 @@ public final class ModEntities {
 
     // --- 0.5.0 Deep space ---------------------------------------------------------------------
 
-    /** Void Manta — deep-space flying mount (decision 004). Size class L, flat disc. */
+    /** Void Manta — deep-space flying mount. Size class L, flat disc. */
     public static final RegistryEntry<EntityType<VoidManta>> VOID_MANTA = ENTITY_TYPES.register(
             "void_manta",
             key -> EntityType.Builder.of(VoidManta::new, MobCategory.CREATURE)
@@ -471,7 +471,7 @@ public final class ModEntities {
                 Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, ModEntities::anyLightGround);
         entities.registerSpawnPlacement(ASTEROID_WORM, SpawnPlacementTypes.ON_GROUND,
                 Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, ModEntities::anyLightGround);
-        // Stage 4's roster is light-independent to a creature, and each for its own reason: a golem
+        // These are light-independent, each and each for its own reason: a golem
         // is part of the terrain, a pirate band camps where it likes, and a machine does not care
         // whether the lights are on.
         entities.registerSpawnPlacement(CRYSTAL_GOLEM, SpawnPlacementTypes.ON_GROUND,

@@ -5,7 +5,7 @@ import org.jetbrains.annotations.Nullable;
 import net.minecraft.world.entity.EquipmentSlot;
 
 /**
- * The creature gear (decision 001), one per signature drop. Each {@link CreatureGearItem} carries one
+ * The creature gear, one per signature drop. Each {@link CreatureGearItem} carries one
  * kind; {@link CreatureGear} finds gear by kind, so nothing here needs a registry reference.
  *
  * <p>Passive gear works while worn in its {@link #slot()} (when it has one) or held in either hand.
@@ -42,7 +42,7 @@ public enum GearKind {
         this.active = active;
     }
 
-    /** The item id path (decision 001). */
+    /** The item id path. */
     public String id() {
         return this.id;
     }

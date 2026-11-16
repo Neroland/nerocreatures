@@ -23,7 +23,7 @@ import za.co.neroland.nerocreatures.trait.TraitPool;
 import za.co.neroland.nerocreatures.trait.TraitSet;
 
 /**
- * The Stage 4 egg layer (decisions 001 and 003): an egg-birth species' breeding drops one
+ * The egg layer: an egg-birth species' breeding drops one
  * {@code <species>_egg} (one item per species, same namespace) carrying the inherited traits in
  * {@code minecraft:custom_data}. No owner, no player, no position is written: an egg is creature data.
  * The egg hatches only in an Incubator, which creates and removes the player's {@code egg} row.

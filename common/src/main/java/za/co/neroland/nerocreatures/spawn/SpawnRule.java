@@ -46,14 +46,14 @@ import za.co.neroland.nerolandcore.worldgen.SpaceTags;
  *                      rather than a place — a boss, gated on {@code naturalBossSpawnsEnabled}, a
  *                      cooldown and "is one already out there" (see {@code boss/BossSpawns}). A
  *                      gate must stay cheap.
- * @param positionGate  a per-position condition (decision 005), asked <b>after</b> the biome test
+ * @param positionGate  a per-position condition, asked <b>after</b> the biome test
  *                      and only for a candidate that already matched everything else. It may read
  *                      the world at the position and may roll a chance; {@link #ANYWHERE} for most
  *                      rules
  * @param candidate     how the spawner picks the position this rule is tested at
  *                      ({@link Candidate#SURFACE} for most rules)
  * @param overworldCapped whether this rule's creatures count toward, and are held back by,
- *                      {@code overworldSpawnCap} when they spawn in the overworld (decision 005)
+ *                      {@code overworldSpawnCap} when they spawn in the overworld
  */
 public record SpawnRule(
         String creatureId,
@@ -83,7 +83,7 @@ public record SpawnRule(
         SURFACE,
         /** As {@link #SURFACE}, lifted 1-4 blocks into the air: flyers. */
         AIR,
-        /** A cave floor at or below Y 0 in the same column (decision 005). */
+        /** A cave floor at or below Y 0 in the same column. */
         CAVE
     }
 
@@ -145,8 +145,8 @@ public record SpawnRule(
     }
 
     /**
-     * As {@link #gated(String, Supplier, TagKey, int, int, int, Predicate)}, plus a per-position gate
-     * (decision 005): the cheap per-level {@code gate} is asked first, the biome next, and
+     * As {@link #gated(String, Supplier, TagKey, int, int, int, Predicate)}, plus a per-position gate:
+     * the cheap per-level {@code gate} is asked first, the biome next, and
      * {@code positionGate} last, so its block reads and its chance roll only happen for a candidate
      * that already qualifies.
      */
@@ -167,7 +167,7 @@ public record SpawnRule(
         return this.withCandidate(Candidate.AIR);
     }
 
-    /** This rule, counted toward and held back by {@code overworldSpawnCap} (decision 005). */
+    /** This rule, counted toward and held back by {@code overworldSpawnCap}. */
     public SpawnRule capOverworld() {
         return new SpawnRule(this.creatureId, this.type, this.biomeTag, this.dimensionTag, this.weight,
                 this.minGroupSize, this.maxGroupSize, this.gate, this.positionGate, this.candidate, true);

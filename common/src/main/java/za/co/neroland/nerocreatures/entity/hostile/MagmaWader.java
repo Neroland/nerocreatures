@@ -45,6 +45,7 @@ import za.co.neroland.nerocreatures.entity.base.NeroCreatureEntity;
 import za.co.neroland.nerocreatures.entity.visual.VisualPose;
 import za.co.neroland.nerocreatures.world.CreatureGriefing;
 import za.co.neroland.nerocreatures.registry.ModSounds;
+import za.co.neroland.nerocreatures.registry.ModParticles;
 
 /**
  * <b>Magma Wader</b> (Cindara, hostile): a small body on four very long stilt legs with a hanging
@@ -63,7 +64,7 @@ import za.co.neroland.nerocreatures.registry.ModSounds;
  *       {@code ephemeral_crust[variant=slag]} blocks per landing, into air over sturdy ground
  *       ({@code restore=air}, {@code Change.PLACE}) or over a lava source ({@code restore=lava},
  *       {@code Change.REPLACE}), never into a cell an entity is in. Each one passes
- *       {@code CreatureGriefing.mayAlter(.., magmaWaderSlag, ..)} first (decision 006) and decays back
+ *       {@code CreatureGriefing.mayAlter(.., magmaWaderSlag, ..)} first and decays back
  *       after 30-60 s. At most {@value SlagLobRules#MAX_LIVE_CRUST} live crust blocks per wader and
  *       {@value SlagLobRules#MAX_IN_FLIGHT} lobs in the air. Denied: the fire damage alone.</li>
  * </ul>
@@ -187,7 +188,7 @@ public class MagmaWader extends NeroCreatureEntity implements Enemy {
             } else if (lob.age % TRAIL_EVERY_TICKS == 0) {
                 double f = (double) lob.age / lob.flightTicks;
                 Vec3 at = lob.from.lerp(lob.to, f).add(0.0D, SlagLobRules.arcHeight(lob.distance, f), 0.0D);
-                level.sendParticles(ParticleTypes.LAVA, at.x, at.y, at.z, 1, 0.0D, 0.0D, 0.0D, 0.0D);
+                level.sendParticles(ModParticles.SLAG_EMBER.get(), at.x, at.y, at.z, 1, 0.0D, 0.0D, 0.0D, 0.0D);
                 level.sendParticles(ParticleTypes.LARGE_SMOKE, at.x, at.y, at.z, 1, 0.05D, 0.05D, 0.05D, 0.0D);
             }
         }
@@ -219,7 +220,7 @@ public class MagmaWader extends NeroCreatureEntity implements Enemy {
 
     /** The landing: splash damage, then (gated, capped) crust. */
     private void land(ServerLevel level, Vec3 at) {
-        level.sendParticles(ParticleTypes.LAVA, at.x, at.y + 0.2D, at.z, 6, 0.4D, 0.2D, 0.4D, 0.0D);
+        level.sendParticles(ModParticles.SLAG_EMBER.get(), at.x, at.y + 0.2D, at.z, 6, 0.4D, 0.2D, 0.4D, 0.0D);
         ModSounds.MAGMA_WADER_SLAG_LAND.play(level, at.x, at.y, at.z, this.getSoundSource());
         AABB splash = new AABB(at, at).inflate(SlagLobRules.SPLASH_RADIUS);
         DamageSource source = this.damageSources().mobAttack(this);

@@ -25,7 +25,7 @@ import za.co.neroland.nerocreatures.menu.MenuOpener;
 
 /**
  * A habitat block with a five-slot stock (Feeding Trough food, Lure Beacon bait, Sonic Ward fuel), opened
- * in vanilla's {@code HopperMenu} through {@link MenuOpener} (decision 001: no menu type of our own for
+ * in vanilla's {@code HopperMenu} through {@link MenuOpener} (no menu type of our own for
  * these). Hoppers can feed it too. The stock is items only, never player data; it drops when the block is
  * removed.
  */

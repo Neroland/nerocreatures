@@ -1,6 +1,5 @@
 package za.co.neroland.nerocreatures.entity.nyxara;
 
-import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
@@ -28,6 +27,7 @@ import za.co.neroland.nerocreatures.entity.base.CreatureTier;
 import za.co.neroland.nerocreatures.entity.base.NeroCreatureEntity;
 import za.co.neroland.nerocreatures.entity.nyxara.ShardbackRules.Phase;
 import za.co.neroland.nerocreatures.registry.ModSounds;
+import za.co.neroland.nerocreatures.registry.ModParticles;
 
 /**
  * <b>Shardback</b> (Nyxara; hostile) — a low charging quadruped behind a fan of five mirror plates.
@@ -119,7 +119,7 @@ public class Shardback extends NeroCreatureEntity implements Enemy {
                 // Over the cap: still blocked by the fan (hurt ignores it), but nothing flies back.
                 return super.deflection(projectile);
             }
-            level.sendParticles(ParticleTypes.ELECTRIC_SPARK, projectile.getX(), projectile.getY(), projectile.getZ(),
+            level.sendParticles(ModParticles.PRISM_GLINT.get(), projectile.getX(), projectile.getY(), projectile.getZ(),
                     6, 0.15D, 0.15D, 0.15D, 0.05D);
             ModSounds.SHARDBACK_DEFLECT.play(this);
         }

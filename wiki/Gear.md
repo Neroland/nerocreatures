@@ -13,7 +13,7 @@ is not enchantable and keeps its effect on a vanilla item cooldown (never shorte
 | Rime Flask | Coolant Milk + Glass Bottle + Snowball (or 4 from one Matriarch Frostcore) | use | 10 s Fire Resistance and puts you out. Reusable. | `rimeFlaskCooldownTicks` 1200 |
 | Heat-gland Greaves | Heat Gland x2 + Leather Leggings + Magma Cream (or one Tyrant Ember + Leather Leggings) | legs | Walk on lava for a few seconds, then recharge. | `heatGlandGreavesLavaTicks` 100, `heatGlandGreavesCooldownTicks` 600 |
 | Graviton Boots | Graviton Node x2 + Leather Boots + Feather | feet | Lower gravity (sneak for normal) and 4 extra blocks of safe fall. | `gravitonBootsGravityPercent` 50 |
-| Resonant Whistle | Resonant Membrane x2 + Copper | use | Calls up to 8 of your own loaded pets and mounts in this dimension within range; sitting ones stay. | `resonantWhistleCooldownTicks` 600, `resonantWhistleRange` 48 |
+| Resonant Whistle | Resonant Membrane x2 + Copper | use | Calls up to 8 of your own loaded pets and mounts in this dimension within range; ones on Sit or Stay stay put. | `resonantWhistleCooldownTicks` 600, `resonantWhistleRange` 48 |
 | Chitin Bulwark | Slag Carapace + Worm Chitin + Lode Scute | held | +0.4 knockback resistance while held; braces (Absorption II, 10 s) at 40% health or less. | `chitinBulwarkCooldownTicks` 1800 |
 | Bloom Amulet | Bloom Heart + String + Gold | held | Regeneration I for 5 s at 60% health or less; never stacks. | `bloomAmuletCooldownTicks` 900 |
 | Static Jar | bottling a weakened Static Swarm | thrown | Disables mechanical creatures for 5 s. See [Wrecks & Pirates](Wrecks-and-Pirates.md). | |

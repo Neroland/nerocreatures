@@ -216,7 +216,7 @@ class GreenxertzCreaturesTest {
 
     @Test
     void naturalLeviathansArriveWithBarnaclesHalfToFullyGrown() {
-        // M3: seeded so a wild leviathan is worth landing on.
+        // Seeded so a wild leviathan is worth landing on.
         int regrow = LeviathanRules.BARNACLE_REGROW_TICKS;
         assertEquals(regrow / 2, LeviathanRules.seedBarnacles(regrow, 0.0D));
         assertEquals(regrow, LeviathanRules.seedBarnacles(regrow, 1.0D));
@@ -229,7 +229,7 @@ class GreenxertzCreaturesTest {
 
     @Test
     void leviathanStateSurvivesASaveRoundTrip() {
-        // M3: the leviathan is saved now; its saved state is barnacle progress and the deck axis.
+        // The leviathan is saved now; its saved state is barnacle progress and the deck axis.
         ProductTimer before = new ProductTimer(LeviathanRules.BARNACLE_REGROW_TICKS,
                 LeviathanRules.BARNACLE_STAGES, LeviathanRules.BARNACLE_MAX_YIELD);
         before.setProgress(LeviathanRules.seedBarnacles(LeviathanRules.BARNACLE_REGROW_TICKS, 0.4D));

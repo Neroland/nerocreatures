@@ -93,7 +93,7 @@ public final class CreatureCensus {
     }
 
     /**
-     * How many overworld-capped creatures (decision 005: Lumen Moth, Lode Tortoise, Static Swarm) are
+     * How many overworld-capped creatures (Lumen Moth, Lode Tortoise, Static Swarm) are
      * loaded in the overworld. Counted inside the same cached query as {@link #inDimension}, so it
      * costs no extra entity scan; 0 in every other dimension. If the dimension cap stops the query
      * early the tally may be short, but then nothing spawns anyway.
@@ -135,6 +135,9 @@ public final class CreatureCensus {
         Set<EntityType<?>> capped = overworld ? overworldCappedTypes() : Set.of();
         int[] cappedCount = new int[1];
         Predicate<Entity> tally = entity -> {
+            if (za.co.neroland.nerocreatures.gallery.GalleryDisplays.isDisplay(entity)) {
+                return false; // gallery displays never count toward any cap
+            }
             if (!capped.isEmpty() && capped.contains(entity.getType())) {
                 cappedCount[0]++;
             }
@@ -199,8 +202,8 @@ public final class CreatureCensus {
         AABB box = new AABB(
                 chunk.getMinBlockX(), minY, chunk.getMinBlockZ(),
                 chunk.getMaxBlockX() + 1.0D, minY + level.getHeight(), chunk.getMaxBlockZ() + 1.0D);
-        return level.getEntitiesOfClass(NeroCreatureEntity.class, box, entity -> true).size()
-                + level.getEntitiesOfClass(TameableCreature.class, box, entity -> true).size();
+        return level.getEntitiesOfClass(NeroCreatureEntity.class, box, entity -> !za.co.neroland.nerocreatures.gallery.GalleryDisplays.isDisplay(entity)).size()
+                + level.getEntitiesOfClass(TameableCreature.class, box, entity -> !za.co.neroland.nerocreatures.gallery.GalleryDisplays.isDisplay(entity)).size();
     }
 
     /**

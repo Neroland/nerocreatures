@@ -48,7 +48,7 @@ import za.co.neroland.nerocreatures.trait.TraitEffects;
 import za.co.neroland.nerocreatures.trait.TraitPool;
 
 /**
- * The shared mount base (decision 004): Dune Loper (ground, bounding leap) and Void Manta (flying,
+ * The shared mount base: Dune Loper (ground, bounding leap) and Void Manta (flying,
  * blink) subclass this and nothing else. One code path on every line from 1.21.1 to 26.3: the riding
  * API it uses ({@code getControllingPassenger}, {@code tickRidden}, {@code getRiddenInput},
  * {@code getRiddenSpeed}, {@code travel}, {@link PlayerRideableJumping}) was verified identical on
@@ -154,12 +154,12 @@ public abstract class MountCreature extends TameableCreature implements PlayerRi
 
     // --- state ---------------------------------------------------------------
 
-    /** Synced through the visuals flags (entity contract bit 14); saved under {@value #MOUNT_KEY}. */
+    /** Synced through the visuals flags (bit 14); saved under {@value #MOUNT_KEY}. */
     public boolean isCreatureSaddled() {
         return this.visuals().saddled();
     }
 
-    /** Synced through the visuals flags (entity contract bit 15); saved under {@value #MOUNT_KEY}. */
+    /** Synced through the visuals flags (bit 15); saved under {@value #MOUNT_KEY}. */
     public boolean hasPanniers() {
         return this.visuals().panniers();
     }
@@ -170,6 +170,12 @@ public abstract class MountCreature extends TameableCreature implements PlayerRi
 
     private void setPanniers(boolean panniers) {
         this.visuals().setPanniers(panniers);
+    }
+
+    /** Gallery paddock only: shows the saddle (and panniers) without the item path or an owner. */
+    public void showSaddledForGallery(boolean panniers) {
+        this.setSaddled(true);
+        this.setPanniers(panniers);
     }
 
     public int stamina() {
@@ -193,6 +199,9 @@ public abstract class MountCreature extends TameableCreature implements PlayerRi
 
     /** Whether this player may steer the mount (tamed, and owner-only respected). */
     public boolean mayRide(Player player) {
+        if (za.co.neroland.nerocreatures.gallery.GalleryDisplays.isPaddock(this)) {
+            return player.getAbilities().instabuild; // gallery paddock: any creative player, no owner read
+        }
         return this.isTame() && (this.entityData.get(DATA_OPEN_RIDING) || this.isOwnedBy(player));
     }
 
@@ -315,7 +324,11 @@ public abstract class MountCreature extends TameableCreature implements PlayerRi
     @Override
     public void tick() {
         super.tick();
-        if (!(this.level() instanceof ServerLevel)) {
+        if (!(this.level() instanceof ServerLevel serverLevel)) {
+            return;
+        }
+        if (za.co.neroland.nerocreatures.gallery.GalleryDisplays.isPaddock(this)) {
+            za.co.neroland.nerocreatures.gallery.GalleryDisplays.tickPaddock(this, serverLevel); // gallery: stays in its yard, snaps back
             return;
         }
         if (this.regenPause > 0) {
@@ -337,6 +350,10 @@ public abstract class MountCreature extends TameableCreature implements PlayerRi
 
     @Override
     public InteractionResult mobInteract(Player player, InteractionHand hand) {
+        // A gallery display does nothing (a paddock mount may be ridden by a creative player).
+        if (za.co.neroland.nerocreatures.gallery.GalleryDisplays.isDisplay(this)) {
+            return za.co.neroland.nerocreatures.gallery.GalleryDisplays.interact(this, player, hand);
+        }
         if (!this.isTame() || this.isBaby()) {
             return super.mobInteract(player, hand);
         }
@@ -401,7 +418,7 @@ public abstract class MountCreature extends TameableCreature implements PlayerRi
                 return InteractionResult.SUCCESS;
             }
             if (server) {
-                if (this.command() == PetCommand.SIT) {
+                if (this.command() == PetCommand.SIT || this.command() == PetCommand.STAY) {
                     this.setCommand(PetCommand.FOLLOW);
                 }
                 this.getNavigation().stop();
@@ -442,7 +459,7 @@ public abstract class MountCreature extends TameableCreature implements PlayerRi
         MenuOpener.open(player, provider);
     }
 
-    // --- owned-creature actions (entity contract section 6) ------------------------------
+    // --- owned-creature actions ------------------------------
 
     /**
      * Registers the two mount actions with the shared dispatcher, which has already checked that the
@@ -451,13 +468,15 @@ public abstract class MountCreature extends TameableCreature implements PlayerRi
     public static void registerActions() {
         CreatureActions.register(CreatureActions.MOUNT_OPEN_PANNIERS, MountCreature.class, 6.0D,
                 (player, mount) -> {
-                    if (mount.hasPanniers()) {
+                    if (za.co.neroland.nerocreatures.gallery.GalleryDisplays.isDisplay(mount)) {
+                        player.sendSystemMessage(Component.translatable("hud.nerocreatures.scanner.gallery"), true);
+                    } else if (mount.hasPanniers()) {
                         mount.openPanniers(player);
                     }
                 });
         CreatureActions.register(CreatureActions.MOUNT_UNSADDLE, MountCreature.class, 6.0D,
                 (player, mount) -> {
-                    if (mount.level() instanceof ServerLevel level) {
+                    if (mount.level() instanceof ServerLevel level && !za.co.neroland.nerocreatures.gallery.GalleryDisplays.isDisplay(mount)) {
                         mount.dropMountGear(level);
                     }
                 });

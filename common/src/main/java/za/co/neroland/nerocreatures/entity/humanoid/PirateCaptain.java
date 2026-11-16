@@ -180,7 +180,8 @@ public class PirateCaptain extends SpacePirate {
         AABB box = this.getBoundingBox().inflate(CaptainRules.RALLY_RADIUS);
         List<SpacePirate> crew = new ArrayList<>(CaptainRules.MAX_RALLIED);
         level.getEntities(EntityTypeTest.forClass(SpacePirate.class), box,
-                p -> p != this && p.isAlive() && !(p instanceof PirateCaptain), crew, CaptainRules.MAX_RALLIED);
+                p -> p != this && p.isAlive() && !(p instanceof PirateCaptain) && !za.co.neroland.nerocreatures.gallery.GalleryDisplays.isDisplay(p), crew,
+                CaptainRules.MAX_RALLIED);
         this.visuals().playPose(VisualPose.ABILITY_2, CaptainRules.RALLY_POSE_TICKS);
         ModSounds.PIRATE_CAPTAIN_RALLY.play(this);
         Holder<MobEffect> speed = WrecksLookups.effect("speed");

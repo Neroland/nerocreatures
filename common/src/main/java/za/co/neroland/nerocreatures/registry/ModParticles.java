@@ -14,7 +14,7 @@ import za.co.neroland.nerolandcore.registry.RegistrationProvider.RegistryEntry;
 import za.co.neroland.nerocreatures.NeroCreaturesCommon;
 
 /**
- * NeroCreatures' 16 custom particle types (decision 007, {@code art/particles/MANIFEST.md}). All are
+ * NeroCreatures' 16 custom particle types ({@code art/particles/MANIFEST.md}). All are
  * simple types with no options, so the registration is the same on every Minecraft line. Each has a
  * definition in {@code assets/nerocreatures/particles/<id>.json} and is drawn by the client's one
  * {@code CreatureParticle} provider, tuned per id by {@code ParticleStyle}.

@@ -93,7 +93,7 @@ public class PreyFleeGoal extends Goal {
         level.getEntities(EntityTypeTest.forClass(LivingEntity.class), box,
                 // canBeSeenAsEnemy: a hidden predator (a buried Frost Lurker, a burrowed worm) is not
                 // noticed, so prey can walk into the trap.
-                e -> e != this.mob && e.isAlive() && e.canBeSeenAsEnemy()
+                e -> e != this.mob && e.isAlive() && e.canBeSeenAsEnemy() && !za.co.neroland.nerocreatures.gallery.GalleryDisplays.isDisplay(e)
                         && e.getType().builtInRegistryHolder().is(this.predatorTag), found, 1);
         return found.isEmpty() ? null : found.get(0);
     }
@@ -105,7 +105,7 @@ public class PreyFleeGoal extends Goal {
         AABB box = this.mob.getBoundingBox().inflate(this.herdRadius, 4.0D, this.herdRadius);
         List<PathfinderMob> mates = new ArrayList<>(MAX_MATES_ALARMED);
         level.getEntities(EntityTypeTest.forClass(PathfinderMob.class), box,
-                e -> e != this.mob && e.getType() == this.mob.getType() && e instanceof HerdMember, mates,
+                e -> e != this.mob && e.getType() == this.mob.getType() && e instanceof HerdMember && !za.co.neroland.nerocreatures.gallery.GalleryDisplays.isDisplay(e), mates,
                 MAX_MATES_ALARMED);
         for (PathfinderMob mate : mates) {
             ((HerdMember) mate).raiseAlarm(threat, until);

@@ -766,6 +766,30 @@ item("capture_pod", "wrecks",
 ................
 """)
 
+# Field Scanner: the interface's dark navy casing, and on its screen the scan HUD itself - cyan
+# corner brackets round a white crosshair. The teal emitter is the colour of the scan_beam particle.
+# The item model has no in-use override, so this is the only frame.
+item("field_scanner", "glacira",
+     "i=indigo3 k=indigo1! K=indigo0! C=nyxara.accent_b3! W=nyxara.opal4! "
+     "T=wrecks.accent_owned3! t=wrecks.accent_owned2! U=wrecks.accent_owned4! A=luna.accent2!", """
+..........T..T..
+..........tUUt..
+...iiiiiiiitTii.
+...ikkkkkkkkkii.
+...ikCCKKKCCkii.
+...ikCKKWKKCkii.
+...ikKKWWWKKkii.
+...ikCKKWKKCkii.
+...ikCCKKKCCkii.
+...ikkkkkkkkkii.
+...iiAAiiCiTiii.
+....iiiiiiiiii..
+......iiii......
+......ikki......
+......iiii......
+......iiii......
+""")
+
 # Filled (custom_model_data flag 0): the dome glows with the creature curled inside; band fully lit.
 item("capture_pod_filled", "wrecks",
      "w=white2 l=white3 o=oxide1 H=hazard2! T=accent_owned3! t=accent_owned2! U=accent_owned4! W=white4!", """

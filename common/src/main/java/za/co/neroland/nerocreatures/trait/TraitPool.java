@@ -24,7 +24,7 @@ import org.jetbrains.annotations.Nullable;
 import za.co.neroland.nerocreatures.NeroCreaturesCommon;
 
 /**
- * The trait pool: every trait an individual can carry, with its roll weight and effect (decision 003).
+ * The trait pool: every trait an individual can carry, with its roll weight and effect.
  *
  * <p><b>Format.</b> A jar-bundled JSON, {@value #RESOURCE}, read once through the classloader the
  * first time anything asks for the pool. It is not datapack-reloadable on purpose: that would need a

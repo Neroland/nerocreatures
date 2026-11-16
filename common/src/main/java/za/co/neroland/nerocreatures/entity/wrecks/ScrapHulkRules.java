@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Pure rules for the {@link ScrapHulk}: decision 006's assembly (three or more mechanical deaths
+ * Pure rules for the {@link ScrapHulk}: the gated assembly (three or more mechanical deaths
  * within 8 blocks in 10 s; at most one hulk per 64 blocks and four per dimension), the shed-parts
  * stages, and the sweep. No Minecraft types; unit-tested in {@code ScrapHulkRulesTest}.
  */
@@ -114,7 +114,7 @@ public final class ScrapHulkRules {
     }
 
     /**
-     * After {@code CreatureGriefing}: {@code true} spawns the hulk, {@code false} takes the decision 006
+     * After {@code CreatureGriefing}: {@code true} spawns the hulk, {@code false} takes the griefing-denied
      * fallback, which is no hulk (the deaths stay ordinary deaths).
      */
     public static boolean assembles(boolean shouldAssemble, boolean griefingAllowed) {

@@ -61,7 +61,7 @@ public final class PackCoordination {
         }
         AABB box = caller.getBoundingBox().inflate(radius);
         List<T> packMates = caller.level().getEntitiesOfClass(packClass, box,
-                mate -> mate != caller && mate.isAlive() && mate.getTarget() == null);
+                mate -> mate != caller && mate.isAlive() && mate.getTarget() == null && !za.co.neroland.nerocreatures.gallery.GalleryDisplays.isDisplay(mate));
         int recruited = 0;
         for (T mate : packMates) {
             if (recruited >= MAX_PACK_SIZE) {

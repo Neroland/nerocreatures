@@ -10,7 +10,7 @@ import org.jetbrains.annotations.Nullable;
 import za.co.neroland.nerocreatures.registry.ModEntities;
 
 /**
- * The Bloom Sovereign's door into {@link BloomHost}'s forms (decision 001: her spore pods and her
+ * The Bloom Sovereign's door into {@link BloomHost}'s forms (her spore pods and her
  * sporelings are {@code bloom_host} in pod and sporeling form). It lives in this package only to
  * reach {@code becomeSporeling()} and the shared sporeling tally, so her adds count against the same
  * per-dimension sporeling cap as every Bloom Host's.

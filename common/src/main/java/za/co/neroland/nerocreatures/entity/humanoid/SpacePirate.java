@@ -125,8 +125,8 @@ public class SpacePirate extends NeroCreatureEntity implements Enemy, RangedAtta
     private static final String CARRIED_LOOT_KEY = "nerocreatures:carried_loot";
 
     /**
-     * The griefing key for picking up loose contraband (decision 006, {@code ITEM}). Set by the
-     * integrator from {@code NeroCreaturesConfig}; while unset the pirates never pick anything up.
+     * The griefing key for picking up loose contraband ({@code ITEM}). Set at common init
+     * from {@code NeroCreaturesConfig}; while unset the pirates never pick anything up.
      */
     @Nullable
     private static volatile ConfigValue<Boolean> contrabandKey;

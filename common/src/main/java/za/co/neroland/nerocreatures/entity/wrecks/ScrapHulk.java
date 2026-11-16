@@ -3,7 +3,6 @@ package za.co.neroland.nerocreatures.entity.wrecks;
 import java.util.EnumSet;
 import java.util.List;
 
-import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.tags.DamageTypeTags;
@@ -35,6 +34,7 @@ import za.co.neroland.nerocreatures.entity.base.CreatureTier;
 import za.co.neroland.nerocreatures.entity.base.NeroCreatureEntity;
 import za.co.neroland.nerocreatures.entity.visual.VisualPose;
 import za.co.neroland.nerocreatures.registry.ModSounds;
+import za.co.neroland.nerocreatures.registry.ModParticles;
 
 /**
  * <b>Scrap Hulk</b> (wrecks and stations; hostile elite) — a lopsided knuckle-walker built from the
@@ -42,8 +42,7 @@ import za.co.neroland.nerocreatures.registry.ModSounds;
  * no head. An emergent mini-boss.
  *
  * <p><b>Ability: assembly.</b> It is not spawned by a rule: {@link ScrapHulkAssembly} builds one where
- * three or more {@code #nerocreatures:mechanical} creatures die within 8 blocks in 10 s (decision 006,
- * {@code scrapHulkAssembly}, ENTITY, capped one per 64 blocks and four per dimension). It arrives in
+ * three or more {@code #nerocreatures:mechanical} creatures die within 8 blocks in 10 s (* {@code scrapHulkAssembly}, ENTITY, capped one per 64 blocks and four per dimension). It arrives in
  * the {@code ability} pose for {@value ScrapHulkRules#ASSEMBLE_TICKS} ticks (parts fly in), during
  * which it cannot be hurt and does not act.
  *
@@ -142,7 +141,7 @@ public class ScrapHulk extends NeroCreatureEntity implements Enemy {
             }
         }
         ModSounds.SCRAP_HULK_SHED.play(this);
-        level.sendParticles(ParticleTypes.ELECTRIC_SPARK, this.getX(), this.getY() + 1.4D, this.getZ(),
+        level.sendParticles(ModParticles.STATIC_SPARK.get(), this.getX(), this.getY() + 1.4D, this.getZ(),
                 16, 0.6D, 0.6D, 0.6D, 0.1D);
     }
 

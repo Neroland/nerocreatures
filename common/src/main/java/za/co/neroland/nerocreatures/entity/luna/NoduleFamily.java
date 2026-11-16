@@ -1,7 +1,7 @@
 package za.co.neroland.nerocreatures.entity.luna;
 
 /**
- * The eight ore colour families a Lode Tortoise's shell nodules can take (decision 007: synced as
+ * The eight ore colour families a Lode Tortoise's shell nodules can take (synced as
  * the visuals {@code variant}). Each family is matched by the block tag
  * {@code nerocreatures:lode_tortoise/<name>} and yields a vanilla item (nuggets or raw ore).
  *

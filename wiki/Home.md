@@ -34,6 +34,8 @@ drops are deliberately raw materials that other mods spend.
 - [Pets & Drones](Pets-and-Drones.md) — taming, commands, the Terraforming Drone, the ownership
   caps, what is stored about you and how to erase it, and where NeroCreatures stops and
   NeroCompanion starts.
+- [Field Scanner and Bestiary](Field-Scanner-and-Bestiary.md) — scan creatures, the Scanned and Studied tiers,
+  the one-time reward and the Bestiary screen.
 - [Traits](Traits.md) — the two traits every tameable carries, inheritance, and the Radiant morph.
 - [Mounts](Mounts.md) — taming, the Creature Saddle, riding, stamina and panniers.
 - [Habitat Blocks](Habitat-Blocks.md) — Nest, Feeding Trough, Incubator, Lure Beacon, Sonic Ward,

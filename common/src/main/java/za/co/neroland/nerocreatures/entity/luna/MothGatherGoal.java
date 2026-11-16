@@ -10,7 +10,7 @@ import net.minecraft.world.level.LightLayer;
 import za.co.neroland.nerocreatures.entity.ai.shared.CadenceTimer;
 
 /**
- * Wild Lumen Moths gather at light sources after dark (movement only; decision 006 lists no world
+ * Wild Lumen Moths gather at light sources after dark (movement only lists no world
  * change). Every {@value MothRules#GATHER_INTERVAL} ticks an untamed, unleashed moth samples
  * {@value MothRules#GATHER_SAMPLES} random loaded spots within {@value MothRules#GATHER_RADIUS}
  * blocks, reads their block light (one light-engine read each, no block scan), and flutters around

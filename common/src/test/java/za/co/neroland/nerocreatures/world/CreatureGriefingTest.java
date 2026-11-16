@@ -12,7 +12,7 @@ import org.junit.jupiter.api.Test;
 import za.co.neroland.nerocreatures.world.CreatureGriefing.Change;
 
 /**
- * The griefing decision order with a fake platform. Stage 2 ability tests reuse {@link FakeChecks}
+ * The griefing decision order with a fake platform. The per-ability tests reuse {@link FakeChecks}
  * to prove each ability's denied case.
  */
 public class CreatureGriefingTest {

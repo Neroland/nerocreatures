@@ -24,7 +24,7 @@ import net.minecraft.resources.Identifier;
 import za.co.neroland.nerocreatures.data.CreatureOwnershipState;
 import za.co.neroland.nerocreatures.data.OwnedCreature;
 
-/** The companion SPI 0.6 additions (handover companion-spi-0.6): rules, park rows, opt-in data. */
+/** The companion SPI 0.6 additions: rules, park rows, opt-in data. */
 class CompanionSpiTest {
 
     private static final UUID ALICE = UUID.fromString("00000000-0000-4000-8000-000000000001");
@@ -119,7 +119,7 @@ class CompanionSpiTest {
         assertTrue(perch.contains("nerocreatures:lumen_moth"));
         assertTrue(perch.contains("nerocreatures:magnet_crab"));
         assertTrue(perch.contains("nerocreatures:glacite_wisp"));
-        assertFalse(perch.contains("nerocreatures:xertz_forager"), "handover: forager does not perch");
+        assertFalse(perch.contains("nerocreatures:xertz_forager"), "forager does not perch");
         Set<String> fetch = tag("companion_fetch");
         assertTrue(fetch.contains("nerocreatures:lumen_moth"));
         assertTrue(fetch.contains("nerocreatures:magnet_crab"));

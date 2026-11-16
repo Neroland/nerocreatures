@@ -12,7 +12,7 @@ import java.util.List;
  *
  * <p>Crystals are {@code ephemeral_crust[variant=prism, restore=air]} pillars, {@value #PILLAR_HEIGHT}
  * blocks tall, placed into <b>air only</b> through {@code CreatureGriefing.mayAlter} with the
- * {@code bossArenaBlocks} key (decision 006). They drop nothing, any player can break them, and each
+ * {@code bossArenaBlocks} key. They drop nothing, any player can break them, and each
  * one reverts to air by itself after {@value #DECAY_TICKS} ticks. Every crystal the boss still owns
  * is reverted when the fight ends (death or discard). Caps, always on:
  *

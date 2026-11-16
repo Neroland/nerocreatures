@@ -1,0 +1,34 @@
+{
+  "title": "quest.nerocreatures.menagerie.survey_mars.title",
+  "description": "quest.nerocreatures.menagerie.survey_mars.desc",
+  "icon": "nerocreatures:charged_sand",
+  "prerequisites": [
+    "nerocreatures:menagerie/field_scanner"
+  ],
+  "objectives": [
+    {
+      "type": "neroquests:gate_open",
+      "gate": "nerocreatures:bestiary/scanned/dune_loper"
+    },
+    {
+      "type": "neroquests:gate_open",
+      "gate": "nerocreatures:bestiary/scanned/strata_hound"
+    },
+    {
+      "type": "neroquests:gate_open",
+      "gate": "nerocreatures:bestiary/scanned/dust_devil"
+    }
+  ],
+  "rewards": [
+    {
+      "type": "neroquests:xp",
+      "amount": 80
+    },
+    {
+      "type": "neroquests:currency",
+      "amount": 60
+    }
+  ],
+  "scope": "player",
+  "visible_gate": "nerolandcore:reached_orbit"
+}

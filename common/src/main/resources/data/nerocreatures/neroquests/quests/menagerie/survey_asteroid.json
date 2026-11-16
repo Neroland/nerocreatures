@@ -1,0 +1,30 @@
+{
+  "title": "quest.nerocreatures.menagerie.survey_asteroid.title",
+  "description": "quest.nerocreatures.menagerie.survey_asteroid.desc",
+  "icon": "nerocreatures:graviton_node",
+  "prerequisites": [
+    "nerocreatures:menagerie/field_scanner"
+  ],
+  "objectives": [
+    {
+      "type": "neroquests:gate_open",
+      "gate": "nerocreatures:bestiary/scanned/magnet_crab"
+    },
+    {
+      "type": "neroquests:gate_open",
+      "gate": "nerocreatures:bestiary/scanned/gravity_leech"
+    }
+  ],
+  "rewards": [
+    {
+      "type": "neroquests:xp",
+      "amount": 80
+    },
+    {
+      "type": "neroquests:currency",
+      "amount": 60
+    }
+  ],
+  "scope": "player",
+  "visible_gate": "nerolandcore:reached_orbit"
+}

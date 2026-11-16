@@ -12,7 +12,7 @@ import za.co.neroland.nerocreatures.entity.greenxertz.Mossback;
 import za.co.neroland.nerocreatures.entity.luna.LodeTortoise;
 import za.co.neroland.nerocreatures.entity.nyxara.PrismStag;
 
-/** Stage 2 review M1: livestock a player keeps or bred never despawns and is never wild prey. */
+/** Husbandry: livestock a player keeps or bred never despawns and is never wild prey. */
 class HusbandryRulesTest {
 
     /** Every livestock species, so each gets the husbandry flag from the shared root. */

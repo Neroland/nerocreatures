@@ -21,7 +21,7 @@ import za.co.neroland.nerocreatures.entity.mars.DustDevil;
 import za.co.neroland.nerocreatures.entity.wrecks.CacheMimic;
 
 /**
- * The Field Scanner's ray (decision 010 section 1): from the eye along the look vector, 8 blocks,
+ * The Field Scanner's ray: from the eye along the look vector, 8 blocks,
  * entity boxes inflated by 0.3, blocks stop it. The server runs it to decide; the client runs the
  * same code only to draw the HUD. A hidden creature (burrowed, lurking, posing as a crate, spinning
  * up, invisible) is skipped as if nothing were there, so the scanner never works as a detector.

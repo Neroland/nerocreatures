@@ -5,7 +5,6 @@ import java.util.Locale;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.regex.Pattern;
 
 import org.apache.logging.log4j.LogManager;
 
@@ -80,10 +79,6 @@ public final class NeroCreaturesTelemetry {
 
     /** Cap on how many mod ids are attached as crash context (payload bound). */
     private static final int MAX_MODS_REPORTED = 300;
-
-    /** Masks OS-account names in Windows/macOS/Linux home-directory paths. */
-    private static final Pattern USER_PATH =
-            Pattern.compile("(?i)(?:[A-Z]:)?[/\\\\](?:Users|home)[/\\\\][^/\\\\\\s:;,'\"]+");
 
     private static volatile boolean active;
     private static final AtomicInteger eventsSent = new AtomicInteger();
@@ -336,29 +331,44 @@ public final class NeroCreaturesTelemetry {
         if (!active || t == null || !touchesNeroCreatures(t)) {
             return;
         }
-        Sentry.withScope(scope -> {
+        String safeSource = scrub(String.valueOf(source));
+        String safeOperation = scrub(String.valueOf(operation));
+        // The (Throwable, ScopeCallback) overload: tags set inside Sentry.withScope do not reach the
+        // event on Sentry Java 8.x. A guard caught this failure, so it is a warning, not a crash.
+        Sentry.captureException(t, scope -> {
+            scope.setLevel(SentryLevel.WARNING);
             scope.setTag("handled", "true");
-            scope.setTag("source", source);
-            scope.setExtra("operation", operation);
-            Sentry.captureException(t);
+            scope.setTag("source", safeSource);
+            scope.setExtra("operation", safeOperation);
+            scope.setFingerprint(List.of("nerocreatures-handled", safeSource, safeOperation));
         });
     }
 
-    /** Capture a (scrubbed, truncated) FATAL log line that names NeroCreatures without a throwable. */
-    static void captureMessage(String message) {
+    /**
+     * Capture a FATAL log line that names NeroCreatures without a throwable. The line itself is never
+     * sent: on Forge/NeoForge it can be crash-report text with player and level sections, so the event
+     * carries a fixed message and the logger name only (POPIA/GDPR).
+     */
+    static void captureFatalLine(String loggerName) {
         if (!active) {
             return;
-        }
-        String scrubbed = scrub(message);
-        if (scrubbed.length() > 4000) {
-            scrubbed = scrubbed.substring(0, 4000) + "…[truncated]";
         }
         SentryEvent event = new SentryEvent();
         event.setLevel(SentryLevel.FATAL);
         Message msg = new Message();
-        msg.setFormatted(scrubbed);
+        msg.setFormatted(fatalLineMessage(loggerName));
         event.setMessage(msg);
         Sentry.captureEvent(event);
+    }
+
+    /** The fixed text sent for a FATAL log line: the logger name, never the line. */
+    static String fatalLineMessage(String loggerName) {
+        String logger = loggerName == null || loggerName.isBlank() ? "unknown" : scrub(loggerName);
+        if (logger.length() > 200) {
+            logger = logger.substring(0, 200);
+        }
+        return "FATAL log line mentioning " + PACKAGE_MARKER + " from logger '" + logger
+                + "' (text withheld for privacy)";
     }
 
     /**
@@ -456,8 +466,8 @@ public final class NeroCreaturesTelemetry {
         return sb.toString();
     }
 
-    /** Replaces home-directory paths (which contain the OS account name) with a neutral marker. */
+    /** Removes personal data from free text; see {@link TelemetryScrubber}. */
     static String scrub(String text) {
-        return USER_PATH.matcher(text).replaceAll("/~");
+        return TelemetryScrubber.scrub(text);
     }
 }

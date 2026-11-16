@@ -45,13 +45,13 @@ import za.co.neroland.nerocreatures.registry.ModSounds;
  * The Incubator's one egg, its progress and its incubation id (rules: {@link IncubatorRules}).
  *
  * <ul>
- *   <li><b>Egg row</b> (decision 004): inserting writes a cap-checked {@code egg} row for the inserting
+ *   <li><b>Egg row</b>: inserting writes a cap-checked {@code egg} row for the inserting
  *       player, keyed by a random incubation id. The block entity keeps only that id, never the player.
  *       Hatching, taking the egg out or breaking the block removes the row by id.</li>
  *   <li><b>Power</b> is pulled, never pushed: each pulse asks every adjacent block for Nero energy through
  *       Core's {@link EnergyLookup}. No storage, no power mod, or a lookup that fails all mean the plain
  *       unpowered rate.</li>
- *   <li><b>Hatchling</b> (decision 003): an untamed baby with the egg's traits; a tameable species is
+ *   <li><b>Hatchling</b>: an untamed baby with the egg's traits; a tameable species is
  *       flagged so its first feed tames it at 100% through the normal cap-checked path; livestock is born
  *       husbanded.</li>
  * </ul>
@@ -64,7 +64,7 @@ public class IncubatorBlockEntity extends HabitatBlockEntity implements HabitatD
     public static final TagKey<Item> EGGS =
             TagKey.create(Registries.ITEM, Identifier.fromNamespaceAndPath(NeroCreaturesCommon.MOD_ID, "creature_eggs"));
 
-    /** Called when an egg hatches, before its row is removed (Stage 8's {@code egg_hatched} event reads it). */
+    /** Called when an egg hatches, before its row is removed (the {@code egg_hatched} link event reads it). */
     @FunctionalInterface
     public interface HatchListener {
         void hatched(ServerLevel level, UUID incubation, Identifier species);
@@ -105,6 +105,40 @@ public class IncubatorBlockEntity extends HabitatBlockEntity implements HabitatD
 
     public static void bindHatchListener(@Nullable HatchListener listener) {
         hatchListener = listener;
+    }
+
+    /**
+     * Occupied incubators that are loaded right now, by incubation id: what lets the companion app
+     * show an egg timer "only while the Incubator is loaded" without the egg row holding a position.
+     * Memory only; an entry leaves when the egg hatches or comes out, or the block is unloaded.
+     */
+    private static final java.util.Map<UUID, IncubatorBlockEntity> LOADED = new java.util.HashMap<>();
+
+    /**
+     * Seconds until the egg with this incubation id hatches at the unpowered rate (the worst case), or
+     * empty when its incubator is not loaded. Server thread only.
+     */
+    public static java.util.OptionalLong hatchSecondsLeft(UUID incubation) {
+        IncubatorBlockEntity incubator = LOADED.get(incubation);
+        if (incubator == null || incubator.isRemoved() || !incubation.equals(incubator.incubation)) {
+            if (incubator != null) {
+                LOADED.remove(incubation);
+            }
+            return java.util.OptionalLong.empty();
+        }
+        return java.util.OptionalLong.of(IncubatorRules.secondsLeft(incubator.progress, hatchTicks.getAsInt()));
+    }
+
+    private void forgetLoaded() {
+        if (this.incubation != null) {
+            LOADED.remove(this.incubation, this);
+        }
+    }
+
+    @Override
+    public void setRemoved() {
+        this.forgetLoaded();
+        super.setRemoved();
     }
 
     public boolean occupied() {
@@ -179,6 +213,9 @@ public class IncubatorBlockEntity extends HabitatBlockEntity implements HabitatD
             IncubatorBlock.setPowered(level, pos, state, false);
             return;
         }
+        if (this.incubation != null && this.pulse == 0) {
+            LOADED.put(this.incubation, this);
+        }
         if (++this.pulse < IncubatorRules.PULSE_TICKS) {
             return;
         }
@@ -244,8 +281,11 @@ public class IncubatorBlockEntity extends HabitatBlockEntity implements HabitatD
         ModSounds.INCUBATOR_HATCH.play(level, pos, SoundSource.BLOCKS);
         if (this.incubation != null) {
             // Bestiary: the player whose ownership row held the egg hatched it (no identity on the block).
-            za.co.neroland.nerocreatures.bestiary.BestiaryProgress.noteHatch(level.getServer(),
-                    CreatureOwnershipState.get(level.getServer()).ownerOfRow(this.incubation), entity.getType());
+            UUID owner = CreatureOwnershipState.get(level.getServer()).ownerOfRow(this.incubation);
+            za.co.neroland.nerocreatures.bestiary.BestiaryProgress.noteHatch(level.getServer(), owner,
+                    entity.getType());
+            // Companion app: "A <species> egg has hatched." to that player only, before the row goes.
+            za.co.neroland.nerocreatures.link.CreatureLinkEvents.eggHatched(level, owner, entity.getType());
         }
         HatchListener listener = hatchListener;
         if (listener != null && this.incubation != null) {
@@ -266,6 +306,7 @@ public class IncubatorBlockEntity extends HabitatBlockEntity implements HabitatD
     }
 
     private void releaseRow(ServerLevel level) {
+        this.forgetLoaded();
         if (this.incubation != null) {
             CreatureOwnershipState.get(level.getServer()).removeRow(this.incubation);
             this.incubation = null;
@@ -273,6 +314,7 @@ public class IncubatorBlockEntity extends HabitatBlockEntity implements HabitatD
     }
 
     private void clear() {
+        this.forgetLoaded();
         this.egg = ItemStack.EMPTY;
         this.progress = 0L;
         this.incubation = null;

@@ -20,7 +20,7 @@ import net.minecraft.nbt.Tag;
 import net.minecraft.resources.Identifier;
 
 /**
- * Decision 004: a 0.4.x ownership save (no {@code schema}, no {@code kind} on pet rows) loads
+ * A 0.4.x ownership save (no {@code schema}, no {@code kind} on pet rows) loads
  * unchanged; mount and egg rows round-trip; pet and drone rows keep their 0.4.x shape on disk; caps
  * are per kind; erasure and export cover the new kinds.
  */

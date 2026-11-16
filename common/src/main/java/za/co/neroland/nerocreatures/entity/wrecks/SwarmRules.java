@@ -2,7 +2,7 @@ package za.co.neroland.nerocreatures.entity.wrecks;
 
 /**
  * Pure rules for the {@link StaticSwarm} and its bottled form, the {@code static_jar}: the drain pulse
- * and its caps, the bottling threshold, the overworld storm rule (decision 005), and the thrown
+ * and its caps, the bottling threshold, the overworld storm rule, and the thrown
  * jar's arc and burst caps. No Minecraft types; unit-tested in {@code SwarmRulesTest}.
  */
 public final class SwarmRules {
@@ -34,7 +34,7 @@ public final class SwarmRules {
     /** A swarm can be bottled once it is at or below this fraction of its health. */
     public static final float BOTTLE_HEALTH_FRACTION = 0.5F;
 
-    // --- overworld (decision 005) -----------------------------------------------------------
+    // --- overworld -----------------------------------------------------------
 
     /** How often an overworld swarm checks the storm and the light. */
     public static final int STORM_CHECK_TICKS = 20;
@@ -98,14 +98,14 @@ public final class SwarmRules {
     }
 
     /**
-     * Decision 005: an overworld swarm discards itself once the thunderstorm ends, unless it is in a
+     * An overworld swarm discards itself once the thunderstorm ends, unless it is in a
      * station or wreck habitat. Outside the overworld it never does.
      */
     public static boolean vanishes(boolean overworld, boolean thundering, boolean wreckHabitat) {
         return overworld && !thundering && !wreckHabitat;
     }
 
-    /** Decision 005: in the overworld the swarm is a storm nuisance and never enters block light 10+. */
+    /** In the overworld the swarm is a storm nuisance and never enters block light 10+. */
     public static boolean tooBright(boolean overworld, int blockLight) {
         return overworld && blockLight >= OVERWORLD_LIGHT_LIMIT;
     }

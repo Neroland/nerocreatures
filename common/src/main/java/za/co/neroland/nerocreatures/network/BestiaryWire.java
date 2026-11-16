@@ -9,7 +9,7 @@ import io.netty.handler.codec.EncoderException;
 /**
  * The small wire helpers the Bestiary payloads share: var-ints and a byte-bounded species path.
  * Written here rather than through {@code ByteBufCodecs} so the 32-byte limit is enforced in
- * <b>bytes</b> on both sides, exactly as decision 010 section 9 states.
+ * <b>bytes</b> on both sides, by design.
  */
 final class BestiaryWire {
 

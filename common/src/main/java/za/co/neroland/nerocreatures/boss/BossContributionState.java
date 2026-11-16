@@ -98,6 +98,9 @@ public final class BossContributionState extends SavedData {
      */
     private static volatile MinecraftServer prunedFor;
 
+    /** When the retention sweep last ran for {@link #prunedFor}, so a long-running server re-sweeps daily. */
+    private static volatile long prunedAt;
+
     /** One player's slice of one fight. */
     public record Share(UUID player, float damage, float fraction) {
     }
@@ -127,8 +130,11 @@ public final class BossContributionState extends SavedData {
     public static BossContributionState get(MinecraftServer server) {
         BossContributionState state = SavedDataRecovery.get(
                 server.overworld(), TYPE, BossContributionState::new, NAME);
-        if (prunedFor != server) {
-            prunedFor = server; // set first: pruning must never re-enter this sweep
+        long now = clock.getAsLong();
+        if (prunedFor != server || now - prunedAt >= MILLIS_PER_DAY) {
+            // Set first: pruning must never re-enter this sweep. Re-run daily on a long-running server.
+            prunedFor = server;
+            prunedAt = now;
             state.pruneStaleFights();
             CreatureData.applyContributionRetention(state);
             // The sweep purged rows after Core's get() refreshed the backup; push the purge into it.
@@ -214,11 +220,19 @@ public final class BossContributionState extends SavedData {
         return List.copyOf(shares);
     }
 
-    /** Drops a fight without paying anything out — a boss that left the world unbeaten. */
-    public void discard(UUID fight) {
-        if (this.fights.remove(fight) != null) {
-            this.setDirty();
+    /**
+     * Drops a fight without paying anything out — a boss that left the world unbeaten.
+     *
+     * @return the players who were in it (the summoner included), so each can be told on their own
+     *         that the fight ended; empty if the fight was never recorded
+     */
+    public List<UUID> discard(UUID fight) {
+        Fight row = this.fights.remove(fight);
+        if (row == null) {
+            return List.of();
         }
+        this.setDirty();
+        return List.copyOf(row.damage.keySet());
     }
 
     /** A player's live contribution to a fight, or {@code 0} if they are not in it. */
@@ -258,6 +272,19 @@ public final class BossContributionState extends SavedData {
      * How many players are recorded in a fight. A <b>count</b>, never a list: the link module uses
      * it to say "you and two others", which needs no identities at all.
      */
+    /** Whether this store holds anything at all for the player: a share in any fight or a retention stamp. */
+    public boolean knowsPlayer(UUID player) {
+        if (this.lastUpdated.containsKey(player)) {
+            return true;
+        }
+        for (Fight row : this.fights.values()) {
+            if (row.damage.containsKey(player)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public int participantCount(UUID fight) {
         Fight row = this.fights.get(fight);
         return row == null ? 0 : row.damage.size();

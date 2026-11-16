@@ -17,7 +17,7 @@ import za.co.neroland.nerocreatures.registry.ModItems;
 import za.co.neroland.nerocreatures.registry.ModSounds;
 
 /**
- * The Field Scanner's HUD indicator (decision 010 section 2): a reticle, up to two lines of text
+ * The Field Scanner's HUD indicator: a reticle, up to two lines of text
  * and the scan bar, laid out in GUI pixels around the crosshair so it is the same at every GUI
  * scale. The client runs the same ray and tick rule as the server only to draw the bar; it never
  * decides a result.
@@ -71,7 +71,7 @@ public final class ScannerHud {
         int before = PROGRESS.ticks();
         ScanProgress.Step step = PROGRESS.tick(mc.level.getGameTime(), target.entityId());
         if (step == ScanProgress.Step.PROGRESS && PROGRESS.ticks() != before && PROGRESS.ticks() % 8 == 0) {
-            float pitch = 0.8F + 0.6F * PROGRESS.ticks() / (float) BestiaryRules.SCAN_TICKS;
+            float pitch = 0.8F + 0.6F * PROGRESS.ticks() / BestiaryRules.SCAN_TICKS;
             player.playSound(ModSounds.FIELD_SCANNER_SCAN.get(), 0.25F, pitch);
         }
     }

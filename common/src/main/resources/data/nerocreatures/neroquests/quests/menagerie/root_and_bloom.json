@@ -1,0 +1,26 @@
+{
+  "title": "quest.nerocreatures.menagerie.root_and_bloom.title",
+  "description": "quest.nerocreatures.menagerie.root_and_bloom.desc",
+  "icon": "nerocreatures:sovereign_seed",
+  "prerequisites": [
+    "nerocreatures:menagerie/survey_greenxertz"
+  ],
+  "objectives": [
+    {
+      "type": "neroquests:kill_entity",
+      "entity": "nerocreatures:bloom_sovereign"
+    }
+  ],
+  "rewards": [
+    {
+      "type": "neroquests:xp",
+      "amount": 300
+    },
+    {
+      "type": "neroquests:currency",
+      "amount": 500
+    }
+  ],
+  "scope": "player",
+  "visible_gate": "nerolandcore:reached_orbit"
+}

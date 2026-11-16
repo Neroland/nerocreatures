@@ -6,7 +6,6 @@ import java.util.List;
 import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
@@ -43,12 +42,13 @@ import za.co.neroland.nerocreatures.entity.tame.TameableCreature;
 import za.co.neroland.nerocreatures.entity.visual.VisualPose;
 import za.co.neroland.nerocreatures.world.CreatureGriefing;
 import za.co.neroland.nerocreatures.registry.ModSounds;
+import za.co.neroland.nerocreatures.registry.ModParticles;
 
 /**
  * <b>Spore Drifter</b> (Greenxertz, ambient, tameable) — a translucent umbrella canopy with six
  * hanging tendrils that floats over crops.
  *
- * <h2>Ability: growth ticks (decision 006, key {@code sporeDrifterGrowth})</h2>
+ * <h2>Ability: growth ticks (key {@code sporeDrifterGrowth})</h2>
  *
  * <p>Every {@value DrifterRules#GROWTH_INTERVAL} ticks (stretched by {@link DrifterRules#interval}
  * when other drifters share the area) an adult picks one column of the 3 x 3 below it and looks down
@@ -63,7 +63,7 @@ import za.co.neroland.nerocreatures.registry.ModSounds;
  * <p>A glass bottle on an adult gives one {@code drifter_spores} (bone-meal-like fertiliser), then it
  * refills for 5 minutes (saved). Wild: anyone; tamed: its owner only.
  *
- * <p>Tamed with bone meal, breeds from bone meal into a spore-pod egg (decision 003). Perch on a
+ * <p>Tamed with bone meal, breeds from bone meal into a spore-pod egg. Perch on a
  * lead or sitting is the held {@code rest} pose. No player identity is stored or logged.
  */
 public class SporeDrifter extends TameableCreature
@@ -187,7 +187,7 @@ public class SporeDrifter extends TameableCreature
             BlockState state = level.getBlockState(crop);
             if (state.is(BlockTags.CROPS)) {
                 state.randomTick(level, crop, this.random);
-                level.sendParticles(ParticleTypes.HAPPY_VILLAGER, crop.getX() + 0.5D, crop.getY() + 0.5D,
+                level.sendParticles(ModParticles.SPORE_PUFF.get(), crop.getX() + 0.5D, crop.getY() + 0.5D,
                         crop.getZ() + 0.5D, 4, 0.3D, 0.2D, 0.3D, 0.0D);
             }
         }
@@ -212,14 +212,14 @@ public class SporeDrifter extends TameableCreature
         return null;
     }
 
-    /** The falling spore strand from canopy to crop (decision 007 readability fix). */
+    /** The falling spore strand from canopy to crop (so the link reads at a glance). */
     private void strand(ServerLevel level, BlockPos crop) {
         double top = this.getY();
         double bottom = crop.getY() + 1.0D;
         int points = (int) Math.max(1, Math.min(8, top - bottom));
         for (int i = 0; i < points; i++) {
             double y = top - (top - bottom) * i / points;
-            level.sendParticles(ParticleTypes.FALLING_SPORE_BLOSSOM, crop.getX() + 0.5D, y, crop.getZ() + 0.5D,
+            level.sendParticles(ModParticles.SPORE_MOTE.get(), crop.getX() + 0.5D, y, crop.getZ() + 0.5D,
                     1, 0.05D, 0.0D, 0.05D, 0.0D);
         }
     }
@@ -239,6 +239,10 @@ public class SporeDrifter extends TameableCreature
 
     @Override
     public InteractionResult mobInteract(Player player, InteractionHand hand) {
+        // A gallery display does nothing (a paddock mount may be ridden by a creative player).
+        if (za.co.neroland.nerocreatures.gallery.GalleryDisplays.isDisplay(this)) {
+            return za.co.neroland.nerocreatures.gallery.GalleryDisplays.interact(this, player, hand);
+        }
         ItemStack held = player.getItemInHand(hand);
         if (!held.is(Items.GLASS_BOTTLE)) {
             return super.mobInteract(player, hand);
@@ -254,7 +258,7 @@ public class SporeDrifter extends TameableCreature
         player.setItemInHand(hand, ItemUtils.createFilledResult(held, player, new ItemStack(spores)));
         this.bottleReadyAt = DrifterRules.nextBottle(level.getGameTime());
         level.playSound(null, this.blockPosition(), SoundEvents.BOTTLE_FILL, SoundSource.NEUTRAL, 1.0F, 1.2F);
-        level.sendParticles(ParticleTypes.SPORE_BLOSSOM_AIR, this.getX(), this.getY() + 0.4D, this.getZ(),
+        level.sendParticles(ModParticles.SPORE_MOTE.get(), this.getX(), this.getY() + 0.4D, this.getZ(),
                 8, 0.3D, 0.2D, 0.3D, 0.0D);
         return InteractionResult.SUCCESS_SERVER;
     }

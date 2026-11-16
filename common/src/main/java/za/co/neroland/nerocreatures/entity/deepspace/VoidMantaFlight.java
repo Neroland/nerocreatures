@@ -44,7 +44,7 @@ public final class VoidMantaFlight {
     /** Fastest airborne sink while gliding (blocks per tick). */
     public static final double GLIDE_SINK = 0.12D;
 
-    /** The longest blink (blocks), decision 004. */
+    /** The longest blink (blocks). */
     public static final double BLINK_DISTANCE = 8.0D;
 
     /** A blink shorter than this fizzles (blocks). */

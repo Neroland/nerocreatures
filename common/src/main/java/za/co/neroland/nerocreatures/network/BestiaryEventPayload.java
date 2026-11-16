@@ -9,7 +9,7 @@ import net.minecraft.resources.Identifier;
 import za.co.neroland.nerocreatures.NeroCreaturesCommon;
 
 /**
- * Server &rarr; client, to the player it is about only (decision 010 section 9.3): a scan result or
+ * Server &rarr; client, to the player it is about only: a scan result or
  * a newly opened tier. Carries a species registry path and nothing about any player.
  */
 public record BestiaryEventPayload(int schema, Kind kind, String species) implements CustomPacketPayload {

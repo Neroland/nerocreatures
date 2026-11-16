@@ -32,7 +32,7 @@ import za.co.neroland.nerolandcore.registry.BlockCodecs;
 import za.co.neroland.nerocreatures.NeroCreaturesCommon;
 
 /**
- * Incubator: holds one egg and hatches it (decision 003). Use an egg on it to put it in; use it with an
+ * Incubator: holds one egg and hatches it. Use an egg on it to put it in; use it with an
  * empty hand to see how long is left; sneak-use with an empty hand to take the egg back out. No menu: the
  * egg goes straight from the hand into the block, so there is nothing to duplicate. Faster with power
  * from an adjacent Core energy storage; works with none.
@@ -65,7 +65,7 @@ public class IncubatorBlock extends HabitatBlock {
         }
     }
 
-    /** Registration properties without the id (the integrator adds {@code .setId(key)}). */
+    /** Registration properties without the id (registration adds {@code .setId(key)}). */
     public static BlockBehaviour.Properties incubatorProperties() {
         return BlockBehaviour.Properties.of().mapColor(MapColor.METAL).strength(3.0F, 6.0F).sound(SoundType.COPPER)
                 .requiresCorrectToolForDrops().noOcclusion()

@@ -38,7 +38,7 @@ import za.co.neroland.nerocreatures.platform.Services;
 import za.co.neroland.nerocreatures.progression.CreatureMilestones;
 
 /**
- * The one owner of the Bestiary gate ids (decision 002): {@code nerocreatures:bestiary/scanned/<id>}
+ * The one owner of the Bestiary gate ids: {@code nerocreatures:bestiary/scanned/<id>}
  * and {@code nerocreatures:bestiary/studied/<id>}, both player-scope Neroland Core record gates.
  * Nothing else opens them.
  *
@@ -90,11 +90,12 @@ public final class BestiaryProgress {
         return BestiaryCatalog.get(key.getPath());
     }
 
+    /** Delegates to the one gallery predicate, {@code gallery/GalleryDisplays#isDisplay}. */
     public static boolean isGallery(Entity entity) {
-        return entity.getTags().contains(GALLERY_TAG);
+        return za.co.neroland.nerocreatures.gallery.GalleryDisplays.isDisplay(entity);
     }
 
-    /** The kill goal or 1, from the species row (decision 002 / 003). */
+    /** The kill goal or 1, from the species row. */
     public static int goal(Entry entry) {
         SpeciesProfile profile = SpeciesProfiles.of(entry.id());
         int explicit = profile == SpeciesProfile.DEFAULT ? 0 : profile.studiedThreshold();
@@ -240,12 +241,13 @@ public final class BestiaryProgress {
         if (server == null || !ProgressionGates.isOpen(server, player, scannedGate(entry.id()))) {
             return false;
         }
-        if (!ProgressionGates.open(server, player, studiedGate(entry.id()))) {
+        int reward = BestiaryRules.rewardFor(ProgressionGates.open(server, player, studiedGate(entry.id())), entry.kind());
+        if (reward == 0) {
             return false;
         }
         ServerPlayer online = server.getPlayerList().getPlayer(player);
         if (online != null) {
-            online.giveExperiencePoints(BestiaryRules.rewardXp(entry.kind()));
+            online.giveExperiencePoints(reward);
             send(online, BestiaryEventPayload.Kind.STUDIED, entry.id());
         }
         return true;
@@ -255,7 +257,8 @@ public final class BestiaryProgress {
 
     /** The vanilla kill statistic for one species, read only. */
     public static long kills(ServerPlayer player, Entry entry) {
-        Optional<EntityType<?>> type = EntityType.byString(NeroCreaturesCommon.MOD_ID + ":" + entry.id());
+        Optional<EntityType<?>> type = net.minecraft.core.registries.BuiltInRegistries.ENTITY_TYPE.getOptional(
+                Identifier.fromNamespaceAndPath(NeroCreaturesCommon.MOD_ID, entry.id()));
         if (type.isEmpty()) {
             return 0L;
         }
@@ -280,16 +283,49 @@ public final class BestiaryProgress {
     /** The counts payload for one player: only that player's own data, only scanned species. */
     public static BestiaryCountsPayload counts(ServerPlayer player) {
         MinecraftServer server = player.level().getServer();
+        UUID id = player.getUUID();
+        return buildCounts(new PlayerData() {
+            @Override
+            public Tier tier(Entry entry) {
+                return BestiaryProgress.tier(server, id, entry.id());
+            }
+
+            @Override
+            public long kills(Entry entry) {
+                return BestiaryProgress.kills(player, entry);
+            }
+
+            @Override
+            public int owned(Entry entry) {
+                return BestiaryProgress.owned(server, id, entry);
+            }
+        }, BestiaryProgress::goal);
+    }
+
+    /** One player's own data, as the counts payload reads it. Every lookup is for that player only. */
+    interface PlayerData {
+        Tier tier(Entry entry);
+
+        long kills(Entry entry);
+
+        int owned(Entry entry);
+    }
+
+    /**
+     * Builds the payload from one player's lookups. Pure, so the "only the asking player's data"
+     * rule is tested without a server: nothing here can reach any other player.
+     */
+    static BestiaryCountsPayload buildCounts(PlayerData data, java.util.function.ToIntFunction<Entry> goals) {
         List<BestiaryCountsPayload.Entry> out = new ArrayList<>();
         for (Entry entry : BestiaryCatalog.entries()) {
-            Tier tier = tier(server, player.getUUID(), entry.id());
+            Tier tier = data.tier(entry);
             if (tier == Tier.NONE) {
                 continue;
             }
             StudyKind study = BestiaryRules.studyKind(entry.kind());
-            int goal = goal(entry);
-            long kills = kills(player, entry);
-            int owned = entry.ownable() ? owned(server, player.getUUID(), entry) : 0;
+            int goal = goals.applyAsInt(entry);
+            long kills = data.kills(entry);
+            int owned = entry.ownable() ? data.owned(entry) : 0;
             int tracked = BestiaryCountsPayload.TRACK_KILLS | (entry.ownable() ? BestiaryCountsPayload.TRACK_OWNED : 0);
             out.add(new BestiaryCountsPayload.Entry(entry.id(), tier.wire(), study.wire(),
                     BestiaryRules.progress(study, goal, kills, tier == Tier.STUDIED), goal, tracked,

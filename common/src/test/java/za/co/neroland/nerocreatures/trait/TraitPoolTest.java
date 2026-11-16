@@ -11,7 +11,7 @@ import com.google.gson.JsonParser;
 
 import org.junit.jupiter.api.Test;
 
-/** Decision 003: the jar-bundled pool parses, matches the built-in defaults and rejects bad data. */
+/** The jar-bundled pool parses, matches the built-in defaults and rejects bad data. */
 class TraitPoolTest {
 
     @Test

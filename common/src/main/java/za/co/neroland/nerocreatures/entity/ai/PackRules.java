@@ -1,7 +1,7 @@
 package za.co.neroland.nerocreatures.entity.ai;
 
 /**
- * Pure pack rules for the Lunar Stalker polish (AUDIT 0.5.0 section 2): the howl on a shared target
+ * Pure pack rules for the Lunar Stalker polish : the howl on a shared target
  * and the last survivor's retreat. Unit-tested ({@code PackRulesTest}).
  */
 public final class PackRules {

@@ -1,7 +1,6 @@
 package za.co.neroland.nerocreatures.entity.hostile;
 
 import net.minecraft.core.Holder;
-import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.util.Mth;
@@ -30,6 +29,7 @@ import za.co.neroland.nerocreatures.entity.base.CreatureTier;
 import za.co.neroland.nerocreatures.entity.base.NeroCreatureEntity;
 import za.co.neroland.nerocreatures.registry.ModEntities;
 import za.co.neroland.nerocreatures.registry.ModSounds;
+import za.co.neroland.nerocreatures.registry.ModParticles;
 
 /**
  * <b>Plasma Slime</b> — a charged blob that punishes standing next to it and refuses to die once.
@@ -163,7 +163,7 @@ public class PlasmaSlime extends NeroCreatureEntity implements Enemy {
             SplitOnDamageBehaviour.split(level, this, ModEntities.PLASMA_SLIME.get(),
                     this.size, CHILDREN_PER_SPLIT,
                     (child, childSize) -> child.setSize(childSize));
-            level.sendParticles(ParticleTypes.ELECTRIC_SPARK, this.getX(),
+            level.sendParticles(ModParticles.STATIC_SPARK.get(), this.getX(),
                     this.getY() + this.getBbHeight() * 0.5D, this.getZ(), 16, 0.4D, 0.3D, 0.4D, 0.05D);
         }
     }

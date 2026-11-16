@@ -7,7 +7,6 @@ import java.util.Objects;
 import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
@@ -53,11 +52,12 @@ import za.co.neroland.nerocreatures.trait.TraitEffects;
 import za.co.neroland.nerocreatures.trait.TraitPool;
 import za.co.neroland.nerocreatures.world.CreatureGriefing;
 import za.co.neroland.nerocreatures.registry.ModSounds;
+import za.co.neroland.nerocreatures.registry.ModParticles;
 
 /**
  * <b>Lumen Moth</b> (Luna, tameable) — a living lantern.
  *
- * <h2>Ability: living lantern (decision 006, key {@code lumenMothLight})</h2>
+ * <h2>Ability: living lantern (key {@code lumenMothLight})</h2>
  *
  * <p>A tamed moth following its owner keeps <b>one</b> {@code minecraft:light} block (level 12) lit
  * in the air at its owner's head (else feet, else the moth's own block) while it is dark there. The
@@ -78,8 +78,8 @@ import za.co.neroland.nerocreatures.registry.ModSounds;
  *
  * <p>Wild moths gather at light after dark ({@link MothGatherGoal}), flee predators as prey
  * ({@code #nerocreatures:prey/moths}; Echo Shrikes hunt them), and in the overworld despawn in
- * daylight with no player within 32 blocks (decision 005). Perch / sit is the held {@code rest}
- * pose. Breeds from glow berries into an egg (decision 003).
+ * daylight with no player within 32 blocks. Perch / sit is the held {@code rest}
+ * pose. Breeds from glow berries into an egg.
  *
  * <p>No player identity is stored or logged; ownership is vanilla's owner field.
  */
@@ -318,7 +318,7 @@ public class LumenMoth extends TameableCreature implements HerdMember
         }
         if (this.lanternDenied) {
             owner.addEffect(new MobEffectInstance(MobEffects.NIGHT_VISION, NIGHT_VISION_TICKS, 0, true, false, true));
-            level.sendParticles(ParticleTypes.GLOW, this.getX(), this.getY() + 0.3D, this.getZ(),
+            level.sendParticles(ModParticles.LUMEN_MOTE.get(), this.getX(), this.getY() + 0.3D, this.getZ(),
                     6, 0.4D, 0.3D, 0.4D, 0.0D);
         }
     }
@@ -361,7 +361,7 @@ public class LumenMoth extends TameableCreature implements HerdMember
         return this.alarmThreat;
     }
 
-    // --- sounds (mapped vanilla until Stage 5 ships the family set) ---------------
+    // --- sounds ---------------
 
     @Override
     @Nullable

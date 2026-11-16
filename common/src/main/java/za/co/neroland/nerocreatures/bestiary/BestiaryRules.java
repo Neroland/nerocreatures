@@ -3,13 +3,13 @@ package za.co.neroland.nerocreatures.bestiary;
 import za.co.neroland.nerocreatures.bestiary.BestiaryCatalog.Kind;
 
 /**
- * The pure Bestiary rules (decisions 002 and 010): which action studies a species, its goal, the
+ * The pure Bestiary rules: which action studies a species, its goal, the
  * progress shown for it, the one-time Studied reward and the scan timing. No Minecraft state, so
  * every rule is unit-tested on a plain JVM.
  */
 public final class BestiaryRules {
 
-    /** Scan reach and the hit-box inflation of the ray (decision 010 section 1). */
+    /** Scan reach and the hit-box inflation of the ray. */
     public static final double SCAN_RANGE = 8.0D;
     public static final double SCAN_INFLATE = 0.3D;
     /** On-target server ticks a scan needs. */
@@ -19,7 +19,7 @@ public final class BestiaryRules {
     /** Item cooldown after a completed scan. */
     public static final int SCAN_COOLDOWN_TICKS = 20;
 
-    /** Kill goals when a species has no explicit {@code studied_threshold} row (decision 002). */
+    /** Kill goals when a species has no explicit {@code studied_threshold} row. */
     public static final int KILLS_COMMON = 5;
     public static final int KILLS_ELITE = 3;
 
@@ -53,7 +53,7 @@ public final class BestiaryRules {
     private BestiaryRules() {
     }
 
-    /** Decision 002's table, by kind chip. A neutral (the Crystal Golem) is studied by defeating it. */
+    /** The study table, by kind chip. A neutral (the Crystal Golem) is studied by defeating it. */
     public static StudyKind studyKind(Kind kind) {
         return switch (kind) {
             case TAMEABLE, DRONE, MOUNT -> StudyKind.TAME_OR_BREED;
@@ -65,7 +65,7 @@ public final class BestiaryRules {
 
     /**
      * The goal. Kill goals come from the species row when it names one ({@code explicitThreshold}
-     * > 0), else 5 (3 for an elite). Every other kind is 1: decision 002 keeps no counter for tames,
+     * > 0), else 5 (3 for an elite). Every other kind is 1: no counter is kept for tames,
      * breeds, harvests or fights, so the gate itself is the record.
      */
     public static int goal(Kind kind, int explicitThreshold) {
@@ -92,6 +92,14 @@ public final class BestiaryRules {
     /** Whether a kill count meets a kill goal. */
     public static boolean killsMeetGoal(long kills, int goal) {
         return kills >= goal;
+    }
+
+    /**
+     * The reward for one study attempt: the kind's experience only when the Studied gate actually
+     * changed (Core's {@code open} returned {@code true}), else nothing. That is what makes it once.
+     */
+    public static int rewardFor(boolean gateChanged, Kind kind) {
+        return gateChanged ? rewardXp(kind) : 0;
     }
 
     /** The Studied reward in experience points. */

@@ -12,6 +12,8 @@ import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.phys.AABB;
 
+import za.co.neroland.nerocreatures.registry.ModParticles;
+
 /**
  * A telegraphed area slam: the creature plants itself, the ground shakes for a moment, and then
  * everything standing near it is thrown off its feet.
@@ -125,7 +127,7 @@ public class GroundSlamGoal extends Goal {
             return;
         }
         if (this.windUp % 4 == 0) {
-            level.sendParticles(ParticleTypes.SMOKE, this.mob.getX(), this.mob.getY() + 0.1D,
+            level.sendParticles(ModParticles.DUST_SWIRL.get(), this.mob.getX(), this.mob.getY() + 0.1D,
                     this.mob.getZ(), 8, this.radius * 0.3D, 0.0D, this.radius * 0.3D, 0.01D);
         }
         if (--this.windUp > 0) {

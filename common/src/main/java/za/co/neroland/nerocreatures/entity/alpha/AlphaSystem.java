@@ -45,7 +45,7 @@ import za.co.neroland.nerocreatures.entity.boss.NeroBossEntity;
  *   <li><b>Cap:</b> the loaded alphas in the dimension are counted (a bounded query, run only after
  *       a roll succeeds, so about once per fifty hostile spawns) and must be under the cap.</li>
  *   <li><b>Rendering:</b> {@link NeroCreatureEntity#isAlpha()} is synced; size comes from the vanilla
- *       {@code minecraft:scale} attribute (decision 007), so the model needs no change. The crimson
+ *       {@code minecraft:scale} attribute, so the model needs no change. The crimson
  *       accent, 85% body brightness and ember tell are renderer work keyed on the flag.</li>
  *   <li><b>Drop:</b> one weighted pick from the species' drop file when killed by a player.</li>
  * </ul>
@@ -140,7 +140,8 @@ public final class AlphaSystem {
             return 0;
         }
         List<NeroCreatureEntity> found = new ArrayList<>(limit);
-        level.getEntities(EntityTypeTest.forClass(NeroCreatureEntity.class), NeroCreatureEntity::isAlpha, found, limit);
+        level.getEntities(EntityTypeTest.forClass(NeroCreatureEntity.class),
+                c -> c.isAlpha() && !za.co.neroland.nerocreatures.gallery.GalleryDisplays.isDisplay(c), found, limit); // gallery alphas never count
         return found.size();
     }
 

@@ -5,7 +5,6 @@ import java.util.function.BooleanSupplier;
 
 import org.jetbrains.annotations.Nullable;
 
-import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
@@ -44,6 +43,7 @@ import za.co.neroland.nerocreatures.entity.visual.VisualPose;
 import za.co.neroland.nerocreatures.trait.TraitEffects;
 import za.co.neroland.nerocreatures.trait.TraitPool;
 import za.co.neroland.nerocreatures.registry.ModSounds;
+import za.co.neroland.nerocreatures.registry.ModParticles;
 
 /**
  * <b>Prism Stag</b> (Nyxara; neutral livestock) — a slender deer with two tall crystal antlers.
@@ -52,7 +52,7 @@ import za.co.neroland.nerocreatures.registry.ModSounds;
  *   <li><b>Antler shedding</b> ({@link PrismStagRules}). Adults grow antlers on a
  *       {@link ProductTimer} (regrow time = the species' {@code product_interval_ticks}) and shed
  *       them as {@code nerocreatures:prism_antler} items: renewable crystal without killing golems.
- *       Dropping an item on its own position changes no block, so no griefing gate (decision 006).
+ *       Dropping an item on its own position changes no block, so no griefing gate.
  *       {@code ability} pose = head toss; {@code stage} 0 bare, 1 half, 2 full.</li>
  *   <li><b>Herd aura.</b> At night, three or more adults within {@value PrismStagRules#HERD_RADIUS}
  *       blocks light their antlers ({@code form} 1) and the herd leader gives nearby players a short
@@ -73,7 +73,7 @@ public class PrismStag extends LivestockCreature {
     private static final Identifier PRISM_ANTLER =
             Identifier.fromNamespaceAndPath(NeroCreaturesCommon.MOD_ID, "prism_antler");
 
-    /** Config hook ({@code prismStagHerdAura}), wired at common init by the integrator; on until then. */
+    /** Config hook ({@code prismStagHerdAura}), wired at common init; on until then. */
     private static volatile BooleanSupplier auraEnabled = () -> true;
 
     private final CadenceTimer growthCadence = new CadenceTimer(PrismStagRules.GROWTH_INTERVAL);
@@ -211,7 +211,7 @@ public class PrismStag extends LivestockCreature {
         }
         double h = PrismStagRules.HERD_RADIUS;
         List<PrismStag> herd = level.getEntitiesOfClass(PrismStag.class, this.getBoundingBox().inflate(h, 4.0D, h),
-                stag -> stag.isAlive() && !stag.isBaby());
+                stag -> stag.isAlive() && !stag.isBaby() && !za.co.neroland.nerocreatures.gallery.GalleryDisplays.isDisplay(stag));
         boolean live = PrismStagRules.auraLive(enabled, night, herd.size());
         this.setAuraLive(live);
         if (!live) {
@@ -235,7 +235,7 @@ public class PrismStag extends LivestockCreature {
         if (this.visuals().pose() == VisualPose.IDLE) {
             this.visuals().playPose(VisualPose.ABILITY_2, PrismStagRules.AURA_POSE_TICKS);
         }
-        level.sendParticles(ParticleTypes.END_ROD, this.getX(), this.getY() + this.getBbHeight() + 0.4D, this.getZ(),
+        level.sendParticles(ModParticles.PRISM_GLINT.get(), this.getX(), this.getY() + this.getBbHeight() + 0.4D, this.getZ(),
                 6, 0.6D, 0.4D, 0.6D, 0.01D);
         if (n > 0) {
             ModSounds.PRISM_STAG_AURA.play(this);

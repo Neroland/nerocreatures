@@ -91,7 +91,7 @@ public final class NeroCreaturesCommon {
         // 8. Declare the payloads before any loader registers them: every loader entry point runs
         //    this method first, then wires its own networking.
         CreatureNetwork.init();
-        // 8b. Owned-creature actions on that channel (entity contract section 6) and the mount's
+        // 8b. Owned-creature actions on that channel and the mount's
         //     saddle item. The predicate and stack supplier resolve the item lazily, so this is safe
         //     before the NeoForge/Forge registries fire.
         MountCreature.registerActions();
@@ -109,7 +109,7 @@ public final class NeroCreaturesCommon {
         PrismStag.configure(() -> NeroCreaturesConfig.PRISM_STAG_HERD_AURA.get());
         // 8e. Apex Altar recharge, read live (per altar, never per player).
         ApexAltarBlockEntity.configure(() -> NeroCreaturesConfig.APEX_ALTAR_COOLDOWN_TICKS.get());
-        // 8f. Stage 4 habitat blocks, read live (per block, never per player).
+        // 8f. Habitat blocks, read live (per block, never per player).
         FeedingTroughBlockEntity.configure(() -> NeroCreaturesConfig.FEEDING_TROUGH_INTERVAL_TICKS.get());
         IncubatorBlockEntity.configure(() -> NeroCreaturesConfig.INCUBATOR_HATCH_TICKS.get(),
                 () -> NeroCreaturesConfig.INCUBATOR_POWERED_HATCH_TICKS.get(),

@@ -15,9 +15,9 @@ public final class FrostLurkerRules {
     public static final int REBURY_COOLDOWN_TICKS = 200;
     /** Longest single wait before it re-checks its hole (it re-buries at once if still on snow or ice). */
     public static final int MAX_LURK_TICKS = 2400;
-    /** The eruption telegraph: spines burst through the snow this long before the bite lands (contract: >= 10). */
+    /** The eruption telegraph: spines burst through the snow this long before the bite lands (at least 10). */
     public static final int TELEGRAPH_TICKS = 12;
-    /** The {@code ability} (erupt) pose length; the bite lands at {@link #TELEGRAPH_TICKS} (contract: < 3 s). */
+    /** The {@code ability} (erupt) pose length; the bite lands at {@link #TELEGRAPH_TICKS} (under 3 s). */
     public static final int ERUPT_POSE_TICKS = 24;
     /** A victim who stepped further than this away during the telegraph is missed. */
     public static final double STRIKE_REACH = 2.5D;

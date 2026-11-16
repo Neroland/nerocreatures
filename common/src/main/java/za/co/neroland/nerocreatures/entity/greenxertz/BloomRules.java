@@ -1,8 +1,8 @@
 package za.co.neroland.nerocreatures.entity.greenxertz;
 
 /**
- * The Bloom Host's sporeling rules as pure logic (decision 006, key {@code bloomHostSporelings};
- * per the entity contract the key is read directly, not through {@code mayAlter}, and the caps
+ * The Bloom Host's sporeling rules as pure logic (key {@code bloomHostSporelings};
+ * by design the key is read directly, not through {@code mayAlter}, and the caps
  * always apply).
  *
  * <ul>
@@ -19,7 +19,7 @@ package za.co.neroland.nerocreatures.entity.greenxertz;
  */
 public final class BloomRules {
 
-    /** {@code CreatureVisuals.form} values (decision 001, entity contract section 3). */
+    /** {@code CreatureVisuals.form} values. */
     public static final int FORM_HOST = 0;
     public static final int FORM_SPORELING = 1;
     public static final int FORM_POD = 2;

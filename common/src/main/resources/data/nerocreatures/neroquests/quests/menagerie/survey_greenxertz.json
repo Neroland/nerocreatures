@@ -1,0 +1,38 @@
+{
+  "title": "quest.nerocreatures.menagerie.survey_greenxertz.title",
+  "description": "quest.nerocreatures.menagerie.survey_greenxertz.desc",
+  "icon": "nerocreatures:bloom_heart",
+  "prerequisites": [
+    "nerocreatures:menagerie/field_scanner"
+  ],
+  "objectives": [
+    {
+      "type": "neroquests:gate_open",
+      "gate": "nerocreatures:bestiary/scanned/spore_drifter"
+    },
+    {
+      "type": "neroquests:gate_open",
+      "gate": "nerocreatures:bestiary/scanned/bloom_host"
+    },
+    {
+      "type": "neroquests:gate_open",
+      "gate": "nerocreatures:bestiary/scanned/mossback"
+    },
+    {
+      "type": "neroquests:gate_open",
+      "gate": "nerocreatures:bestiary/scanned/drift_leviathan"
+    }
+  ],
+  "rewards": [
+    {
+      "type": "neroquests:xp",
+      "amount": 120
+    },
+    {
+      "type": "neroquests:currency",
+      "amount": 80
+    }
+  ],
+  "scope": "player",
+  "visible_gate": "nerolandcore:reached_orbit"
+}

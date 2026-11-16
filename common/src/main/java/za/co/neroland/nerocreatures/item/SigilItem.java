@@ -19,7 +19,7 @@ import za.co.neroland.nerocreatures.entity.boss.NeroBossEntity;
 import za.co.neroland.nerocreatures.entity.boss.RimeMatriarch;
 
 /**
- * A boss sigil (decision 001: one per boss). Used on an Apex Altar, it summons that boss as a
+ * A boss sigil (one per boss). Used on an Apex Altar, it summons that boss as a
  * contribution-tracked fight; the altar consumes it exactly once, and only when the fight started.
  * On its own the item does nothing.
  */

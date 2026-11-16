@@ -43,6 +43,15 @@ first time something notable happens:
 | ---- | ---------- |
 | `nerocreatures:first_tame` | you tame a Glacite Wisp or Xertz Forager |
 | `nerocreatures:first_deploy` | you deploy a Terraforming Drone from a drone shell |
+| `nerocreatures:first_breed` | you breed a pair or hatch an egg in an Incubator |
+| `nerocreatures:bestiary/scanned/<id>` | you scan that creature with the Field Scanner ([Bestiary](Field-Scanner-and-Bestiary.md)) |
+| `nerocreatures:bestiary/studied/<id>` | you study that creature |
+
+The **Menagerie** chapter uses them: craft a Field Scanner, scan and study the three creatures that
+also live in the overworld (Lumen Moth, Lode Tortoise, Static Swarm), breed a first creature, one
+survey per habitat, the mounts, and the three Apex Altar bosses. The Field Scanner, overworld and
+breeding quests have no `visible_gate`, so they show on a server with no planet mod; every
+off-world quest is hidden behind `nerolandcore:reached_orbit` like the Bestiary chapter.
 
 They are **records, not locks**: they have no requirements, NeroCreatures never checks them for
 access to anything, and a quest reads them with a read-only `gate_open` objective. The rows live in

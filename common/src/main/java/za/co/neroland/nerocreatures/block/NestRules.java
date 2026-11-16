@@ -3,7 +3,7 @@ package za.co.neroland.nerocreatures.block;
 import java.util.Optional;
 
 /**
- * Pure rules for the Nest: a home point for one tamed pet or mount (decision 001: the Nest has no block
+ * Pure rules for the Nest: a home point for one tamed pet or mount (the Nest has no block
  * entity; the creature stores its own nest).
  *
  * <ul>

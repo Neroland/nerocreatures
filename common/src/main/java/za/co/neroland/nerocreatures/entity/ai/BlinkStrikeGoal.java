@@ -2,7 +2,6 @@ package za.co.neroland.nerocreatures.entity.ai;
 
 import java.util.EnumSet;
 
-import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.LivingEntity;
@@ -11,6 +10,7 @@ import net.minecraft.world.entity.ai.goal.Goal;
 
 import za.co.neroland.nerocreatures.entity.visual.CreatureVisualsHolder;
 import za.co.neroland.nerocreatures.entity.visual.VisualPose;
+import za.co.neroland.nerocreatures.registry.ModParticles;
 
 /**
  * Short-range teleport that closes the gap to the current target — the ambusher's signature move.
@@ -184,10 +184,10 @@ public class BlinkStrikeGoal extends Goal {
      * @param fromZ origin Z
      */
     protected void onBlink(ServerLevel level, double fromX, double fromY, double fromZ) {
-        level.sendParticles(ParticleTypes.PORTAL, fromX, fromY + 1.0D, fromZ, 12,
-                0.3D, 0.5D, 0.3D, 0.05D);
+        level.sendParticles(ModParticles.VOID_BLINK.get(), fromX, fromY + 1.0D, fromZ, 1,
+                0.0D, 0.0D, 0.0D, 0.0D);
         // The afterimage: slow reverse-portal motes in the crawler's outline at the origin.
-        level.sendParticles(ParticleTypes.REVERSE_PORTAL, fromX, fromY + 0.4D, fromZ, 24,
+        level.sendParticles(ModParticles.VOID_TRAIL.get(), fromX, fromY + 0.4D, fromZ, 24,
                 0.35D, 0.25D, 0.35D, 0.0D);
         if (this.sound != null) {
             this.sound.play(this.mob);

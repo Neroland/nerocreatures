@@ -55,7 +55,7 @@ class StrataTargetsTest {
 
     @Test
     void chestsAndOtherBlockEntitiesAreRefused() {
-        // M5: showing the hound a chest must never lead anyone to another player's chest.
+        // Showing the hound a chest must never lead anyone to another player's chest.
         assertEquals("minecraft:chest", StrataTargets.specForBlock("minecraft", "chest"), "the spec is exact...");
         assertFalse(StrataTargets.trackable(false, true), "...but a chest is refused: block entity, not allowed");
         assertFalse(StrataTargets.trackable(true, true), "a block entity is refused even if a pack tags it");

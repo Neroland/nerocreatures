@@ -1,0 +1,101 @@
+{
+  "title": "chapter.nerocreatures.menagerie.title",
+  "icon": "nerocreatures:field_scanner",
+  "quests": [
+    {
+      "quest": "nerocreatures:menagerie/field_scanner",
+      "x": 0,
+      "y": 3
+    },
+    {
+      "quest": "nerocreatures:menagerie/lantern_light",
+      "x": 2,
+      "y": 1
+    },
+    {
+      "quest": "nerocreatures:menagerie/slow_ore",
+      "x": 2,
+      "y": 3
+    },
+    {
+      "quest": "nerocreatures:menagerie/storm_static",
+      "x": 2,
+      "y": 5
+    },
+    {
+      "quest": "nerocreatures:menagerie/first_brood",
+      "x": 4,
+      "y": 3
+    },
+    {
+      "quest": "nerocreatures:menagerie/saddle_up",
+      "x": 6,
+      "y": 2
+    },
+    {
+      "quest": "nerocreatures:menagerie/void_rider",
+      "x": 8,
+      "y": 2
+    },
+    {
+      "quest": "nerocreatures:menagerie/survey_luna",
+      "x": 4,
+      "y": 0
+    },
+    {
+      "quest": "nerocreatures:menagerie/survey_mars",
+      "x": 4,
+      "y": 6
+    },
+    {
+      "quest": "nerocreatures:menagerie/survey_cindara",
+      "x": 4,
+      "y": 7
+    },
+    {
+      "quest": "nerocreatures:menagerie/survey_glacira",
+      "x": 4,
+      "y": 8
+    },
+    {
+      "quest": "nerocreatures:menagerie/survey_greenxertz",
+      "x": 4,
+      "y": 9
+    },
+    {
+      "quest": "nerocreatures:menagerie/survey_nyxara",
+      "x": 4,
+      "y": 10
+    },
+    {
+      "quest": "nerocreatures:menagerie/survey_asteroid",
+      "x": 4,
+      "y": 11
+    },
+    {
+      "quest": "nerocreatures:menagerie/survey_wrecks",
+      "x": 4,
+      "y": 12
+    },
+    {
+      "quest": "nerocreatures:menagerie/frost_queen",
+      "x": 6,
+      "y": 8
+    },
+    {
+      "quest": "nerocreatures:menagerie/root_and_bloom",
+      "x": 6,
+      "y": 9
+    },
+    {
+      "quest": "nerocreatures:menagerie/broken_facets",
+      "x": 6,
+      "y": 10
+    },
+    {
+      "quest": "nerocreatures:menagerie/menagerie",
+      "x": 8,
+      "y": 8
+    }
+  ]
+}

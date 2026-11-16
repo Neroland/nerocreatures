@@ -7,14 +7,14 @@ import java.util.List;
  * The pure rules of the Magnet Crab (Asteroid, tameable). Unit-tested; no game types.
  *
  * <ul>
- *   <li><b>Wild shell stealing</b> (decision 006, {@code magnetCrabSteals}, {@code Change.ITEM}): a wild
+ *   <li><b>Wild shell stealing</b> ({@code magnetCrabSteals}, {@code Change.ITEM}): a wild
  *       crab takes metal items ({@code #nerocreatures:magnetic}) into its shell, at most
  *       {@value #SHELL_SLOTS} stacks of at most {@value #MAX_PER_SLOT}, and drops them all on death.</li>
  *   <li><b>Tamed item magnet</b> ({@code magnetCrabCollects}, {@code Change.ITEM}): every
  *       {@value #MAGNET_PULSE_TICKS} ticks it moves at most {@value #ITEMS_PER_PULSE} ground item within
  *       {@value #MAGNET_RADIUS} blocks to its online owner (owner within {@value #DELIVERY_RANGE} blocks).
  *       Only items whose thrower is the owner or absent, never items with an owner-only pickup target,
- *       never items a Slag Beetle has claimed (decision 007).</li>
+ *       never items a Slag Beetle has claimed.</li>
  * </ul>
  */
 public final class MagnetCrabRules {
@@ -32,7 +32,7 @@ public final class MagnetCrabRules {
     /** Wild: ticks it chases one item before giving up. */
     public static final int CHASE_TICKS = 100;
 
-    /** Tamed: pull radius around the crab (decision 006: 6 blocks). */
+    /** Tamed: pull radius around the crab (6 blocks). */
     public static final double MAGNET_RADIUS = 6.0D;
     /** Tamed: ticks between pulses. */
     public static final int MAGNET_PULSE_TICKS = 10;
@@ -93,7 +93,7 @@ public final class MagnetCrabRules {
     }
 
     /**
-     * Thrower and pickup-target rule (decision 006). {@code throwerIsOwner}: the thrower resolved to the
+     * Thrower and pickup-target rule. {@code throwerIsOwner}: the thrower resolved to the
      * crab's owner; {@code hasThrower}: the item records a thrower at all; {@code hasTarget}: an
      * owner-only pickup target is set.
      */

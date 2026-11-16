@@ -198,7 +198,7 @@ public final class CreatureSpawns {
 
         // The Terraforming Drone has no rule at all, and never will: it is deployed, not spawned.
 
-        // --- 0.5.0 habitats (decision 001 habitat tags; empty without the planet mod) -----------
+        // --- 0.5.0 habitats (habitat tags; empty without the planet mod) -----------
 
         // Luna. Moths drift in small clouds; shrikes hunt alone or in pairs; tortoises are rare
         // grazers, a pair at most so a herd can start.
@@ -243,7 +243,7 @@ public final class CreatureSpawns {
         register(SpawnRule.anyDimension("magnet_crab", ModEntities.MAGNET_CRAB, HabitatTags.ASTEROID, 10, 1, 3));
         register(SpawnRule.anyDimension("gravity_leech", ModEntities.GRAVITY_LEECH, HabitatTags.ASTEROID, 12, 1, 2));
 
-        // Wrecks (decision 001: habitat/wrecks is the void biome, space levels only, which the level
+        // Wrecks (habitat/wrecks is the void biome, space levels only, which the level
         // gates enforce). Mimics are single crates; a swarm is one cloud, placed in the air, with a
         // hard cap of two per 32 blocks inside its position gate. The Scrap Hulk has no rule: it is
         // assembled from machine wreckage (entity/wrecks/ScrapHulkAssembly, via NeroCreatureEntity.die).
@@ -257,11 +257,11 @@ public final class CreatureSpawns {
                 2, 1, 1));
 
         // Deep space. inSpace, not anyDimension: minecraft:the_void in the habitat tag must never match
-        // a void superflat or skyblock overworld (decision 001), so the off-Earth dimension guard is
+        // a void superflat or skyblock overworld, so the off-Earth dimension guard is
         // the point here. Mantas drift alone or as a breeding pair, any light.
         register(SpawnRule.inSpace("void_manta", ModEntities.VOID_MANTA, HabitatTags.DEEP_SPACE, 4, 1, 2));
 
-        // --- Overworld (decision 005): a Core-only server is not empty, and rare stays rare ------
+        // --- Overworld: a Core-only server is not empty, and rare stays rare ------
         // Each rule: overworld only, behind overworldSpawns, a position gate that ends in a chance
         // roll (moth 15%, tortoise 5%), and overworldSpawnCap counted by the census.
         register(SpawnRule.gated("lumen_moth", ModEntities.LUMEN_MOTH, HabitatTags.OVERWORLD_DARK_FOREST,
@@ -309,6 +309,8 @@ public final class CreatureSpawns {
         GravityTether.sweepIfDue(server);
         // Creature gear's passive effects (cloak, greaves, boots, bulwark, amulet); own cadence.
         CreatureGear.serverTick(server);
+        // Gallery demo plates and running demo scripts (creative players on a plate only).
+        za.co.neroland.nerocreatures.gallery.GalleryDemos.serverTick(server);
         if (RULES.isEmpty() || !NeroCreaturesConfig.SPAWNS_ENABLED.get()) {
             return;
         }
@@ -339,6 +341,7 @@ public final class CreatureSpawns {
         BossSpawns.reset();
         BossFights.reset();
         ScrapHulkAssembly.reset();
+        za.co.neroland.nerocreatures.gallery.GalleryDemos.reset();
     }
 
     private static void sweep(ServerLevel level) {
@@ -382,7 +385,7 @@ public final class CreatureSpawns {
         return placeGroup(level, pick.rule(), pick.pos(), random) > 0;
     }
 
-    /** Decision 005: an overworld-capped rule needs room under {@code overworldSpawnCap} in the overworld. */
+    /** An overworld-capped rule needs room under {@code overworldSpawnCap} in the overworld. */
     private static boolean overworldRoom(ServerLevel level, SpawnRule rule) {
         return !rule.overworldCapped() || CreatureCensus.overworldHasRoom(level);
     }

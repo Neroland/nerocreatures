@@ -53,11 +53,14 @@ first sneak-click sits it down:
 | Order | What it does |
 | --- | --- |
 | **Sit** | Sits where it is and stays there. |
-| **Stay** | Holds the area it was in when you gave the order — it may wander a few blocks, and walks back if it strays more than 8. Still defends you. |
+| **Stay** | Stands exactly where it is, on its feet: no following, no wandering and no fighting, not even back. |
+| **Guard** | Holds the area it was in when you gave the order — it may wander a few blocks, and walks back if it strays more than 8. Still defends you. |
 | **Follow** | Follows you around. |
 
-Every order is confirmed on your action bar. A pet on any order will still defend its owner and
-still fight back if attacked; it never picks a fight on its own.
+Sneak-clicking cycles Sit, Stay, Guard, Follow. Every order is confirmed on your action bar. Except
+on Stay, a pet still defends its owner and fights back if attacked; it never picks a fight on its
+own. Mounting a mount on Sit or Stay switches it to Follow. A companion app can give the Follow, Stay
+and Sit orders too (see [Link module](Link-Module.md#action-pet_command)).
 
 ### Feeding
 
@@ -185,7 +188,7 @@ deeper is **NeroCompanion**'s job when that mod lands.
 
 | NeroCreatures — always | NeroCompanion — if installed |
 | --- | --- |
-| Taming, ownership and its caps; the sit/stay/follow cycle; owner-only interaction; defending its owner; the one species perk; loot; rendering. | Personality, moods, levelling, named abilities, pet inventories, chat, cross-mod errands. |
+| Taming, ownership and its caps; the sit/stay/guard/follow cycle; owner-only interaction; defending its owner; the one species perk; loot; rendering. | Personality, moods, levelling, named abilities, pet inventories, chat, cross-mod errands. |
 
 The hand-off is a small service interface that **NeroCreatures declares** and NeroCompanion
 implements. There is no reflection into the other mod anywhere, no companion mod appears in any

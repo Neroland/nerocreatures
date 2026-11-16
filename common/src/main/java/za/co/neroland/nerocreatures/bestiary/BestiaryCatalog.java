@@ -8,12 +8,12 @@ import java.util.Map;
 import java.util.Optional;
 
 /**
- * The static Bestiary table (decision 010 sections 4.2, 4.3 and 8): for each of the 38 roster
+ * The static Bestiary table: for each of the 38 roster
  * species its habitat, kind chip, Radiant-carrier and alpha flags, the boss sigil and the drops the
  * detail page lists. Pure data with no Minecraft types, so the server ({@link BestiaryProgress}),
  * the client screen and the tests share one copy. It is not player data.
  *
- * <p>Order is the screen's list order: habitats in section 4.2 order, creatures in roster order
+ * <p>Order is the screen's list order: habitats in screen order, creatures in roster order
  * inside each, the boss last.
  */
 public final class BestiaryCatalog {
@@ -48,7 +48,7 @@ public final class BestiaryCatalog {
         }
     }
 
-    /** The kind chip (section 4.3). Decides the study rule and the reward size. */
+    /** The kind chip. Decides the study rule and the reward size. */
     public enum Kind {
         TAMEABLE, DRONE, MOUNT, LIVESTOCK, AMBIENT, NEUTRAL, HOSTILE, ELITE, BOSS;
 
@@ -63,7 +63,7 @@ public final class BestiaryCatalog {
      * @param id      registry path, for example {@code lumen_moth}
      * @param habitat list section
      * @param kind    kind chip
-     * @param radiant one of the 13 Radiant carriers (decision 007 section 2.6)
+     * @param radiant one of the 13 Radiant carriers
      * @param alpha   may spawn as an alpha (every plain hostile: bosses and elites are excluded)
      * @param sigil   the boss's sigil item path, or empty
      * @param drops   item ids ({@code ns:path}) the detail page lists, in display order
@@ -84,13 +84,13 @@ public final class BestiaryCatalog {
             return this.kind == Kind.TAMEABLE || this.kind == Kind.DRONE || this.kind == Kind.MOUNT;
         }
 
-        /** Species whose overworld spawn rule exists (decision 005), for the Habitat "also" line. */
+        /** Species whose overworld spawn rule exists, for the Habitat "also" line. */
         public boolean overworld() {
             return OVERWORLD.contains(this.id);
         }
     }
 
-    /** Decision 005's three species with a rare overworld rule. */
+    /** The three species with a rare overworld rule. */
     public static final List<String> OVERWORLD = List.of("lumen_moth", "lode_tortoise", "static_swarm");
 
     private static final Map<String, Entry> BY_ID = new LinkedHashMap<>();

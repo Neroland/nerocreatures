@@ -32,6 +32,7 @@ import za.co.neroland.nerocreatures.trait.TraitEffects;
 import za.co.neroland.nerocreatures.trait.TraitPool;
 import za.co.neroland.nerocreatures.world.CreatureGriefing;
 import za.co.neroland.nerocreatures.registry.ModSounds;
+import za.co.neroland.nerocreatures.registry.ModParticles;
 
 /**
  * <b>Slag Beetle</b> (Cindara, tameable): a living furnace for a field base.
@@ -42,8 +43,8 @@ import za.co.neroland.nerocreatures.registry.ModSounds;
  *   <li>A tamed beetle walks to raw ore its <b>owner threw</b> within
  *       {@value SlagBeetleRules#FEED_RADIUS} blocks (item tag {@link #FOOD_ORES}) and swallows it one
  *       item at a time through the shared {@link ItemEatingGoal}. Taking the item is a
- *       {@code CreatureGriefing} {@code Change.ITEM} decision under {@code slagBeetleSmelting}
- *       (decision 006); denied, the beetle ignores the item.</li>
+ *       {@code CreatureGriefing} {@code Change.ITEM} decision under {@code slagBeetleSmelting};
+ *       denied, the beetle ignores the item.</li>
  *   <li>Each item digests for {@value SlagBeetleRules#DIGEST_TICKS} ticks (a furnace's ten seconds),
  *       in order, up to {@value SlagBeetleRules#STOMACH_CAPACITY} items. The result is the server's own
  *       vanilla smelting recipe for that item, so packs and other mods' raw ores work. Every item
@@ -64,7 +65,7 @@ import za.co.neroland.nerocreatures.registry.ModSounds;
  * <p>Perk: a warm shell. A nearby owner thaws out (freezing ticks cleared). Comfort only.
  *
  * <p>Breeding: {@code nerocreatures:food/slag_beetle} (coal, charcoal; never ore, which is its
- * smelting input), egg birth (decision 003).
+ * smelting input), egg birth.
  */
 public class SlagBeetle extends TameableCreature {
 
@@ -139,7 +140,7 @@ public class SlagBeetle extends TameableCreature {
         return this.isTame() && item.getItem().is(FOOD_ORES) && ItemEatingGoal.thrownBy(item, this.ownerId());
     }
 
-    /** Permission: decision 006, {@code Change.ITEM} under {@code slagBeetleSmelting}. */
+    /** Permission: the griefing gate, {@code Change.ITEM} under {@code slagBeetleSmelting}. */
     private boolean mayTake(ServerLevel level, PathfinderMob eater, ItemEntity item) {
         boolean food = item.getItem().is(FOOD_ORES);
         boolean thrown = ItemEatingGoal.thrownBy(item, this.ownerId());
@@ -232,7 +233,7 @@ public class SlagBeetle extends TameableCreature {
     protected void applyOwnerPerk(ServerLevel level, Player owner) {
         if (owner.getTicksFrozen() > 0) {
             owner.setTicksFrozen(0);
-            level.sendParticles(ParticleTypes.SMALL_FLAME, this.getX(), this.getY() + this.getBbHeight(),
+            level.sendParticles(ModParticles.SLAG_EMBER.get(), this.getX(), this.getY() + this.getBbHeight(),
                     this.getZ(), 2, 0.2D, 0.1D, 0.2D, 0.0D);
         }
     }

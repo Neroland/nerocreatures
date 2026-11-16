@@ -14,7 +14,7 @@ import org.jetbrains.annotations.Nullable;
 import za.co.neroland.nerocreatures.NeroCreaturesCommon;
 
 /**
- * Where trait effects meet the game. The effect types are a closed set (decision 003):
+ * Where trait effects meet the game. The effect types are a closed set:
  *
  * <ul>
  *   <li>{@code attribute}: a permanent modifier with id {@code nerocreatures:trait/<id>}, applied by
@@ -30,7 +30,7 @@ import za.co.neroland.nerocreatures.NeroCreaturesCommon;
  */
 public final class TraitEffects {
 
-    /** Pannier slots without Stout (decision 004). */
+    /** Pannier slots without Stout. */
     public static final int BASE_CARRY_SLOTS = 9;
 
     private TraitEffects() {

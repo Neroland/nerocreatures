@@ -4,7 +4,6 @@ import java.util.EnumSet;
 import java.util.List;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
@@ -42,6 +41,7 @@ import za.co.neroland.nerocreatures.entity.base.NeroCreatureEntity;
 import za.co.neroland.nerocreatures.entity.visual.VisualPose;
 import za.co.neroland.nerocreatures.spawn.HabitatTags;
 import za.co.neroland.nerocreatures.registry.ModSounds;
+import za.co.neroland.nerocreatures.registry.ModParticles;
 import za.co.neroland.nerolandcore.worldgen.SpaceTags;
 
 /**
@@ -53,14 +53,14 @@ import za.co.neroland.nerolandcore.worldgen.SpaceTags;
  * {@value SwarmRules#DRAIN_RADIUS} blocks, at most {@value SwarmRules#MAX_UNITS_PER_PLAYER} unit per
  * player per pulse, through {@link ChargeDrain} (Core has no item-energy API: plasma cells are eaten,
  * registered handlers drain their own items, anything else is untouched). Each unit heals it. Gated by
- * {@code staticSwarmDrain} (decision 006: items only, no world change, so the key alone); off, it only
+ * {@code staticSwarmDrain} (items only, no world change, so the key alone); off, it only
  * shocks on contact.
  *
  * <p><b>Use: bottling.</b> At or below half health a glass bottle captures it as a
  * {@code static_jar} (anyone may; it is wild). The jar is a throwable that briefly disables
  * mechanical creatures ({@link StaticJarBurst}).
  *
- * <p><b>Overworld</b> (decision 005): spawned only in thunderstorms; on its next storm check after the
+ * <p><b>Overworld</b>: spawned only in thunderstorms; on its next storm check after the
  * storm ends it discards itself unless it is in a wreck habitat or name-tagged; and it never follows a
  * target into block light 10 or more, drifting away instead.
  *
@@ -120,7 +120,7 @@ public class StaticSwarm extends NeroCreatureEntity implements Enemy
     }
     *///?}
 
-    /** Whether the swarm may go to {@code pos} (decision 005: never into overworld block light 10+). */
+    /** Whether the swarm may go to {@code pos} (never into overworld block light 10+). */
     boolean mayEnter(BlockPos pos) {
         Level level = this.level();
         return !SwarmRules.tooBright(level.dimension() == Level.OVERWORLD,
@@ -157,7 +157,7 @@ public class StaticSwarm extends NeroCreatureEntity implements Enemy
         BlockPos pos = this.blockPosition();
         if (!this.isPersistenceRequired() && SwarmRules.vanishes(true, level.isThundering(),
                 SpaceTags.biomeIn(level, pos, HabitatTags.WRECKS))) {
-            level.sendParticles(ParticleTypes.ELECTRIC_SPARK, this.getX(), this.getY() + 0.5D, this.getZ(),
+            level.sendParticles(ModParticles.STATIC_SPARK.get(), this.getX(), this.getY() + 0.5D, this.getZ(),
                     10, 0.4D, 0.4D, 0.4D, 0.05D);
             this.discard();
             return true;
@@ -219,7 +219,7 @@ public class StaticSwarm extends NeroCreatureEntity implements Enemy
         double mx = (this.getX() + player.getX()) * 0.5D;
         double my = (this.getY() + 0.4D + player.getY() + 1.0D) * 0.5D;
         double mz = (this.getZ() + player.getZ()) * 0.5D;
-        level.sendParticles(ParticleTypes.ELECTRIC_SPARK, mx, my, mz, 6,
+        level.sendParticles(ModParticles.STATIC_SPARK.get(), mx, my, mz, 6,
                 Math.abs(player.getX() - this.getX()) * 0.25D, 0.2D, Math.abs(player.getZ() - this.getZ()) * 0.25D, 0.02D);
     }
 
@@ -227,6 +227,10 @@ public class StaticSwarm extends NeroCreatureEntity implements Enemy
 
     @Override
     public InteractionResult mobInteract(Player player, InteractionHand hand) {
+        // A gallery display does nothing (a paddock mount may be ridden by a creative player).
+        if (za.co.neroland.nerocreatures.gallery.GalleryDisplays.isDisplay(this)) {
+            return za.co.neroland.nerocreatures.gallery.GalleryDisplays.interact(this, player, hand);
+        }
         ItemStack held = player.getItemInHand(hand);
         if (!held.is(Items.GLASS_BOTTLE)) {
             return super.mobInteract(player, hand);
@@ -243,7 +247,7 @@ public class StaticSwarm extends NeroCreatureEntity implements Enemy
         }
         player.setItemInHand(hand, ItemUtils.createFilledResult(held, player, new ItemStack(jar)));
         level.playSound(null, this.blockPosition(), SoundEvents.BOTTLE_FILL, SoundSource.HOSTILE, 1.0F, 1.6F);
-        level.sendParticles(ParticleTypes.ELECTRIC_SPARK, this.getX(), this.getY() + 0.4D, this.getZ(),
+        level.sendParticles(ModParticles.STATIC_SPARK.get(), this.getX(), this.getY() + 0.4D, this.getZ(),
                 12, 0.3D, 0.3D, 0.3D, 0.05D);
         // Captured, not killed: no loot, no death.
         this.discard();

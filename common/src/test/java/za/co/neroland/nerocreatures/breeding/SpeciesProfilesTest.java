@@ -11,7 +11,7 @@ import com.google.gson.JsonParser;
 
 import org.junit.jupiter.api.Test;
 
-/** Decision 003: the bundled species table parses; missing rows and unknown birth modes are lenient. */
+/** The bundled species table parses; missing rows and unknown birth modes are lenient. */
 class SpeciesProfilesTest {
 
     @Test

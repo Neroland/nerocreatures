@@ -11,8 +11,8 @@ import net.minecraft.world.phys.AABB;
 import za.co.neroland.nerocreatures.config.NeroCreaturesConfig;
 
 /**
- * The Slag Beetle feed claim (decision 007: a tamed Magnet Crab must not vacuum the ore a player
- * throws to a beetle). <b>WP-Asteroid calls {@link #isReservedForBeetle} for every candidate item
+ * The Slag Beetle feed claim (a tamed Magnet Crab must not vacuum the ore a player
+ * throws to a beetle). <b>The Magnet Crab calls {@link #isReservedForBeetle} for every candidate item
  * and skips it when true.</b>
  *
  * <p>An item is reserved when it is younger than {@value SlagBeetleRules#FRESH_ITEM_TICKS} ticks

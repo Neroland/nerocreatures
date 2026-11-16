@@ -64,7 +64,7 @@ public class PredatorHuntGoal extends Goal {
 
     /**
      * Wild-prey filter shared with other goals: not tamed, not owned, not named, and not livestock a
-     * player keeps or bred (Stage 2 review M1, {@link HusbandryRules#wildPrey}).
+     * player keeps or bred ({@link HusbandryRules#wildPrey}).
      */
     public static boolean isWild(LivingEntity entity) {
         boolean husbanded = entity instanceof LivestockCreature livestock && livestock.isHusbanded();
@@ -87,7 +87,8 @@ public class PredatorHuntGoal extends Goal {
         AABB box = this.mob.getBoundingBox().inflate(this.radius, 4.0D, this.radius);
         List<LivingEntity> found = new ArrayList<>(MAX_CANDIDATES);
         level.getEntities(EntityTypeTest.forClass(LivingEntity.class), box,
-                e -> e != this.mob && e.isAlive() && e.getType().builtInRegistryHolder().is(this.preyTag) && isWild(e), found, MAX_CANDIDATES);
+                e -> e != this.mob && e.isAlive() && e.getType().builtInRegistryHolder().is(this.preyTag) && isWild(e)
+                        && !za.co.neroland.nerocreatures.gallery.GalleryDisplays.isDisplay(e), found, MAX_CANDIDATES);
         if (found.isEmpty()) {
             return false;
         }

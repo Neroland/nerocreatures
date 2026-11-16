@@ -40,7 +40,7 @@ public class FeedingTroughBlock extends HabitatBlock {
         super(properties);
     }
 
-    /** Registration properties without the id (the integrator adds {@code .setId(key)}). */
+    /** Registration properties without the id (registration adds {@code .setId(key)}). */
     public static BlockBehaviour.Properties troughProperties() {
         return BlockBehaviour.Properties.of().mapColor(MapColor.WOOD).strength(2.0F, 3.0F).sound(SoundType.WOOD)
                 .noOcclusion();

@@ -7,14 +7,14 @@ package za.co.neroland.nerocreatures.entity.tame;
  *   <li><b>Output.</b> One digested raw-ore item becomes the vanilla smelting result, plus one
  *       extra item per bonus roll that hits {@link #BONUS_CHANCE}. Every digestion gets one bonus
  *       roll; a Bountiful extra roll ({@code rolls} = 2) adds a second roll of the same chance, never
- *       a multiplier (Stage 2 review M6). Expected output is at most {@link #MAX_EXPECTED_RATIO} of a
+ *       a multiplier. Expected output is at most {@link #MAX_EXPECTED_RATIO} of a
  *       furnace ({@link #expectedOutput}); the total is capped at {@link #maxOutput(int)}.</li>
  *   <li><b>Inputs</b> are raw-ore items only ({@code nerocreatures:slag_beetle_ores}: vanilla raw
  *       iron, copper and gold plus {@code #c:raw_materials}); ore blocks are not food.</li>
  *   <li><b>Eating gate.</b> A beetle eats only when it is tamed, its owner threw the item, the item
  *       is beetle food, and {@code CreatureGriefing} allowed the pickup ({@code Change.ITEM},
- *       {@code slagBeetleSmelting}). Any "no" means it ignores the item (decision 006 fallback).</li>
- *   <li><b>Feed claim</b> (decision 007, Magnet Crab clash). A ground item is reserved for beetles,
+ *       {@code slagBeetleSmelting}). Any "no" means it ignores the item (the fallback when the griefing gate says no).</li>
+ *   <li><b>Feed claim</b> (Magnet Crab clash). A ground item is reserved for beetles,
  *       and a tamed Magnet Crab must leave it alone, when it is younger than
  *       {@link #FRESH_ITEM_TICKS} ticks (any item: it was just thrown or just dropped), or when it is
  *       beetle food lying within {@link #FEED_RADIUS} blocks of a tamed Slag Beetle.</li>
@@ -88,7 +88,7 @@ public final class SlagBeetleRules {
     }
 
     /**
-     * The feed-claim rule WP-Asteroid's tamed Magnet Crab honours.
+     * The feed-claim rule a tamed Magnet Crab honours.
      *
      * @param itemAgeTicks      {@code ItemEntity.getAge()}
      * @param beetleFood        the item is in {@code nerocreatures:slag_beetle_ores}

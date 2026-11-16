@@ -1,7 +1,10 @@
 package za.co.neroland.nerocreatures.link;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
+import java.util.function.Supplier;
 
 import com.google.gson.JsonObject;
 
@@ -21,53 +24,48 @@ import za.co.neroland.nerolandcore.link.NeroLinkRegistry;
 import za.co.neroland.nerocreatures.NeroCreaturesCommon;
 import za.co.neroland.nerocreatures.boss.BossContributionState;
 import za.co.neroland.nerocreatures.data.OwnedCreature;
+import za.co.neroland.nerocreatures.telemetry.NeroCreaturesTelemetry;
 
 /**
- * The live half of the link module: the three things worth waking a companion client for, plus the
- * two things worth interrupting a player for.
+ * The live half of the link module: the few things worth telling a player's phone about, plus the
+ * boss broadcasts and the two alerts.
  *
- * <h2>Events</h2>
+ * <h2>Player events — each one a push when the player has turned on the "Creatures" category</h2>
+ *
+ * <p>The bridge pushes <em>every</em> player-scoped event of a module to a player who has that
+ * module's category on and no live app connection, and it has no per-topic opt-out. So this class
+ * publishes a player-scoped event <b>only</b> for the four things that should push, each with the
+ * bridge's {@code _notify} copy whose body names the species and nothing else:
  *
  * <ul>
- *   <li><b>{@code pet_state_changed}</b> — one of <em>your</em> owned creatures changed hands with
- *       the world: {@code tamed}, {@code released}, {@code deployed}, {@code recalled} or
- *       {@code died}. Published with {@link LinkEvent#forPlayer}, so the bridge routes it to that
- *       player's sessions and nobody else's. It mirrors the {@code pets} snapshot section, which is
- *       why a drone's states are on the same topic — the section covers both.</li>
- *   <li><b>{@code boss_phase}</b> — a boss fight escalated. <b>Broadcast</b>, because a boss fight
- *       is a place, not a person.</li>
- *   <li><b>{@code boss_defeated}</b> — a boss fight ended in the boss's defeat. Also broadcast.</li>
+ *   <li><b>{@code pet_state_changed}</b> with {@code state: "died"} — an owned pet, mount or drone
+ *       died ("Your Dune Loper died.");</li>
+ *   <li><b>{@code creature_hurt}</b> — an owned creature dropped below a quarter health while not
+ *       being hurt by its owner, at most once per creature per five minutes ("Your Dune Loper is badly
+ *       hurt.");</li>
+ *   <li><b>{@code egg_hatched}</b> — an egg the player was incubating hatched ("A Lumen Moth egg has
+ *       hatched.");</li>
+ *   <li><b>{@code fight_ended}</b> — a summoned boss fight the player joined was won or ended ("The
+ *       Rime Matriarch fight has ended."), one event per participant with their own share only.</li>
  * </ul>
+ *
+ * <p>Routine changes — tamed, released, deployed, recalled, orders, traits, timers — are <b>not</b>
+ * published any more (schema 2): the app polls the {@code pets} section for them. The topic and
+ * payload shape of {@code pet_state_changed} are unchanged for schema-1 clients.
+ *
+ * <h2>Broadcasts</h2>
+ *
+ * <p>{@code boss_phase} and {@code boss_defeated} go to every session and therefore carry a boss, a
+ * phase, a phase count and a dimension id — nothing about any player. A broadcast never pushes.
  *
  * <h2>Alerts</h2>
  *
- * <p>Two, and deliberately only two — an alert survives in Core's store until it is acknowledged,
- * so it is reserved for things a player would genuinely want to be told about while the game is
- * closed:
- *
- * <ul>
- *   <li><b>your pet died</b> — raised for the owner alone;</li>
- *   <li><b>a boss you damaged was defeated</b> — raised for each recorded participant of a
- *       <em>summoned</em> fight (a natural fight records nobody, so it alerts nobody).</li>
- * </ul>
- *
- * <h2>Scope and privacy (POPIA/GDPR)</h2>
- *
- * <p>A broadcast reaches every session, so a broadcast payload here carries a boss id, a phase
- * number, a phase count and a dimension id — and nothing else. There is no participant list, no
- * killer, no damage total and no position: the same rule Core's {@code ThresholdEvents} contract
- * imposes on {@code nerocreatures:boss_pressure}, applied to the same information.
- *
- * <p>An alert's {@code text} is a plain string by Core's contract and therefore <b>must never
- * contain another player's data</b>. Both texts here name a creature or a boss and nothing else —
- * "Your Glacite Wisp did not survive", never who killed it. Names come from
- * {@link CreatureLinkAccess#readableName} rather than a lang file, because a dedicated server has
- * no client assets to resolve one with.
+ * <p>"Your pet died" for the owner and "a boss you fought was defeated" for each participant of a
+ * summoned fight, through Core's alert store. Each is raised <b>after</b> the matching player event,
+ * so the bridge's rich copy shadows the alert's generic push.
  *
  * <p><b>Nothing here may throw at its caller.</b> Every publisher is wrapped: a link failure must
- * never disturb a pet's death, a drone's recall or a boss's phase transition.
- *
- * <p>Server thread only.
+ * never disturb a pet's death, an egg's hatching or a boss's phase transition. Server thread only.
  */
 public final class CreatureLinkEvents {
 
@@ -86,6 +84,12 @@ public final class CreatureLinkEvents {
     /** An owned creature died. */
     public static final String STATE_DIED = "died";
 
+    /** Per-creature "badly hurt" debounce, in memory. */
+    private static final CreatureLinkRules.HurtDebounce HURT = new CreatureLinkRules.HurtDebounce();
+
+    /** Players whose erasure is running right now; nothing may be published or raised for them. */
+    private static final Set<UUID> ERASING = new HashSet<>();
+
     private CreatureLinkEvents() {
     }
 
@@ -98,6 +102,30 @@ public final class CreatureLinkEvents {
      */
     static void init() {
         // Intentionally empty — see the javadoc.
+    }
+
+    // --- erasure guard ----------------------------------------------------------
+
+    /**
+     * Runs one erasure with every event and alert for {@code player} suppressed. An erasure must not
+     * re-create data about the person it erases: Core's alert eraser has already run by the time this
+     * mod's eraser frees their creatures, so a "released" or "died" event published now would sit in
+     * the bridge, a relay queue or an app cache. Server thread only; nests safely.
+     */
+    public static <T> T whileErasing(UUID player, Supplier<T> body) {
+        boolean added = ERASING.add(player);
+        try {
+            return body.get();
+        } finally {
+            if (added) {
+                ERASING.remove(player);
+            }
+        }
+    }
+
+    /** Whether anything may be published to (or raised for) this player now. */
+    public static boolean mayPublishTo(@Nullable UUID player) {
+        return player == null || !ERASING.contains(player);
     }
 
     // --- pet_state_changed ----------------------------------------------------
@@ -114,24 +142,140 @@ public final class CreatureLinkEvents {
      */
     public static void petStateChanged(ServerLevel level, @Nullable UUID owner, Entity creature,
             OwnedCreature.Kind kind, String state) {
-        if (owner == null) {
-            return;
+        if (owner == null || !publishesState(state)) {
+            return; // routine state is polled, never pushed (schema 2)
         }
         try {
-            JsonObject payload = new JsonObject();
-            payload.addProperty("schema_version", CreatureLinkModule.SCHEMA_VERSION);
-            payload.addProperty("entity", creature.getUUID().toString());
-            payload.addProperty("kind", kind.key());
-            payload.addProperty("type", EntityType.getKey(creature.getType()).toString());
-            payload.addProperty("name", CreatureLinkAccess.readableName(creature.getType()));
-            payload.addProperty("dimension", level.dimension().identifier().toString());
-            payload.addProperty("state", state);
-            payload.addProperty("timestamp", System.currentTimeMillis());
+            Identifier type = EntityType.getKey(creature.getType());
+            JsonObject payload = petStatePayload(creature.getUUID(), kind, type,
+                    level.dimension().identifier().toString(), state, System.currentTimeMillis());
             publish(LinkEvent.forPlayer(CreatureLinkModule.MODULE_ID,
                     CreatureLinkModule.TOPIC_PET_STATE_CHANGED, owner, payload));
         } catch (RuntimeException e) {
             warn(CreatureLinkModule.TOPIC_PET_STATE_CHANGED, e);
         }
+    }
+
+    /** Only a death is published as a {@code pet_state_changed} event (it is the one that pushes). */
+    static boolean publishesState(String state) {
+        return STATE_DIED.equals(state);
+    }
+
+    /**
+     * The schema-1 {@code pet_state_changed} payload, plus the {@code _notify} copy for a death. The
+     * species name in {@code name} and the dimension id are for the player's own app; the push body
+     * uses the species only.
+     */
+    static JsonObject petStatePayload(UUID entity, OwnedCreature.Kind kind, Identifier type, String dimension,
+            String state, long timestamp) {
+        String species = CreatureLinkJson.speciesName(type);
+        JsonObject payload = new JsonObject();
+        payload.addProperty("schema_version", CreatureLinkModule.SCHEMA_VERSION);
+        payload.addProperty("entity", entity.toString());
+        payload.addProperty("kind", kind.key());
+        payload.addProperty("type", type.toString());
+        payload.addProperty("name", species);
+        payload.addProperty("dimension", dimension);
+        payload.addProperty("state", state);
+        payload.addProperty("timestamp", timestamp);
+        if (STATE_DIED.equals(state)) {
+            payload.add("_notify", CreatureLinkRules.notify(CreatureLinkRules.diedBody(species)));
+        }
+        return payload;
+    }
+
+    // --- creature_hurt ----------------------------------------------------------
+
+    /**
+     * An owned creature just crossed below a quarter health. Pushed to its owner at most once per
+     * creature per five minutes, and never while its own owner is the one hurting it.
+     */
+    public static void creatureHurt(ServerLevel level, @Nullable UUID owner, Entity creature,
+            OwnedCreature.Kind kind, boolean byOwner) {
+        if (owner == null) {
+            return;
+        }
+        try {
+            if (!HURT.shouldAlert(creature.getUUID(), byOwner, System.currentTimeMillis())) {
+                return;
+            }
+            publish(LinkEvent.forPlayer(CreatureLinkModule.MODULE_ID, CreatureLinkModule.TOPIC_CREATURE_HURT,
+                    owner, hurtPayload(creature.getUUID(), kind, EntityType.getKey(creature.getType()),
+                            System.currentTimeMillis())));
+        } catch (RuntimeException e) {
+            warn(CreatureLinkModule.TOPIC_CREATURE_HURT, e);
+        }
+    }
+
+    static JsonObject hurtPayload(UUID entity, OwnedCreature.Kind kind, Identifier type, long timestamp) {
+        JsonObject payload = new JsonObject();
+        payload.addProperty("schema_version", CreatureLinkModule.SCHEMA_VERSION);
+        payload.addProperty("entity", entity.toString());
+        payload.addProperty("kind", kind.key());
+        payload.addProperty("type", type.toString());
+        payload.addProperty("timestamp", timestamp);
+        payload.add("_notify", CreatureLinkRules.notify(CreatureLinkRules.hurtBody(CreatureLinkJson.speciesName(type))));
+        return payload;
+    }
+
+    // --- egg_hatched ------------------------------------------------------------
+
+    /** An egg the player was incubating hatched. Called before the egg row is removed. */
+    public static void eggHatched(ServerLevel level, @Nullable UUID owner, EntityType<?> species) {
+        if (owner == null) {
+            return; // an unattributed egg (erased owner) tells nobody
+        }
+        try {
+            publish(LinkEvent.forPlayer(CreatureLinkModule.MODULE_ID, CreatureLinkModule.TOPIC_EGG_HATCHED,
+                    owner, hatchedPayload(EntityType.getKey(species), System.currentTimeMillis())));
+        } catch (RuntimeException e) {
+            warn(CreatureLinkModule.TOPIC_EGG_HATCHED, e);
+        }
+    }
+
+    static JsonObject hatchedPayload(Identifier type, long timestamp) {
+        JsonObject payload = new JsonObject();
+        payload.addProperty("schema_version", CreatureLinkModule.SCHEMA_VERSION);
+        payload.addProperty("type", type.toString());
+        payload.addProperty("kind", OwnedCreature.Kind.EGG.key());
+        payload.addProperty("timestamp", timestamp);
+        payload.add("_notify", CreatureLinkRules.notify(CreatureLinkRules.hatchedBody(CreatureLinkJson.speciesName(type))));
+        return payload;
+    }
+
+    // --- fight_ended ------------------------------------------------------------
+
+    /**
+     * A summoned fight ended without a win (the boss left the world): each player who joined is told on
+     * their own. {@code players} comes straight from the discarded contribution row.
+     */
+    public static void fightEnded(ServerLevel level, Identifier bossId, List<UUID> players) {
+        for (UUID player : players) {
+            publishFightEnded(player, bossId, false, 0.0F);
+        }
+    }
+
+    private static void publishFightEnded(UUID player, Identifier bossId, boolean defeated, float share) {
+        try {
+            publish(LinkEvent.forPlayer(CreatureLinkModule.MODULE_ID, CreatureLinkModule.TOPIC_FIGHT_ENDED,
+                    player, fightEndedPayload(bossId, defeated, share, System.currentTimeMillis())));
+        } catch (RuntimeException e) {
+            warn(CreatureLinkModule.TOPIC_FIGHT_ENDED, e);
+        }
+    }
+
+    /** Boss, outcome and the player's <b>own</b> share; never anybody else's. */
+    static JsonObject fightEndedPayload(Identifier bossId, boolean defeated, float share, long timestamp) {
+        JsonObject payload = new JsonObject();
+        payload.addProperty("schema_version", CreatureLinkModule.SCHEMA_VERSION);
+        payload.addProperty("type", bossId.toString());
+        payload.addProperty("kind", "boss");
+        payload.addProperty("outcome", defeated ? "defeated" : "ended");
+        payload.addProperty("share", Math.max(0.0F, Math.min(1.0F, share)));
+        payload.addProperty("timestamp", timestamp);
+        payload.add("_notify", CreatureLinkRules.notify(
+                CreatureLinkRules.fightEndedBody(CreatureLinkJson.speciesName(bossId))));
+        return payload;
     }
 
     /**
@@ -146,7 +290,7 @@ public final class CreatureLinkEvents {
             return;
         }
         try {
-            String name = CreatureLinkAccess.readableName(creature.getType());
+            String name = CreatureLinkJson.speciesName(EntityType.getKey(creature.getType()));
             // Game state only: what died, never who or what killed it (POPIA/GDPR).
             raise(level.getServer(), owner, "pet_lost." + creature.getUUID(),
                     LinkAlert.Severity.WARN,
@@ -200,9 +344,11 @@ public final class CreatureLinkEvents {
             return;
         }
         try {
-            String name = CreatureLinkAccess.readablePath(bossId.getPath());
+            String name = CreatureLinkJson.speciesName(bossId);
             String text = "The " + name + " you fought has been defeated.";
             for (BossContributionState.Share share : shares) {
+                // The rich, species-only push first, so it shadows the alert's generic one.
+                publishFightEnded(share.player(), bossId, true, share.fraction());
                 // One id per fight, so a player who fought two bosses gets two alerts and a
                 // re-raise for the same fight replaces rather than stacks.
                 raise(level.getServer(), share.player(), "boss_defeated." + bossId.getPath() + "."
@@ -231,7 +377,7 @@ public final class CreatureLinkEvents {
     /** Raises one alert through Core's per-player store. Never logs who it was raised for. */
     private static void raise(MinecraftServer server, UUID player, String alertId,
             LinkAlert.Severity severity, String text) {
-        if (server == null) {
+        if (server == null || !mayPublishTo(player)) {
             return;
         }
         LinkAlerts.get(server).raise(server, player,
@@ -240,6 +386,9 @@ public final class CreatureLinkEvents {
 
     /** Publish to Core's shared bus; a failure there is logged, never thrown at the caller. */
     private static void publish(LinkEvent event) {
+        if (!event.isBroadcast() && !mayPublishTo(event.playerId())) {
+            return; // the player is being erased
+        }
         try {
             NeroLinkRegistry.eventBus().publish(event);
         } catch (RuntimeException e) {
@@ -250,6 +399,7 @@ public final class CreatureLinkEvents {
     /** Topic only — never who the event was for (POPIA/GDPR). */
     private static void warn(String topic, RuntimeException e) {
         NeroCreaturesCommon.LOGGER.warn(
-                "[NeroCreatures] Publishing the NeroLink '{}' event failed.", topic, e);
+                "[NeroCreatures] Publishing the NeroLink '{}' event failed: {}", topic, e.getClass().getSimpleName());
+        NeroCreaturesTelemetry.captureHandledException(e, "link-event", topic);
     }
 }

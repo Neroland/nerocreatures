@@ -4,7 +4,7 @@ import java.util.Locale;
 
 import com.mojang.serialization.Codec;
 
-/** How a species reproduces (decision 003). Lenient codec: anything unrecognised reads as {@link #LIVE}. */
+/** How a species reproduces. Lenient codec: anything unrecognised reads as {@link #LIVE}. */
 public enum BirthMode {
 
     /** The vanilla {@code spawnChildFromBreeding} path: a baby appears beside the parents. */

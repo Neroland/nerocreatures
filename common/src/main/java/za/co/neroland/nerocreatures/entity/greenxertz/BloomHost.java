@@ -5,7 +5,6 @@ import java.util.List;
 
 import org.jetbrains.annotations.Nullable;
 
-import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
@@ -46,14 +45,15 @@ import za.co.neroland.nerocreatures.entity.boss.NeroBossEntity;
 import za.co.neroland.nerocreatures.entity.visual.VisualPose;
 import za.co.neroland.nerocreatures.world.CreatureOwners;
 import za.co.neroland.nerocreatures.registry.ModSounds;
+import za.co.neroland.nerocreatures.registry.ModParticles;
 
 /**
  * <b>Bloom Host</b> (Greenxertz, hostile) — a stooped walker carrying one huge lopsided flower cap.
- * One entity type with three synced {@code form}s (decision 001): {@code host} (0), {@code sporeling}
+ * One entity type with three synced {@code form}s: {@code host} (0), {@code sporeling}
  * (1: the cap alone on stub legs; the model is authored small) and {@code pod} (2: Bloom Sovereign's
  * spore pod, configured by the boss through {@link #becomePod()}; rooted, never raises).
  *
- * <h2>Ability: sporelings (decision 006, key {@code bloomHostSporelings}, read directly)</h2>
+ * <h2>Ability: sporelings (key {@code bloomHostSporelings}, read directly)</h2>
  *
  * <p>A host hunts players and, every 2 s at most, the wild mobs of {@code #nerocreatures:sporeling_hosts}
  * near it. A mob it kills itself rises as a short-lived sporeling that fights beside it: a spore strand
@@ -149,8 +149,13 @@ public class BloomHost extends NeroCreatureEntity implements Enemy {
         this.refreshDimensions();
     }
 
+    /** Gallery only: shows this fresh display as a sporeling (form 1). It never expires and is saved. */
+    public void becomeGallerySporeling() {
+        this.becomeSporeling();
+    }
+
     /**
-     * Stage 3 hook for Bloom Sovereign: turns this fresh entity into a rooted spore pod. A pod never
+     * Hook for the Bloom Sovereign: turns this fresh entity into a rooted spore pod. A pod never
      * moves and never raises sporelings; the boss owns its health, caps and removal.
      */
     public void becomePod() {
@@ -197,9 +202,10 @@ public class BloomHost extends NeroCreatureEntity implements Enemy {
             // xpReward is not saved: a reloaded pod or sporeling would otherwise give the host's experience.
             this.xpReward = 0;
         }
-        if (this.level() instanceof ServerLevel level && this.isSporeling() && this.isAlive()) {
+        if (this.level() instanceof ServerLevel level && this.isSporeling() && this.isAlive()
+                && !za.co.neroland.nerocreatures.gallery.GalleryDisplays.isDisplay(this)) {
             if (BloomRules.expired(++this.life)) {
-                level.sendParticles(ParticleTypes.SPORE_BLOSSOM_AIR, this.getX(), this.getY() + 0.3D, this.getZ(),
+                level.sendParticles(ModParticles.SPORE_PUFF.get(), this.getX(), this.getY() + 0.3D, this.getZ(),
                         10, 0.25D, 0.2D, 0.25D, 0.0D);
                 this.discard();
             }
@@ -217,7 +223,8 @@ public class BloomHost extends NeroCreatureEntity implements Enemy {
     /** Sporelings are never saved: an unload ends them, so the dimension cap needs no store. */
     @Override
     public boolean shouldBeSaved() {
-        return !this.isSporeling() && super.shouldBeSaved();
+        // A gallery sporeling is a persistent display, saved like any other exhibit.
+        return (!this.isSporeling() || za.co.neroland.nerocreatures.gallery.GalleryDisplays.isDisplay(this)) && super.shouldBeSaved();
     }
 
     @Override
@@ -270,12 +277,12 @@ public class BloomHost extends NeroCreatureEntity implements Enemy {
         ModSounds.BLOOM_HOST_RAISE.play(level, victim.blockPosition(), this.getSoundSource());
     }
 
-    /** The spore strand from corpse to host (decision 007 readability fix). */
+    /** The spore strand from corpse to host (so the link reads at a glance). */
     private void strand(ServerLevel level, Vec3 from) {
         Vec3 to = this.position().add(0.0D, this.getBbHeight() * 0.8D, 0.0D);
         for (int i = 0; i <= BloomRules.STRAND_POINTS; i++) {
             Vec3 at = from.add(0.0D, 0.3D, 0.0D).lerp(to, (double) i / BloomRules.STRAND_POINTS);
-            level.sendParticles(ParticleTypes.SPORE_BLOSSOM_AIR, at.x, at.y, at.z, 1, 0.02D, 0.02D, 0.02D, 0.0D);
+            level.sendParticles(ModParticles.SPORE_MOTE.get(), at.x, at.y, at.z, 1, 0.02D, 0.02D, 0.02D, 0.0D);
         }
     }
 

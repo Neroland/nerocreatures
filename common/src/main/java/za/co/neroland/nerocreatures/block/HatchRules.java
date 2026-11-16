@@ -1,7 +1,7 @@
 package za.co.neroland.nerocreatures.block;
 
 /**
- * What an Incubator hatchling is (decision 003, PROGRESS "Stage 4 egg-baby marking"). Pure.
+ * What an Incubator hatchling is. Pure.
  *
  * <ul>
  *   <li>Always a baby, carrying the egg's traits.</li>

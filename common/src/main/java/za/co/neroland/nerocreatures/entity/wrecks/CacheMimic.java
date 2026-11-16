@@ -32,9 +32,9 @@ import za.co.neroland.nerocreatures.registry.ModSounds;
 
 /**
  * <b>Cache Mimic</b> (wrecks and stations; hostile) — an entity drawn as a loot crate. It places no
- * block (decision 001).
+ * block.
  *
- * <p><b>What it copies</b> (decision 007's open item, answered here): an <b>original salvage crate</b>
+ * <p><b>What it copies</b> (open item, answered here): an <b>original salvage crate</b>
  * in the family style, not a vanilla chest or barrel. A squat, square plated cargo crate: ribbed grey
  * side panels, hazard-yellow corner bands, two side latch clamps, a flat hinged lid with a stencilled
  * chevron, and one sensor-red status pip. This mod has no wreck structure with vanilla containers, so
@@ -105,7 +105,7 @@ public class CacheMimic extends NeroCreatureEntity implements Enemy {
         }
     }
 
-    /** Centres it on its block and snaps its yaw (decision 007). */
+    /** Centres it on its block and snaps its yaw. */
     private void settle() {
         float yaw = MimicRules.snapYaw(this.getYRot());
         this.snapTo(MimicRules.blockCentre(this.getX()), this.getY(), MimicRules.blockCentre(this.getZ()), yaw, 0.0F);
@@ -141,6 +141,10 @@ public class CacheMimic extends NeroCreatureEntity implements Enemy {
 
     @Override
     public InteractionResult mobInteract(Player player, InteractionHand hand) {
+        // A gallery display does nothing (a paddock mount may be ridden by a creative player).
+        if (za.co.neroland.nerocreatures.gallery.GalleryDisplays.isDisplay(this)) {
+            return za.co.neroland.nerocreatures.gallery.GalleryDisplays.interact(this, player, hand);
+        }
         if (!this.isDormant()) {
             return super.mobInteract(player, hand);
         }

@@ -5,8 +5,8 @@ package za.co.neroland.nerocreatures.entity.boss;
  *
  * <ul>
  *   <li><b>Rooted.</b> She never moves; the fight is about the pods around her and her vine.</li>
- *   <li><b>Spore pods</b> ({@code bloom_host} in pod form, decision 001) heal her while they live.
- *       They are entities, never blocks (decision 006), hard-capped, and destroyable.</li>
+ *   <li><b>Spore pods</b> ({@code bloom_host} in pod form) heal her while they live.
+ *       They are entities, never blocks, hard-capped, and destroyable.</li>
  *   <li><b>Infect</b> ({@code ability}, {@value #INFECT_CLIP_TICKS} ticks, the hit at tick
  *       {@value #INFECT_HIT_TICK}): a vine lash that poisons the target and raises a sporeling (her
  *       add) at the target's feet, under her own cap and the shared sporeling dimension cap.</li>

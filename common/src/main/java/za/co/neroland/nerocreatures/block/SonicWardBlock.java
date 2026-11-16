@@ -30,7 +30,7 @@ public class SonicWardBlock extends FieldBlock {
         super(properties);
     }
 
-    /** Registration properties without the id (the integrator adds {@code .setId(key)}). */
+    /** Registration properties without the id (registration adds {@code .setId(key)}). */
     public static BlockBehaviour.Properties fieldProperties() {
         return BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_CYAN).strength(3.0F, 6.0F).sound(SoundType.AMETHYST)
                 .requiresCorrectToolForDrops()

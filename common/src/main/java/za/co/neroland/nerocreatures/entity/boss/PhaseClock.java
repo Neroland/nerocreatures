@@ -1,7 +1,7 @@
 package za.co.neroland.nerocreatures.entity.boss;
 
 /**
- * The 30-tick phase transition of decision 007 section 4.3: when the boss's phase number changes it
+ * The 30-tick phase transition: when the boss's phase number changes it
  * holds still for {@value #TRANSITION_TICKS} ticks (the new phase pose blends in) and starts no
  * ability. Pure Java; the boss ticks it once per server tick with the controller's phase number.
  */

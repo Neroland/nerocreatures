@@ -5,7 +5,7 @@ import net.minecraft.util.RandomSource;
 import org.jetbrains.annotations.Nullable;
 
 /**
- * How traits are rolled and inherited (decision 003).
+ * How traits are rolled and inherited.
  *
  * <ul>
  *   <li><b>Fresh roll</b> (a wild spawn, or an existing save's creature on its first tick): two

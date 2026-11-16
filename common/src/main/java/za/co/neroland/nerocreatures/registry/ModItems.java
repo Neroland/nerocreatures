@@ -87,7 +87,7 @@ public final class ModItems {
     public static final RegistryEntry<Item> ANDROID_CORE = ITEMS.register("android_core",
             key -> new Item(new Item.Properties().stacksTo(16).setId(key)));
 
-    // --- 0.5.0 habitat drops (decision 001) ----------------------------------------------------
+    // --- 0.5.0 habitat drops ----------------------------------------------------
 
     /** Lumen Moth drop — luminous wing-scale dust; light source input ({@code c:dusts/lumen}). */
     public static final RegistryEntry<Item> LUMEN_DUST = ITEMS.register("lumen_dust",
@@ -162,7 +162,7 @@ public final class ModItems {
     public static final RegistryEntry<Item> MIRROR_SCALE = ITEMS.register("mirror_scale",
             key -> new Item(new Item.Properties().setId(key)));
 
-    /** Gravity Leech drop — a gravity reagent; Graviton Boots (Stage 4) and anti-grav parts elsewhere. */
+    /** Gravity Leech drop — a gravity reagent; Graviton Boots and anti-grav parts elsewhere. */
     public static final RegistryEntry<Item> GRAVITON_NODE = ITEMS.register("graviton_node",
             key -> new Item(new Item.Properties().setId(key)));
 
@@ -181,7 +181,7 @@ public final class ModItems {
             key -> new StaticJarItem(new Item.Properties().stacksTo(16).setId(key)));
 
     /**
-     * The Field Scanner (decision 010): hold Use on a creature to scan it into the Bestiary; Sneak +
+     * The Field Scanner: hold Use on a creature to scan it into the Bestiary; Sneak +
      * Use opens the Bestiary. Stack size 1, no durability.
      */
     public static final RegistryEntry<Item> FIELD_SCANNER = ITEMS.register("field_scanner",
@@ -198,7 +198,7 @@ public final class ModItems {
     public static final RegistryEntry<Item> APEX_TROPHY = ITEMS.register("apex_trophy",
             key -> new Item(new Item.Properties().stacksTo(8).setId(key)));
 
-    // --- 0.5.0 boss signature drops (decision 001; one per boss, beside the shared trophy) -------
+    // --- 0.5.0 boss signature drops (one per boss, beside the shared trophy) -------
 
     /** Rime Matriarch drop — a cryogenic core; crafts Rime Flasks, coolant/reactor cooling elsewhere. */
     public static final RegistryEntry<Item> MATRIARCH_FROSTCORE = ITEMS.register("matriarch_frostcore",
@@ -255,14 +255,14 @@ public final class ModItems {
             key -> new DroneShellItem(new Item.Properties().stacksTo(4).setId(key)));
 
     /**
-     * Mount saddle (decision 004): the owner uses it on a tamed mount. Its own item, never the
+     * Mount saddle: the owner uses it on a tamed mount. Its own item, never the
      * vanilla saddle, so there is one code path on every Minecraft line. Crafted, not a drop.
      */
     public static final RegistryEntry<Item> CREATURE_SADDLE = ITEMS.register("creature_saddle",
             key -> new Item(new Item.Properties().stacksTo(1).setId(key)));
 
 
-    // --- 0.5.0 habitat block items (Stage 4) -------------------------------------------------------
+    // --- 0.5.0 habitat block items ---------------------------------------------------------------
 
     public static final RegistryEntry<Item> NEST = ITEMS.register("nest",
             key -> new BlockItem(ModBlocks.NEST.get(), new Item.Properties()
@@ -313,7 +313,7 @@ public final class ModItems {
                     //?}
                     .setId(key)));
 
-    // --- 0.5.0 Capture Pod and creature gear (Stage 4) -------------------------------------------
+    // --- 0.5.0 Capture Pod and creature gear ---------------------------------------------------
 
     /** Captures a small tameable creature (no owner stored) and releases it on a block. */
     public static final RegistryEntry<Item> CAPTURE_POD = ITEMS.register("capture_pod",
@@ -328,7 +328,7 @@ public final class ModItems {
     public static final RegistryEntry<Item> CHITIN_BULWARK = gear("chitin_bulwark", GearKind.CHITIN_BULWARK);
     public static final RegistryEntry<Item> BLOOM_AMULET = gear("bloom_amulet", GearKind.BLOOM_AMULET);
 
-    // --- 0.5.0 creature eggs (Stage 4; traits in custom data, hatched in an Incubator) ----------
+    // --- 0.5.0 creature eggs (traits in custom data, hatched in an Incubator) ----------
     public static final RegistryEntry<Item> LUMEN_MOTH_EGG = ITEMS.register("lumen_moth_egg",
             key -> new Item(new Item.Properties().stacksTo(16).setId(key)));
     public static final RegistryEntry<Item> LODE_TORTOISE_EGG = ITEMS.register("lode_tortoise_egg",

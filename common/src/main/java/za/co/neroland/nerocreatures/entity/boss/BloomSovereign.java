@@ -8,7 +8,6 @@ import java.util.UUID;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
@@ -50,16 +49,17 @@ import za.co.neroland.nerocreatures.entity.greenxertz.SovereignBrood;
 import za.co.neroland.nerocreatures.entity.visual.VisualPose;
 import za.co.neroland.nerocreatures.registry.ModSounds;
 import za.co.neroland.nerocreatures.sound.CreatureSound;
+import za.co.neroland.nerocreatures.registry.ModParticles;
 
 /**
- * <b>Bloom Sovereign</b> — Greenxertz's signature boss (altar-summoned only, decision 001).
+ * <b>Bloom Sovereign</b> — Greenxertz's signature boss (altar-summoned only).
  *
  * <p>Built on {@link BossController}. She is <b>rooted</b>: no movement speed, no movement goals,
  * total knockback resistance. The fight (numbers in {@link SovereignRules}):
  *
  * <ul>
- *   <li><b>Spore pods</b> — {@code bloom_host} in pod form (decision 001), entities never blocks
- *       (decision 006), regrown on a ring around her roots up to a per-phase count under a hard cap of
+ *   <li><b>Spore pods</b> — {@code bloom_host} in pod form, entities never blocks,
+ *       regrown on a ring around her roots up to a per-phase count under a hard cap of
  *       {@value SovereignRules#MAX_PODS}. They have no AI and little health: they are there to be
  *       destroyed.</li>
  *   <li><b>Heal</b> ({@code ability_2}, 60 ticks): pods pulse; at the end of the channel she heals per
@@ -173,7 +173,7 @@ public class BloomSovereign extends NeroBossEntity {
     private void onPhaseEntered(ServerLevel level) {
         this.podTick = 0;
         ModSounds.BLOOM_SOVEREIGN_PHASE.play(this);
-        level.sendParticles(ParticleTypes.SPORE_BLOSSOM_AIR, this.getX(), this.getY() + 3.0D, this.getZ(),
+        level.sendParticles(ModParticles.SPORE_PUFF.get(), this.getX(), this.getY() + 3.0D, this.getZ(),
                 60, 2.0D, 1.0D, 2.0D, 0.0D);
     }
 
@@ -253,7 +253,7 @@ public class BloomSovereign extends NeroBossEntity {
             if (level.addFreshEntity(pod)) {
                 this.pods.add(pod.getId());
                 wanted--;
-                level.sendParticles(ParticleTypes.SPORE_BLOSSOM_AIR, pod.getX(), pod.getY() + 0.5D, pod.getZ(),
+                level.sendParticles(ModParticles.SPORE_PUFF.get(), pod.getX(), pod.getY() + 0.5D, pod.getZ(),
                         12, 0.3D, 0.3D, 0.3D, 0.0D);
             }
         }
@@ -354,7 +354,7 @@ public class BloomSovereign extends NeroBossEntity {
             if (now - this.barkCueAt >= SovereignRules.BARK_CUE_TICKS || now < this.barkCueAt) {
                 this.barkCueAt = now;
                 level.playSound(null, this.blockPosition(), SoundEvents.MOSS_BREAK, SoundSource.HOSTILE, 1.4F, 1.6F);
-                level.sendParticles(ParticleTypes.SPORE_BLOSSOM_AIR, this.getX(), this.getY() + 2.0D, this.getZ(),
+                level.sendParticles(ModParticles.SPORE_PUFF.get(), this.getX(), this.getY() + 2.0D, this.getZ(),
                         8, 1.0D, 1.0D, 1.0D, 0.0D);
             }
             return false;
@@ -421,7 +421,7 @@ public class BloomSovereign extends NeroBossEntity {
             if ((this.tick % 10) == 0) {
                 for (int id : BloomSovereign.this.pods) {
                     if (level.getEntity(id) instanceof BloomHost pod) {
-                        level.sendParticles(ParticleTypes.HAPPY_VILLAGER, pod.getX(), pod.getY() + 0.8D, pod.getZ(),
+                        level.sendParticles(ModParticles.BLOOM_MOTE.get(), pod.getX(), pod.getY() + 0.8D, pod.getZ(),
                                 3, 0.2D, 0.3D, 0.2D, 0.0D);
                     }
                 }
@@ -431,7 +431,7 @@ public class BloomSovereign extends NeroBossEntity {
                         BloomSovereign.this.getHealth(), BloomSovereign.this.livePods(level));
                 if (amount > 0.0F) {
                     BloomSovereign.this.heal(amount);
-                    level.sendParticles(ParticleTypes.HEART, BloomSovereign.this.getX(),
+                    level.sendParticles(ModParticles.BLOOM_MOTE.get(), BloomSovereign.this.getX(),
                             BloomSovereign.this.getY() + 3.5D, BloomSovereign.this.getZ(), 4, 0.8D, 0.4D, 0.8D, 0.0D);
                 }
                 this.running = false;
@@ -513,7 +513,7 @@ public class BloomSovereign extends NeroBossEntity {
             Vec3 to = target.position().add(0.0D, target.getBbHeight() * 0.5D, 0.0D);
             for (int i = 0; i <= 10; i++) {
                 Vec3 at = from.lerp(to, i / 10.0D);
-                level.sendParticles(ParticleTypes.SPORE_BLOSSOM_AIR, at.x, at.y, at.z, 1, 0.02D, 0.02D, 0.02D, 0.0D);
+                level.sendParticles(ModParticles.SPORE_MOTE.get(), at.x, at.y, at.z, 1, 0.02D, 0.02D, 0.02D, 0.0D);
             }
             ModSounds.BLOOM_SOVEREIGN_INFECT.play(BloomSovereign.this);
             DamageSource source = BloomSovereign.this.damageSources().mobAttack(BloomSovereign.this);

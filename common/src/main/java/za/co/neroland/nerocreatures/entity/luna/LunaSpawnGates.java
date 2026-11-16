@@ -10,8 +10,8 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LightLayer;
 
 /**
- * World-reading halves of the decision-005 overworld rules for Lumen Moth and Lode Tortoise, for the
- * integration agent to wire into {@code CreatureSpawns} (position gate overload and the cave
+ * World-reading halves of the overworld spawn rules for Lumen Moth and Lode Tortoise, wired into
+ * {@code CreatureSpawns} (position gate overload and the cave
  * candidate mode). Server thread only; never loads a chunk.
  */
 public final class LunaSpawnGates {

@@ -5,9 +5,9 @@ package za.co.neroland.nerocreatures.entity.boss;
  *
  * <h2>Blizzard beam</h2>
  * The {@code ability} clip is {@value #BEAM_CLIP_TICKS} ticks: telegraph 0–20, beam 20–40, recovery
- * 40–50 (decision 007 / art spec). The beam fires along the direction locked at the end of the
+ * 40–50 . The beam fires along the direction locked at the end of the
  * telegraph and is stopped by the first solid block — the breakable ice pillars are the cover. When
- * arena blocks are denied (decision 006 fallback) there are no pillars, so the telegraph is
+ * arena blocks are denied (the fallback when the griefing gate says no) there are no pillars, so the telegraph is
  * {@value #DENIED_EXTRA_TELEGRAPH} ticks longer (twice as long in total) and any solid block is cover.
  *
  * <h2>Freezing floor</h2>

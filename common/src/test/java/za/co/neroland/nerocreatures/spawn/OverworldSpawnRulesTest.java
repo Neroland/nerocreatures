@@ -10,7 +10,7 @@ import org.junit.jupiter.api.Test;
 
 import za.co.neroland.nerocreatures.entity.luna.LunaSpawnRules;
 
-/** Decision 005: the per-attempt chance keeps overworld spawns rare and the alive cap holds. */
+/** Overworld spawns: the per-attempt chance keeps overworld spawns rare and the alive cap holds. */
 class OverworldSpawnRulesTest {
 
     private static final int ATTEMPTS = 20_000;

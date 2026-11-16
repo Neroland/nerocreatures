@@ -126,7 +126,7 @@ public class DriftLeviathan extends NeroCreatureEntity {
         this.goalSelector.addGoal(5, new DriftGoal(this));
     }
 
-    /** Spawn gate for the integrator's spawn rule: below the per-dimension cap. */
+    /** Spawn gate for its spawn rule: below the per-dimension cap. */
     public static boolean maySpawnNaturally(ServerLevel level) {
         return LeviathanRules.maySpawnNaturally(LOADED.count(dimensionKey(level), id -> isLoadedLeviathan(level, id)));
     }
@@ -256,6 +256,10 @@ public class DriftLeviathan extends NeroCreatureEntity {
 
     @Override
     protected InteractionResult mobInteract(Player player, InteractionHand hand) {
+        // A gallery display does nothing (a paddock mount may be ridden by a creative player).
+        if (za.co.neroland.nerocreatures.gallery.GalleryDisplays.isDisplay(this)) {
+            return za.co.neroland.nerocreatures.gallery.GalleryDisplays.interact(this, player, hand);
+        }
         ItemStack held = player.getItemInHand(hand);
         if (!(held.getItem() instanceof ShearsItem)) {
             return super.mobInteract(player, hand);
@@ -290,7 +294,7 @@ public class DriftLeviathan extends NeroCreatureEntity {
         SpawnGroupData result = super.finalizeSpawn(level, difficulty, spawnReason, groupData);
         if (spawnReason == EntitySpawnReason.NATURAL || spawnReason == EntitySpawnReason.CHUNK_GENERATION) {
             this.liftToCruise(level);
-            // M3: barnacles start partly grown, so one found in the wild is worth landing on.
+            // Barnacles start partly grown, so one found in the wild is worth landing on.
             this.barnacles.setProgress(LeviathanRules.seedBarnacles(this.barnacles.regrowTicks(),
                     this.random.nextDouble()));
             this.visuals().setStage(this.barnacles.stage());
@@ -331,7 +335,7 @@ public class DriftLeviathan extends NeroCreatureEntity {
     }
 
     /**
-     * Saved like any mob (M3; the old "never saved" rule wiped barnacle progress on every unload).
+     * Saved like any mob (the old "never saved" rule wiped barnacle progress on every unload).
      * Vanilla's random despawn between 32 and 128 blocks is skipped; the hard range still applies.
      */
     @Override

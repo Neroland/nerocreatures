@@ -4,7 +4,7 @@ import za.co.neroland.nerocreatures.config.NeroCreaturesConfig;
 
 /**
  * The per-player, per-kind caps on {@link CreatureOwnershipState} rows, all server-authoritative
- * config keys (decision 004):
+ * config keys:
  *
  * <ul>
  *   <li>{@link OwnedCreature.Kind#PET}: {@code maxPetsPerPlayer} (default 3)</li>

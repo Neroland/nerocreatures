@@ -1,0 +1,30 @@
+{
+  "title": "quest.nerocreatures.menagerie.saddle_up.title",
+  "description": "quest.nerocreatures.menagerie.saddle_up.desc",
+  "icon": "nerocreatures:creature_saddle",
+  "prerequisites": [
+    "nerocreatures:menagerie/first_brood"
+  ],
+  "objectives": [
+    {
+      "type": "neroquests:craft_item",
+      "item": "nerocreatures:creature_saddle"
+    },
+    {
+      "type": "neroquests:gate_open",
+      "gate": "nerocreatures:bestiary/studied/dune_loper"
+    }
+  ],
+  "rewards": [
+    {
+      "type": "neroquests:xp",
+      "amount": 120
+    },
+    {
+      "type": "neroquests:currency",
+      "amount": 100
+    }
+  ],
+  "scope": "player",
+  "visible_gate": "nerolandcore:reached_orbit"
+}

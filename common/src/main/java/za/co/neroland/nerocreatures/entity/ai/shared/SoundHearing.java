@@ -129,6 +129,9 @@ public final class SoundHearing implements GameEventListener {
         this.loudness = loud;
         this.sourceEntityId = cause != null ? cause.getId() : -1;
         this.position = sourcePosition;
+        // An expanding ring where the noise was heard: the player sees what gave them away.
+        level.sendParticles(za.co.neroland.nerocreatures.registry.ModParticles.ECHO_RING.get(), sourcePosition.x,
+                sourcePosition.y + 0.2D, sourcePosition.z, 1, 0.0D, 0.0D, 0.0D, 0.0D);
         return true;
     }
 

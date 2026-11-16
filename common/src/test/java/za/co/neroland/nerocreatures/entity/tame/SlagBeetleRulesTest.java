@@ -35,7 +35,7 @@ class SlagBeetleRulesTest {
 
     @Test
     void expectedOutputStaysWithinAQuarterOfAFurnace() {
-        // M6: Bountiful used to multiply (about 1.6 per item); the bound is 1.25x a furnace.
+        // Bountiful used to multiply (about 1.6 per item); the bound is 1.25x a furnace.
         for (int base = 1; base <= 4; base++) {
             for (int rolls = 1; rolls <= 2; rolls++) {
                 double ratio = SlagBeetleRules.expectedOutput(base, rolls) / base;
