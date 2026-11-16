@@ -99,6 +99,22 @@ public final class GearRules {
         return held && !onCooldown && !ownProjectile && incoming;
     }
 
+    /**
+     * Whether the shield turns this kind of projectile at all: never a trident (a loyalty trident
+     * would fly home to the shield holder) or a thrown ender pearl (it would move its thrower).
+     */
+    public static boolean reflectsType(String entityTypeId) {
+        return !"minecraft:trident".equals(entityTypeId) && !"minecraft:ender_pearl".equals(entityTypeId);
+    }
+
+    /**
+     * Whether a reflected projectile becomes the shield holder's. Only a projectile no player owns
+     * (a creature's or a dispenser's); another player's shot is turned back but stays theirs.
+     */
+    public static boolean reflectTakesOwnership(boolean ownedByPlayer) {
+        return !ownedByPlayer;
+    }
+
     // --- Lurker Cloak -------------------------------------------------------------------------
 
     /** Sound hunters ignore a cloaked wearer unless they sprint (sneaking is always silent). */

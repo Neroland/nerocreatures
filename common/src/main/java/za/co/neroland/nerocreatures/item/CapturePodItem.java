@@ -95,6 +95,10 @@ public class CapturePodItem extends Item {
             notify(player, "full");
             return InteractionResult.SUCCESS_SERVER;
         }
+        if (CaptureRules.creativeCopy(player.getAbilities().instabuild, player.getItemInHand(hand) == stack)) {
+            notify(player, "creative");
+            return InteractionResult.SUCCESS_SERVER;
+        }
         CaptureRules.Verdict verdict = CaptureRules.mayCapture(candidate(level, player, mob));
         if (verdict != CaptureRules.Verdict.OK || !(mob instanceof TameableCreature creature)) {
             notify(player, verdict == CaptureRules.Verdict.OK ? "not_capturable" : verdict.key());

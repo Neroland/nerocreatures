@@ -28,6 +28,8 @@ public class FeedingTroughBlockEntity extends InventoryHabitatBlockEntity {
 
     private static IntSupplier intervalTicks = () -> TroughRules.DEFAULT_INTERVAL_TICKS;
 
+    private static IntSupplier maxLivestock = () -> TroughRules.DEFAULT_MAX_LIVESTOCK;
+
     public FeedingTroughBlockEntity(BlockPos pos, BlockState state) {
         super(type(), pos, state);
     }
@@ -36,10 +38,13 @@ public class FeedingTroughBlockEntity extends InventoryHabitatBlockEntity {
         return lookup(ID);
     }
 
-    /** Wires {@code feedingTroughIntervalTicks}; called once at common init. */
-    public static void configure(IntSupplier interval) {
+    /** Wires {@code feedingTroughIntervalTicks} and {@code feedingTroughMaxLivestock}; called once at common init. */
+    public static void configure(IntSupplier interval, IntSupplier crowdCap) {
         if (interval != null) {
             intervalTicks = interval;
+        }
+        if (crowdCap != null) {
+            maxLivestock = crowdCap;
         }
     }
 
@@ -59,7 +64,7 @@ public class FeedingTroughBlockEntity extends InventoryHabitatBlockEntity {
         AABB box = new AABB(pos).inflate(TroughRules.RADIUS, TroughRules.VERTICAL, TroughRules.RADIUS);
         List<LivestockCreature> near = level.getEntitiesOfClass(LivestockCreature.class, box,
                 e -> e.isAlive() && !za.co.neroland.nerocreatures.gallery.GalleryDisplays.isDisplay(e));
-        if (near.size() < 2) {
+        if (near.size() < 2 || TroughRules.crowded(near.size(), maxLivestock.getAsInt())) {
             return;
         }
         List<TroughRules.Candidate<LivestockCreature>> candidates = new ArrayList<>(near.size());

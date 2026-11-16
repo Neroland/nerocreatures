@@ -1,5 +1,7 @@
 package za.co.neroland.nerocreatures.data;
 
+import java.io.IOException;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -13,6 +15,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.level.entity.EntityTypeTest;
+import net.minecraft.world.level.storage.LevelResource;
 
 import za.co.neroland.nerolandcore.config.CoreConfig;
 import za.co.neroland.nerolandcore.data.PlayerDataErasure;
@@ -96,6 +99,8 @@ public final class CreatureData {
         BossContributionState contributions = BossContributionState.get(server);
         int freed = eraseStores(ownership, contributions, player, serverFreer(server));
         logReleased(freed);
+        // A data-access export about this player is a copy of the same record: it goes too.
+        eraseExports(server.getWorldPath(LevelResource.ROOT), player);
         // Core's last-known-good backups are a second copy of the same rows: erasure must reach them
         // in the same request, not at the next periodic backup pass (POPIA/GDPR).
         ownership.backupNow(server);
@@ -152,6 +157,42 @@ public final class CreatureData {
             }
         }
         return freed + freer.sweep(player);
+    }
+
+    /** Deletes the player's export files; logs a count only, and only the exception class on failure. */
+    static int eraseExports(Path worldRoot, UUID player) {
+        try {
+            int deleted = CreatureExportFile.deleteFor(worldRoot, player);
+            if (deleted > 0) {
+                NeroCreaturesCommon.LOGGER.info("[NeroCreatures] Erasure: deleted {} data export file(s).", deleted);
+            }
+            return deleted;
+        } catch (IOException e) {
+            // Exception class only: the message holds a file path (POPIA/GDPR).
+            NeroCreaturesCommon.LOGGER.warn("[NeroCreatures] Erasure: deleting data export files failed: {}",
+                    e.getClass().getSimpleName());
+            return 0;
+        }
+    }
+
+    /**
+     * Retention for data-access export files, run with the daily ownership sweep and on every new
+     * export: deletes files older than {@link CreatureExportFile#lifetimeDays}.
+     */
+    public static int applyExportRetention(Path worldRoot, long now) {
+        try {
+            int deleted = CreatureExportFile.deleteExpired(worldRoot, now,
+                    CreatureExportFile.lifetimeDays(CoreConfig.DATA_RETENTION_DAYS.get()));
+            if (deleted > 0) {
+                NeroCreaturesCommon.LOGGER.info("[NeroCreatures] Retention: deleted {} expired data export file(s).",
+                        deleted);
+            }
+            return deleted;
+        } catch (IOException e) {
+            NeroCreaturesCommon.LOGGER.warn("[NeroCreatures] Retention: deleting data export files failed: {}",
+                    e.getClass().getSimpleName());
+            return 0;
+        }
     }
 
     private static void logReleased(int freed) {

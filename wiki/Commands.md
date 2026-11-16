@@ -160,7 +160,8 @@ feet is never touched.
 It writes nothing about any player. Bosses are posed and start no fight, bar or cooldown; no display
 is tamed, owned or counted; demo plates play visuals only. `clear` removes **only the entities the
 gallery placed** (by tag) plus dropped items and XP: your own pets, mounts and other animals inside the
-box stay. With no gallery nearby, `clear` clears the old 0.4 showcase box around you the same way.
+box stay, and so do containers that are not the gallery's own blocks. With no gallery within 96 blocks,
+`clear` refuses and changes nothing.
 
 The client-side `/ncgallery capture` screenshot harness that photographs it is on the
 [Gallery](Gallery.md) page.

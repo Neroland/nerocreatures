@@ -110,7 +110,8 @@ public final class NeroCreaturesCommon {
         // 8e. Apex Altar recharge, read live (per altar, never per player).
         ApexAltarBlockEntity.configure(() -> NeroCreaturesConfig.APEX_ALTAR_COOLDOWN_TICKS.get());
         // 8f. Habitat blocks, read live (per block, never per player).
-        FeedingTroughBlockEntity.configure(() -> NeroCreaturesConfig.FEEDING_TROUGH_INTERVAL_TICKS.get());
+        FeedingTroughBlockEntity.configure(() -> NeroCreaturesConfig.FEEDING_TROUGH_INTERVAL_TICKS.get(),
+                () -> NeroCreaturesConfig.FEEDING_TROUGH_MAX_LIVESTOCK.get());
         IncubatorBlockEntity.configure(() -> NeroCreaturesConfig.INCUBATOR_HATCH_TICKS.get(),
                 () -> NeroCreaturesConfig.INCUBATOR_POWERED_HATCH_TICKS.get(),
                 () -> NeroCreaturesConfig.INCUBATOR_ENERGY_PER_TICK.get());

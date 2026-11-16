@@ -1132,9 +1132,11 @@ public final class MenagerieBuilder {
     }
 
     /**
-     * The clear steps: every container in the box emptied first (slab by slab), then every non-air
-     * block to air from the top down (slab by slab; the layer below F is never touched), then the
-     * tagged entities (anchor last) and item and XP litter. Counts go to {@code result}.
+     * The clear steps: the gallery's own habitat blocks and lectern emptied first (slab by slab), then
+     * every other non-air block to air from the top down (slab by slab; the layer below F is never
+     * touched), then the tagged entities (anchor last) and item and XP litter. Any other block that holds
+     * things ({@link MenagerieLayout#clearKeepsBlock}) is left exactly as it is. Counts go to
+     * {@code result}.
      */
     private static void bulldozeSteps(Deque<Runnable> steps, ServerLevel level, BlockPos origin,
             MenagerieLayout.Box box, int[] result) {
@@ -1170,8 +1172,8 @@ public final class MenagerieBuilder {
                     BlockEntity be = level.getBlockEntity(cursor);
                     if (be instanceof HabitatBlockEntity habitat) {
                         habitat.emptyForGallery();
-                    } else if (be instanceof Clearable clearable) {
-                        clearable.clearContent();
+                    } else if (be instanceof net.minecraft.world.level.block.entity.LecternBlockEntity lectern) {
+                        lectern.clearContent();
                     }
                 }
             }
@@ -1186,7 +1188,7 @@ public final class MenagerieBuilder {
             for (int x = minX; x <= maxX; x++) {
                 for (int z = minZ; z <= maxZ; z++) {
                     cursor.set(x, y, z);
-                    if (!level.getBlockState(cursor).isAir()) {
+                    if (!level.getBlockState(cursor).isAir() && !keeps(level.getBlockEntity(cursor))) {
                         level.setBlock(cursor, air, FLAGS);
                         cleared++;
                     }
@@ -1194,6 +1196,14 @@ public final class MenagerieBuilder {
             }
         }
         return cleared;
+    }
+
+    /** A block {@code clear} must not touch: see {@link MenagerieLayout#clearKeepsBlock}. */
+    private static boolean keeps(@org.jetbrains.annotations.Nullable BlockEntity be) {
+        return be != null && MenagerieLayout.clearKeepsBlock(
+                be instanceof net.minecraft.world.Container || be instanceof Clearable,
+                be instanceof HabitatBlockEntity,
+                be instanceof net.minecraft.world.level.block.entity.LecternBlockEntity);
     }
 
     private static int discardTagged(ServerLevel level, AABB aabb) {

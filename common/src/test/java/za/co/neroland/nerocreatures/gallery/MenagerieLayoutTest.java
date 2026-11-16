@@ -274,6 +274,10 @@ class MenagerieLayoutTest {
         assertFalse(MenagerieLayout.clearRemoves(Set.of(), false), "a player's pet stays");
         assertFalse(MenagerieLayout.clearRemoves(Set.of("nerocreatures:nest_home"), false), "untagged stays");
         assertFalse(MenagerieLayout.clearRemoves(Set.of("my_gallery"), false));
+        assertTrue(MenagerieLayout.clearKeepsBlock(true, false, false), "a player's chest is neither emptied nor removed");
+        assertFalse(MenagerieLayout.clearKeepsBlock(true, true, false), "the gallery's own habitat block goes");
+        assertFalse(MenagerieLayout.clearKeepsBlock(true, false, true), "the builder's lectern goes");
+        assertFalse(MenagerieLayout.clearKeepsBlock(false, false, false), "plain blocks go");
     }
 
     // --- shots -------------------------------------------------------------------------------------

@@ -29,7 +29,8 @@ nest is never loaded just to check it.
 Put breeding food in it (5 slots). Every `feedingTroughIntervalTicks` (200) it looks at up to 32
 livestock within 6 blocks and puts one eligible pair of **husbanded adults** in love with their species'
 food. Wild herds and babies are never fed. Love from a trough has no player cause, so nothing about a
-player is recorded. 0 = troughs never feed.
+player is recorded. 0 = troughs never feed. It stops feeding while `feedingTroughMaxLivestock` (16)
+livestock, babies included, are already in range, so one trough cannot fill a pen without limit.
 
 ## Incubator
 
@@ -60,7 +61,9 @@ fields count per dimension.
 Use a filled [Capture Pod](Gear.md#capture-pod) on an empty Terrarium to move its creature in; use an
 empty pod on a full one to take it back out. Only small species fit
 (`#nerocreatures:terrarium_small`). A full Terrarium cannot be mined in survival and resists
-explosions, so a creature is never lost: empty it with a pod first.
+explosions, so a creature is never lost: empty it with a pod first. If a full Terrarium is removed some
+other way (creative mode, a command, another mod's block breaker), its creature drops as a filled
+Capture Pod.
 
 ## Trophy Plaque
 
@@ -73,6 +76,7 @@ never a swap.
 | Key | Default | Range | What it does |
 | --- | --- | --- | --- |
 | `feedingTroughIntervalTicks` | 200 | 0-24000 | Ticks between a trough's feeding pulses. 0 = never feeds. |
+| `feedingTroughMaxLivestock` | 16 | 2-256 | No pair is fed while this many livestock are in range. |
 | `incubatorHatchTicks` | 24000 | 1200-240000 | Unpowered hatch time. |
 | `incubatorPoweredHatchTicks` | 6000 | 600-240000 | Fully powered hatch time. |
 | `incubatorEnergyPerTick` | 20 | 0-10000 | Energy pulled per tick from adjacent storages. 0 = power ignored. |

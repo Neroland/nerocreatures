@@ -29,7 +29,8 @@ One request removes you from every Nero mod at once:
 
 For NeroCreatures this removes every ownership row, frees your loaded pets and mounts (a mount drops
 its saddle and panniers), recalls your drones into their shells, clears vanilla's breeding cause that
-names you, removes you from running boss fights and rewrites the crash-recovery backups. A creature in
+names you, removes you from running boss fights, deletes any data export file about you and rewrites
+the crash-recovery backups. A creature in
 an unloaded chunk is freed the next time it loads, through an erasure marker. Nothing is sent to you
 while this happens. Run `/save-all` afterwards if you need the erase on disk before the next autosave.
 See [Data storage](Data-Storage.md) for the details.
@@ -38,7 +39,9 @@ See [Data storage](Data-Storage.md) for the details.
 
 `/nerocreatures export <player>` (operator level 2) writes everything NeroCreatures holds about one
 player, and nothing about anyone else, to a JSON file under the world folder. It works with a raw UUID
-for a player who has left. See [Commands](Commands.md#nerocreatures-export-player).
+for a player who has left. See [Commands](Commands.md#nerocreatures-export-player). The file is a
+one-off copy: the mod deletes it after 7 days (or Core's `dataRetentionDays` if shorter), and erasing
+the player deletes every export about them.
 
 ## Retention
 

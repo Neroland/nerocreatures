@@ -396,8 +396,8 @@ public final class BossController {
             }
         }
         this.fire(level, 0L, this.phases.size(), false);
-        // The companion-app side of the same news: a broadcast event carrying no player data, plus
-        // one private alert per recorded participant of a summoned fight.
+        // The companion-app side of the same news: one event and one private alert per recorded
+        // participant of a summoned fight, and nothing to anybody else.
         CreatureLinkEvents.bossDefeated(level, this.bossId, this.phases.size(),
                 this.fightId != null, shares);
         this.unbindFight();
@@ -448,10 +448,11 @@ public final class BossController {
         if (runEntry) {
             phase.onEnter().accept(level);
             this.fire(level, this.phaseNumber(), this.phaseNumber(), true);
-            // Same news, second audience: a companion-app broadcast. Boss, phase and dimension —
-            // nothing player-shaped, exactly like the threshold crossing above it.
+            // Same news, second audience: the fight's own participants' companion apps, each on their
+            // own. Boss, phase and dimension; nothing player-shaped, and nobody outside the fight.
             CreatureLinkEvents.bossPhase(level, this.bossId, this.phaseNumber(), this.phases.size(),
-                    this.fightId != null);
+                    this.fightId != null, this.fightId == null ? java.util.List.of()
+                            : BossContributionState.get(level.getServer()).participants(this.fightId));
         }
     }
 

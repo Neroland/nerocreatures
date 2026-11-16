@@ -185,6 +185,8 @@ public final class CreatureOwnershipState extends SavedData {
                 // Markers went after Core's get() refreshed the backup; push the expiry into it.
                 state.backupNow(server);
             }
+            CreatureData.applyExportRetention(
+                    server.getWorldPath(net.minecraft.world.level.storage.LevelResource.ROOT), now);
         }
         state.reportMarkersDroppedAtCap();
         return state;

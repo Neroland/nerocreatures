@@ -31,6 +31,14 @@ class ScrapHulkRulesTest {
     }
 
     @Test
+    void onlyRealMechanicalDeathsFeedAssembly() {
+        assertTrue(ScrapHulkRules.feedsAssembly(true, false, false));
+        assertFalse(ScrapHulkRules.feedsAssembly(true, false, true), "a gallery display never builds a hulk");
+        assertFalse(ScrapHulkRules.feedsAssembly(true, true, false), "a hulk never feeds another");
+        assertFalse(ScrapHulkRules.feedsAssembly(false, false, false));
+    }
+
+    @Test
     void staleOrDistantDeathsDoNotCount() {
         long now = 1000L;
         Death old = new Death(now - ScrapHulkRules.WINDOW_TICKS - 1, 0, 64, 0);

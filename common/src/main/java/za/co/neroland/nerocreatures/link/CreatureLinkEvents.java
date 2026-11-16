@@ -28,7 +28,7 @@ import za.co.neroland.nerocreatures.telemetry.NeroCreaturesTelemetry;
 
 /**
  * The live half of the link module: the few things worth telling a player's phone about, plus the
- * boss broadcasts and the two alerts.
+ * participant-only boss events and the two alerts.
  *
  * <h2>Player events — each one a push when the player has turned on the "Creatures" category</h2>
  *
@@ -53,10 +53,12 @@ import za.co.neroland.nerocreatures.telemetry.NeroCreaturesTelemetry;
  * published any more (schema 2): the app polls the {@code pets} section for them. The topic and
  * payload shape of {@code pet_state_changed} are unchanged for schema-1 clients.
  *
- * <h2>Broadcasts</h2>
+ * <h2>Boss events</h2>
  *
- * <p>{@code boss_phase} and {@code boss_defeated} go to every session and therefore carry a boss, a
- * phase, a phase count and a dimension id — nothing about any player. A broadcast never pushes.
+ * <p>{@code boss_phase} and {@code boss_defeated} go only to the recorded participants of a summoned
+ * fight (the summoner included), one player-scoped copy each, and carry a boss, a phase, a phase count
+ * and a dimension id — nothing about any player. Nobody outside the fight hears of it, and a natural
+ * fight, which records nobody, sends nothing. They carry no push copy, so they never push.
  *
  * <h2>Alerts</h2>
  *
@@ -304,28 +306,39 @@ public final class CreatureLinkEvents {
 
     // --- boss_phase -----------------------------------------------------------
 
-    /** Broadcasts a phase transition. Carries a boss, a phase and a place — never a person. */
+    /**
+     * Sends a phase transition to each recorded participant of the fight, on their own. Carries a boss,
+     * a phase and a place, never a person. A natural fight records nobody, so it sends nothing: a
+     * fight's dimension is never told to players who are not in it.
+     */
     public static void bossPhase(ServerLevel level, Identifier bossId, int phase, int phaseCount,
-            boolean summoned) {
+            boolean summoned, List<UUID> participants) {
         try {
             JsonObject payload = bossPayload(level, bossId, phaseCount, summoned);
             payload.addProperty("phase", phase);
-            publish(LinkEvent.broadcast(CreatureLinkModule.MODULE_ID,
-                    CreatureLinkModule.TOPIC_BOSS_PHASE, payload));
+            for (LinkEvent event : toParticipants(CreatureLinkModule.TOPIC_BOSS_PHASE, payload, participants)) {
+                publish(event);
+            }
         } catch (RuntimeException e) {
             warn(CreatureLinkModule.TOPIC_BOSS_PHASE, e);
         }
     }
 
+    /** One player-scoped copy of a boss event per participant; never a broadcast. */
+    static List<LinkEvent> toParticipants(String topic, JsonObject payload, List<UUID> participants) {
+        List<LinkEvent> events = new java.util.ArrayList<>(participants.size());
+        for (UUID player : participants) {
+            events.add(LinkEvent.forPlayer(CreatureLinkModule.MODULE_ID, topic, player, payload.deepCopy()));
+        }
+        return events;
+    }
+
     // --- boss_defeated --------------------------------------------------------
 
     /**
-     * Broadcasts a defeat, then raises one private alert per recorded participant.
-     *
-     * <p>The broadcast and the alerts carry deliberately different things. The broadcast says only
-     * that a boss fell in a dimension — it reaches everybody, so it may not say who was there. The
-     * alerts are private to one player each and say "a boss you fought was defeated", which is a
-     * fact about that player's own participation.
+     * Sends the defeat to each recorded participant on their own, then raises one private alert per
+     * participant. Nobody who was not in the fight hears of it, so the dimension and the participant
+     * count never reach a bystander. A natural fight records nobody and sends nothing.
      *
      * @param shares the resolved contribution shares, already emptied out of the store by the
      *               caller; empty for a natural fight, which alerts nobody
@@ -335,8 +348,13 @@ public final class CreatureLinkEvents {
         try {
             JsonObject payload = bossPayload(level, bossId, phaseCount, summoned);
             payload.addProperty("participants", shares.size());
-            publish(LinkEvent.broadcast(CreatureLinkModule.MODULE_ID,
-                    CreatureLinkModule.TOPIC_BOSS_DEFEATED, payload));
+            List<UUID> players = new java.util.ArrayList<>(shares.size());
+            for (BossContributionState.Share share : shares) {
+                players.add(share.player());
+            }
+            for (LinkEvent event : toParticipants(CreatureLinkModule.TOPIC_BOSS_DEFEATED, payload, players)) {
+                publish(event);
+            }
         } catch (RuntimeException e) {
             warn(CreatureLinkModule.TOPIC_BOSS_DEFEATED, e);
         }

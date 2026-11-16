@@ -291,14 +291,18 @@ public final class CreatureLinkJson {
     }
 
     /**
-     * {@code bosses}: summoned fights in progress with the asking player's own damage and share (0 in a
-     * fight they are not in) and a participant <b>count</b>; and (schema 2) the player's own altars by
-     * label number only.
+     * {@code bosses}: the summoned fights in progress that the asking player is recorded in (they
+     * summoned it or hit the boss), with their own damage and share and a participant <b>count</b>; and
+     * (schema 2) the player's own altars by label number only. Fights they are not in are left out
+     * entirely, so nobody learns where somebody else is fighting or how many are with them.
      */
     public static JsonObject bosses(List<Fight> fights, BossContributionState contribution, UUID player,
             List<AltarUses.Row> altars, boolean online) {
         JsonArray rows = new JsonArray();
         for (Fight fight : fights) {
+            if (!contribution.isParticipant(fight.fight(), player)) {
+                continue;
+            }
             JsonObject row = new JsonObject();
             row.addProperty("fight", fight.fight().toString());
             row.addProperty("boss", fight.boss().toString());

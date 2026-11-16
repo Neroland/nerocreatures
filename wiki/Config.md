@@ -101,7 +101,7 @@ See [Link module](Link-Module.md#validation-and-refusals).
 ## Habitat blocks and gear
 
 The habitat-block keys are on [Habitat Blocks](Habitat-Blocks.md#config) and the gear keys on
-[Gear](Gear.md): `feedingTroughIntervalTicks`, `incubatorHatchTicks`, `incubatorPoweredHatchTicks`,
+[Gear](Gear.md): `feedingTroughIntervalTicks`, `feedingTroughMaxLivestock`, `incubatorHatchTicks`, `incubatorPoweredHatchTicks`,
 `incubatorEnergyPerTick`, `lureBeaconBaitTicks`, `lureBeaconWeightMultiplier`, `sonicWardFuelTicks`,
 `nestHealIntervalTicks`, `mirrorShieldCooldownTicks`, `lurkerCloakSilences`, `blinkCharmCooldownTicks`,
 `blinkCharmRange`, `rimeFlaskCooldownTicks`, `heatGlandGreavesLavaTicks`,

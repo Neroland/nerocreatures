@@ -102,13 +102,13 @@ The bosses in the hall are posed, not fighting: no boss bar, no arena, no contri
 ## Clearing
 
 `/nerocreatures gallery clear` finds the nearest gallery within 96 blocks (you can be anywhere inside
-it), stops its demos, puts any rider off a paddock mount, empties every container, turns every block in
-its box to air (never the layer below the floor) and removes **only the entities the gallery placed**.
-Your own pets, mounts and any other animal that wandered in stay where they are. Nothing is killed, so
-nothing drops.
+it), stops its demos, puts any rider off a paddock mount, empties the gallery's own habitat blocks and
+lectern, turns every other block in its box to air (never the layer below the floor) and removes **only
+the entities the gallery placed**. Your own pets, mounts and any other animal that wandered in stay
+where they are, and so does any chest, barrel or machine you put inside it, contents and all. Nothing
+is killed, so nothing drops.
 
-With no gallery nearby, `clear` falls back to clearing the old 0.4 showcase box around you, again
-removing only tagged entities.
+With no gallery within 96 blocks, `clear` refuses and changes nothing.
 
 ## Privacy
 

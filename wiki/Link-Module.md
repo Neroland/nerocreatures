@@ -15,15 +15,15 @@ all.
 | --- | --- | --- |
 | Section | `bestiary` | Every creature with its habitat and kind, and **your** discovery tier, kill counts and study progress |
 | Section | `pets` | **Your** pets, mounts, drones and incubating eggs, with health, traits, orders and timers |
-| Section | `bosses` | Summoned boss fights in progress with **your** share, and **your** altars' cooldowns |
+| Section | `bosses` | Summoned boss fights **you** are in, with **your** share, and **your** altars' cooldowns |
 | Action | `pet_recall` | Bring your own pets and mounts to you |
 | Action | `pet_command` | Tell one of your own pets or mounts to follow, stay or sit |
 | Event | `pet_state_changed` | One of your creatures died |
 | Event | `creature_hurt` | One of your creatures is badly hurt |
 | Event | `egg_hatched` | An egg you were incubating hatched |
 | Event | `fight_ended` | A summoned boss fight you joined ended |
-| Event | `boss_phase` | A boss fight escalated (broadcast) |
-| Event | `boss_defeated` | A boss fight ended in the boss's defeat (broadcast) |
+| Event | `boss_phase` | A boss fight you are in escalated |
+| Event | `boss_defeated` | A boss fight you were in ended in the boss's defeat |
 | Alert | your pet died | Raised for the owner |
 | Alert | a boss you fought was defeated | Raised for each participant of a summoned fight |
 
@@ -120,8 +120,9 @@ world's entity index without loading a chunk; a parked pet reads as `unloaded`.
 }
 ```
 
-- `fights` (schema 1) lists every summoned fight in progress. `your_damage` and `your_share` are
-  **yours** (0 in a fight you are not in); `participants` is a count, never a list.
+- `fights` (schema 1) lists the summoned fights in progress that **you** are in: you summoned it or
+  hit the boss. Other players' fights are never listed, so the app never shows where somebody else is
+  fighting. `your_damage` and `your_share` are **yours**; `participants` is a count, never a list.
 - `altars` (schema 2) are the Apex Altars **you** lit. An altar has no name and no position here,
   only `index`, a label number that stays the same while the altar is remembered. `state` is
   `ready`, `cooldown` (with `ready_in_s`) or `fighting` (your fight there is still going).
@@ -131,7 +132,7 @@ world's entity index without loading a chunk; a parked pet reads as `unloaded`.
 ## Action: `pet_recall`
 
 Parameters: `{"pet": "<entity>"}` for one creature, or `{}` for all your pets and mounts. Only
-creatures in **your** dimension, loaded, and not ridden or perched are moved; each is placed on solid
+creatures in **your** dimension, loaded, still yours, and not ridden, perched or leashed are moved; each is placed on solid
 ground within 3 blocks of you, or skipped. Result:
 
 ```json
@@ -187,8 +188,8 @@ Refusals carry a token as the message, never a sentence:
 | `creature_hurt` | yours | `entity`, `kind`, `type`, `timestamp`, `_notify` | "Your Dune Loper is badly hurt." |
 | `egg_hatched` | yours | `type`, `kind` (`egg`), `timestamp`, `_notify` | "A Lumen Moth egg has hatched." |
 | `fight_ended` | yours | `type` (boss), `kind` (`boss`), `outcome` (`defeated` or `ended`), `share` (yours), `timestamp`, `_notify` | "The Rime Matriarch fight has ended." |
-| `boss_phase` | broadcast | `boss`, `name`, `dimension`, `phase`, `phase_count`, `summoned`, `timestamp` | never |
-| `boss_defeated` | broadcast | as above, plus `participants` | never |
+| `boss_phase` | the fight's participants | `boss`, `name`, `dimension`, `phase`, `phase_count`, `summoned`, `timestamp` | never |
+| `boss_defeated` | the fight's participants | as above, plus `participants` | never |
 
 - **Push notifications are off by default.** The bridge sends a push for an event only when you have
   turned on the **Creatures** category in the app (wire category `nerocreatures`) and the app is not

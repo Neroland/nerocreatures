@@ -181,7 +181,8 @@ public final class CreatureLinkActions implements LinkActionHandler {
             if (requested != null && rows.stream().noneMatch(row -> row.entity().equals(requested))) {
                 return refuse(LinkActionResult.Error.NOT_OWNER, NOT_OWNER);
             }
-            return recall ? recall(owner, rows, requested) : command(server, playerId, rows, requested, order);
+            return recall ? recall(owner, playerId, rows, requested)
+                    : command(server, playerId, rows, requested, order);
         } catch (RuntimeException e) {
             // Action id only — never who asked (POPIA/GDPR).
             NeroCreaturesCommon.LOGGER.warn("[NeroCreatures] NeroLink action '{}' failed: {}", actionId,
@@ -234,7 +235,22 @@ public final class CreatureLinkActions implements LinkActionHandler {
 
     // --- pet_recall -----------------------------------------------------------------
 
-    private static LinkActionResult recall(ServerPlayer owner, List<OwnedCreature> rows, @Nullable UUID requested) {
+    /**
+     * Why a loaded creature found for a recall row is skipped, or {@code null} to move it. The creature's
+     * own owner must be the asker, exactly as for {@code pet_command}: a store row alone never moves a
+     * creature (if the two ever disagree, it answers as though it were not theirs).
+     *
+     * @param movable alive, not perched, not riding or ridden, not leashed
+     */
+    static @Nullable String recallSkip(UUID asker, @Nullable UUID entityOwner, boolean movable) {
+        if (!movable) {
+            return NOT_LOADED;
+        }
+        return asker.equals(entityOwner) ? null : NOT_OWNER;
+    }
+
+    private static LinkActionResult recall(ServerPlayer owner, UUID playerId, List<OwnedCreature> rows,
+            @Nullable UUID requested) {
         if (!(owner.level() instanceof ServerLevel ownerLevel)) {
             return refuse(LinkActionResult.Error.INTERNAL, INTERNAL);
         }
@@ -259,13 +275,16 @@ public final class CreatureLinkActions implements LinkActionHandler {
                 reason = OTHER_DIMENSION;
             } else {
                 Entity entity = ownerLevel.getEntity(row.entity());
-                if (!(entity instanceof TameableCreature found) || !found.isAlive() || found.isPerched()
-                        || found.isPassenger() || found.isVehicle()) {
+                if (!(entity instanceof TameableCreature found)) {
                     reason = NOT_LOADED;
                 } else {
-                    pet = found;
-                    if (!teleportNear(ownerLevel, pet, owner)) {
-                        reason = NO_ROOM;
+                    reason = recallSkip(playerId, found.ownerId(), found.isAlive() && !found.isPerched()
+                            && !found.isPassenger() && !found.isVehicle() && !found.isLeashed());
+                    if (reason == null) {
+                        pet = found;
+                        if (!teleportNear(ownerLevel, pet, owner)) {
+                            reason = NO_ROOM;
+                        }
                     }
                 }
             }
@@ -289,6 +308,9 @@ public final class CreatureLinkActions implements LinkActionHandler {
             return refuse(LinkActionResult.Error.VALIDATION, NO_PETS);
         }
         if (recalled.isEmpty()) {
+            if (NOT_OWNER.equals(firstSkip)) {
+                return refuse(LinkActionResult.Error.NOT_OWNER, NOT_OWNER);
+            }
             return refuse(LinkActionResult.Error.VALIDATION, firstSkip == null ? NOT_LOADED : firstSkip);
         }
 

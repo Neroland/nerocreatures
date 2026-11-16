@@ -193,12 +193,16 @@ class CreatureLinkSchemaTest {
 
         JsonObject bosses = world.bosses(ALICE);
         JsonArray fights = bosses.getAsJsonArray("fights");
+        assertEquals(1, fights.size(), "a fight Alice is not in is not listed at all");
         JsonObject shared = fights.get(0).getAsJsonObject();
-        JsonObject bobs = fights.get(1).getAsJsonObject();
+        assertEquals(world.sharedFight.toString(), shared.get("fight").getAsString());
+        assertFalse(bosses.toString().contains(world.bobsFight.toString()), "Bob's own fight never reaches Alice");
         assertEquals(30.0D, shared.get("your_damage").getAsDouble(), 1e-6, "own damage only");
         assertEquals(0.25D, shared.get("your_share").getAsDouble(), 1e-6, "own share of the aggregate");
         assertEquals(2, shared.get("participants").getAsInt(), "a count, not a roster");
-        assertEquals(0.0D, bobs.get("your_damage").getAsDouble(), 1e-6, "a fight Alice is not in shows nothing of hers");
+        assertEquals(2, world.bosses(BOB).getAsJsonArray("fights").size(), "Bob is in both");
+        assertEquals(0, world.bosses(UUID.randomUUID()).getAsJsonArray("fights").size(),
+                "a bystander sees no fight, no dimension and no count");
         assertEquals(1, bosses.getAsJsonArray("altars").size(), "only Alice's own altar");
         assertEquals(2, world.bosses(BOB).getAsJsonArray("altars").size());
         assertFalse(bosses.toString().contains("90.0"), "Bob's damage never reaches Alice");
@@ -231,6 +235,38 @@ class CreatureLinkSchemaTest {
         assertNoPlaceAndNoPlayer(CreatureLinkEvents.fightEndedPayload(MATRIARCH, true, 0.25F, 1L), "fight_ended");
         // The altar block position held in memory never reaches the section.
         assertFalse(world.bosses(BOB).toString().contains("987654321"));
+    }
+
+    @Test
+    void recallChecksTheCreaturesOwnOwnerLikeCommandDoes() {
+        assertEquals(null, CreatureLinkActions.recallSkip(ALICE, ALICE, true));
+        assertEquals(CreatureLinkActions.NOT_OWNER, CreatureLinkActions.recallSkip(ALICE, BOB, true),
+                "a stale store row never moves somebody else's creature");
+        assertEquals(CreatureLinkActions.NOT_OWNER, CreatureLinkActions.recallSkip(ALICE, null, true),
+                "a creature that went wild is not recalled");
+        assertEquals(CreatureLinkActions.NOT_LOADED, CreatureLinkActions.recallSkip(ALICE, ALICE, false),
+                "leashed, ridden, perched or dead stays put");
+    }
+
+    @Test
+    void bossEventsGoOnlyToTheFightsParticipants() {
+        World world = new World();
+        JsonObject payload = new JsonObject();
+        payload.addProperty("dimension", "nerospace:glacira");
+        List<za.co.neroland.nerolandcore.link.LinkEvent> events = CreatureLinkEvents.toParticipants(
+                CreatureLinkModule.TOPIC_BOSS_PHASE, payload, world.contribution.participants(world.sharedFight));
+        assertEquals(2, events.size());
+        Set<UUID> recipients = new java.util.HashSet<>();
+        for (za.co.neroland.nerolandcore.link.LinkEvent event : events) {
+            assertFalse(event.isBroadcast(), "never a broadcast");
+            recipients.add(event.playerId());
+        }
+        assertEquals(Set.of(ALICE, BOB), recipients);
+        assertEquals(List.of(BOB), world.contribution.participants(world.bobsFight));
+        assertTrue(CreatureLinkEvents.toParticipants(CreatureLinkModule.TOPIC_BOSS_DEFEATED, payload, List.of())
+                .isEmpty(), "a natural fight records nobody and tells nobody");
+        assertTrue(world.contribution.isParticipant(world.sharedFight, ALICE));
+        assertFalse(world.contribution.isParticipant(world.bobsFight, ALICE));
     }
 
     @Test

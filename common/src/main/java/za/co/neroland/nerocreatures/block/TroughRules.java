@@ -19,6 +19,9 @@ import java.util.function.Predicate;
  *       {@value #MAX_SCANNED} animals looked at and at most one pair per pulse.</li>
  *   <li><b>Cadence.</b> One pulse every {@code feedingTroughIntervalTicks} (default
  *       {@value #DEFAULT_INTERVAL_TICKS}); 0 switches troughs off.</li>
+ *   <li><b>Crowd cap.</b> No pair is fed while {@code feedingTroughMaxLivestock} (default
+ *       {@value #DEFAULT_MAX_LIVESTOCK}) or more livestock, babies included, are already in range, so one
+ *       filled trough cannot breed a pen without limit.</li>
  * </ul>
  */
 public final class TroughRules {
@@ -30,6 +33,8 @@ public final class TroughRules {
     public static final int MAX_SCANNED = 32;
 
     public static final int DEFAULT_INTERVAL_TICKS = 200;
+
+    public static final int DEFAULT_MAX_LIVESTOCK = 16;
 
     private TroughRules() {
     }
@@ -65,6 +70,11 @@ public final class TroughRules {
             }
         }
         return List.of();
+    }
+
+    /** Whether the pen is full: {@code inRange} livestock (babies included) at or past {@code cap}. */
+    public static boolean crowded(int inRange, int cap) {
+        return inRange >= Math.max(2, cap);
     }
 
     /** Whether a pulse is due; an interval of 0 or less switches the trough off. */

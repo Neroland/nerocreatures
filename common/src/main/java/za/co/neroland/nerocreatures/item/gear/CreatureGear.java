@@ -165,11 +165,15 @@ public final class CreatureGear {
             Vec3 v = projectile.getDeltaMovement();
             Vec3 to = centre.subtract(projectile.position());
             boolean own = projectile.getOwner() == player;
-            if (!GearRules.mayReflect(true, false, own, GearRules.isIncoming(v.x, v.y, v.z, to.x, to.y, to.z))) {
+            if (!GearRules.reflectsType(net.minecraft.world.entity.EntityType.getKey(projectile.getType()).toString())
+                    || !GearRules.mayReflect(true, false, own,
+                            GearRules.isIncoming(v.x, v.y, v.z, to.x, to.y, to.z))) {
                 continue;
             }
             projectile.setDeltaMovement(v.scale(-GearRules.REFLECT_SPEED));
-            projectile.setOwner(player);
+            if (GearRules.reflectTakesOwnership(projectile.getOwner() instanceof Player)) {
+                projectile.setOwner(player);
+            }
             markMoved(projectile);
             ModSounds.MIRROR_SHIELD_REFLECT.play(level, player.getX(), player.getY(), player.getZ(), SoundSource.PLAYERS);
             startCooldown(player, shield, GearSettings.mirrorShieldCooldownTicks.getAsInt());

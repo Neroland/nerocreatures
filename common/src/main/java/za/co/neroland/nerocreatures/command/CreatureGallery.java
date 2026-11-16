@@ -140,7 +140,8 @@ public final class CreatureGallery {
      * {@code gallery clear}: removes the nearest gallery within 96 blocks: running demos stop, paddock
      * riders are put off, containers are emptied, blocks in the layout's clear box go to air, and every
      * <b>tagged</b> entity is discarded (never killed: no loot, no XP, no death event). Untagged
-     * entities in the box stay. With no anchor, the 0.4.x box around the invoker is cleared the same way.
+     * entities in the box stay, and so does any container that is not one of the gallery's own blocks.
+     * With no gallery anchor in range it refuses: it never clears an arbitrary box round the invoker.
      */
     public static int clear(CommandSourceStack source) {
         ServerPlayer player = requireCreativePlayer(source);
@@ -150,19 +151,19 @@ public final class CreatureGallery {
         ServerLevel level = levelOf(player);
         GalleryDisplays.Anchor anchor = GalleryDisplays.nearestAnchor(level, player.position(),
                 MenagerieLayout.ANCHOR_RADIUS);
+        if (anchor == null) {
+            source.sendFailure(Component.translatable("command.nerocreatures.gallery.none"));
+            return 0;
+        }
         if (MenagerieBuilder.busy()) {
             source.sendFailure(Component.translatable("command.nerocreatures.gallery.busy"));
             return 0;
         }
         java.util.function.Consumer<int[]> done = result -> source.sendSuccess(() -> Component.translatable(
                 "command.nerocreatures.gallery.cleared", result[0], result[1]), false);
-        if (anchor != null) {
-            GalleryDemos.stopAt(level, anchor.origin());
-            MenagerieBuilder.startClear(level, anchor.origin(),
-                    anchor.grid() ? MenagerieLayout.GRID_CLEAR_BOX : MenagerieLayout.CLEAR_BOX, done);
-        } else {
-            MenagerieBuilder.startClear(level, player.blockPosition(), MenagerieLayout.LEGACY_CLEAR_BOX, done);
-        }
+        GalleryDemos.stopAt(level, anchor.origin());
+        MenagerieBuilder.startClear(level, anchor.origin(),
+                anchor.grid() ? MenagerieLayout.GRID_CLEAR_BOX : MenagerieLayout.CLEAR_BOX, done);
         return Command.SINGLE_SUCCESS;
     }
 

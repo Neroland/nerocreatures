@@ -72,6 +72,14 @@ public final class CaptureRules {
     private CaptureRules() {
     }
 
+    /**
+     * Whether a capture must be refused (with a message) because the game handed the pod a creative-mode
+     * copy of the held stack: filling the copy would leave the real pod empty and the creature gone.
+     */
+    public static boolean creativeCopy(boolean creative, boolean sameStackInHand) {
+        return creative && !sameStackInHand;
+    }
+
     /** The capture verdict for one candidate. */
     public static Verdict mayCapture(Candidate c) {
         if (!c.alive()) {

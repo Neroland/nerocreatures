@@ -59,7 +59,8 @@ public final class ScrapHulkAssembly {
 
     /** Integration hook: call from the creature base's {@code die} on the server. */
     public static void onCreatureDeath(ServerLevel level, Mob dead) {
-        if (dead instanceof ScrapHulk || !WrecksLookups.mechanical(dead)
+        if (!ScrapHulkRules.feedsAssembly(WrecksLookups.mechanical(dead), dead instanceof ScrapHulk,
+                za.co.neroland.nerocreatures.gallery.GalleryDisplays.isDisplay(dead))
                 || !NeroCreaturesConfig.SCRAP_HULK_ASSEMBLY.get()) {
             return;
         }

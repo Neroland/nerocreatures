@@ -29,6 +29,11 @@ class GearRulesTest {
         assertTrue(GearRules.mayReflect(true, false, false, true));
         assertFalse(GearRules.mayReflect(true, true, false, true), "one projectile per cooldown");
         assertFalse(GearRules.mayReflect(true, false, true, true), "never its holder's own shot");
+        assertFalse(GearRules.reflectsType("minecraft:trident"), "a loyalty trident never flies to the holder");
+        assertFalse(GearRules.reflectsType("minecraft:ender_pearl"), "a pearl never moves its thrower");
+        assertTrue(GearRules.reflectsType("minecraft:arrow"));
+        assertFalse(GearRules.reflectTakesOwnership(true), "another player's shot stays theirs");
+        assertTrue(GearRules.reflectTakesOwnership(false), "a creature's shot becomes the holder's");
         assertFalse(GearRules.mayReflect(false, false, false, true), "only while held");
     }
 

@@ -273,6 +273,7 @@
   "message.nerocreatures.capture_pod.attached": "Unleash it and get it off any rider first.",
   "message.nerocreatures.capture_pod.not_yours": "Only its owner can capture that creature.",
   "message.nerocreatures.capture_pod.empty": "The pod is empty.",
+  "message.nerocreatures.capture_pod.creative": "Capture Pods only capture in survival or adventure mode.",
   "message.nerocreatures.capture_pod.unknown": "This pod's creature cannot be released here (newer or missing species).",
   "message.nerocreatures.capture_pod.not_allowed": "You cannot release a creature here.",
   "message.nerocreatures.capture_pod.blocked": "There is no room to release it here.",

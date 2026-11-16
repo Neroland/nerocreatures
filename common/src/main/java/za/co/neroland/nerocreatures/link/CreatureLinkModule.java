@@ -29,7 +29,7 @@ import za.co.neroland.nerocreatures.telemetry.NeroCreaturesTelemetry;
  *       {@code pet_command}, both owner-checked and rate-limited per player;</li>
  *   <li><b>Live</b> — {@link CreatureLinkEvents}, publishing the four player events that may push
  *       ({@code pet_state_changed} for a death, {@code creature_hurt}, {@code egg_hatched},
- *       {@code fight_ended}) and the {@code boss_phase} / {@code boss_defeated} broadcasts onto Core's
+ *       {@code fight_ended}) and the participant-only {@code boss_phase} / {@code boss_defeated} events onto Core's
  *       shared event bus, and raising the two per-player alerts this mod has any business raising.</li>
  * </ul>
  *
@@ -38,10 +38,9 @@ import za.co.neroland.nerocreatures.telemetry.NeroCreaturesTelemetry;
  * <p><b>Own data only.</b> Every snapshot section is scoped to the requesting {@code playerId}
  * before it leaves this mod: their own kill statistics, their own pets and drones, and their own
  * contribution to a boss fight. No other player's rows, shares or identity is ever put in a
- * snapshot, an action result, an event payload or an alert text. Boss events are broadcast — and
- * therefore reach every session — so their payloads carry a boss, a phase and a dimension and
- * nothing player-shaped at all, exactly as the {@code nerocreatures:boss_pressure} threshold
- * channel does.
+ * snapshot, an action result, an event payload or an alert text. Boss events and the {@code bosses}
+ * section reach only the players recorded in that fight; their payloads carry a boss, a phase and a
+ * dimension and nothing player-shaped at all.
  *
  * <p><b>Erasure needs no separate wiring.</b> Every read here goes to the live stores
  * ({@code data/CreatureOwnershipState}, {@code boss/BossContributionState}), so a player erased
@@ -90,10 +89,10 @@ public final class CreatureLinkModule {
     /** Topic (schema 2): a summoned fight you joined ended. Player-scoped; may push. */
     public static final String TOPIC_FIGHT_ENDED = "fight_ended";
 
-    /** Topic: a boss fight entered a new phase. Broadcast; carries no player data. */
+    /** Topic: a boss fight entered a new phase. Sent to the fight's participants only; no player data. */
     public static final String TOPIC_BOSS_PHASE = "boss_phase";
 
-    /** Topic: a boss fight ended in the boss's defeat. Broadcast; carries no player data. */
+    /** Topic: a boss fight ended in the boss's defeat. Sent to its participants only; no player data. */
     public static final String TOPIC_BOSS_DEFEATED = "boss_defeated";
 
     /** The registered action handler, kept so erasure can reach its in-memory rate limiter. */

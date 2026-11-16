@@ -273,6 +273,10 @@ public final class NeroCreaturesConfig {
             "feedingTroughIntervalTicks", 200, 0, 24000, true,
             "Ticks between a trough's feeding pulses. 0 = troughs never feed.");
 
+    public static final ConfigValue<Integer> FEEDING_TROUGH_MAX_LIVESTOCK = SCHEMA.intRange(
+            "feedingTroughMaxLivestock", 16, 2, 256, true,
+            "A trough feeds no pair while this many livestock (babies included) are within its range.");
+
     public static final ConfigValue<Integer> INCUBATOR_HATCH_TICKS = SCHEMA.intRange(
             "incubatorHatchTicks", 24000, 1200, 240000, true,
             "Unpowered incubator hatch time in ticks.");

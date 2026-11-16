@@ -33,6 +33,7 @@ guidance for operators, not legal advice. The developers receive no player data 
 | 5 | Owner on the creature | the creature's entity data, in the chunk | the owner's UUID on a tamed pet or mount (vanilla's own field for every tameable animal) and on a deployed Terraforming Drone | what "owned" means to the game | as row 1 | as row 1 (the creature is freed) | owner cleared / drone recalled | `loaded_creatures` |
 | 6 | Nest home | an entity tag on the creature | the nest's dimension id and block position | send a homed pet back to its nest | as row 1 | until un-homed, freed or captured | cleared when the creature is freed | `loaded_creatures[].nest` |
 | 7 | Bestiary and milestone gates | Neroland Core's progression store | per player: `nerocreatures:bestiary/scanned/<species>`, `nerocreatures:bestiary/studied/<species>`, `nerocreatures:first_tame`, `first_deploy`, `first_breed` | Bestiary tiers, the one-time Studied reward, quest hooks | providing the game feature | Core's `dataRetentionDays` sweep | Core's eraser (same request) | `progression_gates` |
+| 8 | Data-access export files | `data/nerocreatures/exports/export-<time>-<random>.json` (world folder) | one player's export (see Access / export) | answer an access request | complying with an access request (GDPR art. 15; POPIA s 23) | 7 days, or `dataRetentionDays` if shorter (checked on every new export and daily) | every export file about the player is deleted | (it is the export) |
 
 Nothing else NeroCreatures does is saved against a player. In particular:
 
@@ -101,7 +102,9 @@ For NeroCreatures the request:
 4. clears vanilla's `LoveCause` on every loaded animal that names the player;
 5. removes the player from every summoned boss fight, and drops a fight nobody is left in;
 6. refreshes both stores' last-known-good backups at once, so the erased rows do not survive in a
-   backup copy. Marker expiry does the same.
+   backup copy. Marker expiry does the same;
+7. deletes every data-access export file about the player (row 8), so an export made just before the
+   erase does not outlive it.
 
 Nothing on this path sends anything to the player being erased: no companion-app event, push or
 alert is published or raised for them while their creatures are released, because the request has
@@ -185,6 +188,9 @@ request). NeroCreatures has no separate setting.
   fight is dropped once it is six hours past its last hit (checked at start-up and then daily), whatever
   the retention setting.
 - **Bestiary and milestone gates** are Core's records and follow Core's retention.
+- **Export files** are deleted 7 days after they are written, or after `dataRetentionDays` days when
+  that is set and shorter (never under one day). The check runs whenever a new export is made and with
+  the daily sweep, whatever the retention setting.
 
 Sweeps log only how many records were removed, never whose.
 
@@ -197,7 +203,8 @@ system supports it the folder and file are readable by the server's own account 
 inherit the world folder's access rules. The whole export is written, however long. The command
 replies with the file's path and size only, so nothing personal appears in chat or, when run from the
 console or RCON, in the server log. The operator gives the file to the player securely and deletes it
-afterwards.
+afterwards. If they do not, the mod deletes it after 7 days (or `dataRetentionDays` if shorter), and
+erasing the player deletes every export about them at once.
 
 | Section | Content |
 | --- | --- |
@@ -237,8 +244,10 @@ bridge installed, nothing is exposed.
   `linkRecallCooldownSeconds` (10) and give one order per `linkCommandCooldownMillis` (1000).
 - **Events.** Only four events are sent to a player, and only to that player's sessions: their
   creature died, is badly hurt, their egg hatched, or a summoned fight they joined ended (with their
-  own share). Routine changes are not sent. Boss phase and defeat events go to everyone and therefore
-  carry a boss, a phase and a dimension id, and nothing about any player.
+  own share). Routine changes are not sent. Boss phase and defeat events go only to the players
+  recorded in that summoned fight (the summoner included) and carry a boss, a phase and a dimension
+  id, and nothing about any player; nobody outside the fight receives them, and the `bosses` section
+  lists only fights the asking player is in.
 - **Push notifications are off by default.** A player turns on the "Creatures" category in the app.
   A push names the **species only** (for example "Your Rime Yak is badly hurt."): never a custom name,
   a dimension, a position or another player.
@@ -259,6 +268,11 @@ The full contract is in [`wiki/Link-Module.md`](wiki/Link-Module.md).
 - **Fabric gap:** Fabric has no standard claim event. A claim mod that does not hook `mobGriefing` is
   not consulted for **wild** creatures on Fabric. Owned creatures are still limited to what their owner
   may do. Turn the ability keys off, or `mobGriefing` off, if this matters on your server.
+- **What "the owner may do" means.** For an owned creature the check is the game's own build permission
+  and spawn protection, on every loader. A claim mod that hooks neither the build permission nor
+  `mobGriefing` is not consulted for owned creatures either. Each such change (a tamed Magnet Crab
+  picking up loose items, a Lumen Moth's light, a Rime Yak's frost) is one the owner could make in
+  person or is cosmetic.
 - **Requests from the client** (for example "open my mount's panniers", "show my Bestiary") carry only a
   creature's session network id, an action number or a species id. The server checks that the sender
   owns the creature, is near it and is not flooding requests, and answers only with the sender's own

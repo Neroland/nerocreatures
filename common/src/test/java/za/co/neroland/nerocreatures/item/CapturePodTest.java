@@ -39,6 +39,13 @@ class CapturePodTest {
     }
 
     @Test
+    void creativeCopiesAreRefusedWithAMessage() {
+        assertTrue(CaptureRules.creativeCopy(true, false), "a creative copy would lose the creature");
+        assertFalse(CaptureRules.creativeCopy(true, true));
+        assertFalse(CaptureRules.creativeCopy(false, false), "survival goes on to the identity check");
+    }
+
+    @Test
     void roundTripKeepsTraitsAndStoresNoIdentity() {
         TraitSet traits = TraitSet.of(TraitPool.HARDY, TraitPool.SWIFT);
         CapturedCreature captured = CapturedCreature.of("nerocreatures:lumen_moth", tamedPetSave(traits),

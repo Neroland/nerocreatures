@@ -390,6 +390,8 @@ public final class CreatureCommands {
         JsonObject json = CreatureExport.export(server, player);
         String pretty = new GsonBuilder().setPrettyPrinting().create().toJson(json);
         Path worldRoot = server.getWorldPath(LevelResource.ROOT);
+        // Old exports expire whenever a new one is made, as well as in the daily sweep.
+        za.co.neroland.nerocreatures.data.CreatureData.applyExportRetention(worldRoot, System.currentTimeMillis());
         Path file;
         try {
             file = CreatureExportFile.write(worldRoot, pretty, System.currentTimeMillis());

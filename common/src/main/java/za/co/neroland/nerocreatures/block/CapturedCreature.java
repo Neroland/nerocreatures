@@ -208,11 +208,24 @@ public record CapturedCreature(int version, String species, CompoundTag entity, 
 
     /** Writes this capture into a pod, keeping any other custom-data keys. */
     public void write(ItemStack stack) {
+        writeTag(stack, this.toTag());
+    }
+
+    /**
+     * Writes an already-encoded capture compound into a pod verbatim (a capture of a newer schema too, so
+     * it is carried, never lost), keeping any other custom-data keys.
+     */
+    public static void writeTag(ItemStack stack, CompoundTag capture) {
         CustomData data = stack.get(DataComponents.CUSTOM_DATA);
-        CompoundTag tag = data == null ? new CompoundTag() : data.copyTag();
-        tag.put(KEY, this.toTag());
-        stack.set(DataComponents.CUSTOM_DATA, CustomData.of(tag));
+        stack.set(DataComponents.CUSTOM_DATA, CustomData.of(podData(data == null ? null : data.copyTag(), capture)));
         stack.set(DataComponents.CUSTOM_MODEL_DATA, FILLED_MODEL);
+    }
+
+    /** A pod's custom data with {@code capture} (copied) under {@link #KEY}; other keys are kept. */
+    public static CompoundTag podData(@org.jetbrains.annotations.Nullable CompoundTag existing, CompoundTag capture) {
+        CompoundTag tag = existing == null ? new CompoundTag() : existing.copy();
+        tag.put(KEY, capture.copy());
+        return tag;
     }
 
     /**

@@ -109,6 +109,14 @@ public final class ScrapHulkRules {
      * The whole assembly decision except the griefing check: enough deaths, no hulk in the area, room
      * in the dimension.
      */
+    /**
+     * Whether a death feeds assembly: a real mechanical creature, never a Scrap Hulk itself and never a
+     * gallery display (a {@code /kill} of a showcase must not build a hulk).
+     */
+    public static boolean feedsAssembly(boolean mechanical, boolean hulk, boolean display) {
+        return mechanical && !hulk && !display;
+    }
+
     public static boolean shouldAssemble(int clusterSize, int hulksInArea, int hulksInDimension) {
         return clusterSize >= MIN_DEATHS && hulksInArea == 0 && hulksInDimension < MAX_PER_DIMENSION;
     }

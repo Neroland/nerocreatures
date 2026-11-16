@@ -290,6 +290,21 @@ public final class BossContributionState extends SavedData {
         return row == null ? 0 : row.damage.size();
     }
 
+    /** Whether the player is recorded in the fight (the summoner from the start, anybody else on a hit). */
+    public boolean isParticipant(UUID fight, UUID player) {
+        Fight row = this.fights.get(fight);
+        return row != null && row.damage.containsKey(player);
+    }
+
+    /**
+     * The players recorded in a fight, as a copy. Used only to address a companion-app event to each of
+     * them on their own; never serialised, never logged.
+     */
+    public List<UUID> participants(UUID fight) {
+        Fight row = this.fights.get(fight);
+        return row == null ? List.of() : List.copyOf(row.damage.keySet());
+    }
+
     // --- privacy: erasure, retention, export --------------------------------
 
     /**

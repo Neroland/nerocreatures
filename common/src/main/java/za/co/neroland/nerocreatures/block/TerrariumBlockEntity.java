@@ -7,6 +7,8 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.Containers;
 import net.minecraft.resources.Identifier;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.EntityType;
@@ -101,6 +103,36 @@ public class TerrariumBlockEntity extends HabitatBlockEntity implements HabitatD
                     Component.translatable("message.nerocreatures.terrarium.full"));
             default -> HabitatBlock.tell(player, Component.translatable("message.nerocreatures.terrarium.empty"));
         }
+    }
+
+    /**
+     * Any removal of an occupied Terrarium (creative break, {@code /setblock}, a block-breaking machine,
+     * an explosion that beats its blast resistance) hands the creature back as a filled Capture Pod
+     * dropped in place, the capture kept verbatim. It is never deleted. Pistons cannot move it (a block
+     * entity), and a survival player cannot mine it while full.
+     */
+    @Override
+    protected void onBlockRemoved(ServerLevel level, BlockPos pos) {
+        if (this.captured == null) {
+            return;
+        }
+        ItemStack pod = emptyPod();
+        if (pod.isEmpty()) {
+            return;
+        }
+        CapturedCreature.writeTag(pod, this.captured);
+        Containers.dropItemStack(level, pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D, pod);
+        this.captured = null;
+        this.species = "";
+    }
+
+    private static ItemStack emptyPod() {
+        Identifier id = Identifier.fromNamespaceAndPath(NeroCreaturesCommon.MOD_ID, "capture_pod");
+        if (!BuiltInRegistries.ITEM.containsKey(id)) {
+            return ItemStack.EMPTY;
+        }
+        ItemStack stack = new ItemStack(BuiltInRegistries.ITEM.getValue(id));
+        return stack.is(Items.AIR) ? ItemStack.EMPTY : stack;
     }
 
     @Override

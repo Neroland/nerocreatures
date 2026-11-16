@@ -938,6 +938,16 @@ public final class MenagerieLayout {
     }
 
     /**
+     * Whether {@code clear} leaves a block in place, contents and all: any block that holds things
+     * (a container or anything clearable) other than the gallery's own habitat blocks and the lectern
+     * the builder places. A chest, barrel or machine a player put inside the gallery is never emptied
+     * and never removed.
+     */
+    public static boolean clearKeepsBlock(boolean holdsThings, boolean habitat, boolean lectern) {
+        return holdsThings && !habitat && !lectern;
+    }
+
+    /**
      * The item on a base slot's stand: the species' spawn egg, or for the Terraforming Drone (which has
      * no spawn egg) the Drone Shell it is deployed from.
      */

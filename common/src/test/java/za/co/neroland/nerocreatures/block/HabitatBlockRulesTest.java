@@ -225,6 +225,15 @@ class HabitatBlockRulesTest {
         assertFalse(TroughRules.pulseDue(0L, 0, 0L), "interval 0 switches troughs off");
     }
 
+    @Test
+    void troughStopsAtTheCrowdCap() {
+        assertFalse(TroughRules.crowded(15, TroughRules.DEFAULT_MAX_LIVESTOCK));
+        assertTrue(TroughRules.crowded(16, TroughRules.DEFAULT_MAX_LIVESTOCK), "a full pen breeds no more");
+        assertTrue(TroughRules.crowded(40, 16));
+        assertTrue(TroughRules.crowded(2, 0), "a cap below a pair still means one pair at most");
+        assertFalse(TroughRules.crowded(2, 3));
+    }
+
     // --- Nest -----------------------------------------------------------------------------------
 
     @Test
@@ -298,5 +307,20 @@ class HabitatBlockRulesTest {
         CapturedCreature newer = new CapturedCreature(CapturedCreature.CURRENT_VERSION + 1, "nerocreatures:lumen_moth",
                 new CompoundTag(), Optional.empty(), false);
         assertFalse(newer.understood(), "a newer capture is kept, never released");
+    }
+
+    @Test
+    void aRemovedTerrariumHandsItsCreatureBackInAPod() throws Exception {
+        CompoundTag newer = new CapturedCreature(CapturedCreature.CURRENT_VERSION + 1, "nerocreatures:lumen_moth",
+                new CompoundTag(), Optional.empty(), false).toTag();
+        CompoundTag existing = new CompoundTag();
+        existing.putString("other", "kept");
+        CompoundTag pod = CapturedCreature.podData(existing, newer);
+        assertEquals(newer, pod.get(CapturedCreature.KEY), "carried verbatim, even a newer schema");
+        assertTrue(pod.contains("other"), "other custom data is kept");
+        assertFalse(existing.contains(CapturedCreature.KEY), "the caller's tag is not modified");
+        // Every removal path ends in the block entity's removal hook; the Terrarium must override it.
+        assertEquals(TerrariumBlockEntity.class, TerrariumBlockEntity.class.getDeclaredMethod("onBlockRemoved",
+                net.minecraft.server.level.ServerLevel.class, net.minecraft.core.BlockPos.class).getDeclaringClass());
     }
 }
