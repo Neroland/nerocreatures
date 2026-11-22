@@ -19,6 +19,7 @@ import net.minecraft.world.level.storage.LevelResource;
 
 import za.co.neroland.nerolandcore.config.CoreConfig;
 import za.co.neroland.nerolandcore.data.PlayerDataErasure;
+import za.co.neroland.nerolandcore.data.PlayerDataExport;
 
 import za.co.neroland.nerocreatures.NeroCreaturesCommon;
 import za.co.neroland.nerocreatures.boss.BossContributionState;
@@ -72,9 +73,15 @@ public final class CreatureData {
     private CreatureData() {
     }
 
-    /** Registers the eraser with Core. Idempotent per launch; called once from common init. */
+    /**
+     * Registers the eraser and the exporter with Core. Idempotent per launch; called once from common
+     * init. The exporter hands Core's {@code /neroland data exportme} the same document as
+     * {@code /nerocreatures data export} ({@link CreatureExport#export}), built in memory: Core's path
+     * writes no file and logs nothing.
+     */
     public static void init() {
         PlayerDataErasure.register(CreatureData::erasePlayer);
+        PlayerDataExport.register(NeroCreaturesCommon.MOD_ID, CreatureExport::export);
     }
 
     /**

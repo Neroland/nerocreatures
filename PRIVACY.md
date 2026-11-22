@@ -222,6 +222,10 @@ operators. An operator is required because an export is somebody's personal reco
 see their own data, scoped to them automatically, in the companion app. Per-species kill counts are
 vanilla statistics and are not in this export; they are in `world/stats/<uuid>.json`.
 
+The same document is also part of Neroland Core's combined export (`/neroland data exportme` for a
+player's own data, `/neroland data export <uuid>` for operators), under `mods.nerocreatures`. Core's path
+builds it in memory and hands it over in chat: it writes no file and logs nothing.
+
 ## Companion app (link module)
 
 NeroCreatures shows a player's **own** Bestiary progress, creatures and boss share in a Neroland
@@ -307,6 +311,9 @@ reports are anonymous):
 - **NeroCreatures only:** a report is sent only if its stack trace touches
   `za.co.neroland.nerocreatures`; everything else is dropped before it leaves the game.
 - A build that carries no DSN (a fork, a stripped build) is a hard no-op whatever the config says.
+- **Its own client:** NeroCreatures reports through a Sentry client of its own and never touches the
+  shared global Sentry hub, so another mod's crash reporter can neither read its reports nor switch it
+  off.
 
 **A report contains:** the stack trace; NeroCreatures, Minecraft, loader, OS and Java versions; the ids
 and versions of other installed mods; this mod's own config values; recent NeroCreatures actions

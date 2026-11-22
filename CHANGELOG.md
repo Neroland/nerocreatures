@@ -7,6 +7,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.6.0] - 2026-11-22
+
+### Added
+
+- NeroCreatures' data export is now part of Neroland Core's combined export
+  (`/neroland data exportme`). It is the same document `/nerocreatures export` writes, built in memory:
+  Core's path writes no file and logs nothing.
+
+### Changed
+
+- Requires Neroland Core **1.20.1**.
+
+### Fixed
+
+- Crash reports could be silently dropped when another mod (any Nero mod included) started Sentry
+  after NeroCreatures: all of them share one bundled Sentry, and each global `Sentry.init` replaced the
+  previous client. NeroCreatures now reports through a client of its own and never touches the global
+  hub.
+
 ## [0.5.2] - 2026-11-26
 
 ### Added
