@@ -156,6 +156,16 @@ public final class CreatureOwnershipState extends SavedData {
     private final Map<UUID, Long> lastUpdated = new LinkedHashMap<>();
 
     /**
+     * Lifetime hand-tame count per player, for the {@code tamed/10} and {@code tamed/25} record gates.
+     * Stored only up to {@link #TAME_COUNT_CAP} (the highest threshold), so it never says more than
+     * those gates need. Erased with the player, shown in their export.
+     */
+    private final Map<UUID, Integer> tameCounts = new LinkedHashMap<>();
+
+    /** The highest tame-count threshold any gate needs; counts stop here (data minimisation). */
+    public static final int TAME_COUNT_CAP = 25;
+
+    /**
      * Erasure markers (load-time half of erasure). {@code erasedOwners} holds a salted one-way hash
      * of each erased owner, never the UUID itself; {@code erasedCreatures} holds the entity UUIDs of
      * the rows erasure removed and could not free because they were not loaded. Neither names a
@@ -247,7 +257,29 @@ public final class CreatureOwnershipState extends SavedData {
      * the load-time check: "unknown" is not "erased" (see {@link #loadVerdict}).
      */
     public boolean knowsPlayer(UUID player) {
-        return this.byPlayer.containsKey(player) || this.lastUpdated.containsKey(player);
+        return this.byPlayer.containsKey(player) || this.lastUpdated.containsKey(player)
+                || this.tameCounts.containsKey(player);
+    }
+
+    /**
+     * Counts one successful hand-tame for {@code player}, saturating at {@link #TAME_COUNT_CAP}.
+     *
+     * @return the player's count after this tame
+     */
+    public int noteTame(UUID player) {
+        int before = this.tameCounts.getOrDefault(player, 0);
+        if (before >= TAME_COUNT_CAP) {
+            return before;
+        }
+        int after = before + 1;
+        this.tameCounts.put(player, after);
+        this.setDirty();
+        return after;
+    }
+
+    /** The player's lifetime hand-tame count (saturated at {@link #TAME_COUNT_CAP}). */
+    public int tameCount(UUID player) {
+        return this.tameCounts.getOrDefault(player, 0);
     }
 
     /**
@@ -447,6 +479,7 @@ public final class CreatureOwnershipState extends SavedData {
     public List<OwnedCreature> forgetPlayer(UUID player) {
         List<OwnedCreature> removed = this.byPlayer.remove(player);
         this.lastUpdated.remove(player);
+        this.tameCounts.remove(player);
         // Positive erasure record for the load-time check: a salted hash of the owner (covers
         // creatures the index never knew about) and the entity UUIDs of the removed rows. The caller
         // clears an entity marker again once it frees that creature.
@@ -535,6 +568,10 @@ public final class CreatureOwnershipState extends SavedData {
             owned.add(entry);
         }
         root.add("owned", owned);
+        int tames = this.tameCounts.getOrDefault(player, 0);
+        if (tames > 0) {
+            root.addProperty("tames", tames);
+        }
         return root;
     }
 
@@ -597,11 +634,13 @@ public final class CreatureOwnershipState extends SavedData {
 
     // --- persistence (same SavedDataType + Codec pattern as Core) -----------
 
-    private record PlayerRow(String player, long updatedAt, List<OwnedCreature> owned) {
+    private record PlayerRow(String player, long updatedAt, List<OwnedCreature> owned, int tames) {
         static final Codec<PlayerRow> CODEC = RecordCodecBuilder.create(instance -> instance.group(
                 Codec.STRING.fieldOf("player").forGetter(PlayerRow::player),
                 Codec.LONG.optionalFieldOf("updated_at", 0L).forGetter(PlayerRow::updatedAt),
-                OwnedCreature.CODEC.listOf().optionalFieldOf("owned", List.of()).forGetter(PlayerRow::owned)
+                OwnedCreature.CODEC.listOf().optionalFieldOf("owned", List.of()).forGetter(PlayerRow::owned),
+                // Lifetime hand-tame count (unreleased). Absent in older files: reads as 0.
+                Codec.INT.optionalFieldOf("tames", 0).forGetter(PlayerRow::tames)
         ).apply(instance, PlayerRow::new));
     }
 
@@ -646,7 +685,13 @@ public final class CreatureOwnershipState extends SavedData {
         List<PlayerRow> out = new ArrayList<>(this.byPlayer.size());
         this.byPlayer.forEach((player, rows) ->
                 out.add(new PlayerRow(player.toString(), this.lastUpdated.getOrDefault(player, 0L),
-                        List.copyOf(rows))));
+                        List.copyOf(rows), this.tameCounts.getOrDefault(player, 0))));
+        // Players with a tame count but no current rows (every pet released) keep their count.
+        this.tameCounts.forEach((player, tames) -> {
+            if (!this.byPlayer.containsKey(player)) {
+                out.add(new PlayerRow(player.toString(), 0L, List.of(), tames));
+            }
+        });
         return out;
     }
 
@@ -662,6 +707,12 @@ public final class CreatureOwnershipState extends SavedData {
                 player = UUID.fromString(row.player());
             } catch (IllegalArgumentException ignored) {
                 continue; // skip malformed rows rather than failing the whole load
+            }
+            if (row.tames() > 0) {
+                state.tameCounts.put(player, Math.min(row.tames(), TAME_COUNT_CAP));
+            }
+            if (row.tames() > 0 && row.owned().isEmpty() && row.updatedAt() == 0L) {
+                continue; // a count-only row: no ownership rows to index
             }
             state.byPlayer.put(player, new ArrayList<>(row.owned()));
             state.lastUpdated.put(player, row.updatedAt());

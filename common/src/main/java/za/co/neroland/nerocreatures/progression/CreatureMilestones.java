@@ -28,12 +28,28 @@ public final class CreatureMilestones {
     public static final Identifier FIRST_DEPLOY = gate("first_deploy");
     /** The player bred a pair or hatched an egg for the first time (quest pack hook). */
     public static final Identifier FIRST_BREED = gate("first_breed");
+    /** The player has hand-tamed 10 creatures over their lifetime (NeroTrophies "Tamer"). */
+    public static final Identifier TAMED_10 = gate("tamed/10");
+    /** The player has hand-tamed 25 creatures over their lifetime (NeroTrophies "Beastmaster"). */
+    public static final Identifier TAMED_25 = gate("tamed/25");
+    /** Every species in the Bestiary catalogue is Studied (NeroTrophies "Complete Bestiary"). */
+    public static final Identifier BESTIARY_COMPLETE = gate("bestiary/complete");
 
     private CreatureMilestones() {
     }
 
     private static Identifier gate(String path) {
         return Identifier.fromNamespaceAndPath(NeroCreaturesCommon.MOD_ID, path);
+    }
+
+    /**
+     * The tame-count gates a lifetime count has reached, lowest first. Pure, for tests.
+     */
+    public static java.util.List<Identifier> tameCountGates(int tames) {
+        if (tames >= 25) {
+            return java.util.List.of(TAMED_10, TAMED_25);
+        }
+        return tames >= 10 ? java.util.List.of(TAMED_10) : java.util.List.of();
     }
 
     /**

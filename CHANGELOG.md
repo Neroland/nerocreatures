@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.5.2] - 2026-11-26
+
+### Added
+
+- Three new player record gates for NeroTrophies and quest packs: `nerocreatures:tamed/10` and
+  `nerocreatures:tamed/25` (lifetime hand-tames) and `nerocreatures:bestiary/complete` (every species
+  Studied; also checked when the Bestiary opens, so players who finished earlier get it too).
+- The ownership index keeps each player's lifetime hand-tame count, stored only up to 25. It is erased
+  with the player and shown in their data export (`tames`). Existing saves read it as zero.
+
 ## [0.5.1] - 2026-11-21
 
 ### Changed

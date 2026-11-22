@@ -241,7 +241,11 @@ public final class BestiaryProgress {
         if (server == null || !ProgressionGates.isOpen(server, player, scannedGate(entry.id()))) {
             return false;
         }
-        int reward = BestiaryRules.rewardFor(ProgressionGates.open(server, player, studiedGate(entry.id())), entry.kind());
+        boolean opened = ProgressionGates.open(server, player, studiedGate(entry.id()));
+        if (opened) {
+            checkComplete(server, player);
+        }
+        int reward = BestiaryRules.rewardFor(opened, entry.kind());
         if (reward == 0) {
             return false;
         }
@@ -347,7 +351,35 @@ public final class BestiaryProgress {
             return;
         }
         LAST_ANSWER.put(player, now);
+        // Catches players who studied every species before the completion gate existed.
+        checkComplete(player.level().getServer(), player.getUUID());
         Services.NETWORK.sendToPlayer(player, counts(player));
+    }
+
+    /**
+     * Opens {@code nerocreatures:bestiary/complete} once every catalogue species is Studied for
+     * {@code player}. A record gate in Core's store, nothing else; a no-op when already open.
+     */
+    static void checkComplete(@Nullable MinecraftServer server, UUID player) {
+        if (server == null || ProgressionGates.isOpen(server, player, CreatureMilestones.BESTIARY_COMPLETE)) {
+            return;
+        }
+        if (allStudied(BestiaryCatalog.entries(), id -> ProgressionGates.isOpen(server, player, studiedGate(id)))) {
+            ProgressionGates.open(server, player, CreatureMilestones.BESTIARY_COMPLETE);
+        }
+    }
+
+    /** Whether every entry is Studied according to {@code studied}. Pure, for tests; empty is false. */
+    static boolean allStudied(List<Entry> entries, java.util.function.Predicate<String> studied) {
+        if (entries.isEmpty()) {
+            return false;
+        }
+        for (Entry entry : entries) {
+            if (!studied.test(entry.id())) {
+                return false;
+            }
+        }
+        return true;
     }
 
     /** The per-player answer limit. Package-private for tests. */

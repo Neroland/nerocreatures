@@ -573,6 +573,9 @@ public abstract class TameableCreature extends TamableAnimal implements ProductS
         this.tame(player);
         this.hatchling = false;
         CreatureMilestones.record(player, CreatureMilestones.FIRST_TAME); // record gate, never a lock
+        for (net.minecraft.resources.Identifier countGate : CreatureMilestones.tameCountGates(state.noteTame(owner))) {
+            CreatureMilestones.record(player, countGate); // tamed/10, tamed/25: record gates, never locks
+        }
         za.co.neroland.nerocreatures.bestiary.BestiaryProgress.noteTame(player, this); // Bestiary: tames study tameables and mounts
         this.setCommand(PetCommand.FOLLOW);
         this.setTarget(null);
