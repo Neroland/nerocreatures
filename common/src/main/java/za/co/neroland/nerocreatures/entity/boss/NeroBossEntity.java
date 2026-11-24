@@ -199,8 +199,13 @@ public abstract class NeroBossEntity extends NeroCreatureEntity implements Enemy
     }
 
     /** A boss never uses a portal: its arena, bar and fight belong to this dimension. */
+    //? if >=1.21 {
     @Override
     public boolean canUsePortal(boolean allowPassengers) {
+    //?} else {
+    /*@Override
+    public boolean canChangeDimensions() {
+    *///?}
         return false;
     }
 

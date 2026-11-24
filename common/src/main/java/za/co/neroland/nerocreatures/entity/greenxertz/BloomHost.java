@@ -213,12 +213,21 @@ public class BloomHost extends NeroCreatureEntity implements Enemy {
     }
 
     /** Sporelings and Bloom Sovereign pods drop nothing and give no experience ({@link BloomRules#dropsLoot}). */
+    //? if >=1.21 {
     @Override
     protected void dropAllDeathLoot(ServerLevel level, DamageSource source) {
         if (BloomRules.dropsLoot(this.form())) {
             super.dropAllDeathLoot(level, source);
         }
     }
+    //?} else {
+    /*@Override
+    protected void dropAllDeathLoot(DamageSource source) {
+        if (BloomRules.dropsLoot(this.form())) {
+            super.dropAllDeathLoot(source);
+        }
+    }
+    *///?}
 
     /** Sporelings are never saved: an unload ends them, so the dimension cap needs no store. */
     @Override

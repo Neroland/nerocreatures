@@ -201,9 +201,18 @@ public class PirateCaptain extends SpacePirate {
 
     // --- the ledger -----------------------------------------------------------------------------
 
+    //? if >=1.21 {
     @Override
     protected void dropCustomDeathLoot(ServerLevel level, DamageSource source, boolean killedByPlayer) {
         super.dropCustomDeathLoot(level, source, killedByPlayer);
+    //?} else {
+    /*@Override
+    protected void dropCustomDeathLoot(DamageSource source, int looting, boolean killedByPlayer) {
+        super.dropCustomDeathLoot(source, looting, killedByPlayer);
+        if (!(this.level() instanceof ServerLevel level)) {
+            return;
+        }
+    *///?}
         Entity killer = source.getEntity();
         boolean isPlayer = killer instanceof ServerPlayer;
         if (!CaptainRules.ledgerGoesToKiller(isPlayer, isPlayer && killer.level() == level,

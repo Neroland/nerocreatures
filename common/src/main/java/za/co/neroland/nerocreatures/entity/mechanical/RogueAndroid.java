@@ -238,9 +238,18 @@ public class RogueAndroid extends AbstractAndroid {
      * The salvage nod: a frame shut down cleanly while exposed yields one extra board. Fire kills
      * yield nothing extra — the boards burn.
      */
+    //? if >=1.21 {
     @Override
     protected void dropCustomDeathLoot(ServerLevel level, DamageSource source, boolean recentlyHit) {
         super.dropCustomDeathLoot(level, source, recentlyHit);
+    //?} else {
+    /*@Override
+    protected void dropCustomDeathLoot(DamageSource source, int looting, boolean recentlyHit) {
+        super.dropCustomDeathLoot(source, looting, recentlyHit);
+        if (!(this.level() instanceof ServerLevel level)) {
+            return;
+        }
+    *///?}
         if (!this.isStaggered() || source.is(DamageTypeTags.IS_FIRE)) {
             return;
         }

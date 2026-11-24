@@ -32,6 +32,7 @@ import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 
 import za.co.neroland.nerocreatures.NeroCreaturesCommon;
+import za.co.neroland.nerocreatures.compat.CreatureAttributeModifier;
 import za.co.neroland.nerocreatures.data.CreatureOwnershipState;
 import za.co.neroland.nerocreatures.data.OwnedCreature;
 import za.co.neroland.nerocreatures.entity.ai.shared.SoundHearing;
@@ -257,11 +258,11 @@ public final class CreatureGear {
         if (attribute == null) {
             return;
         }
-        boolean has = attribute.hasModifier(id);
+        boolean has = CreatureAttributeModifier.has(attribute, id);
         if (on && !has) {
-            attribute.addTransientModifier(new AttributeModifier(id, amount, operation));
+            attribute.addTransientModifier(CreatureAttributeModifier.create(id, amount, operation));
         } else if (!on && has) {
-            attribute.removeModifier(id);
+            CreatureAttributeModifier.remove(attribute, id);
         }
     }
 

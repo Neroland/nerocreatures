@@ -3,6 +3,9 @@
 Player- and contributor-facing documentation for **NeroCreatures**, the creature layer of the
 Neroland sci-fi ecosystem. Built on **Neroland Core**.
 
+NeroCreatures requires **Neroland Core 1.23.0 or newer** (below 2.0). Minecraft 1.20.5
+runs on Fabric, and 1.20.6 runs on Fabric, Forge and NeoForge.
+
 NeroCreatures populates the worlds other mods build: hostile fauna on the planets, neutral
 resource creatures, humanoid raiders, tameable companions, mounts, livestock and planet bosses. Its
 drops are deliberately raw materials that other mods spend, and every drop also has a use inside the

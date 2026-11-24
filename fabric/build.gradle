@@ -148,7 +148,8 @@ eclipse.synchronizationTasks generateModMetadata
 // The access widener's namespace differs by era: 26.x is `official` (de-obfuscated), 1.21.x is `named`
 // (Mojang mappings, remapped to intermediary in remapJar). Each 1.21.x line has its own file under
 // src/main/accesswidener/, swapped into the jar under the name fabric.mod.json declares.
-def awFile = obfuscated ? file("${branchDir}/src/main/accesswidener/${mc}.accesswidener")
+def awVersion = mc.startsWith('1.20.') ? '1.21.1' : mc
+def awFile = obfuscated ? file("${branchDir}/src/main/accesswidener/${awVersion}.accesswidener")
         : file("${branchDir}/src/main/resources/nerocreatures.accesswidener")
 if (obfuscated) {
     tasks.named('processResources', ProcessResources) {

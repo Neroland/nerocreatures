@@ -289,12 +289,21 @@ public abstract class NeroCreatureEntity extends PathfinderMob implements Creatu
     }
 
     /** A gallery display drops nothing (no loot, no equipment) and gives no experience. */
+    //? if >=1.21 {
     @Override
     protected void dropAllDeathLoot(ServerLevel level, DamageSource source) {
         if (!za.co.neroland.nerocreatures.gallery.GalleryDisplays.isDisplay(this)) {
             super.dropAllDeathLoot(level, source);
         }
     }
+    //?} else {
+    /*@Override
+    protected void dropAllDeathLoot(DamageSource source) {
+        if (!za.co.neroland.nerocreatures.gallery.GalleryDisplays.isDisplay(this)) {
+            super.dropAllDeathLoot(source);
+        }
+    }
+    *///?}
 
     @Override
     public boolean shouldDropExperience() {
@@ -302,6 +311,7 @@ public abstract class NeroCreatureEntity extends PathfinderMob implements Creatu
     }
 
     /** Alphas add one guaranteed rare drop when a player kills them (see {@link AlphaSystem}). */
+    //? if >=1.21 {
     @Override
     protected void dropCustomDeathLoot(ServerLevel level, DamageSource source, boolean killedByPlayer) {
         super.dropCustomDeathLoot(level, source, killedByPlayer);
@@ -309,6 +319,15 @@ public abstract class NeroCreatureEntity extends PathfinderMob implements Creatu
             AlphaSystem.dropReward(this, level);
         }
     }
+    //?} else {
+    /*@Override
+    protected void dropCustomDeathLoot(DamageSource source, int looting, boolean killedByPlayer) {
+        super.dropCustomDeathLoot(source, looting, killedByPlayer);
+        if (killedByPlayer && this.isAlpha() && this.level() instanceof ServerLevel level) {
+            AlphaSystem.dropReward(this, level);
+        }
+    }
+    *///?}
 
     /**
      * Scrap Hulk assembly hook: a mechanical creature's death is offered to

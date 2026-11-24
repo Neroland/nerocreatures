@@ -58,8 +58,13 @@ public class FieldScannerItem extends Item {
         *///?}
     }
 
+    //? if >=1.21 {
     @Override
     public int getUseDuration(ItemStack stack, LivingEntity entity) {
+    //?} else {
+    /*@Override
+    public int getUseDuration(ItemStack stack) {
+    *///?}
         return USE_DURATION;
     }
 

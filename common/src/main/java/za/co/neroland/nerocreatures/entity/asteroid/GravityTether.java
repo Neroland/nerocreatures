@@ -18,6 +18,7 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.phys.Vec3;
 
 import za.co.neroland.nerocreatures.NeroCreaturesCommon;
+import za.co.neroland.nerocreatures.compat.CreatureAttributeModifier;
 import za.co.neroland.nerocreatures.entity.ai.shared.TetherGoal;
 import za.co.neroland.nerocreatures.entity.ai.shared.TetherState;
 import za.co.neroland.nerocreatures.registry.ModSounds;
@@ -106,8 +107,8 @@ public final class GravityTether implements TetherGoal.TetherEffect {
         if (!LEASES.containsKey(target) && !GravityTetherRules.hasLeaseRoom(LEASES.size())) {
             return; // table full: no new effect (old ones still expire)
         }
-        gravity.removeModifier(MODIFIER_ID);
-        gravity.addTransientModifier(new AttributeModifier(MODIFIER_ID, amount,
+        CreatureAttributeModifier.remove(gravity, MODIFIER_ID);
+        gravity.addTransientModifier(CreatureAttributeModifier.create(MODIFIER_ID, amount,
                 AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL));
         LEASES.put(target, GravityTetherRules.leaseUntil(server.getTickCount()));
     }
@@ -116,7 +117,7 @@ public final class GravityTether implements TetherGoal.TetherEffect {
     static void clear(LivingEntity target) {
         AttributeInstance gravity = target.getAttribute(Attributes.GRAVITY);
         if (gravity != null) {
-            gravity.removeModifier(MODIFIER_ID);
+            CreatureAttributeModifier.remove(gravity, MODIFIER_ID);
         }
         LEASES.remove(target);
     }
@@ -148,7 +149,7 @@ public final class GravityTether implements TetherGoal.TetherEffect {
             if (target.isRemoved() || GravityTetherRules.leaseExpired(now, entry.getValue())) {
                 AttributeInstance gravity = target.getAttribute(Attributes.GRAVITY);
                 if (gravity != null) {
-                    gravity.removeModifier(MODIFIER_ID);
+                    CreatureAttributeModifier.remove(gravity, MODIFIER_ID);
                 }
                 it.remove();
             }

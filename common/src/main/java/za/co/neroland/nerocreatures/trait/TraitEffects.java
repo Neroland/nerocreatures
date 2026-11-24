@@ -12,6 +12,7 @@ import net.minecraft.util.RandomSource;
 import org.jetbrains.annotations.Nullable;
 
 import za.co.neroland.nerocreatures.NeroCreaturesCommon;
+import za.co.neroland.nerocreatures.compat.CreatureAttributeModifier;
 
 /**
  * Where trait effects meet the game. The effect types are a closed set:
@@ -57,9 +58,9 @@ public final class TraitEffects {
             }
             Identifier id = modifierId(def.id());
             if (traits != null && traits.has(def.id())) {
-                instance.addOrReplacePermanentModifier(new AttributeModifier(id, effect.amount(), operation(effect.operation())));
+                CreatureAttributeModifier.replacePermanent(instance, id, effect.amount(), operation(effect.operation()));
             } else {
-                instance.removeModifier(id);
+                CreatureAttributeModifier.remove(instance, id);
             }
         }
         if (wasFull && entity.getHealth() < entity.getMaxHealth()) {

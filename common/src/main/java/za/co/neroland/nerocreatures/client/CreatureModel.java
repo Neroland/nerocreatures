@@ -123,14 +123,34 @@ public abstract class CreatureModel extends net.minecraft.client.model.Hierarchi
     void setPendingBodyTint(int argb) {
         this.pendingBodyTint = argb;
     }
+    *///?}
 
-    @Override
+    //? if >=1.21 && <1.21.2 {
+    /*@Override
     public void renderToBuffer(com.mojang.blaze3d.vertex.PoseStack poseStack,
             com.mojang.blaze3d.vertex.VertexConsumer buffer, int packedLight, int packedOverlay, int color) {
         int tint = this.pendingBodyTint;
         this.pendingBodyTint = -1;
         super.renderToBuffer(poseStack, buffer, packedLight, packedOverlay,
                 tint == -1 ? color : CreatureArt.multiplyArgb(color, tint));
+    }
+    *///?} else if <1.21 {
+    /*@Override
+    public void renderToBuffer(com.mojang.blaze3d.vertex.PoseStack poseStack,
+            com.mojang.blaze3d.vertex.VertexConsumer buffer, int packedLight, int packedOverlay,
+            float red, float green, float blue, float alpha) {
+        int tint = this.pendingBodyTint;
+        this.pendingBodyTint = -1;
+        super.renderToBuffer(poseStack, buffer, packedLight, packedOverlay,
+                red * ((tint >>> 16) & 255) / 255f, green * ((tint >>> 8) & 255) / 255f,
+                blue * (tint & 255) / 255f, alpha * (tint >>> 24) / 255f);
+    }
+
+    void renderToBuffer(com.mojang.blaze3d.vertex.PoseStack poseStack,
+            com.mojang.blaze3d.vertex.VertexConsumer buffer, int packedLight, int packedOverlay, int color) {
+        this.renderToBuffer(poseStack, buffer, packedLight, packedOverlay,
+                ((color >>> 16) & 255) / 255f, ((color >>> 8) & 255) / 255f,
+                (color & 255) / 255f, (color >>> 24) / 255f);
     }
     *///?}
 

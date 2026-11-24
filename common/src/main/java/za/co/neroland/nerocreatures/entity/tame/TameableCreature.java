@@ -479,12 +479,21 @@ public abstract class TameableCreature extends TamableAnimal implements ProductS
     }
 
     /** A gallery display drops nothing (no loot, no equipment) and gives no experience. */
+    //? if >=1.21 {
     @Override
     protected void dropAllDeathLoot(ServerLevel level, DamageSource source) {
         if (!za.co.neroland.nerocreatures.gallery.GalleryDisplays.isDisplay(this)) {
             super.dropAllDeathLoot(level, source);
         }
     }
+    //?} else {
+    /*@Override
+    protected void dropAllDeathLoot(DamageSource source) {
+        if (!za.co.neroland.nerocreatures.gallery.GalleryDisplays.isDisplay(this)) {
+            super.dropAllDeathLoot(source);
+        }
+    }
+    *///?}
 
     @Override
     public boolean shouldDropExperience() {
@@ -941,7 +950,11 @@ public abstract class TameableCreature extends TamableAnimal implements ProductS
 
         CommandedFollowOwnerGoal(TameableCreature pet, double speed, float startDistance,
                 float stopDistance) {
+            //? if >=1.21 {
             super(pet, speed, startDistance, stopDistance);
+            //?} else {
+            /*super(pet, speed, startDistance, stopDistance, false);
+            *///?}
             this.pet = pet;
         }
 

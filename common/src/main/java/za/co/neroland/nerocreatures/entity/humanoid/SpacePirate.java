@@ -260,7 +260,11 @@ public class SpacePirate extends NeroCreatureEntity implements Enemy, RangedAtta
     /** Fires one bolt at {@code target}. Server-side only. */
     private void fireBolt(LivingEntity target) {
         ItemStack weapon = this.getMainHandItem();
+        //? if >=1.21 {
         Arrow bolt = new Arrow(this.level(), this, new ItemStack(Items.ARROW), weapon);
+        //?} else {
+        /*Arrow bolt = new Arrow(this.level(), this, new ItemStack(Items.ARROW));
+        *///?}
         double deltaX = target.getX() - this.getX();
         double deltaY = target.getY() + target.getBbHeight() * 0.33D - bolt.getY();
         double deltaZ = target.getZ() - this.getZ();

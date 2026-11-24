@@ -140,7 +140,11 @@ public class FireVolleyGoal extends Goal {
                     (this.mob.getRandom().nextDouble() - 0.5D) * this.spread,
                     (this.mob.getRandom().nextDouble() - 0.5D) * this.spread).normalize();
         }
+        //? if >=1.21 {
         SmallFireball fireball = new SmallFireball(level, this.mob, aim);
+        //?} else {
+        /*SmallFireball fireball = new SmallFireball(level, this.mob, aim.x, aim.y, aim.z);
+        *///?}
         // Start it clear of the shooter's own hitbox, or a wide creature shoots itself in the chest.
         fireball.setPos(from.x() + aim.x(), from.y() + aim.y() * 0.5D, from.z() + aim.z());
         level.addFreshEntity(fireball);

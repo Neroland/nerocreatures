@@ -227,7 +227,11 @@ public class MagmaWader extends NeroCreatureEntity implements Enemy {
         for (LivingEntity victim : level.getEntitiesOfClass(LivingEntity.class, splash,
                 e -> e.isAlive() && e != this && !(e instanceof MagmaWader))) {
             if (victim.hurtServer(level, source, SlagLobRules.SPLASH_DAMAGE)) {
+                //? if >=1.21 {
                 victim.igniteForSeconds(SlagLobRules.IGNITE_SECONDS);
+                //?} else {
+                /*victim.igniteForSeconds((int) Math.ceil(SlagLobRules.IGNITE_SECONDS));
+                *///?}
             }
         }
         this.placeCrust(level, at);

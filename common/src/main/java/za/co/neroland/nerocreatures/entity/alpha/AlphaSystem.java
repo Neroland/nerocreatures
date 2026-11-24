@@ -29,6 +29,7 @@ import net.minecraft.world.level.entity.EntityTypeTest;
 import org.jetbrains.annotations.Nullable;
 
 import za.co.neroland.nerocreatures.NeroCreaturesCommon;
+import za.co.neroland.nerocreatures.compat.CreatureAttributeModifier;
 import za.co.neroland.nerocreatures.entity.base.NeroCreatureEntity;
 import za.co.neroland.nerocreatures.entity.boss.NeroBossEntity;
 
@@ -180,8 +181,8 @@ public final class AlphaSystem {
             return;
         }
         Identifier id = Identifier.fromNamespaceAndPath(NeroCreaturesCommon.MOD_ID, MODIFIER_PREFIX + n);
-        instance.removeModifier(id);
-        instance.addPermanentModifier(new AttributeModifier(id, amount, operation(op)));
+        CreatureAttributeModifier.remove(instance, id);
+        instance.addPermanentModifier(CreatureAttributeModifier.create(id, amount, operation(op)));
     }
 
     private static AttributeModifier.Operation operation(String op) {

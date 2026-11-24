@@ -704,7 +704,11 @@ public final class BudgetProbe {
                 return false;
             }
             for (AttributeModifier mod : gravity.getModifiers()) {
+                //? if >=1.21 {
                 if (NeroCreaturesCommon.MOD_ID.equals(mod.id().getNamespace())) {
+                //?} else {
+                /*if (mod.name().startsWith(NeroCreaturesCommon.MOD_ID + ":")) {
+                *///?}
                     return true;
                 }
             }

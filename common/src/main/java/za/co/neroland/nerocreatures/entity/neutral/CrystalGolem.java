@@ -268,13 +268,26 @@ public class CrystalGolem extends NeroCreatureEntity implements NeutralMob {
      * Adds the pickaxe bonus on top of the loot table. Deliberately additive: the table is the base
      * drop and stays a plain data file, and this only ever adds.
      */
+    //? if >=1.21 {
     @Override
     protected void dropCustomDeathLoot(ServerLevel level, DamageSource source, boolean recentlyHit) {
         super.dropCustomDeathLoot(level, source, recentlyHit);
+    //?} else {
+    /*@Override
+    protected void dropCustomDeathLoot(DamageSource source, int looting, boolean recentlyHit) {
+        super.dropCustomDeathLoot(source, looting, recentlyHit);
+        if (!(this.level() instanceof ServerLevel level)) {
+            return;
+        }
+    *///?}
         if (!(source.getEntity() instanceof Player player)) {
             return;
         }
+        //? if >=1.21 {
         ItemStack weapon = player.getWeaponItem();
+        //?} else {
+        /*ItemStack weapon = player.getMainHandItem();
+        *///?}
         if (weapon.isEmpty() || !weapon.typeHolder().is(ItemTags.PICKAXES)) {
             return;
         }

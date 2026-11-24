@@ -31,7 +31,7 @@ materials the rest of the ecosystem spends.
 
 ## Requirements
 
-- **Neroland Core 1.17.0+** — required, and the only hard dependency.
+- **Neroland Core 1.23.0 or newer** (below 2.0).
 - **NeroQuests** is optional. NeroCreatures ships a quest chapter, `nerocreatures:bestiary` "Bestiary",
   inside its own jar; it appears in the quest book when NeroQuests is installed and is inert data
   otherwise. There is no dependency in either direction.
@@ -42,8 +42,8 @@ materials the rest of the ecosystem spends.
 
 - **Minecraft:** 1.21.1, 1.21.4, 1.21.5, 1.21.8 (also runs on 1.21.7), 1.21.10 (also runs on 1.21.9),
   1.21.11, 26.1.2, 26.2 and 26.3
-- **Loaders:** NeoForge, MinecraftForge/Forge, Fabric (the 27 cells)
-- **Java:** 21 for the 1.21.x builds, 25 for 26.x
+- **Minecraft 1.20.5** on Fabric and **1.20.6** on Fabric, Forge and NeoForge.
+- **Java:** 21 for 1.20.5 through 1.21.x, and 25 for 26.x.
 - Mod id: `nerocreatures` · package `za.co.neroland.nerocreatures`
 
 ## Layout
