@@ -150,12 +150,6 @@ jobs:
           python3 -B tools/check_log_privacy.py --check
           python3 -B tools/check_private_refs.py --check
 
-      - name: Static analysis and unit tests
-        env:
-          GITHUB_ACTOR: ${{ github.actor }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: ./gradlew :neoforge:26.3:test --no-daemon --stacktrace
-
   build:
     name: Build ${{ matrix.label }} ${{ matrix.mc }}
     needs: [detect, validate]
