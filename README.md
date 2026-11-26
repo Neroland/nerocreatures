@@ -29,9 +29,11 @@ materials the rest of the ecosystem spends.
 - **PII-free crash reporting, on by default and opt-out** — this mod's own crashes only; set
   `telemetryEnabled=false` in `config/nerocreatures.properties` to switch it off.
 
+Minecraft 1.20.5 on NeoForge requires loader 20.5.21-beta.
+
 ## Requirements
 
-- **Neroland Core 1.23.0 or newer** (below 2.0).
+- **Neroland Core 1.24.0 or newer** (below 2.0).
 - **NeroQuests** is optional. NeroCreatures ships a quest chapter, `nerocreatures:bestiary` "Bestiary",
   inside its own jar; it appears in the quest book when NeroQuests is installed and is inert data
   otherwise. There is no dependency in either direction.

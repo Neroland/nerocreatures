@@ -3,7 +3,7 @@
 Player- and contributor-facing documentation for **NeroCreatures**, the creature layer of the
 Neroland sci-fi ecosystem. Built on **Neroland Core**.
 
-NeroCreatures requires **Neroland Core 1.23.0 or newer** (below 2.0). Minecraft 1.20.5
+NeroCreatures requires **Neroland Core 1.24.0 or newer** (below 2.0). Minecraft 1.20.5
 runs on Fabric, and 1.20.6 runs on Fabric, Forge and NeoForge.
 
 NeroCreatures populates the worlds other mods build: hostile fauna on the planets, neutral
@@ -16,6 +16,8 @@ mod.
 > mounts, husbanded livestock, traits and breeding; habitat blocks and creature gear; the Field
 > Scanner and Bestiary; alphas; a companion-app link (schema 2); and the walkable Menagerie gallery.
 > See the [Changelog](https://github.com/Neroland/nerocreatures/blob/main/CHANGELOG.md).
+
+Minecraft 1.20.5 on NeoForge requires loader 20.5.21-beta.
 
 ## Contents
 

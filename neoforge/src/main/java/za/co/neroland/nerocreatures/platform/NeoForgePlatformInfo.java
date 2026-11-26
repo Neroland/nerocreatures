@@ -66,7 +66,11 @@ public final class NeoForgePlatformInfo implements PlatformInfo {
     /** Fires {@code EntityMobGriefingEvent} (defaults to the {@code mobGriefing} game rule). */
     @Override
     public boolean canMobGrief(ServerLevel level, Mob actor) {
+        //? if >=1.20.6 {
         return EventHooks.canEntityGrief(level, actor);
+        //?} else {
+        /*return EventHooks.getMobGriefingEvent(level, actor);
+        *///?}
     }
 
     /**
