@@ -36,7 +36,14 @@ public final class ForgeCreatureEvents {
         *///?}
     }
 
+    //? if >=1.20.5 {
     private static void onServerTick(TickEvent.ServerTickEvent.Post event) {
+    //?} else {
+    /*private static void onServerTick(TickEvent.ServerTickEvent event) {
+        if (event.phase != TickEvent.Phase.END) {
+            return;
+        }
+    *///?}
         //? if >=1.21.9 {
         CreatureSpawns.serverTick(event.server());
         //?} else {

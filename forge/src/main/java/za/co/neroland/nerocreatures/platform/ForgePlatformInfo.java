@@ -28,6 +28,13 @@ import za.co.neroland.nerocreatures.NeroCreaturesCommon;
  * the static {@code ModList.getModContainerById} / {@code ModList.getMods()} pair instead.
  */
 public final class ForgePlatformInfo implements PlatformInfo {
+    //? if <1.20.5 {
+    /*@Override
+    public net.minecraft.world.entity.ai.attributes.Attribute gravityAttribute() {
+        return net.minecraftforge.common.ForgeMod.ENTITY_GRAVITY.get();
+    }
+    *///?}
+
 
     @Override
     public String getPlatformName() {

@@ -149,8 +149,16 @@ public final class BestiaryGfx {
         *///?} else {
         /*Turn saved = Turn.apply(entity, yaw);
         graphics.enableScissor(x0, y0, x1, y1);
+        //? if >=1.20.5 {
         net.minecraft.client.gui.screens.inventory.InventoryScreen.renderEntityInInventory(graphics, (x0 + x1) / 2.0F,
                 centreY, scale, translation, rotation, pitch, entity);
+        //?} else if >=1.20.2 {
+        net.minecraft.client.gui.screens.inventory.InventoryScreen.renderEntityInInventory(graphics, (x0 + x1) / 2.0F,
+                centreY, Math.max(1, Math.round(scale)), translation, rotation, pitch, entity);
+        //?} else {
+        net.minecraft.client.gui.screens.inventory.InventoryScreen.renderEntityInInventory(graphics, (x0 + x1) / 2,
+                feetY, Math.max(1, Math.round(scale)), rotation, pitch, entity);
+        //?}
         graphics.disableScissor();
         saved.restore(entity);
         *///?}

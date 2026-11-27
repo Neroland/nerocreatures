@@ -11,8 +11,7 @@ description = '''
 NeroCreatures - multiloader build (NeoForge).
 '''
 
-[[mixins]]
-config = "nerocreatures-common.mixins.json"
+${mod_mixin_entry}
 
 [[dependencies.${mod_id}]]
 modId = "neoforge"

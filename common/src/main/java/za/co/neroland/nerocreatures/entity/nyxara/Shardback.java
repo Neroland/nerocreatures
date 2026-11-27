@@ -19,7 +19,9 @@ import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.monster.Enemy;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;
+//? if >=1.20.5 {
 import net.minecraft.world.entity.projectile.ProjectileDeflection;
+//?}
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 
@@ -109,21 +111,26 @@ public class Shardback extends NeroCreatureEntity implements Enemy {
 
     // --- the mirror fan ---------------------------------------------------------------
 
+    //? if >=1.20.5 {
     @Override
     public ProjectileDeflection deflection(Projectile projectile) {
+        return this.reflectProjectile(projectile) ? ProjectileDeflection.REVERSE : super.deflection(projectile);
+    }
+    //?}
+
+    public boolean reflectProjectile(Projectile projectile) {
         if (!ShardbackRules.reflects(this.platesFolded(), this.fromFront(projectile.getX(), projectile.getZ()))) {
-            return super.deflection(projectile);
+            return false;
         }
         if (this.level() instanceof ServerLevel level) {
             if (!this.reflects.tryUse(level.getGameTime())) {
-                // Over the cap: still blocked by the fan (hurt ignores it), but nothing flies back.
-                return super.deflection(projectile);
+                return false;
             }
             level.sendParticles(ModParticles.PRISM_GLINT.get(), projectile.getX(), projectile.getY(), projectile.getZ(),
                     6, 0.15D, 0.15D, 0.15D, 0.05D);
             ModSounds.SHARDBACK_DEFLECT.play(this);
         }
-        return ProjectileDeflection.REVERSE;
+        return true;
     }
 
     //? if >=1.21.2 {

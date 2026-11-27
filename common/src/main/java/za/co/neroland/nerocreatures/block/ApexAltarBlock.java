@@ -145,26 +145,41 @@ public class ApexAltarBlock extends BaseEntityBlock {
         return super.getDestroyProgress(state, player, level, pos);
     }
 
+    //? if <1.20.5 {
+    /*@Override
+    public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player,
+            InteractionHand hand, BlockHitResult hit) {
+        return useItemOnLegacy(player.getItemInHand(hand), state, level, pos, player, hand, hit);
+    }
+    *///?}
+
     //? if >=1.21.2 {
     @Override
     protected InteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos,
             Player player, InteractionHand hand, BlockHitResult hit) {
-    //?} else {
+    //?} else if >=1.20.5 {
     /*@Override
     protected net.minecraft.world.ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level,
             BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
+    *///?} else {
+    /*private InteractionResult useItemOnLegacy(ItemStack stack, BlockState state, Level level,
+            BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
     *///?}
         if (!(stack.getItem() instanceof SigilItem sigil)) {
+            //? if >=1.20.5 {
             return super.useItemOn(stack, state, level, pos, player, hand, hit);
+            //?} else {
+            /*return InteractionResult.PASS;
+            *///?}
         }
         if (level instanceof ServerLevel server && player instanceof ServerPlayer serverPlayer
                 && level.getBlockEntity(pos) instanceof ApexAltarBlockEntity altar) {
             altar.trySummon(server, pos, serverPlayer, stack, sigil.kind());
         }
-        //? if >=1.21.2 {
-        return InteractionResult.SUCCESS;
-        //?} else {
+        //? if >=1.20.5 && <1.21.2 {
         /*return net.minecraft.world.ItemInteractionResult.SUCCESS;
-        *///?}
+        *///?} else {
+        return InteractionResult.SUCCESS;
+        //?}
     }
 }

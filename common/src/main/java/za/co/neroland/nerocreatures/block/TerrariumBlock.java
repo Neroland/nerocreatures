@@ -77,31 +77,52 @@ public class TerrariumBlock extends HabitatBlock {
         return super.getDestroyProgress(state, player, level, pos);
     }
 
+    //? if <1.20.5 {
+    /*@Override
+    public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player,
+            InteractionHand hand, BlockHitResult hit) {
+        InteractionResult result = useItemOnLegacy(player.getItemInHand(hand), state, level, pos, player, hand, hit);
+        return result == InteractionResult.PASS ? useWithoutItem(state, level, pos, player, hit) : result;
+    }
+    *///?}
+
     //? if >=1.21.2 {
     @Override
     protected InteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos,
             Player player, InteractionHand hand, BlockHitResult hit) {
-    //?} else {
+    //?} else if >=1.20.5 {
     /*@Override
     protected net.minecraft.world.ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level,
             BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
+    *///?} else {
+    /*private InteractionResult useItemOnLegacy(ItemStack stack, BlockState state, Level level,
+            BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
     *///?}
         if (!stack.is(TerrariumBlockEntity.CAPTURE_PODS)) {
+            //? if >=1.20.5 {
             return super.useItemOn(stack, state, level, pos, player, hand, hit);
+            //?} else {
+            /*return InteractionResult.PASS;
+            *///?}
         }
         if (level instanceof ServerLevel && level.getBlockEntity(pos) instanceof TerrariumBlockEntity terrarium) {
             terrarium.usePod(player, stack);
         }
-        //? if >=1.21.2 {
-        return InteractionResult.SUCCESS;
-        //?} else {
+        //? if >=1.20.5 && <1.21.2 {
         /*return net.minecraft.world.ItemInteractionResult.SUCCESS;
-        *///?}
+        *///?} else {
+        return InteractionResult.SUCCESS;
+        //?}
     }
 
+    //? if >=1.20.5 {
     @Override
     protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player,
             BlockHitResult hit) {
+    //?} else {
+    /*private InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player,
+            BlockHitResult hit) {
+    *///?}
         if (level instanceof ServerLevel && level.getBlockEntity(pos) instanceof TerrariumBlockEntity terrarium) {
             terrarium.describe(player);
         }

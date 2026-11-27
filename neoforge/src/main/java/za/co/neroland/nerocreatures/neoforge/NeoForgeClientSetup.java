@@ -4,10 +4,15 @@ import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.neoforged.bus.api.IEventBus;
-import net.neoforged.neoforge.client.event.ClientTickEvent;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import net.neoforged.neoforge.client.event.RegisterClientCommandsEvent;
+//? if >=1.20.5 {
+import net.neoforged.neoforge.client.event.ClientTickEvent;
 import net.neoforged.neoforge.client.event.RegisterGuiLayersEvent;
+//?} else {
+/*import net.neoforged.neoforge.client.event.RegisterGuiOverlaysEvent;
+import net.neoforged.neoforge.event.TickEvent;
+*///?}
 import net.neoforged.neoforge.client.event.RegisterKeyMappingsEvent;
 import net.neoforged.neoforge.client.event.RegisterParticleProvidersEvent;
 import net.neoforged.neoforge.common.NeoForge;
@@ -37,16 +42,38 @@ public final class NeoForgeClientSetup {
         // The screenshot harness: its per-tick pump on the game bus, and its own client-side command
         // tree. The root is /ncgallery, NOT /nerocreatures — a client root sharing the server root's
         // name shadows the server subtree (see GalleryCaptureHarness).
+        //? if >=1.20.5 {
         NeoForge.EVENT_BUS.addListener((ClientTickEvent.Post event) -> GalleryCaptureHarness.tick());
+        //?} else {
+        /*NeoForge.EVENT_BUS.addListener((TickEvent.ClientTickEvent event) -> {
+            if (event.phase == TickEvent.Phase.END) {
+                GalleryCaptureHarness.tick();
+            }
+        });
+        *///?}
         NeoForge.EVENT_BUS.addListener((RegisterClientCommandsEvent event) ->
                 GalleryCaptureHarness.registerClientCommands(event.getDispatcher()));
         // Field Scanner and Bestiary: client seams, the open-Bestiary key (its category registers in
         // ClientBestiary's static initialiser), its tick, and the scanner HUD layer.
         ClientBestiary.install();
         modEventBus.addListener((RegisterKeyMappingsEvent event) -> event.register(ClientBestiary.OPEN_BESTIARY));
+        //? if >=1.20.5 {
         NeoForge.EVENT_BUS.addListener((ClientTickEvent.Post event) -> ClientBestiary.tick());
+        //?} else {
+        /*NeoForge.EVENT_BUS.addListener((TickEvent.ClientTickEvent event) -> {
+            if (event.phase == TickEvent.Phase.END) {
+                ClientBestiary.tick();
+            }
+        });
+        *///?}
+        //? if >=1.20.5 {
         modEventBus.addListener((RegisterGuiLayersEvent event) ->
                 event.registerAboveAll(ScannerHud.LAYER_ID, (graphics, delta) -> ScannerHud.render(graphics)));
+        //?} else {
+        /*modEventBus.addListener((RegisterGuiOverlaysEvent event) ->
+                event.registerAboveAll(ScannerHud.LAYER_ID,
+                        (gui, graphics, delta, width, height) -> ScannerHud.render(graphics)));
+        *///?}
         // The 16 custom particles: one sprite-set provider per type.
         modEventBus.addListener((RegisterParticleProvidersEvent event) -> CreatureParticles.registerAll((type, id) ->
                 event.registerSpriteSet(type, sprites -> new CreatureParticle.Provider(sprites, id))));

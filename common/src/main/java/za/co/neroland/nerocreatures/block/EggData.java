@@ -4,11 +4,9 @@ import java.util.Optional;
 
 import com.mojang.serialization.Codec;
 
-import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.component.CustomData;
 
 import za.co.neroland.nerocreatures.trait.TraitSet;
 
@@ -62,15 +60,15 @@ public record EggData(String species, TraitSet traits) {
         if (stack == null || stack.isEmpty()) {
             return Optional.empty();
         }
-        CustomData data = stack.get(DataComponents.CUSTOM_DATA);
-        return data == null ? Optional.empty() : fromTag(data.copyTag());
+        CompoundTag data = CreatureStackData.copy(stack);
+        return data == null ? Optional.empty() : fromTag(data);
     }
 
     /** Writes this egg into a stack's custom data, keeping any other keys. */
     public void write(ItemStack stack) {
-        CustomData data = stack.get(DataComponents.CUSTOM_DATA);
-        CompoundTag tag = data == null ? new CompoundTag() : data.copyTag();
+        CompoundTag data = CreatureStackData.copy(stack);
+        CompoundTag tag = data == null ? new CompoundTag() : data;
         tag.merge(this.toTag());
-        stack.set(DataComponents.CUSTOM_DATA, CustomData.of(tag));
+        CreatureStackData.write(stack, tag);
     }
 }

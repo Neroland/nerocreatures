@@ -105,6 +105,9 @@ public class MagmaWader extends NeroCreatureEntity implements Enemy {
 
     public MagmaWader(EntityType<? extends MagmaWader> type, Level level) {
         super(type, level, CreatureTier.COMMON);
+        //? if <1.20.5 {
+        /*this.setMaxUpStep(1.0F);
+        *///?}
         this.setPathfindingMalus(PathType.LAVA, 0.0F);
         //? if >=26.1 {
         this.setPathfindingMalus(PathType.FIRE_IN_NEIGHBOR, 0.0F);
@@ -123,7 +126,10 @@ public class MagmaWader extends NeroCreatureEntity implements Enemy {
                 .add(Attributes.ATTACK_DAMAGE, 5.0D)
                 .add(Attributes.FOLLOW_RANGE, 24.0D)
                 .add(Attributes.ARMOR, 2.0D)
-                .add(Attributes.STEP_HEIGHT, 1.0D);
+                //? if >=1.20.5 {
+                .add(Attributes.STEP_HEIGHT, 1.0D)
+                //?}
+                ;
     }
 
     @Override

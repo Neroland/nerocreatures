@@ -2,7 +2,9 @@ package za.co.neroland.nerocreatures.network;
 
 import io.netty.buffer.ByteBuf;
 
+//? if >=1.20.5 {
 import net.minecraft.network.codec.ByteBufCodecs;
+//?}
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.Identifier;
@@ -23,15 +25,29 @@ import za.co.neroland.nerocreatures.NeroCreaturesCommon;
  */
 public record CreatureActionPayload(int entityId, int action) implements CustomPacketPayload {
 
+    //? if >=1.20.5 {
     public static final CustomPacketPayload.Type<CreatureActionPayload> TYPE =
             new CustomPacketPayload.Type<>(
                     Identifier.fromNamespaceAndPath(NeroCreaturesCommon.MOD_ID, "creature_action"));
+    //?} else {
+    /*public static final CustomPacketPayload.Type<CreatureActionPayload> TYPE =
+            new CustomPacketPayload.Type<>(
+                    Identifier.fromNamespaceAndPath(NeroCreaturesCommon.MOD_ID, "creature_action"), CreatureActionPayload.class);
+    *///?}
 
     /** Registry-free codec: two var-ints. Round-trip tested on a plain JVM. */
+    //? if >=1.20.5 {
     public static final StreamCodec<ByteBuf, CreatureActionPayload> STREAM_CODEC = StreamCodec.composite(
             ByteBufCodecs.VAR_INT, CreatureActionPayload::entityId,
             ByteBufCodecs.VAR_INT, CreatureActionPayload::action,
             CreatureActionPayload::new);
+    //?} else {
+    /*public static final StreamCodec<net.minecraft.network.FriendlyByteBuf, CreatureActionPayload> STREAM_CODEC =
+            StreamCodec.of((buffer, packet) -> {
+                buffer.writeVarInt(packet.entityId());
+                buffer.writeVarInt(packet.action());
+            }, buffer -> new CreatureActionPayload(buffer.readVarInt(), buffer.readVarInt()));
+    *///?}
 
     @Override
     public CustomPacketPayload.Type<? extends CustomPacketPayload> type() {

@@ -123,7 +123,12 @@ public class PrismStag extends LivestockCreature {
             }
         });
         this.goalSelector.addGoal(3, new BreedGoal(this, 1.0D));
+        //? if >=1.20.5 {
         this.goalSelector.addGoal(4, new TemptGoal(this, 1.1D, this::isSpeciesFood, false));
+        //?} else {
+        /*this.goalSelector.addGoal(4, new TemptGoal(this, 1.1D,
+                net.minecraft.world.item.crafting.Ingredient.of(this.foodTag()), false));
+        *///?}
         this.goalSelector.addGoal(5, new FollowParentGoal(this, 1.1D));
         this.goalSelector.addGoal(6, new HerdCohesionGoal(this, 16.0D, 7.0D, 60, 1.0D));
         this.goalSelector.addGoal(7, new WaterAvoidingRandomStrollGoal(this, 0.8D));

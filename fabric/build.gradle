@@ -13,6 +13,7 @@ plugins {
 
 // MC version comes from the Stonecutter node (e.g. :fabric:26.1.2), not a global property.
 def mc = stonecutter.current.version
+def preComponents = stonecutter.eval(mc, '<1.20.5')
 // Minecraft before 26.1 ships obfuscated, so those cells need mappings and a remapped jar.
 def obfuscated = mc.startsWith('1.')
 apply plugin: obfuscated ? 'net.fabricmc.fabric-loom-remap' : 'net.fabricmc.fabric-loom'
@@ -127,6 +128,7 @@ dependencies {
 // Run & Debug works — while values stay dynamic (sourced from gradle.properties).
 def generateModMetadata = tasks.register('generateModMetadata', ProcessResources) {
     def props = [
+        java_version: project.javaRelease,
         mod_id               : rootProject.mod_id,
         mod_version          : rootProject.mod_version,
         mod_name             : rootProject.mod_name,
@@ -148,7 +150,7 @@ eclipse.synchronizationTasks generateModMetadata
 // The access widener's namespace differs by era: 26.x is `official` (de-obfuscated), 1.21.x is `named`
 // (Mojang mappings, remapped to intermediary in remapJar). Each 1.21.x line has its own file under
 // src/main/accesswidener/, swapped into the jar under the name fabric.mod.json declares.
-def awVersion = mc.startsWith('1.20.') ? '1.21.1' : mc
+def awVersion = (preComponents || mc.startsWith('1.20.')) ? '1.21.1' : mc
 def awFile = obfuscated ? file("${branchDir}/src/main/accesswidener/${awVersion}.accesswidener")
         : file("${branchDir}/src/main/resources/nerocreatures.accesswidener")
 if (obfuscated) {

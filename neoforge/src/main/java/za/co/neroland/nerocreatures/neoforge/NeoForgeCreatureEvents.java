@@ -2,7 +2,11 @@ package za.co.neroland.nerocreatures.neoforge;
 
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.RegisterCommandsEvent;
+//? if >=1.20.5 {
 import net.neoforged.neoforge.event.tick.ServerTickEvent;
+//?} else {
+/*import net.neoforged.neoforge.event.TickEvent;
+*///?}
 
 import za.co.neroland.nerocreatures.command.CreatureCommands;
 import za.co.neroland.nerocreatures.spawn.CreatureSpawns;
@@ -23,8 +27,16 @@ public final class NeoForgeCreatureEvents {
 
     /** Called once from the NeoForge entry point. */
     public static void register() {
+        //? if >=1.20.5 {
         NeoForge.EVENT_BUS.addListener((ServerTickEvent.Post event) ->
                 CreatureSpawns.serverTick(event.getServer()));
+        //?} else {
+        /*NeoForge.EVENT_BUS.addListener((TickEvent.ServerTickEvent event) -> {
+            if (event.phase == TickEvent.Phase.END) {
+                CreatureSpawns.serverTick(event.getServer());
+            }
+        });
+        *///?}
 
         NeoForge.EVENT_BUS.addListener((RegisterCommandsEvent event) ->
                 CreatureCommands.register(event.getDispatcher()));

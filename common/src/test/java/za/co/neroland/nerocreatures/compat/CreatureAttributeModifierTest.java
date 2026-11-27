@@ -19,7 +19,12 @@ class CreatureAttributeModifierTest {
         var updated = CreatureAttributeModifier.create(id, 2.0, operation);
         var separate = CreatureAttributeModifier.create(other, 2.0, operation);
 
+        //? if >=1.20.5 {
         assertEquals(first.id(), updated.id());
         assertNotEquals(first.id(), separate.id());
+        //?} else {
+        /*assertEquals(first.getId(), updated.getId());
+        assertNotEquals(first.getId(), separate.getId());
+        *///?}
     }
 }

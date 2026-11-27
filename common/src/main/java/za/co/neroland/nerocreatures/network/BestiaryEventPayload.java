@@ -32,8 +32,13 @@ public record BestiaryEventPayload(int schema, Kind kind, String species) implem
         }
     }
 
+    //? if >=1.20.5 {
     public static final CustomPacketPayload.Type<BestiaryEventPayload> TYPE = new CustomPacketPayload.Type<>(
             Identifier.fromNamespaceAndPath(NeroCreaturesCommon.MOD_ID, "bestiary_event"));
+    //?} else {
+    /*public static final CustomPacketPayload.Type<BestiaryEventPayload> TYPE = new CustomPacketPayload.Type<>(
+            Identifier.fromNamespaceAndPath(NeroCreaturesCommon.MOD_ID, "bestiary_event"), BestiaryEventPayload.class);
+    *///?}
 
     public static final StreamCodec<ByteBuf, BestiaryEventPayload> STREAM_CODEC = StreamCodec.of(
             (buf, payload) -> {

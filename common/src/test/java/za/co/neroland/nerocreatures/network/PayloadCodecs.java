@@ -15,8 +15,13 @@ final class PayloadCodecs {
     private PayloadCodecs() {
     }
 
+    //? if >=1.20.5 {
     static <T> T roundTrip(StreamCodec<ByteBuf, T> codec, T value) {
         ByteBuf buf = Unpooled.buffer();
+    //?} else {
+    /*static <T> T roundTrip(StreamCodec<? super net.minecraft.network.FriendlyByteBuf, T> codec, T value) {
+        var buf = new net.minecraft.network.FriendlyByteBuf(Unpooled.buffer());
+    *///?}
         try {
             codec.encode(buf, value);
             T decoded = codec.decode(buf);

@@ -23,6 +23,13 @@ import za.co.neroland.nerocreatures.NeroCreaturesCommon;
  * {@code META-INF/services/za.co.neroland.nerocreatures.platform.PlatformInfo}.
  */
 public final class NeoForgePlatformInfo implements PlatformInfo {
+    //? if <1.20.5 {
+    /*@Override
+    public net.minecraft.world.entity.ai.attributes.Attribute gravityAttribute() {
+        return net.neoforged.neoforge.common.NeoForgeMod.ENTITY_GRAVITY.value();
+    }
+    *///?}
+
 
     @Override
     public String getPlatformName() {

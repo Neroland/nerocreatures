@@ -7,14 +7,15 @@ import java.util.Set;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 
-import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.nbt.Tag;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.component.CustomData;
+//? if >=1.20.5 {
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.item.component.CustomModelData;
+//?}
 
 import za.co.neroland.nerocreatures.trait.TraitSet;
 
@@ -190,11 +191,11 @@ public record CapturedCreature(int version, String species, CompoundTag entity, 
         if (stack == null || stack.isEmpty()) {
             return Optional.empty();
         }
-        CustomData data = stack.get(DataComponents.CUSTOM_DATA);
+        CompoundTag data = CreatureStackData.copy(stack);
         if (data == null) {
             return Optional.empty();
         }
-        return fromTag(data.copyTag().get(KEY));
+        return fromTag(data.get(KEY));
     }
 
     /** Whether a pod carries anything under {@link #KEY} (even a capture this reader cannot parse). */
@@ -202,8 +203,8 @@ public record CapturedCreature(int version, String species, CompoundTag entity, 
         if (stack == null || stack.isEmpty()) {
             return false;
         }
-        CustomData data = stack.get(DataComponents.CUSTOM_DATA);
-        return data != null && data.copyTag().contains(KEY);
+        CompoundTag data = CreatureStackData.copy(stack);
+        return data != null && data.contains(KEY);
     }
 
     /** Writes this capture into a pod, keeping any other custom-data keys. */
@@ -216,9 +217,12 @@ public record CapturedCreature(int version, String species, CompoundTag entity, 
      * it is carried, never lost), keeping any other custom-data keys.
      */
     public static void writeTag(ItemStack stack, CompoundTag capture) {
-        CustomData data = stack.get(DataComponents.CUSTOM_DATA);
-        stack.set(DataComponents.CUSTOM_DATA, CustomData.of(podData(data == null ? null : data.copyTag(), capture)));
+        CreatureStackData.write(stack, podData(CreatureStackData.copy(stack), capture));
+        //? if >=1.20.5 {
         stack.set(DataComponents.CUSTOM_MODEL_DATA, FILLED_MODEL);
+        //?} else {
+        /*stack.getOrCreateTag().putInt("CustomModelData", 1);
+        *///?}
     }
 
     /** A pod's custom data with {@code capture} (copied) under {@link #KEY}; other keys are kept. */
@@ -235,23 +239,22 @@ public record CapturedCreature(int version, String species, CompoundTag entity, 
      */
     //? if >=1.21.4 {
     private static final CustomModelData FILLED_MODEL = new CustomModelData(List.of(), List.of(true), List.of(), List.of());
-    //?} else {
+    //?} else if >=1.20.5 {
     /*private static final CustomModelData FILLED_MODEL = new CustomModelData(1);
     *///?}
 
     /** Empties a pod: removes {@link #KEY}, and the component when nothing else is left. */
     public static void clear(ItemStack stack) {
+        //? if >=1.20.5 {
         stack.remove(DataComponents.CUSTOM_MODEL_DATA);
-        CustomData data = stack.get(DataComponents.CUSTOM_DATA);
+        //?} else {
+        /*stack.removeTagKey("CustomModelData");
+        *///?}
+        CompoundTag data = CreatureStackData.copy(stack);
         if (data == null) {
             return;
         }
-        CompoundTag tag = data.copyTag();
-        tag.remove(KEY);
-        if (tag.isEmpty()) {
-            stack.remove(DataComponents.CUSTOM_DATA);
-        } else {
-            stack.set(DataComponents.CUSTOM_DATA, CustomData.of(tag));
-        }
+        data.remove(KEY);
+        CreatureStackData.write(stack, data);
     }
 }

@@ -10,7 +10,11 @@ import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.MobCategory;
+//? if >=1.20.5 {
 import net.minecraft.world.entity.SpawnPlacementTypes;
+//?} else {
+/*import net.minecraft.world.entity.SpawnPlacements;
+*///?}
 import net.minecraft.world.level.LightLayer;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.levelgen.Heightmap;

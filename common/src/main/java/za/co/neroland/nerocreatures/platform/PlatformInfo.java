@@ -29,6 +29,14 @@ import za.co.neroland.nerocreatures.world.CreatureGriefing;
  * string — never personal data (POPIA/GDPR).
  */
 public interface PlatformInfo {
+    //? if <1.20.5 {
+    /*default boolean usesVanillaGravity() {
+        return false;
+    }
+
+    net.minecraft.world.entity.ai.attributes.Attribute gravityAttribute();
+    *///?}
+
 
     /** Human-readable platform name ("Fabric" / "Forge" / "NeoForge"). */
     String getPlatformName();

@@ -166,8 +166,13 @@ public class BloomHost extends NeroCreatureEntity implements Enemy {
 
     /** Sporelings and pods are smaller than the host: the hitbox follows the synced form. */
     @Override
+    //? if >=1.20.5 {
     public EntityDimensions getDefaultDimensions(Pose pose) {
         EntityDimensions base = super.getDefaultDimensions(pose);
+    //?} else {
+    /*public EntityDimensions getDimensions(Pose pose) {
+        EntityDimensions base = super.getDimensions(pose);
+    *///?}
         // Can run inside the Entity constructor, before the visuals component exists.
         int form = this.visuals() == null ? BloomRules.FORM_HOST : this.form();
         EntityDimensions host = this.getType().getDimensions();

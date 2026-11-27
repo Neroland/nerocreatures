@@ -205,7 +205,7 @@ public class EphemeralCrustBlock extends Block {
     @Override
     public void destroy(LevelAccessor level, BlockPos pos, BlockState state) {
         super.destroy(level, pos, state);
-        refill(level, pos, state);
+        restoreFluidAfterRemoval(level, pos, state);
     }
 
     /** Blown up: same as a break. The state is captured before vanilla clears the cell. */
@@ -214,18 +214,18 @@ public class EphemeralCrustBlock extends Block {
     protected void onExplosionHit(BlockState state, ServerLevel level, BlockPos pos, Explosion explosion,
             BiConsumer<ItemStack, BlockPos> dropConsumer) {
         super.onExplosionHit(state, level, pos, explosion, dropConsumer);
-        refill(level, pos, state);
+        restoreFluidAfterRemoval(level, pos, state);
     }
-    //?} else {
+    //?} else if >=1.20.3 {
     /*@Override
-    protected void onExplosionHit(BlockState state, net.minecraft.world.level.Level level, BlockPos pos,
+    public void onExplosionHit(BlockState state, net.minecraft.world.level.Level level, BlockPos pos,
             Explosion explosion, BiConsumer<ItemStack, BlockPos> dropConsumer) {
         super.onExplosionHit(state, level, pos, explosion, dropConsumer);
-        refill(level, pos, state);
+        restoreFluidAfterRemoval(level, pos, state);
     }
     *///?}
 
-    private static void refill(LevelAccessor level, BlockPos pos, BlockState state) {
+    public static void restoreFluidAfterRemoval(LevelAccessor level, BlockPos pos, BlockState state) {
         if (level.isClientSide() || !state.hasProperty(RESTORE)) {
             return;
         }

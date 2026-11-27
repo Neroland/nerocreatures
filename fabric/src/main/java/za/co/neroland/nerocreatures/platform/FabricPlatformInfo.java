@@ -12,6 +12,18 @@ import za.co.neroland.nerocreatures.NeroCreaturesCommon;
  * {@code META-INF/services/za.co.neroland.nerocreatures.platform.PlatformInfo}.
  */
 public final class FabricPlatformInfo implements PlatformInfo {
+    //? if <1.20.5 {
+    /*@Override
+    public boolean usesVanillaGravity() {
+        return true;
+    }
+
+    @Override
+    public net.minecraft.world.entity.ai.attributes.Attribute gravityAttribute() {
+        return za.co.neroland.nerocreatures.registry.LegacyCreatureAttributes.VANILLA_GRAVITY;
+    }
+    *///?}
+
 
     @Override
     public String getPlatformName() {

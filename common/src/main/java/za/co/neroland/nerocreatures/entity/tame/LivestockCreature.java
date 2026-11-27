@@ -178,7 +178,12 @@ public abstract class LivestockCreature extends TameableCreature {
         this.goalSelector.addGoal(0, new FloatGoal(this));
         this.goalSelector.addGoal(1, new PanicGoal(this, 1.25D));
         this.goalSelector.addGoal(2, new BreedGoal(this, 1.0D));
+        //? if >=1.20.5 {
         this.goalSelector.addGoal(3, new TemptGoal(this, 1.1D, this::isSpeciesFood, false));
+        //?} else {
+        /*this.goalSelector.addGoal(3, new TemptGoal(this, 1.1D,
+                net.minecraft.world.item.crafting.Ingredient.of(this.foodTag()), false));
+        *///?}
         this.goalSelector.addGoal(4, new FollowParentGoal(this, 1.1D));
         this.goalSelector.addGoal(5, new WaterAvoidingRandomStrollGoal(this, 0.8D));
         this.goalSelector.addGoal(6, new LookAtPlayerGoal(this, Player.class, 6.0F));

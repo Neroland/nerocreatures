@@ -12,6 +12,7 @@ plugins {
 
 // MC version comes from the Stonecutter node (e.g. :neoforge:26.1.2), not a global property.
 def mc = stonecutter.current.version
+def preComponents = stonecutter.eval(mc, '<1.20.5')
 // Minecraft range: 1.21.x cells are bounded to their API line (gradle.properties); 26.x keep [mc,).
 def mcCeiling = project.findProperty("mc_ceiling_${mc}")
 def mcFloor = project.findProperty("mc_floor_${mc}") ?: mc
@@ -83,7 +84,7 @@ dependencies {
 
 tasks.named('test', Test) {
     useJUnitPlatform()
-    enabled = (project.name in ['26.3', '1.21.1'])
+    enabled = (project.name in ['26.3', '1.21.1', '1.20.2', '1.20.3', '1.20.4'])
 }
 
 dependencies {
@@ -123,6 +124,7 @@ dependencies {
 // and Run & Debug works — values stay dynamic (from gradle.properties).
 def generateModMetadata = tasks.register('generateModMetadata', ProcessResources) {
     def props = [
+        mod_mixin_entry        : stonecutter.eval(mc, '<1.20.4') ? '' : '[[mixins]]\nconfig = "nerocreatures-common.mixins.json"',
         mod_id                 : rootProject.mod_id,
         mod_version            : rootProject.mod_version,
         mod_name               : rootProject.mod_name,
@@ -137,13 +139,26 @@ def generateModMetadata = tasks.register('generateModMetadata', ProcessResources
     inputs.properties(props)
     expand(props)
     from "${branchDir}/src/main/templates"
+    if (stonecutter.eval(mc, '<1.20.5')) {
+        filesMatching('META-INF/neoforge.mods.toml') {
+            name = 'mods.toml'
+            filter { line -> line.replace('type = "required"', 'mandatory = true')
+                                 .replace('type = "optional"', 'mandatory = false') }
+        }
+    }
     into layout.buildDirectory.dir('generated/sources/modMetadata')
 }
 sourceSets.main.resources.srcDir generateModMetadata
 
-// NeoForge 20.5's POM predates the ModDevGradle variants. The original userdev jar supplies the
+if (stonecutter.eval(mc, '<1.20.4')) {
+    tasks.named('jar', Jar) {
+        manifest.attributes('MixinConfigs': 'nerocreatures-common.mixins.json')
+    }
+}
+
+// These early NeoForge POMs predate the ModDevGradle variants. The original userdev jar supplies the
 // game patches and the original POM supplies dependencies for the compile and test classpaths.
-if (mc == '1.20.5') {
+if (mc in ['1.20.2', '1.20.3', '1.20.5']) {
     dependencies.components.withModule('net.neoforged:neoforge') { details ->
         if (details.id.version == neoVersion) {
             details.withVariant('sources') {
@@ -218,7 +233,10 @@ neoForge {
 // runs/probe, adds the TEST source set (common/src/test/java .../probe/BudgetProbe) to the dev mod so the
 // probe can hook server ticks, writes runs/probe/budget-probe-<mc>.txt and halts the server on its own.
 // The probe never enters a release jar (jar = main source set only) and is inert without the system property.
-if (project.hasProperty('budgetProbe')) {
+if (preComponents) {
+    sourceSets.test.java.exclude '**/probe/BudgetProbe.java'
+}
+if (!preComponents && project.hasProperty('budgetProbe')) {
     neoForge {
         runs {
             budgetProbe {

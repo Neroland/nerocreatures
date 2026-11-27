@@ -4,12 +4,17 @@
 plugins {
     id 'net.minecraftforge.gradle'
     id 'net.minecraftforge.jarjar'
+    id 'net.minecraftforge.renamer' apply false
     id 'eclipse'
     id 'maven-publish'
 }
 
 // MC version comes from the Stonecutter node (e.g. :forge:26.1.2), not a global property.
 def mc = stonecutter.current.version
+def preComponents = stonecutter.eval(mc, '<1.20.5')
+if (preComponents) {
+    apply plugin: 'net.minecraftforge.renamer'
+}
 // Minecraft range: 1.21.x cells are bounded to their API line (gradle.properties); 26.x keep [mc,).
 def mcCeiling = project.findProperty("mc_ceiling_${mc}")
 def mcFloor = project.findProperty("mc_floor_${mc}") ?: mc
@@ -104,6 +109,9 @@ repositories {
 
 dependencies {
     implementation minecraft.dependency("net.minecraftforge:forge:${forgeVersion}")
+    if (preComponents) {
+        annotationProcessor 'org.spongepowered:mixin:0.8.7:processor'
+    }
     // EventBus 7's compile-time validator; Forge before 1.21.6 ships EventBus 6, which it cannot validate.
     if (stonecutter.eval(mc, '>=1.21.6')) {
         annotationProcessor 'net.minecraftforge:eventbus-validator:7.0.6'
@@ -131,6 +139,26 @@ dependencies {
 }
 
 // Expand mods.toml from src/main/templates into generated resources.
+if (preComponents) {
+    renamer.mappings.from minecraft.dependency.toSrgFile
+    renamer.enableMixinRefmaps {
+        config 'nerocreatures-common.mixins.json'
+        refMap = 'nerocreatures.refmap.json'
+    }
+    tasks.named('jar', Jar) {
+        manifest.attributes('MixinConfigs': 'nerocreatures-common.mixins.json')
+    }
+    def bundled = tasks.named('jarJar', Jar) {
+        archiveClassifier = 'dev-all'
+    }
+    renamer.classes('renameReleaseJar', bundled) {
+        mappings renamer.mixin.generatedMappings
+        archiveClassifier = 'all'
+    }
+    tasks.named('assemble') { dependsOn 'renameReleaseJar' }
+}
+
+
 def generateModMetadata = tasks.register('generateModMetadata', ProcessResources) {
     def props = [
         mod_id                    : rootProject.mod_id,

@@ -39,8 +39,13 @@ public record BestiaryCountsPayload(int schema, List<Entry> entries) implements 
             int kills, int owned, int bred, int harvested) {
     }
 
+    //? if >=1.20.5 {
     public static final CustomPacketPayload.Type<BestiaryCountsPayload> TYPE = new CustomPacketPayload.Type<>(
             Identifier.fromNamespaceAndPath(NeroCreaturesCommon.MOD_ID, "bestiary_counts"));
+    //?} else {
+    /*public static final CustomPacketPayload.Type<BestiaryCountsPayload> TYPE = new CustomPacketPayload.Type<>(
+            Identifier.fromNamespaceAndPath(NeroCreaturesCommon.MOD_ID, "bestiary_counts"), BestiaryCountsPayload.class);
+    *///?}
 
     public static final StreamCodec<ByteBuf, BestiaryCountsPayload> STREAM_CODEC = StreamCodec.of(
             BestiaryCountsPayload::write, BestiaryCountsPayload::read);

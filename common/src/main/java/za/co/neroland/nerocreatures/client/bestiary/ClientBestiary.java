@@ -95,7 +95,11 @@ public final class ClientBestiary {
     }
 
     static boolean hasScanner(Player player) {
+        //? if >=1.20.5 {
         return player.getInventory().contains(stack -> stack.is(ModItems.FIELD_SCANNER.get()));
+        //?} else {
+        /*return player.getInventory().contains(new net.minecraft.world.item.ItemStack(ModItems.FIELD_SCANNER.get()));
+        *///?}
     }
 
     public static void openScreen() {

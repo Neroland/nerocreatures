@@ -4,7 +4,11 @@ import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraftforge.client.event.EntityRenderersEvent;
+//? if >=1.20.5 {
 import net.minecraftforge.client.event.AddGuiOverlayLayersEvent;
+//?} else {
+/*import net.minecraftforge.client.event.RegisterGuiOverlaysEvent;
+*///?}
 import net.minecraftforge.client.event.RegisterClientCommandsEvent;
 import net.minecraftforge.client.event.RegisterKeyMappingsEvent;
 import net.minecraftforge.client.event.RegisterParticleProvidersEvent;
@@ -75,15 +79,29 @@ public final class ForgeClientSetup {
     }
     *///?}
 
+    //? if >=1.20.5 {
     private static void onClientTick(TickEvent.ClientTickEvent.Post event) {
+    //?} else {
+    /*private static void onClientTick(TickEvent.ClientTickEvent event) {
+        if (event.phase != TickEvent.Phase.END) {
+            return;
+        }
+    *///?}
         GalleryCaptureHarness.tick();
         ClientBestiary.tick();
     }
 
     /** The Field Scanner HUD indicator, on top of the vanilla HUD. */
+    //? if >=1.20.5 {
     private static void onAddGuiLayers(AddGuiOverlayLayersEvent event) {
         event.getLayeredDraw().add(ScannerHud.LAYER_ID, (graphics, delta) -> ScannerHud.render(graphics));
     }
+    //?} else {
+    /*private static void onAddGuiLayers(RegisterGuiOverlaysEvent event) {
+        event.registerAboveAll(ScannerHud.LAYER_ID.getPath(),
+                (gui, graphics, delta, width, height) -> ScannerHud.render(graphics));
+    }
+    *///?}
 
     /** The 16 custom particles: one sprite-set provider per type. */
     private static void onRegisterParticles(RegisterParticleProvidersEvent event) {

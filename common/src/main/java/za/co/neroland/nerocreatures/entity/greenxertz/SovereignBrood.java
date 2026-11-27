@@ -29,7 +29,8 @@ public final class SovereignBrood {
      */
     @Nullable
     public static BloomHost pod(ServerLevel level, double x, double y, double z, double health) {
-        if (!(ModEntities.BLOOM_HOST.get().create(level, EntitySpawnReason.MOB_SUMMONED) instanceof BloomHost pod)) {
+        BloomHost pod = ModEntities.BLOOM_HOST.get().create(level, EntitySpawnReason.MOB_SUMMONED);
+        if (pod == null) {
             return null;
         }
         pod.becomePod();
@@ -50,7 +51,8 @@ public final class SovereignBrood {
      */
     @Nullable
     public static BloomHost sporeling(ServerLevel level, double x, double y, double z) {
-        if (!(ModEntities.BLOOM_HOST.get().create(level, EntitySpawnReason.MOB_SUMMONED) instanceof BloomHost add)) {
+        BloomHost add = ModEntities.BLOOM_HOST.get().create(level, EntitySpawnReason.MOB_SUMMONED);
+            if (add == null) {
             return null;
         }
         String dimension = level.dimension().identifier().toString();

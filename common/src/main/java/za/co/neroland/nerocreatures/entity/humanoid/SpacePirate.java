@@ -262,8 +262,10 @@ public class SpacePirate extends NeroCreatureEntity implements Enemy, RangedAtta
         ItemStack weapon = this.getMainHandItem();
         //? if >=1.21 {
         Arrow bolt = new Arrow(this.level(), this, new ItemStack(Items.ARROW), weapon);
-        //?} else {
+        //?} else if >=1.20.3 {
         /*Arrow bolt = new Arrow(this.level(), this, new ItemStack(Items.ARROW));
+        *///?} else {
+        /*Arrow bolt = new Arrow(this.level(), this);
         *///?}
         double deltaX = target.getX() - this.getX();
         double deltaY = target.getY() + target.getBbHeight() * 0.33D - bolt.getY();

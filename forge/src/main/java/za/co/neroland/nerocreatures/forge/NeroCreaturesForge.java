@@ -19,7 +19,12 @@ import za.co.neroland.nerocreatures.NeroCreaturesCommon;
 @Mod(NeroCreaturesCommon.MOD_ID)
 public final class NeroCreaturesForge {
 
+    //? if >=1.20.5 {
     public NeroCreaturesForge(FMLJavaModLoadingContext context) {
+    //?} else {
+    /*public NeroCreaturesForge() {
+        FMLJavaModLoadingContext context = FMLJavaModLoadingContext.get();
+    *///?}
         NeroCreaturesCommon.LOGGER.info("[NeroCreatures] Forge bootstrap");
         // Common init declares the payloads; the channel below is sealed the moment it is built,
         // so that ordering is mandatory on Forge.

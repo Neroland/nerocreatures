@@ -72,6 +72,9 @@ public final class NeroCreaturesCommon {
         ModParticles.init();
         ModBlocks.init();
         ModBlockEntities.init();
+        //? if <1.20.5 {
+        /*za.co.neroland.nerocreatures.registry.LegacyCreatureAttributes.init();
+        *///?}
         ModEntities.init();
         ModItems.init();
         ModSpawnEggs.init();

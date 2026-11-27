@@ -38,6 +38,13 @@ import za.co.neroland.nerolandcore.map.MapViewer;
  * member concept (ownership is one player), so there is no member fixture.
  */
 class CreatureMapLayerProviderTest {
+    //? if <1.20.3 {
+    /*static {
+        net.minecraft.SharedConstants.tryDetectVersion();
+        net.minecraft.server.Bootstrap.bootStrap();
+    }
+    *///?}
+
     private static final Identifier OVERWORLD_ID = Identifier.fromNamespaceAndPath("minecraft", "overworld");
     private static final Identifier OTHER_ID = Identifier.fromNamespaceAndPath("maptest", "other");
     private static final ResourceKey<Level> OVERWORLD = ResourceKey.create(Registries.DIMENSION, OVERWORLD_ID);

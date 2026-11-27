@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.7.2]
+
+### Added
+
+- Minecraft 1.20 through 1.20.6 on Fabric, 1.20 through 1.20.4 and 1.20.6 on Forge, and 1.20.2 through 1.20.6 on NeoForge. The Forge 1.20.1 jar also supports legacy NeoForge 1.20.1.
+
 ## [0.7.1]
 
 ### Added

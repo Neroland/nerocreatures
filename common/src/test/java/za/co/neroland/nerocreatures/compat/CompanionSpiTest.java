@@ -26,6 +26,13 @@ import za.co.neroland.nerocreatures.data.OwnedCreature;
 
 /** The companion SPI 0.6 additions: rules, park rows, opt-in data. */
 class CompanionSpiTest {
+    //? if <1.20.3 {
+    /*static {
+        net.minecraft.SharedConstants.tryDetectVersion();
+        net.minecraft.server.Bootstrap.bootStrap();
+    }
+    *///?}
+
 
     private static final UUID ALICE = UUID.fromString("00000000-0000-4000-8000-000000000001");
     private static final UUID PET = UUID.fromString("00000000-0000-4000-8000-0000000000a1");

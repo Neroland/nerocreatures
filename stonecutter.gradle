@@ -26,6 +26,87 @@ allprojects {
 // AFTER Stonecutter's own //? processing. Only for pure renames Mojang made with no behaviour change;
 // anything else uses //? if blocks in the source. Loader src/ trees do NOT get these (use //? there).
 ext.legacyRenames = [
+    [below: '1.21', from: /("\/data\/nerocreatures\/tags\/)(block|entity_type|item)\//, to: '$1$2s/'],
+    [below: '1.21', from: /("\/data\/nerocreatures\/)loot_table\//, to: '$1loot_tables/'],
+    [below: '1.20.5', from: /key -> (EntityType\.Builder\.of\([^\n]+\n[ \t]+\.sized\([^)\n]+\))\.eyeHeight\(([^)\n]+)\)([^\n]+\.build\(key\))/,
+            to: 'key -> za.co.neroland.nerocreatures.registry.LegacyCreatureDimensions.withEyeHeight($1$3, $2)'],
+    [below: '1.20.5', from: /\.build\(key\)(, [0-9.]+F\)\))/, to: '.build(key.location().toString())$1'],
+    [below: '1.20.5', from: /\.saturationModifier\(/, to: '.saturationMod('],
+    [below: '1.20.5', from: /SpawnPlacements\.isSpawnPositionOk\(type, level, pos\)/,
+            to: 'net.minecraft.world.level.NaturalSpawner.isSpawnPositionOk(SpawnPlacements.getPlacementType(type), level, pos, type)'],
+    [below: '1.20.5', from: /\.validate\(TraitPool::validate\)/, to: '.flatXmap(TraitPool::validate, TraitPool::validate)'],
+    [below: '1.20.5', from: /\bAttributes\.(SCALE|SAFE_FALL_DISTANCE)\b/,
+            to: 'za.co.neroland.nerocreatures.registry.LegacyCreatureAttributes.$1'],
+    [below: '1.20.5', from: /\bAttributes\.GRAVITY\b/,
+            to: 'za.co.neroland.nerocreatures.registry.LegacyCreatureAttributes.gravity()'],
+    [below: '1.20.2', from: /public boolean mouseScrolled\(double mouseX, double mouseY, double scrollX, double scrollY\)/,
+            to: 'public boolean mouseScrolled(double mouseX, double mouseY, double scrollY)'],
+    [below: '1.20.2', from: /void renderBackground\(GuiGraphicsExtractor g, int mouseX, int mouseY, float partialTick\)/,
+            to: 'void renderBackground(GuiGraphicsExtractor g)'],
+    [below: '1.20.2', from: /\bmatch\.get\(\)\.value\(\)\.assemble\(/, to: 'match.get().assemble('],
+    [below: '1.20.5', from: /\beffect\.getEffect\(\)\.is\((MobEffects\.[A-Z_]+)\)/, to: '(effect.getEffect() == $1)'],
+    [below: '1.20.5', from: /BuiltInRegistries\.(ATTRIBUTE|MOB_EFFECT)\.wrapAsHolder\(BuiltInRegistries\.\1\.getValue\(id\)\)/,
+            to: 'BuiltInRegistries.$1.getValue(id)'],
+    [below: '1.20.5', from: /BuiltInRegistries\.MOB_EFFECT\.wrapAsHolder\(effect\)/, to: 'effect'],
+    [below: '1.20.5', from: /\.getSpawnAABB\(/, to: '.getAABB('],
+    [below: '1.20.5', from: /SoundEvents\.ARMOR_EQUIP_NETHERITE\.value\(\)/, to: 'SoundEvents.ARMOR_EQUIP_NETHERITE'],
+    [below: '1.20.5', from: /\.hurtAndBreak\(1, player, hand == InteractionHand\.MAIN_HAND \? EquipmentSlot\.MAINHAND : EquipmentSlot\.OFFHAND\)/,
+            to: '.hurtAndBreak(1, player, broken -> broken.broadcastBreakEvent(hand))'],
+    [below: '1.20.5', from: /\.withColor\((CYAN|AMBER)\)/, to: '.withStyle(style -> style.withColor($1))'],
+    [below: '1.20.5', from: /\bHolder<GameEvent> event\b/, to: 'GameEvent event'],
+    [below: '1.20.5', from: /\bevent\.is\(GameEvent\.([A-Z_]+)\.key\(\)\)/, to: '(event == GameEvent.$1)'],
+    [below: '1.20.5', from: /\bsetTame\((true|false), true\)/, to: 'setTame($1)'],
+    [below: '1.20.5', from: /player\.getInventory\(\)\.contains\(\(stack\) -> stack\.is\(([^)]+)\.get\(\)\)\)/,
+            to: 'player.getInventory().contains(new ItemStack($1.get()))'],
+    [below: '1.20.5', from: /\bsaveCustomOnly\(registries\)/, to: 'saveWithoutMetadata()'],
+    [below: '1.20.5', from: /protected InteractionResult useWithoutItem\(BlockState state, Level level, BlockPos pos, Player player,\s*BlockHitResult hit\)/,
+            to: 'public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, net.minecraft.world.InteractionHand hand, BlockHitResult hit)'],
+    [below: '1.20.5', from: /void defineSynchedData\(SynchedEntityData\.Builder builder\)/, to: 'void defineSynchedData()'],
+    [below: '1.20.5', from: /super\.defineSynchedData\(builder\)/, to: 'super.defineSynchedData()'],
+    [below: '1.20.5', from: /CreatureVisuals\.define\(builder, /, to: 'CreatureVisuals.define(entityData, '],
+    [below: '1.20.5', from: /\bbuilder\.define\((DATA_[A-Z_]+),/, to: 'entityData.define($1,'],
+    [below: '1.20.5', from: /void define\(SynchedEntityData\.Builder builder,/, to: 'void define(SynchedEntityData builder,'],
+    [below: '1.20.5', from: /public SpawnGroupData finalizeSpawn\(([^)]*SpawnGroupData \w+)\)/,
+            to: 'public SpawnGroupData finalizeSpawn($1, net.minecraft.nbt.CompoundTag spawnData)'],
+    [below: '1.20.5', from: /super\.finalizeSpawn\(([^)]*), groupData\);/, to: 'super.finalizeSpawn($1, groupData, spawnData);'],
+    [below: '1.20.5', from: /\b((?!super\b)\w+\.finalizeSpawn\([^;]*), (null|groupData)\);/, to: '$1, $2, null);'],
+    [below: '1.20.5', from: /setTame\((true|false), false\)/, to: 'setTame($1)'],
+    [below: '1.20.5', from: /(\w+)\.consume\((\d+), (\w+)\);/, to: 'if (!$3.getAbilities().instabuild) { $1.shrink($2); }'],
+    [below: '1.20.5', from: /stack\.getComponentsPatch\(\)\.isEmpty\(\)/, to: '!stack.hasTag()'],
+    [below: '1.20.5', from: /\.igniteForSeconds\(/, to: '.setSecondsOnFire('],
+    [below: '1.20.5', from: /AttributeModifier\.Operation\.ADD_VALUE\b/, to: 'AttributeModifier.Operation.ADDITION'],
+    [below: '1.20.5', from: /AttributeModifier\.Operation\.ADD_MULTIPLIED_TOTAL\b/, to: 'AttributeModifier.Operation.MULTIPLY_TOTAL'],
+    [below: '1.20.5', from: /AttributeModifier\.Operation\.ADD_MULTIPLIED_BASE\b/, to: 'AttributeModifier.Operation.MULTIPLY_BASE'],
+    [below: '1.20.5', from: /Holder<MobEffect>/, to: 'MobEffect'],
+    [below: '1.20.5', from: /Value(Input|Output)\.of\((\w+), \w+\.registryAccess\(\)\)/, to: 'Value$1.of($2, null)'],
+    [below: '1.20.5', from: /\b(dims|dimensions|host|size)\.(width|height)\(\)/, to: '$1.$2'],
+    [below: '1.20.5', from: /\bprotected ([\w.]+ (?:getRenderShape|getShape|getCollisionShape|getVisualShape|getDestroyProgress|rotate|mirror|onRemove|updateShape|tick|randomTick|attack)\()/, to: 'public $1'],
+    [below: '1.20.5', from: /void saveAdditional\(((?:net\.minecraft\.nbt\.)?CompoundTag \w+), (?:net\.minecraft\.core\.)?HolderLookup\.Provider registries\)/, to: 'void saveAdditional($1)'],
+    [below: '1.20.5', from: /protected void loadAdditional\(((?:net\.minecraft\.nbt\.)?CompoundTag \w+), (?:net\.minecraft\.core\.)?HolderLookup\.Provider registries\)/, to: 'public void load($1)'],
+    [below: '1.20.5', from: /super\.saveAdditional\((\w+), registries\)/, to: 'super.saveAdditional($1)'],
+    [below: '1.20.5', from: /super\.loadAdditional\((\w+), registries\)/, to: 'super.load($1)'],
+    [below: '1.20.5', from: /CompoundTag getUpdateTag\((?:net\.minecraft\.core\.)?HolderLookup\.Provider registries\)/, to: 'CompoundTag getUpdateTag()'],
+    [below: '1.20.5', from: /super\.getUpdateTag\(registries\)/, to: 'super.getUpdateTag()'],
+    [below: '1.20.5', from: /ContainerHelper\.(saveAllItems|loadAllItems)\((\w+), ([\w.]+(?:\(\))?), registries\)/, to: 'ContainerHelper.$1($2, $3)'],
+    [below: '1.20.5', from: /Value(Input|Output)\.of\(tag, registries\)/, to: 'Value$1.of(tag, null)'],
+    [below: '1.20.5', from: /ItemStack\.isSameItemSameComponents\(/, to: 'ItemStack.isSameItemSameTags('],
+    [below: '1.20.5', from: /\b\w*Math\.clamp\(/, to: 'net.minecraft.util.Mth.clamp('],
+    [below: '1.20.5', from: /Item\.TooltipContext (?:context|ctx),/, to: 'net.minecraft.world.level.Level tooltipLevel,'],
+    [below: '1.20.5', from: /\.appendHoverText\(stack, (?:context|ctx),/, to: '.appendHoverText(stack, tooltipLevel,'],
+
+    [below: '1.20.5', from: /import net\.minecraft\.world\.level\.pathfinder\.PathType;/, to: 'import net.minecraft.world.level.pathfinder.BlockPathTypes;'],
+    [below: '1.20.5', from: /\bPathType\b/, to: 'BlockPathTypes'],
+    [below: '1.20.5', from: /import net\.minecraft\.world\.entity\.SpawnPlacementTypes;\r?\n/, to: ''],
+    [below: '1.20.5', from: /\bSpawnPlacementTypes\./, to: 'SpawnPlacements.Type.'],
+    [below: '1.20.5', from: /\bHolder<Attribute>/, to: 'Attribute'],
+    [below: '1.20.5', from: /\b(player|live|captor)\.registryAccess\(\)/, to: '$1.level().registryAccess()'],
+    [below: '1.20.5', from: /\.getOrThrow\(\)/, to: '.result().orElseThrow()'],
+    [below: '1.20.5', from: /import net\.minecraft\.network\.RegistryFriendlyByteBuf;/, to: 'import net.minecraft.network.FriendlyByteBuf;'],
+    [below: '1.20.5', from: /\bRegistryFriendlyByteBuf\b/, to: 'FriendlyByteBuf'],
+    [below: '1.20.5', from: /import net\.minecraft\.network\.codec\.StreamCodec;/, to: 'import za.co.neroland.nerolandcore.network.legacy.LegacyStreamCodec;'],
+    [below: '1.20.5', from: /\bStreamCodec\b/, to: 'LegacyStreamCodec'],
+    [below: '1.20.5', from: /import net\.minecraft\.network\.protocol\.common\.custom\.CustomPacketPayload;/, to: 'import za.co.neroland.nerolandcore.network.legacy.LegacyPayload;'],
+    [below: '1.20.5', from: /(?<![.\w])CustomPacketPayload\b/, to: 'LegacyPayload'],
     // 1.21.11 renamed ResourceLocation -> Identifier and ResourceKey.location() -> identifier().
     [below: '1.21.11', from: /\bIdentifier\b/, to: 'ResourceLocation'],
     [below: '1.21.11', from: /\.identifier\(\)/, to: '.location()'],
@@ -97,21 +178,33 @@ subprojects {
 
     // Minecraft 1.21.x runs on Java 21, so its cells must emit Java 21 bytecode (and may not use
     // Java 22+ language features). 26.x cells stay on Java 25. A node's project name IS its MC version.
-    def javaRelease = project.name.startsWith('1.') ? 21 : 25
+    def java17Versions = ['1.20', '1.20.1', '1.20.2', '1.20.3', '1.20.4']
+    def javaRelease = project.name in java17Versions ? 17 : project.name.startsWith('1.') ? 21 : 25
     ext.javaRelease = javaRelease
 
-    if (project.name in ['1.20.5', '1.20.6']) {
+    if (project.name == '1.20' || project.name.startsWith('1.20.')) {
+        def packFormats = [
+                '1.20': [15, 15], '1.20.1': [15, 15], '1.20.2': [18, 18],
+                '1.20.3': [22, 26], '1.20.4': [22, 26], '1.20.5': [32, 41], '1.20.6': [32, 41]
+        ][project.name]
         tasks.named('processResources') {
+            inputs.property('packFormats', packFormats)
             eachFile { file ->
-                file.path = file.path.replaceFirst(/^(data\/[^\/]+\/)(advancement|loot_table|recipe)\//, '$1$2s/')
+                file.path = file.path.replaceFirst(/^(data\/[^\/]+\/)(advancement|loot_table|recipe|structure)\//, '$1$2s/')
                         .replaceFirst(/^(data\/[^\/]+\/tags\/)(block|entity_type|fluid|item)\//, '$1$2s/')
             }
             includeEmptyDirs = false
+            if (javaRelease == 17) {
+                filesMatching('**/*.mixins.json') {
+                    filter { line -> line.replace('JAVA_21', 'JAVA_17') }
+
+                }
+            }
             doLast {
                 def metadata = new File(destinationDir, 'pack.mcmeta')
                 def pack = new groovy.json.JsonSlurper().parse(metadata).pack
                 metadata.setText(groovy.json.JsonOutput.toJson([
-                        pack: [description: pack.description, pack_format: 32, supported_formats: [32, 41]]
+                        pack: [description: pack.description, pack_format: packFormats[0], supported_formats: packFormats]
                 ]), 'UTF-8')
             }
         }
@@ -313,6 +406,35 @@ subprojects {
             }
         }
     }
+    if (isNode) {
+        afterEvaluate { node ->
+            def sc = node.extensions.findByName('stonecutter')
+            if (sc == null || !sc.eval(sc.current.version, '<1.20.5')) {
+                return
+            }
+            def mixins = ['LegacyAttributeSupplierMixin', 'LegacyLivingEntityMixin', 'LegacyProjectileMixin']
+            if (node.parent.name == 'fabric') {
+                mixins.add('LegacyFabricGravityMixin')
+            }
+            if (sc.eval(sc.current.version, '<1.20.3')) {
+                mixins.add('LegacyExplosionMixin')
+            }
+            node.tasks.named('processResources') {
+                inputs.property('creatureLegacyMixins', mixins)
+                filesMatching('nerocreatures-common.mixins.json') {
+                    filter { line ->
+                        def config = line.replace('"JAVA_21"', '"JAVA_17"').replace('"mixins": []',
+                                '"mixins": ' + groovy.json.JsonOutput.toJson(mixins))
+                        if (node.parent.name == 'forge') {
+                            config = config.replace('"minVersion": "0.8",',
+                                    '"minVersion": "0.8",\n  "refmap": "nerocreatures.refmap.json",')
+                        }
+                        config
+                    }
+                }
+            }
+        }
+    }
     // Recipe ingredients: 1.21.2 made a bare item id / "#tag" string a valid ingredient, and the source
     // recipes use that short form. For older nodes, rewrite every data/*/recipe/*.json to the
     // {"item": ..} / {"tag": ..} object form at build time (same files, overlaid last so they win), instead
@@ -327,7 +449,9 @@ subprojects {
             def outDir = node.file('build/generated/legacy-recipes')
             def legacyRecipes = node.tasks.register('legacyRecipes') {
                 group = 'stonecutter'
-                description = 'Rewrites short-form recipe ingredients to the pre-1.21.2 object form.'
+                description = 'Converts recipes and recipe unlocks to the format supported by the target version.'
+                def preComponents = sc.eval(sc.current.version, '<1.20.5')
+                inputs.property('preComponents', preComponents)
                 inputs.dir(base)
                 outputs.dir(outDir)
                 doLast {
@@ -342,10 +466,28 @@ subprojects {
                     }
                     base.eachFileRecurse(groovy.io.FileType.FILES) { f ->
                         def rel = base.toPath().relativize(f.toPath()).toString().replace('\\', '/')
-                        if (!(rel ==~ /data\/[^\/]+\/recipe\/.+\.json/)) {
+                        def legacyAdvancement = preComponents && rel ==~ /data\/[^\/]+\/advancement\/recipes\/.+\.json/
+                        if (!(rel ==~ /data\/[^\/]+\/recipe\/.+\.json/) && !legacyAdvancement) {
                             return
                         }
                         def json = slurper.parse(f)
+                        if (legacyAdvancement) {
+                            json.criteria?.values()?.each { criterion ->
+                                if (criterion.trigger == 'minecraft:inventory_changed') {
+                                    criterion.conditions?.items?.each { predicate ->
+                                        if (predicate.items instanceof String) {
+                                            def item = predicate.items
+                                            if (item.startsWith('#')) {
+                                                predicate.remove('items')
+                                                predicate.tag = item.substring(1)
+                                            } else {
+                                                predicate.items = [item]
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
                         if (json.key instanceof Map) {
                             json.key = json.key.collectEntries { k, v -> [(k): conv(v)] }
                         }
@@ -355,6 +497,13 @@ subprojects {
                         ['ingredient', 'template', 'base', 'addition'].each { k ->
                             if (json[k] != null) {
                                 json[k] = conv(json[k])
+                            }
+                        }
+                        if (preComponents && json.result instanceof Map && json.result.id != null) {
+                            if (json.type in ['minecraft:crafting_shaped', 'minecraft:crafting_shapeless']) {
+                                json.result.item = json.result.remove('id')
+                            } else if (json.type in ['minecraft:smelting', 'minecraft:smoking', 'minecraft:campfire_cooking']) {
+                                json.result = json.result.id
                             }
                         }
                         def dst = new File(outDir, rel)

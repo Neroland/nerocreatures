@@ -4,7 +4,6 @@ import java.util.Optional;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.GlobalPos;
-import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
@@ -19,7 +18,15 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+//? if >=1.20.5 {
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.item.component.LodestoneTracker;
+//?} else {
+/*import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtOps;
+import net.minecraft.nbt.NbtUtils;
+import net.minecraft.nbt.Tag;
+*///?}
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.level.storage.loot.LootTable;
@@ -78,8 +85,16 @@ public class CaptainsLedgerItem extends Item {
 
     /** Writes the stash mark onto a ledger. */
     public static void mark(ItemStack ledger, ResourceKey<Level> dimension, BlockPos stash) {
+        //? if >=1.20.5 {
         ledger.set(DataComponents.LODESTONE_TRACKER,
                 new LodestoneTracker(Optional.of(GlobalPos.of(dimension, stash)), false));
+        //?} else {
+        /*CompoundTag tag = ledger.getOrCreateTag();
+        tag.put("LodestonePos", NbtUtils.writeBlockPos(stash));
+        Level.RESOURCE_KEY_CODEC.encodeStart(NbtOps.INSTANCE, dimension).result()
+                .ifPresent(value -> tag.put("LodestoneDimension", value));
+        tag.putBoolean("LodestoneTracked", false);
+        *///?}
     }
 
     //? if >=1.21.2 {
@@ -101,12 +116,21 @@ public class CaptainsLedgerItem extends Item {
     }
 
     private static void read(ServerLevel level, ServerPlayer holder, ItemStack stack) {
+        //? if >=1.20.5 {
         LodestoneTracker tracker = stack.get(DataComponents.LODESTONE_TRACKER);
-        if (tracker == null || tracker.target().isEmpty()) {
+        GlobalPos mark = tracker == null ? null : tracker.target().orElse(null);
+        //?} else {
+        /*CompoundTag tag = stack.getTag();
+        GlobalPos mark = tag == null || !tag.contains("LodestonePos", Tag.TAG_COMPOUND)
+                || !tag.contains("LodestoneDimension")
+                ? null : Level.RESOURCE_KEY_CODEC.parse(NbtOps.INSTANCE, tag.get("LodestoneDimension")).result()
+                        .map(dimension -> GlobalPos.of(dimension, NbtUtils.readBlockPos(tag.getCompound("LodestonePos"))))
+                        .orElse(null);
+        *///?}
+        if (mark == null) {
             holder.sendSystemMessage(Component.translatable("message.nerocreatures.captains_ledger.blank"), true);
             return;
         }
-        GlobalPos mark = tracker.target().get();
         if (!mark.dimension().equals(level.dimension())) {
             holder.sendSystemMessage(Component.translatable("message.nerocreatures.captains_ledger.other_world"), true);
             return;
@@ -124,8 +148,12 @@ public class CaptainsLedgerItem extends Item {
 
     private static void openStash(ServerLevel level, ServerPlayer holder, ItemStack stack) {
         stack.consume(1, holder);
+        //? if >=1.20.5 {
         ResourceKey<LootTable> key = ResourceKey.create(Registries.LOOT_TABLE, WrecksLookups.PIRATE_STASH_LOOT);
         LootTable table = level.getServer().reloadableRegistries().getLootTable(key);
+        //?} else {
+        /*LootTable table = level.getServer().getLootData().getLootTable(WrecksLookups.PIRATE_STASH_LOOT);
+        *///?}
         LootParams params = new LootParams.Builder(level)
                 .withParameter(LootContextParams.ORIGIN, holder.position())
                 .withParameter(LootContextParams.THIS_ENTITY, holder)

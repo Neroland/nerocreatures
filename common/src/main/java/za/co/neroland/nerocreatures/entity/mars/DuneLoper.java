@@ -58,6 +58,9 @@ public class DuneLoper extends MountCreature {
 
     public DuneLoper(EntityType<? extends DuneLoper> type, Level level) {
         super(type, level, CreatureTier.COMMON);
+        //? if <1.20.5 {
+        /*this.setMaxUpStep(1.1F);
+        *///?}
     }
 
     /** Sturdy and quick, with a tall step for dune ridges. */
@@ -67,7 +70,9 @@ public class DuneLoper extends MountCreature {
                 .add(Attributes.MOVEMENT_SPEED, 0.30D)
                 .add(Attributes.ATTACK_DAMAGE, 3.0D)
                 .add(Attributes.FOLLOW_RANGE, 24.0D)
+                //? if >=1.20.5 {
                 .add(Attributes.STEP_HEIGHT, 1.1D)
+                //?}
                 .add(Attributes.SAFE_FALL_DISTANCE, 6.0D);
     }
 
